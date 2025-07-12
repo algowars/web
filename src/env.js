@@ -6,9 +6,7 @@ export const env = createEnv({
    * Specify your server-side environment variables schema here. This way you can ensure the app
    * isn't built with invalid env vars.
    */
-  server: {
-    API_SERVER_URL: z.string(),
-  },
+  server: {},
 
   /**
    * Specify your client-side environment variables schema here. This way you can ensure the app
@@ -20,6 +18,7 @@ export const env = createEnv({
     NEXT_PUBLIC_AUTH0_CLIENT_ID: z.string(),
     NEXT_PUBLIC_AUTH0_CALLBACK_URL: z.string(),
     NEXT_PUBLIC_AUTH0_AUDIENCE: z.string(),
+    NEXT_PUBLIC_API_SERVER_URL: z.string(),
   },
 
   /**
@@ -27,7 +26,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    API_SERVER_URL: process.env.API_SERVER_URL,
+    NEXT_PUBLIC_API_SERVER_URL: process.env.NEXT_PUBLIC_API_SERVER_URL,
     NEXT_PUBLIC_AUTH0_DOMAIN: process.env.NEXT_PUBLIC_AUTH0_DOMAIN,
     NEXT_PUBLIC_AUTH0_CLIENT_ID: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID,
     NEXT_PUBLIC_AUTH0_CALLBACK_URL: process.env.NEXT_PUBLIC_AUTH0_CALLBACK_URL,

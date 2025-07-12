@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button";
+import AuthLoginButton from "@/features/auth/auth-login/auth-login-button";
+import AuthSignupButton from "@/features/auth/auth-signup/auth-signup-button";
 import React from "react";
 
 export default function Hero() {
@@ -15,12 +16,14 @@ export default function Hero() {
         </p>
         <ul className="flex items-center gap-3">
           <li>
-            <Button className="w-48">Get Started</Button>
+            <AuthLoginButton className="w-48" variant="default">
+              Get Started
+            </AuthLoginButton>
           </li>
           <li>
-            <Button className="w-48" variant="secondary">
-              Get Started
-            </Button>
+            <AuthSignupButton className="w-48" variant="secondary">
+              Join Today
+            </AuthSignupButton>
           </li>
         </ul>
       </article>

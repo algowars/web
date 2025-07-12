@@ -1,15 +1,28 @@
 "use client";
 
 import React from "react";
-import { Auth0Provider, AppState } from "@auth0/auth0-react";
+import { Auth0Provider, AppState, User } from "@auth0/auth0-react";
 import { useRouter } from "next/navigation";
 import { env } from "@/env";
+import { AccountProvider } from "./account.context";
+import { Account } from "./models/account.model";
 
 type AuthProviderProps = {
   children?: React.ReactNode;
+  initialAccount?: Account | null;
+  initialAuth0State?: {
+    user?: User;
+    isAuthenticated?: boolean;
+    isLoading?: boolean;
+    error?: Error;
+  };
 };
 
-export default function AuthProvider({ children }: AuthProviderProps) {
+export default function AuthProvider({
+  children,
+  initialAccount,
+  initialAuth0State,
+}: AuthProviderProps) {
   const router = useRouter();
 
   const onRedirectCallback = (appState?: AppState) => {
@@ -26,7 +39,12 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       }}
       onRedirectCallback={onRedirectCallback}
     >
-      {children}
+      <AccountProvider
+        initialAccount={initialAccount}
+        initialAuth0State={initialAuth0State}
+      >
+        {children}
+      </AccountProvider>
     </Auth0Provider>
   );
 }
