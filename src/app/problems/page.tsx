@@ -1,11 +1,11 @@
 import LandingLayout from "@/components/layouts/landing-layout/landing-layout";
-import Hero from "@/features/landing/hero/hero";
+import React from "react";
 
-export default function Home() {
+export default function ProblemsPage() {
   return (
     <div>
       <LandingLayout>
-        <Hero />
+        <h1>TESTING2</h1>
       </LandingLayout>
     </div>
   );
