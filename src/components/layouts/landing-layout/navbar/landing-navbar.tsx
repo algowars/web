@@ -29,7 +29,7 @@ function AuthButtons() {
       <div className="flex items-center gap-2">
         <AuthLoginButton
           variant="link"
-          className="text-muted-foreground hover:text-primary pl-0 pr-3 text-sm hover:underline-none"
+          className="text-muted-foreground hover:text-primary pl-0 pr-3 text-sm hover:no-underline"
         >
           Sign In
         </AuthLoginButton>
