@@ -7,7 +7,6 @@ import Link from "next/link";
 import React from "react";
 import { useAccount, AuthStatus } from "@/features/auth/account.context";
 import { Button } from "@/components/ui/button";
-import { useAuth0 } from "@auth0/auth0-react";
 import { LogOut, User } from "lucide-react";
 import {
   DropdownMenu,
@@ -22,7 +21,7 @@ import AuthLoginButton from "@/features/auth/auth-login/auth-login-button";
 import AuthSignupButton from "@/features/auth/auth-signup/auth-signup-button";
 
 function AuthButtons() {
-  const { authStatus, auth0, account, logout } = useAccount();
+  const { authStatus, account, logout } = useAccount();
 
   if (authStatus === AuthStatus.UNAUTHENTICATED) {
     return (
@@ -44,9 +43,7 @@ function AuthButtons() {
     authStatus === AuthStatus.FULLY_AUTHENTICATED ||
     authStatus === AuthStatus.PARTIALLY_AUTHENTICATED
   ) {
-    const user = auth0.user;
-    const displayName =
-      account?.username || user?.name || user?.email || "User";
+    const displayName = account?.username ?? "User";
     const userInitials = displayName.slice(0, 2).toUpperCase();
 
     return (
@@ -54,7 +51,7 @@ function AuthButtons() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.picture} alt={displayName} />
+              <AvatarImage src={account?.imageUrl} alt={displayName} />
               <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
           </Button>
@@ -63,9 +60,6 @@ function AuthButtons() {
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">{displayName}</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                {user?.email}
-              </p>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -112,7 +106,7 @@ export default function LandingNavbar() {
               Problems
             </Link>
           </li>
-          <li>
+          <li className="flex items-center">
             <AuthButtons />
           </li>
           <li>

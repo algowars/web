@@ -10,6 +10,9 @@ export const routerConfig = {
   home: {
     path: "/",
   },
+  accountSetup: {
+    path: "/account/setup",
+  },
   problems: {
     path: "/problems",
   },

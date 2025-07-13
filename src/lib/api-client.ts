@@ -2,11 +2,16 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { toast } from "sonner";
 import { env } from "@/env";
 
-type RequestOptions = {
-  headers?: Record<string, string>;
-  params?: Record<string, string | number | boolean | undefined | null>;
-  cache?: RequestCache;
-  next?: NextFetchRequestConfig;
+type ApiRequestConfig = {
+  url: string;
+  config?: AxiosRequestConfig;
+  accessToken?: string;
+};
+
+type ApiRequestWithBodyConfig = {
+  url: string;
+  body?: any;
+  config?: AxiosRequestConfig;
   accessToken?: string;
 };
 
@@ -106,70 +111,47 @@ const addAuthToken = (
 };
 
 export const api = {
-  get<T>(url: string, options?: RequestOptions): Promise<T> {
-    const config = addAuthToken(
-      {
-        params: options?.params,
-        headers: options?.headers,
-      },
-      options?.accessToken
-    );
+  get<T>(request: ApiRequestConfig): Promise<T> {
+    const { url, config = {}, accessToken } = request;
+    const finalConfig = addAuthToken(config, accessToken);
 
-    return apiClient.get<T>(url, config).then((response) => response.data);
+    return apiClient.get<T>(url, finalConfig).then((response) => response.data);
   },
 
-  post<T>(url: string, body?: any, options?: RequestOptions): Promise<T> {
-    const config = addAuthToken(
-      {
-        params: options?.params,
-        headers: options?.headers,
-      },
-      options?.accessToken
-    );
+  post<T>(request: ApiRequestWithBodyConfig): Promise<T> {
+    const { url, body, config = {}, accessToken } = request;
+    const finalConfig = addAuthToken(config, accessToken);
 
     return apiClient
-      .post<T>(url, body, config)
+      .post<T>(url, body, finalConfig)
       .then((response) => response.data);
   },
 
-  put<T>(url: string, body?: any, options?: RequestOptions): Promise<T> {
-    const config = addAuthToken(
-      {
-        params: options?.params,
-        headers: options?.headers,
-      },
-      options?.accessToken
-    );
+  put<T>(request: ApiRequestWithBodyConfig): Promise<T> {
+    const { url, body, config = {}, accessToken } = request;
+    const finalConfig = addAuthToken(config, accessToken);
 
     return apiClient
-      .put<T>(url, body, config)
+      .put<T>(url, body, finalConfig)
       .then((response) => response.data);
   },
 
-  patch<T>(url: string, body?: any, options?: RequestOptions): Promise<T> {
-    const config = addAuthToken(
-      {
-        params: options?.params,
-        headers: options?.headers,
-      },
-      options?.accessToken
-    );
+  patch<T>(request: ApiRequestWithBodyConfig): Promise<T> {
+    const { url, body, config = {}, accessToken } = request;
+    const finalConfig = addAuthToken(config, accessToken);
 
     return apiClient
-      .patch<T>(url, body, config)
+      .patch<T>(url, body, finalConfig)
       .then((response) => response.data);
   },
 
-  delete<T>(url: string, options?: RequestOptions): Promise<T> {
-    const config = addAuthToken(
-      {
-        params: options?.params,
-        headers: options?.headers,
-      },
-      options?.accessToken
-    );
+  delete<T>(request: ApiRequestConfig): Promise<T> {
+    const { url, config = {}, accessToken } = request;
+    const finalConfig = addAuthToken(config, accessToken);
 
-    return apiClient.delete<T>(url, config).then((response) => response.data);
+    return apiClient
+      .delete<T>(url, finalConfig)
+      .then((response) => response.data);
   },
 };
 

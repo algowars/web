@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
 import { useAuth0, User } from "@auth0/auth0-react";
 import { QueryStatus } from "@tanstack/react-query";
 import { Account } from "./models/account.model";
@@ -57,13 +63,15 @@ export function AccountProvider({
     getAccessTokenSilently,
   } = useAuth0();
 
-  const [accessToken, setAccessToken] = React.useState<string>("");
+  const [accessToken, setAccessToken] = useState<string>("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (auth0IsAuthenticated && user && !auth0IsLoading) {
       getAccessTokenSilently().then(setAccessToken);
     }
   }, [auth0IsAuthenticated, user, auth0IsLoading, getAccessTokenSilently]);
+
+  console.log(!!user?.sub, !auth0IsLoading, !!accessToken);
 
   const {
     data: account,
@@ -75,11 +83,11 @@ export function AccountProvider({
   } = useAccountQuery({
     accessToken,
     queryConfig: {
-      enabled:
-        auth0IsAuthenticated && !!user?.sub && !auth0IsLoading && !!accessToken,
       initialData: initialAccount,
     },
   });
+
+  console.log("ACCOUNT ERROR: ", accountError);
 
   const isAuthenticated = auth0IsAuthenticated && !!account;
   const isLoading = auth0IsLoading || isLoadingAccount;
