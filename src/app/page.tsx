@@ -1,12 +1,5 @@
-import LandingLayout from "@/components/layouts/landing-layout/landing-layout";
-import Hero from "@/features/landing/hero/hero";
+import HomeContext from "./home-context";
 
 export default function Home() {
-  return (
-    <div>
-      <LandingLayout>
-        <Hero />
-      </LandingLayout>
-    </div>
-  );
+  return <HomeContext />;
 }

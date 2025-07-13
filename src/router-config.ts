@@ -13,6 +13,9 @@ export const routerConfig = {
   accountSetup: {
     path: "/account/setup",
   },
+  dashboard: {
+    path: "/",
+  },
   problems: {
     path: "/problems",
   },
