@@ -73,9 +73,11 @@ const createApiClient = (): AxiosInstance => {
 
   client.interceptors.response.use(
     (response: AxiosResponse) => {
+      console.log("RESPONSE: ", response);
       return response;
     },
     (error) => {
+      console.log("ERROR: ", error);
       const message =
         error.response?.data?.message || error.message || "An error occurred";
 
@@ -85,6 +87,7 @@ const createApiClient = (): AxiosInstance => {
         });
       }
 
+      console.log("RIGHT HERE: ", error);
       return Promise.reject(new Error(message));
     }
   );

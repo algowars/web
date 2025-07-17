@@ -66,12 +66,16 @@ export function AccountProvider({
   const [accessToken, setAccessToken] = useState<string>("");
 
   useEffect(() => {
-    if (auth0IsAuthenticated && user && !auth0IsLoading) {
-      getAccessTokenSilently().then(setAccessToken);
-    }
-  }, [auth0IsAuthenticated, user, auth0IsLoading, getAccessTokenSilently]);
+    (async () => {
+      if (auth0IsAuthenticated) {
+        const token = await getAccessTokenSilently();
 
-  console.log(!!user?.sub, !auth0IsLoading, !!accessToken);
+        if (token) {
+          setAccessToken(token);
+        }
+      }
+    })();
+  }, [auth0IsAuthenticated]);
 
   const {
     data: account,
@@ -82,12 +86,7 @@ export function AccountProvider({
     refetch: refetchAccount,
   } = useAccountQuery({
     accessToken,
-    queryConfig: {
-      initialData: initialAccount,
-    },
   });
-
-  console.log("ACCOUNT ERROR: ", accountError);
 
   const isAuthenticated = auth0IsAuthenticated && !!account;
   const isLoading = auth0IsLoading || isLoadingAccount;

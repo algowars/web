@@ -22,7 +22,7 @@ export default function AccountVerificationBanner() {
   }
 
   return (
-    <Alert className="relative bg-secondary rounded-none border-none border-b flex items-center">
+    <Alert className="relative bg-secondary rounded-none border-none border-b flex items-center py-2 px-4">
       <AlertCircle className="h-4 w-4" />
       <AlertDescription className="flex items-center justify-between w-full pr-8">
         <span className="flex-1">
