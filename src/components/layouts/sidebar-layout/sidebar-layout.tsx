@@ -8,11 +8,16 @@ import AppSidebarHeader, {
 type SidebarProps = {
   breadcrumbs: BreadcrumbItem[];
   children?: ReactNode;
+  defaultOpen?: boolean;
 };
 
-export default function SidebarLayout({ breadcrumbs, children }: SidebarProps) {
+export default function SidebarLayout({
+  breadcrumbs,
+  children,
+  defaultOpen,
+}: SidebarProps) {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <SidebarInset>
         <AppSidebarHeader breadcrumbs={breadcrumbs} />
