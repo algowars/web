@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,14 +9,77 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  createAccountSchema,
+  useCreateAccount,
+} from "@/features/auth/api/create-account";
+import { useAccount } from "@/features/auth/account.context";
+import { useRouter } from "next/navigation";
+import { routerConfig } from "@/router-config";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "sonner";
 
 export default function AccountSetupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
+  const { auth0, getAccessTokenSilently, refreshAccount } = useAccount();
+
+  const signupForm = useForm<z.infer<typeof createAccountSchema>>({
+    resolver: zodResolver(createAccountSchema),
+    defaultValues: {
+      username: "",
+      imageUrl: auth0.user?.picture,
+    },
+  });
+
+  const createAccountMutation = useCreateAccount({
+    mutationConfig: {
+      onSuccess: (account) => {
+        toast.success("Account created successfully!", {
+          description: `Welcome, ${account.username}!`,
+        });
+        refreshAccount();
+
+        router.push(routerConfig.home.path);
+      },
+      onError: (error) => {
+        toast.error("Failed to create account", {
+          description: error.message || "Please try again.",
+        });
+      },
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof createAccountSchema>) {
+    try {
+      const accessToken = await getAccessTokenSilently();
+
+      createAccountMutation.mutate({
+        data: values,
+        accessToken,
+      });
+    } catch (error) {
+      toast.error("Authentication error", {
+        description: "Unable to get access token. Please try logging in again.",
+      });
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -23,17 +88,44 @@ export default function AccountSetupForm({
           <CardDescription>Please fill out the required fields</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="username">Username</Label>
-                <Input placeholder="username" required />
-                <Button variant="outline" className="w-full">
-                  Setup Account
-                </Button>
-              </div>
-            </div>
-          </form>
+          <Form {...signupForm}>
+            <form
+              onSubmit={signupForm.handleSubmit(onSubmit)}
+              className="space-y-8"
+            >
+              <FormField
+                control={signupForm.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your username"
+                        disabled={createAccountMutation.isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is your public display name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-full"
+                disabled={createAccountMutation.isPending}
+              >
+                {createAccountMutation.isPending
+                  ? "Setting up..."
+                  : "Setup Account"}
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

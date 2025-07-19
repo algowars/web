@@ -9,9 +9,9 @@ export const getProblemsPageable = ({
   size,
   timestamp,
 }: {
-  page: number;
-  size: number;
-  timestamp: Date;
+  page?: number;
+  size?: number;
+  timestamp?: Date;
 }) => {
   return api.get<PageResult<Problem>>({
     url: "/api/v1/problem",
@@ -19,16 +19,16 @@ export const getProblemsPageable = ({
       params: {
         page,
         size,
-        timestamp: timestamp.toISOString(),
+        timestamp: timestamp ? timestamp.toISOString() : undefined,
       },
     },
   });
 };
 
 export const getProblemsPageableQueryOptions = (
-  page: number,
-  size: number,
-  timestamp: Date
+  page?: number,
+  size?: number,
+  timestamp?: Date
 ) => {
   return queryOptions({
     queryKey: ["problems", page, size, timestamp],
@@ -37,13 +37,13 @@ export const getProblemsPageableQueryOptions = (
 };
 
 type UseProblemsOptions = {
-  page: number;
-  size: number;
-  timestamp: Date;
+  page?: number;
+  size?: number;
+  timestamp?: Date;
   queryConfig?: QueryConfig<typeof getProblemsPageableQueryOptions>;
 };
 
-export const UseProblems = ({
+export const useProblems = ({
   page,
   size,
   timestamp,

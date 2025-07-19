@@ -34,6 +34,7 @@ interface AccountContextType {
   authStatus: AuthStatus;
   refreshAccount: () => void;
   logout: () => void;
+  getAccessTokenSilently: () => Promise<string>;
 }
 
 const AccountContext = createContext<AccountContextType | undefined>(undefined);
@@ -138,6 +139,7 @@ export function AccountProvider({
     authStatus,
     refreshAccount,
     logout,
+    getAccessTokenSilently,
   };
 
   return (

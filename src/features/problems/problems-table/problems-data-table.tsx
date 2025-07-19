@@ -1,18 +1,17 @@
 "use client";
 
-import {
-  ColumnDef,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import React from "react";
+import React, { useState } from "react";
+import { columns } from "./problems-columns";
+import { DataTable } from "@/components/ui/data-table";
+import { useProblems } from "../api/get-problems-pageable";
 
-interface ProblemsDataTable {
-  page: number;
-  size: number;
-  timestamp: Date;
-}
+export default function ProblemsDataTable() {
+  const [timestamp] = useState(new Date());
+  const { data: results } = useProblems({
+    page: 1,
+    size: 25,
+    timestamp,
+  });
 
-export default function ProblemsDataTable({ columns, data }) {
-  return <div>ProblemsDataTable</div>;
+  return <DataTable data={results?.results ?? []} columns={columns} />;
 }

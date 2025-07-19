@@ -19,6 +19,11 @@ export const routerConfig = {
   problems: {
     path: "/problems",
   },
+  problem: {
+    path: "/problems/:slug",
+    execute: ({ slug }: { slug: string }) =>
+      `/problems/${encodeURIComponent(slug)}`,
+  },
   contests: {
     path: "/contests",
   },
