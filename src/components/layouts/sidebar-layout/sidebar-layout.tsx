@@ -21,7 +21,7 @@ export default function SidebarLayout({
       <AppSidebar />
       <SidebarInset>
         <AppSidebarHeader breadcrumbs={breadcrumbs} />
-        <div className="px-4">{children}</div>
+        <div className="px-4 pb-4 h-full">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

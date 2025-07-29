@@ -41,7 +41,7 @@ export const EditorTab = ({ tab }: EditorTabProps) => {
   const currentTab = tab.children ? tab.children[activeTab] : tab;
 
   return (
-    <Card className="h-full overflow-hidden bg-sidebar">
+    <Card className="h-full overflow-hidden bg-sidebar py-0 gap-0">
       <EditorPanelHeader
         tab={tab}
         currentTabIndex={activeTab}

@@ -5,110 +5,44 @@ import { CodeXml, FileText } from "lucide-react";
 import ProblemCodeEditorLanguageSelect from "./problem-editor-language-select/problem-editor-language-select";
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
-import { useState } from "react";
-import { Problem } from "@/features/problems/models/problem";
+import { useProblemContext } from "../problem-context";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
-const languages = [
-  {
-    id: 93,
-    name: "JavaScript",
-    versions: [
-      {
-        versionId: 93,
-        name: "(Node.js 18.15.0)",
-      },
-      {
-        versionId: 97,
-        name: "(Node.js 20.17.0)",
-      },
-      {
-        versionId: 102,
-        name: "(Node.js 22.08.0",
-      },
-    ],
-  },
-  {
-    id: 70,
-    name: "Python",
-    versions: [
-      {
-        versionId: 70,
-        name: "(2.7.17)",
-      },
-      {
-        versionId: 100,
-        name: "(3.11.2)",
-      },
-    ],
-  },
-  {
-    id: 105,
-    name: "C++",
-    versions: [
-      {
-        versionId: 105,
-        name: "(GCC 14.1.0)",
-      },
-    ],
-  },
-];
+export default function ProblemEditor() {
+  const {
+    problemSetup,
+    isLoading,
+    error,
+    currentLanguage,
+    currentVersion,
+    code,
+    changePreferredLanguage,
+    changeCurrentVersion,
+    changeCode,
+  } = useProblemContext();
 
-type ProblemEditorProps = {
-  className?: string;
-  slug: string;
-};
+  if (isLoading) {
+    return (
+      <div className="h-full p-6 space-y-4">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-64 w-full" />
+        <Skeleton className="h-32 w-full" />
+      </div>
+    );
+  }
 
-export default function ProblemEditor({ slug }: ProblemEditorProps) {
-  const problem: Problem = {
-    id: "123",
-    title: "Test question",
-    slug: slug,
-    question: "TEST QUESTION",
-    tags: ["banana", "chicken"],
-    difficulty: {
-      name: "Hard",
-      rating: 2000,
-    },
-  };
-
-  const [code, setCode] = useState<string>("");
-  const [selectedLanguages, setSelectedLanguages] = useState({
-    id: 93,
-    name: "JavaScript",
-    versions: [
-      {
-        versionId: 93,
-        name: "(Node.js 18.15.0)",
-      },
-      {
-        versionId: 97,
-        name: "(Node.js 20.17.0)",
-      },
-      {
-        versionId: 102,
-        name: "(Node.js 22.08.0",
-      },
-    ],
-  });
-  const [currentLanguageVersionId, setCurrentLanguageVersionId] =
-    useState<number>(93);
-
-  const changeCode = (value: string) => {
-    setCode(value);
-  };
-
-  const changeCurrentLanguage = (languageId: number) => {
-    const foundLanguage = languages.find((lan) => lan.id === languageId);
-
-    if (foundLanguage) {
-      setSelectedLanguages(foundLanguage);
-      setCurrentLanguageVersionId(foundLanguage.versions[0]?.versionId ?? 0);
-    }
-  };
-
-  const changeCurrentLanguageVersion = (versionId: number) => {
-    setCurrentLanguageVersionId(versionId);
-  };
+  if (error || !problemSetup) {
+    return (
+      <Alert variant="destructive" className="m-6">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          Failed to load problem: {error?.message || "Problem not found"}
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   const tabs: Tab = {
     direction: "horizontal",
@@ -124,14 +58,13 @@ export default function ProblemEditor({ slug }: ProblemEditorProps) {
           <>
             <div className="px-1 py-1">
               <ProblemCodeEditorLanguageSelect
-                availableLanguages={languages}
-                currentLanguage={selectedLanguages}
-                currentLanguageVersionId={currentLanguageVersionId}
-                changeCurrentLanguage={changeCurrentLanguage}
-                changeCurrentLanguageVersion={changeCurrentLanguageVersion}
+                availableLanguages={problemSetup.availableLanguages}
+                currentLanguage={currentLanguage}
+                currentVersion={currentVersion}
+                changeCurrentLanguage={changePreferredLanguage}
+                changeCurrentVersion={changeCurrentVersion}
               />
             </div>
-
             <CodeEditor
               code={code}
               changeCode={changeCode}
@@ -145,7 +78,7 @@ export default function ProblemEditor({ slug }: ProblemEditorProps) {
         defaultSize: 45,
         children: [
           {
-            component: <ProblemQuestion problem={problem ?? null} />,
+            component: <ProblemQuestion problem={problemSetup.problem} />,
             key: "description",
             name: "Description",
             defaultSize: 70,
