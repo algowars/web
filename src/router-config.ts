@@ -48,6 +48,16 @@ export const routerConfig = {
   privacy: {
     path: "/privacy",
   },
+  tags: {
+    path: "/tags",
+    execute: ({ tags }: { tags: string[] }) =>
+      `/tags?q=${encodeURIComponent(tags.join(","))}`,
+  },
+  profile: {
+    path: "/profile/:username",
+    execute: ({ username }: { username: string }) =>
+      `/profile/${encodeURIComponent(username)}`,
+  },
   terms: {
     path: "/terms",
   },

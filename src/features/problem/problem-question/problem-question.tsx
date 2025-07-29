@@ -7,6 +7,7 @@ import {
 import { Problem } from "@/features/problems/models/problem";
 import { Tag } from "lucide-react";
 import React from "react";
+import ProblemEditorTags from "./problem-editor-tags";
 
 type Props = {
   problem: Problem | null;
@@ -42,7 +43,7 @@ export default function ProblemQuestion({ problem }: Props) {
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            {/* <ProblemEditorTags tags={problem.tags ?? []} /> */}
+            <ProblemEditorTags tags={problem.tags ?? []} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
