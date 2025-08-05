@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { routerConfig } from "@/router-config";
-import { Command, DumbbellIcon, ListTree, SquareTerminal } from "lucide-react";
+import { Command, ListTree, SquareTerminal } from "lucide-react";
 import React from "react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import { AppSidebaraccount } from "./app-sidebar-user";

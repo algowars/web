@@ -112,9 +112,7 @@ export function MainErrorFallback({
   );
 }
 
-// Alternative minimal version
 export function MinimalErrorFallback({
-  error,
   resetErrorBoundary,
 }: MainErrorFallbackProps) {
   return (

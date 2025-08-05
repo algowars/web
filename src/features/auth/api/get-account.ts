@@ -1,7 +1,7 @@
 import { api } from "@/lib/api-client";
 import { Account } from "../models/account.model";
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { queryConfig, QueryConfig } from "@/lib/react-query";
+import { QueryConfig } from "@/lib/react-query";
 
 export const getAccount = ({ accessToken }: { accessToken: string }) => {
   console.log("ACCESS TOKEN IN API: ", accessToken);
