@@ -73,7 +73,7 @@ export default function AccountSetupForm({
         data: values,
         accessToken,
       });
-    } catch (error) {
+    } catch {
       toast.error("Authentication error", {
         description: "Unable to get access token. Please try logging in again.",
       });

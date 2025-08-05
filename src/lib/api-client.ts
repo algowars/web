@@ -8,9 +8,9 @@ type ApiRequestConfig = {
   accessToken?: string;
 };
 
-type ApiRequestWithBodyConfig = {
+type ApiRequestWithBodyConfig<T = unknown> = {
   url: string;
-  body?: any;
+  body?: T;
   config?: AxiosRequestConfig;
   accessToken?: string;
 };
@@ -121,7 +121,9 @@ export const api = {
     return apiClient.get<T>(url, finalConfig).then((response) => response.data);
   },
 
-  post<T>(request: ApiRequestWithBodyConfig): Promise<T> {
+  post<T, TBody = unknown>(
+    request: ApiRequestWithBodyConfig<TBody>
+  ): Promise<T> {
     const { url, body, config = {}, accessToken } = request;
     const finalConfig = addAuthToken(config, accessToken);
 
@@ -130,7 +132,9 @@ export const api = {
       .then((response) => response.data);
   },
 
-  put<T>(request: ApiRequestWithBodyConfig): Promise<T> {
+  put<T, TBody = unknown>(
+    request: ApiRequestWithBodyConfig<TBody>
+  ): Promise<T> {
     const { url, body, config = {}, accessToken } = request;
     const finalConfig = addAuthToken(config, accessToken);
 
@@ -139,7 +143,9 @@ export const api = {
       .then((response) => response.data);
   },
 
-  patch<T>(request: ApiRequestWithBodyConfig): Promise<T> {
+  patch<T, TBody = unknown>(
+    request: ApiRequestWithBodyConfig<TBody>
+  ): Promise<T> {
     const { url, body, config = {}, accessToken } = request;
     const finalConfig = addAuthToken(config, accessToken);
 

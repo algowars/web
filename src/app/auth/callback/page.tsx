@@ -1,12 +1,23 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageLoader from "@/components/loader/page-loader/page-loader";
 import { useAccount, AuthStatus } from "@/features/auth/account.context";
 import { routerConfig } from "@/router-config";
 
-export default function AuthCallbackPage() {
+interface ApiError {
+  status?: number;
+  message?: string;
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
+}
+
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { authStatus, isLoading, auth0, error } = useAccount();
@@ -19,11 +30,12 @@ export default function AuthCallbackPage() {
     const handleRedirect = () => {
       const returnTo = searchParams.get("returnTo");
 
+      const apiError = error as ApiError | null;
       const is404Error =
         error?.message?.includes("404") ||
         error?.message?.includes("not found") ||
-        (error as any)?.status === 404 ||
-        (error as any)?.response?.status === 404;
+        apiError?.status === 404 ||
+        apiError?.response?.status === 404;
 
       switch (authStatus) {
         case AuthStatus.FULLY_AUTHENTICATED:
@@ -50,12 +62,12 @@ export default function AuthCallbackPage() {
   }, [authStatus, isLoading, auth0.isLoading, router, searchParams, error]);
 
   const getLoadingMessage = (): string => {
-    // Check if error is a 404
+    const apiError = error as ApiError | null;
     const is404Error =
       error?.message?.includes("404") ||
       error?.message?.includes("not found") ||
-      (error as any)?.status === 404 ||
-      (error as any)?.response?.status === 404;
+      apiError?.status === 404 ||
+      apiError?.response?.status === 404;
 
     switch (authStatus) {
       case AuthStatus.FULLY_AUTHENTICATED:
@@ -74,4 +86,14 @@ export default function AuthCallbackPage() {
   };
 
   return <PageLoader message={getLoadingMessage()} className="bg-background" />;
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={<PageLoader message="Loading..." className="bg-background" />}
+    >
+      <AuthCallbackContent />
+    </Suspense>
+  );
 }

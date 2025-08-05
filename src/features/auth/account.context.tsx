@@ -52,7 +52,6 @@ interface AccountProviderProps {
 
 export function AccountProvider({
   children,
-  initialAccount = null,
   initialAuth0State,
 }: AccountProviderProps) {
   const {

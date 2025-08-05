@@ -11,6 +11,17 @@ import { ProblemSetup } from "../problems/models/problem-setup";
 import { Language, LanguageVersion } from "../problems/models/language";
 import { useProblem } from "../problems/api/get-problem";
 
+interface ApiError {
+  status?: number;
+  message?: string;
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 interface ProblemContextType {
   problemSetup: ProblemSetup | null;
   isLoading: boolean;
@@ -59,10 +70,13 @@ export function ProblemProvider({
 
   const error = rawError
     ? {
-        status: (rawError as any)?.response?.status || 500,
+        status:
+          (rawError as ApiError)?.response?.status ||
+          (rawError as ApiError)?.status ||
+          500,
         message:
-          (rawError as any)?.response?.data?.message ||
-          rawError.message ||
+          (rawError as ApiError)?.response?.data?.message ||
+          (rawError as ApiError)?.message ||
           "An error occurred",
       }
     : null;

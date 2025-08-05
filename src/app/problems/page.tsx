@@ -1,4 +1,3 @@
-import LandingLayout from "@/components/layouts/landing-layout/landing-layout";
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
 import ProblemsDataTable from "@/features/problems/problems-table/problems-data-table";
 import { routerConfig } from "@/router-config";
