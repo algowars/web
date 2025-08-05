@@ -15,34 +15,70 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     permissions:
-       id-token: write
-       contents: read
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm run build
+        env:
+          # Add your environment variables here
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+
       - name: Install OIDC Client from Core Package
-        run: npm install @actions/core@1.6.0 @actions/http-client
+        run: pnpm add @actions/core@1.6.0 @actions/http-client
+
       - name: Get Id Token
         uses: actions/github-script@v6
         id: idtoken
         with:
-           script: |
-               const coredemo = require('@actions/core')
-               return await coredemo.getIDToken()
-           result-encoding: string
+          script: |
+            const coredemo = require('@actions/core')
+            return await coredemo.getIDToken()
+          result-encoding: string
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WITTY_ROCK_072F9480F }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          ###### Repository/Build Configurations ######
           app_location: "/" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "" # Built app content directory - optional
+          output_location: "out" # Built app content directory for Next.js static export
+          skip_app_build: true # Skip Azure's build since we built manually above
           github_id_token: ${{ steps.idtoken.outputs.result }}
           ###### End of Repository/Build Configurations ######
 
@@ -55,4 +91,5 @@ jobs:
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WITTY_ROCK_072F9480F }}
           action: "close"
