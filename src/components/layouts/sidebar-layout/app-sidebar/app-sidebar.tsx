@@ -14,6 +14,7 @@ import { Command, ListTree, SquareTerminal } from "lucide-react";
 import React from "react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import { AppSidebaraccount } from "./app-sidebar-user";
+import Link from "next/link";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
@@ -40,7 +41,7 @@ export default function AppSidebar(
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href={routerConfig.dashboard.path}>
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
                 </div>
@@ -48,7 +49,7 @@ export default function AppSidebar(
                   <span className="truncate font-medium">Algowars</span>
                   <span className="truncate text-xs">Competitive Coding</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

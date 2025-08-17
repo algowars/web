@@ -13,8 +13,6 @@ export default function ProblemsDataTable() {
     timestamp,
   });
 
-  console.log("DATA: ", data);
-
   return (
     <DataTable
       data={data?.results ?? []}

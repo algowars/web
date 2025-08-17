@@ -87,6 +87,11 @@ export default function AccountSetupForm({
           <CardTitle>Finish setting up your account</CardTitle>
           <CardDescription>Please fill out the required fields</CardDescription>
         </CardHeader>
+        {createAccountMutation.isError ? (
+          <p className="text-sm text-center text-destructive">
+            {createAccountMutation.error.message}
+          </p>
+        ) : null}
         <CardContent>
           <Form {...signupForm}>
             <form
