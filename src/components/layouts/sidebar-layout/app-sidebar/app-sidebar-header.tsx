@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import Link from "next/link";
 import React from "react";
 
 export type BreadcrumbItem = {
@@ -44,8 +45,8 @@ export default function AppSidebarHeader({
                       {isLast || !breadcrumb.url ? (
                         <BreadcrumbPage>{breadcrumb.name}</BreadcrumbPage>
                       ) : (
-                        <BreadcrumbLink href={breadcrumb.url}>
-                          {breadcrumb.name}
+                        <BreadcrumbLink asChild>
+                          <Link href={breadcrumb.url}>{breadcrumb.name}</Link>
                         </BreadcrumbLink>
                       )}
                     </BreadcrumbItem>
