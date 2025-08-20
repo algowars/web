@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/theme/mode-toggle";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -62,6 +63,7 @@ export default function AppSidebarHeader({
           </Breadcrumb>
         )}
       </div>
+      <ModeToggle className="ml-auto mr-3" />
     </header>
   );
 }

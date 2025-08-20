@@ -31,9 +31,13 @@ export function PermissionGuard({
   const router = useRouter();
   const login = useAuthLogin();
 
-  const hasPermission = requiredPermissions.some((perm) =>
-    userPermissions.includes(perm)
-  );
+  const hasPermission = requiredPermissions
+    .map((perm) => perm.toLowerCase())
+    .some((perm) =>
+      userPermissions.map((role) => role.toLowerCase()).includes(perm)
+    );
+
+  console.log(authStatus, userPermissions, isLoading, requiredPermissions);
 
   React.useEffect(() => {
     if (authStatus === AuthStatus.PARTIALLY_AUTHENTICATED) {
