@@ -3,6 +3,7 @@ import { AdminProblem } from "../models/admin-problem";
 import { api } from "@/lib/api-client";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
+import { access } from "fs";
 
 export const getAdminProblems = ({
   page,
@@ -35,7 +36,7 @@ export const getAdminProblemsQueryOptions = (
   timestamp?: Date
 ) => {
   return queryOptions({
-    queryKey: ["problems", page, size, timestamp],
+    queryKey: ["problems", page, size, timestamp, accessToken],
     queryFn: () => getAdminProblems({ page, size, timestamp, accessToken }),
   });
 };
