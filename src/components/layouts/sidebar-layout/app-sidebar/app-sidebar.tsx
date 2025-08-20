@@ -10,28 +10,47 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { routerConfig } from "@/router-config";
-import { Command, ListTree, SquareTerminal } from "lucide-react";
+import {
+  Command,
+  LayoutDashboard,
+  ListTree,
+  Puzzle,
+  Shield,
+} from "lucide-react";
 import React from "react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import { AppSidebaraccount } from "./app-sidebar-user";
 import Link from "next/link";
+import { useUserRoles } from "@/features/auth/roles/user-roles";
+import { PUBLIC_ROLES } from "@/features/auth/public-roles";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
+  const { roles } = useUserRoles();
+
   const data = {
     navMain: [
       {
         title: "Dashboard",
         url: routerConfig.dashboard.path,
-        icon: SquareTerminal,
+        icon: LayoutDashboard,
         isActive: true,
       },
       {
         title: "Problems",
         url: routerConfig.problems.path,
-        icon: ListTree,
+        icon: Puzzle,
       },
+      ...(roles.includes(PUBLIC_ROLES.ADMIN)
+        ? [
+            {
+              title: "Admin",
+              url: routerConfig.admin.path,
+              icon: Shield,
+            },
+          ]
+        : []),
     ],
   };
 

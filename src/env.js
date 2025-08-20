@@ -19,6 +19,7 @@ export const env = createEnv({
     NEXT_PUBLIC_AUTH0_CALLBACK_URL: z.string(),
     NEXT_PUBLIC_AUTH0_AUDIENCE: z.string(),
     NEXT_PUBLIC_API_SERVER_URL: z.string(),
+    NEXT_PUBLIC_AUTH0_NAMESPACE: z.string(),
   },
 
   /**
@@ -31,6 +32,7 @@ export const env = createEnv({
     NEXT_PUBLIC_AUTH0_CLIENT_ID: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID,
     NEXT_PUBLIC_AUTH0_CALLBACK_URL: process.env.NEXT_PUBLIC_AUTH0_CALLBACK_URL,
     NEXT_PUBLIC_AUTH0_AUDIENCE: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
+    NEXT_PUBLIC_AUTH0_NAMESPACE: process.env.NEXT_PUBLIC_AUTH0_NAMESPACE,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

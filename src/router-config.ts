@@ -10,6 +10,9 @@ export const routerConfig = {
   home: {
     path: "/",
   },
+  admin: {
+    path: "/admin",
+  },
   accountSetup: {
     path: "/account/setup",
   },
