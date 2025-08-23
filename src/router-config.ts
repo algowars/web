@@ -13,6 +13,11 @@ export const routerConfig = {
   admin: {
     path: "/admin",
   },
+  adminProblem: {
+    path: "/admin/problems/:slug",
+    execute: ({ slug }: { slug: string }) =>
+      `/admin/problems/${encodeURIComponent(slug)}`,
+  },
   accountSetup: {
     path: "/account/setup",
   },

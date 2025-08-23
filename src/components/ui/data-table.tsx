@@ -26,19 +26,21 @@ import {
 } from "@/components/ui/table";
 import React, { useState } from "react";
 import { DataTablePagination } from "./data-table-pagination";
-import { routerConfig } from "@/router-config";
 import DataTableToolbar from "./data-table-toolbar";
 import { useRouter } from "next/navigation";
+import { routerConfig } from "@/router-config";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   pagination: PaginationState;
+  getRowUrl?: (row: TData) => string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  getRowUrl,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
   const [rowSelection, setRowSelection] = useState({});
@@ -98,8 +100,13 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => {
-                    const slug = (row.original as { slug: string }).slug;
-                    void router.push(routerConfig.problem.execute({ slug }));
+                    if (getRowUrl) {
+                      const url = getRowUrl(row.original);
+                      void router.push(url);
+                    } else {
+                      const slug = (row.original as { slug: string }).slug;
+                      void router.push(routerConfig.problem.execute({ slug }));
+                    }
                   }}
                   className="hover:cursor-pointer"
                 >

@@ -37,8 +37,6 @@ export function PermissionGuard({
       userPermissions.map((role) => role.toLowerCase()).includes(perm)
     );
 
-  console.log(authStatus, userPermissions, isLoading, requiredPermissions);
-
   React.useEffect(() => {
     if (authStatus === AuthStatus.PARTIALLY_AUTHENTICATED) {
       router.replace(routerConfig.accountSetup.path);
