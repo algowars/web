@@ -82,10 +82,8 @@ export function ProblemProvider({
     : null;
 
   const currentLanguage: Language | null =
-    problemSetup?.availableLanguages?.find(
-      (lang) => lang.id === preferredLanguageId
-    ) ||
-    problemSetup?.availableLanguages?.[0] ||
+    problemSetup?.languages?.find((lang) => lang.id === preferredLanguageId) ||
+    problemSetup?.languages?.[0] ||
     null;
 
   const currentVersion: LanguageVersion | null =
@@ -108,18 +106,18 @@ export function ProblemProvider({
   }, [currentLanguage]);
 
   useEffect(() => {
-    if (problemSetup?.availableLanguages?.length && !currentLanguage) {
+    if (problemSetup?.languages?.length && !currentLanguage) {
       const defaultLang =
-        problemSetup.availableLanguages.find(
+        problemSetup.languages.find(
           (lang) => lang.id === problemSetup.defaultLanguageId
-        ) || problemSetup.availableLanguages[0];
+        ) || problemSetup.languages[0];
 
       setPreferredLanguageId(defaultLang.id);
     }
   }, [problemSetup, currentLanguage]);
 
   const changePreferredLanguage = (languageId: number) => {
-    const foundLanguage = problemSetup?.availableLanguages?.find(
+    const foundLanguage = problemSetup?.languages?.find(
       (lang) => lang.id === languageId
     );
 

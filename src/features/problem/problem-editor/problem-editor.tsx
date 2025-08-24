@@ -58,7 +58,7 @@ export default function ProblemEditor() {
           <>
             <div className="px-1 py-1">
               <ProblemCodeEditorLanguageSelect
-                availableLanguages={problemSetup.availableLanguages}
+                availableLanguages={problemSetup.languages}
                 currentLanguage={currentLanguage}
                 currentVersion={currentVersion}
                 changeCurrentLanguage={changePreferredLanguage}

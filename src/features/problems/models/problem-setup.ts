@@ -13,5 +13,5 @@ export interface ProblemSetup {
   problem: Problem;
   initialCode: string;
   testSuite: TestSuite;
-  availableLanguages: Language[];
+  languages: Language[];
 }
