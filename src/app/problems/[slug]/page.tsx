@@ -31,7 +31,7 @@ export default async function ProblemPage({
       ]}
       defaultOpen={false}
     >
-      <div className="h-full px-3">
+      <div className="h-full">
         <Problem params={Promise.resolve(resolvedParams)} />
       </div>
     </SidebarLayout>
