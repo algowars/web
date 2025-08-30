@@ -28,7 +28,7 @@ import {
 import { useAccount } from "@/features/auth/account.context";
 import { useAuthLogout } from "@/features/auth/auth-logout/auth-logout";
 
-export function AppSidebaraccount() {
+export function AppSidebarAccount() {
   const { account } = useAccount();
   const { isMobile } = useSidebar();
   const { logout } = useAuthLogout();

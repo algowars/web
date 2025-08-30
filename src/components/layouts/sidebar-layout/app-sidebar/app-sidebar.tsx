@@ -19,20 +19,24 @@ import {
 } from "lucide-react";
 import React from "react";
 import { SidebarMainNav } from "./sidebar-main-nav";
-import { AppSidebaraccount } from "./app-sidebar-user";
+import { AppSidebarAccount } from "./app-sidebar-account";
 import Link from "next/link";
 import { useUserRoles } from "@/features/auth/roles/user-roles";
 import { PUBLIC_ROLES } from "@/features/auth/public-roles";
+import { useAccount } from "@/features/auth/account.context";
+import { UnauthenticatedAccount } from "./unauthenticated-account";
+import { PartiallyAuthenticatedAccount } from "./partially-authenticated-account";
+import { AuthComponentGuard } from "@/features/auth/guards/auth-component.guard";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
   const { roles } = useUserRoles();
-
+  const { isAuthenticated } = useAccount();
   const data = {
     navMain: [
       {
-        title: "Dashboard",
+        title: isAuthenticated ? "Dashboard" : "Home",
         url: routerConfig.dashboard.path,
         icon: LayoutDashboard,
         isActive: true,
@@ -77,7 +81,12 @@ export default function AppSidebar(
         <SidebarMainNav items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <AppSidebaraccount />
+        <AuthComponentGuard
+          unauthenticated={<UnauthenticatedAccount />}
+          partiallyAuthenticated={<PartiallyAuthenticatedAccount />}
+        >
+          <AppSidebarAccount />
+        </AuthComponentGuard>
       </SidebarFooter>
     </Sidebar>
   );
