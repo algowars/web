@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+import AuthLogout from "@/features/auth/auth-logout/auth-logout";
 
 export function PartiallyAuthenticatedAccount({
   message = "Please finish setting up your account to continue.",
@@ -35,6 +36,7 @@ export function PartiallyAuthenticatedAccount({
           >
             {ctaText}
           </Link>
+          <AuthLogout variant="secondary">Logout</AuthLogout>
         </div>
       </CardContent>
     </Card>
