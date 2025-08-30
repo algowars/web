@@ -23,13 +23,14 @@ export function PartiallyAuthenticatedAccount({
 }) {
   const router = useRouter();
   return (
-    <Card className="py-2">
+    <Card className="py-2 overflow-visible -mx-4">
       <CardHeader className="px-2">
         <CardTitle>Finish account setup</CardTitle>
         <CardDescription>{message}</CardDescription>
       </CardHeader>
+
       <CardContent className="px-2">
-        <div className="flex flex-col gap-2">
+        <div className="-mx-6 px-6 flex flex-col gap-2">
           <Link
             href={routerConfig.accountSetup.path}
             className={buttonVariants({ variant: "default" })}

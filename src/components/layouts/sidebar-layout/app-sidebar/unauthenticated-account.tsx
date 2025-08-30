@@ -24,15 +24,17 @@ export function UnauthenticatedAccount({
 }) {
   const login = useAuthLogin();
   return (
-    <Card className="py-2">
-      <CardHeader className="px-2">
+    <Card className="overflow-visible -mx-2">
+      <CardHeader className="px-2.5">
         <CardTitle>Join Algowars</CardTitle>
         <CardDescription>{message}</CardDescription>
       </CardHeader>
-      <CardContent className="px-2">
-        <div className="flex flex-col gap-2">
+      <CardContent className="px-2.5">
+        <div className="-mx-6 px-6 flex flex-col gap-2">
           <AuthLoginButton className="w-full">Login</AuthLoginButton>
-          <AuthSignupButton variant="secondary">Get Started</AuthSignupButton>
+          <AuthSignupButton className="w-full" variant="secondary">
+            Get Started
+          </AuthSignupButton>
         </div>
       </CardContent>
     </Card>
