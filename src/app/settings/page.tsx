@@ -1,4 +1,5 @@
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
+import Settings from "@/features/settings/settings";
 import { routerConfig } from "@/router-config";
 
 export default function SettingsPage() {
@@ -17,7 +18,7 @@ export default function SettingsPage() {
       defaultOpen={false}
     >
       <div className="h-full">
-        <h1>SETTINGS</h1>
+        <Settings />
       </div>
     </SidebarLayout>
   );

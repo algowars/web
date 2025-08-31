@@ -69,6 +69,16 @@ export const routerConfig = {
   profileSettings: {
     path: "/settings",
   },
+
+  settingsProfile: {
+    path: "/settings/profile",
+  },
+  settingsAccount: {
+    path: "/settings/account",
+  },
+  settingsPreferences: {
+    path: "/settings/preferences",
+  },
   terms: {
     path: "/terms",
   },
