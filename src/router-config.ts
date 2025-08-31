@@ -66,6 +66,9 @@ export const routerConfig = {
     execute: ({ username }: { username: string }) =>
       `/profile/${encodeURIComponent(username)}`,
   },
+  profileSettings: {
+    path: "/settings",
+  },
   terms: {
     path: "/terms",
   },
