@@ -1,22 +1,15 @@
 "use client";
 
+import React from "react";
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AuthGuard } from "@/features/auth/guards/auth.guard";
 import { routerConfig } from "@/router-config";
-import Link from "next/link";
 import { User, Key, Sliders } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function SettingsLayout({
   children,
@@ -25,79 +18,62 @@ export default function SettingsLayout({
 }) {
   const pathname = usePathname() ?? "";
 
-  const data = {
-    nav: [
-      { label: "Profile", href: routerConfig.settingsProfile.path, icon: User },
-      { label: "Account", href: routerConfig.settingsAccount.path, icon: Key },
-      {
-        label: "Preferences",
-        href: routerConfig.settingsPreferences.path,
-        icon: Sliders,
-      },
-    ],
-  };
+  const nav = [
+    { label: "Profile", href: routerConfig.settingsProfile.path, icon: User },
+    { label: "Account", href: routerConfig.settingsAccount.path, icon: Key },
+    {
+      label: "Preferences",
+      href: routerConfig.settingsPreferences.path,
+      icon: Sliders,
+    },
+  ];
 
   return (
     <AuthGuard>
       <SidebarLayout
         breadcrumbs={[
-          {
-            url: routerConfig.home.path,
-            name: "Home",
-          },
-          {
-            url: routerConfig.profileSettings.path,
-            name: "Settings",
-          },
+          { url: routerConfig.home.path, name: "Home" },
+          { url: routerConfig.profileSettings.path, name: "Settings" },
         ]}
-        defaultOpen={true}
+        defaultOpen
       >
         <div className="flex flex-col gap-4 md:flex-row">
-          <aside className="w-full md:w-56 shrink-0">
-            <Card className="h-full gap-1">
+          {/* nav card (no Sidebar component) */}
+          <aside className="w-full md:w-56 shrink-0 self-start">
+            <Card className="md:sticky md:top-20 gap-0 ">
               <CardHeader className="px-4">
                 <CardTitle>Settings</CardTitle>
               </CardHeader>
-              <SidebarProvider>
-                <Sidebar collapsible="none">
-                  <SidebarContent>
-                    <SidebarGroup>
-                      <SidebarGroupContent>
-                        <SidebarMenu>
-                          {data.nav.map((item) => {
-                            const active =
-                              pathname === item.href ||
-                              pathname.startsWith(item.href + "/");
-                            return (
-                              <SidebarMenuItem key={item.label}>
-                                <SidebarMenuButton asChild>
-                                  <Link
-                                    href={item.href}
-                                    className={`flex items-center gap-2 px-2 py-2 rounded-md w-full text-sm ${
-                                      active
-                                        ? "bg-primary text-primary-foreground font-semibold"
-                                        : "hover:bg-muted/60"
-                                    }`}
-                                  >
-                                    <item.icon className="h-4 w-4" />
-                                    <span className="text-sm">
-                                      {item.label}
-                                    </span>
-                                  </Link>
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                            );
-                          })}
-                        </SidebarMenu>
-                      </SidebarGroupContent>
-                    </SidebarGroup>
-                  </SidebarContent>
-                </Sidebar>
-              </SidebarProvider>
+              <CardContent className="px-2 mt-2">
+                <ul className="flex flex-col gap-1">
+                  {nav.map((item) => {
+                    const active =
+                      pathname === item.href ||
+                      pathname.startsWith(item.href + "/");
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            buttonVariants({
+                              variant: active ? "secondary" : "ghost",
+                            }),
+                            "flex text-start justify-start items-center gap-2 px-3 py-2 rounded-md text-sm w-full"
+                          )}
+                          aria-current={active ? "page" : undefined}
+                        >
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.label}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </CardContent>
             </Card>
           </aside>
 
-          {/* Right: main content card */}
+          {/* main content */}
           <main className="flex-1 min-w-0">{children}</main>
         </div>
       </SidebarLayout>
