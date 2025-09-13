@@ -46,16 +46,16 @@ export default function AppSidebar(
         url: routerConfig.problems.path,
         icon: Puzzle,
       },
-      ...(roles.includes(PUBLIC_ROLES.ADMIN)
-        ? [
-            {
-              title: "Admin",
-              url: routerConfig.admin.path,
-              icon: Shield,
-            },
-          ]
-        : []),
     ],
+    navAdmin: roles.includes(PUBLIC_ROLES.ADMIN)
+      ? [
+          {
+            title: "Dashboard",
+            url: routerConfig.admin.path,
+            icon: Shield,
+          },
+        ]
+      : [],
   };
 
   return (
@@ -79,6 +79,7 @@ export default function AppSidebar(
       </SidebarHeader>
       <SidebarContent>
         <SidebarMainNav items={data.navMain} />
+        <SidebarMainNav items={data.navAdmin} title="Admin" />
       </SidebarContent>
       <SidebarFooter>
         <AuthComponentGuard

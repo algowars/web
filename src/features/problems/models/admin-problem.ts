@@ -1,4 +1,5 @@
 import { ProblemDifficulty } from "./problem-difficulty";
+import { ProblemSetup } from "./problem-setup";
 import { ProblemStatus } from "./problem-status";
 
 export interface AdminProblem {
@@ -11,4 +12,5 @@ export interface AdminProblem {
   status: ProblemStatus;
   createdAt: string;
   updatedAt: string;
+  setups: ProblemSetup[];
 }

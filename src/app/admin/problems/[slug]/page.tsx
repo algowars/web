@@ -1,4 +1,5 @@
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
+import AdminProblem from "@/features/admin/admin-problem/admin-problem";
 import { routerConfig } from "@/router-config";
 
 export default async function AdminProblemPage({
@@ -28,9 +29,11 @@ export default async function AdminProblemPage({
           name: resolvedParams.slug,
         },
       ]}
-      defaultOpen={false}
+      defaultOpen={true}
     >
-      <div className="h-full px-3">{resolvedParams.slug}</div>
+      <div className="h-full px-3">
+        <AdminProblem params={Promise.resolve(resolvedParams)} />
+      </div>
     </SidebarLayout>
   );
 }

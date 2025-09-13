@@ -11,7 +11,7 @@ export const getProblem = ({
   preferredLanguageId?: number;
 }) => {
   return api.get<ProblemSetup>({
-    url: `/api/v1/problem/slug/${slug}`,
+    url: `/api/v1/problem/slug/${encodeURIComponent(slug)}`,
     config: {
       params: {
         preferredLanguageId,

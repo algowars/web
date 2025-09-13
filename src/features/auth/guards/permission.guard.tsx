@@ -10,6 +10,7 @@ import { useUserRoles } from "@/features/auth/roles/user-roles";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/router-config";
 import { useAuthLogin } from "../auth-login/auth-login-button";
+import PageLoader from "@/components/loader/page-loader/page-loader";
 
 export interface PermissionGuardProps {
   authOptions?: WithAuthenticationRequiredOptions;
@@ -23,7 +24,7 @@ export function PermissionGuard({
   authOptions,
   requiredPermissions,
   fallback = <div>Access Denied</div>,
-  loadingFallback = <div>Loading...</div>,
+  loadingFallback = <PageLoader />,
   children,
 }: PermissionGuardProps) {
   const { authStatus } = useAccount();
