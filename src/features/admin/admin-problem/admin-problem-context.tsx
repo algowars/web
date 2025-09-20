@@ -11,6 +11,7 @@ import {
 } from "react";
 import { useAdminProblem } from "../api/get-admin-problem";
 import { useAccount } from "@/features/auth/account.context";
+import { ProblemStatus } from "@/features/problems/models/problem-status";
 
 interface AdminProblemContextState {
   problem: AdminProblem | null;
@@ -41,7 +42,51 @@ export function AdminProblemProvider({
   });
 
   const contextValue: AdminProblemContextState = {
-    problem: data?.problem ?? null,
+    problem: {
+      id: "12303-1233-3213-1231",
+      slug: "buy-sell-stock",
+      title: "Buy Sell Stock",
+      tags: ["test", "test2", "test3"],
+      difficulty: {
+        rating: 1234,
+        name: "Easy",
+      },
+      status: ProblemStatus.ACCEPTED,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      availableLanguages: [
+        {
+          id: 1,
+          name: "JavaScript",
+          versions: [
+            { id: 101, version: "ES6" },
+            { id: 102, version: "ES2020" },
+          ],
+        },
+        {
+          id: 2,
+          name: "Python",
+          versions: [
+            { id: 201, version: "3.8" },
+            { id: 202, version: "3.11" },
+          ],
+        },
+        {
+          id: 3,
+          name: "Java",
+          versions: [
+            { id: 301, version: "8" },
+            { id: 302, version: "17" },
+          ],
+        },
+      ],
+      createdBy: {
+        username: "shadcn123",
+        id: "123-123-123",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    },
     isLoading,
     error: error ? { message: error.message } : null,
     setups: [],

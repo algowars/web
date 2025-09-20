@@ -31,7 +31,7 @@ export default async function AdminProblemPage({
       ]}
       defaultOpen={true}
     >
-      <div className="h-full px-3">
+      <div className="h-full">
         <AdminProblem params={Promise.resolve(resolvedParams)} />
       </div>
     </SidebarLayout>

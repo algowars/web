@@ -1,6 +1,8 @@
+import { Account } from "@/features/auth/models/account.model";
 import { ProblemDifficulty } from "./problem-difficulty";
 import { ProblemSetup } from "./problem-setup";
 import { ProblemStatus } from "./problem-status";
+import { Language } from "./language";
 
 export interface AdminProblem {
   id: string;
@@ -10,7 +12,8 @@ export interface AdminProblem {
   difficulty: ProblemDifficulty;
   tags: string[];
   status: ProblemStatus;
-  createdAt: string;
-  updatedAt: string;
-  setups: ProblemSetup[];
+  createdAt: Date;
+  updatedAt: Date;
+  availableLanguages: Language[];
+  createdBy: Account;
 }
