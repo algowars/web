@@ -9,11 +9,13 @@ export interface AdminProblem {
   title: string;
   slug: string;
   question?: string;
-  difficulty: ProblemDifficulty;
+  difficulty: number;
   tags: string[];
   status: ProblemStatus;
-  createdAt: Date;
-  updatedAt: Date;
+  createdOn: Date;
+  lastModifiedOn: Date | null;
   availableLanguages: Language[];
   createdBy: Account;
+  deletedOn: Date | null;
+  version: number;
 }

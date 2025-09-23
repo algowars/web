@@ -9,13 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Dot, FolderGit2 } from "lucide-react";
+import { Dot, Edit, FolderGit2 } from "lucide-react";
 import { ProblemStatusBadge } from "@/features/problem/problem-status-badge/problem-status-badge";
 import { ProblemDifficultyBadge } from "@/features/problem/problem-difficulty-badge/problem-difficulty-badge";
 import AdminProblemSubmissions from "../admin-problem-submissions/admin-problem-submissions";
 import AdminProblemAcceptanceRate from "../admin-problem-acceptance-rate/admin-problem-acceptrance-rate";
 import AdminProblemLanguages from "../admin-problem-languages/admin-problem-languages";
 import AdminProblemTags from "../admin-problem-tags/admin-problem-tags";
+import { Button } from "@/components/ui/button";
 
 export default function AdminProblemHeader() {
   const context = useAdminProblemContext();
@@ -42,7 +43,9 @@ export default function AdminProblemHeader() {
               </span>
               <Dot />
               <span className="text-muted-foreground">
-                {problem.createdAt.toDateString()}
+                {problem.createdOn instanceof Date
+                  ? problem.createdOn.toDateString()
+                  : null}
               </span>
             </CardDescription>
           </div>
@@ -50,9 +53,12 @@ export default function AdminProblemHeader() {
         <div className="flex flex-col gap-3 md:ml-auto">
           <div className="flex flex-row gap-2">
             <ProblemStatusBadge status={problem.status} />
-            <ProblemDifficultyBadge difficulty={problem.difficulty.rating} />
+            <ProblemDifficultyBadge difficulty={problem.difficulty} />
+            <AdminProblemTags />
+            <Button variant="ghost">
+              <Edit />
+            </Button>
           </div>
-          <AdminProblemTags />
         </div>
       </CardHeader>
       <CardContent>

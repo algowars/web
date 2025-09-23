@@ -38,7 +38,7 @@ export default function ProblemCodeEditorLanguageSelect({
           <SelectContent className="min-w-[6rem]">
             <SelectGroup>
               <SelectLabel className="text-xs py-1 px-2">Languages</SelectLabel>
-              {availableLanguages.map((lang) => (
+              {availableLanguages?.map((lang) => (
                 <SelectItem
                   value={`${lang.id}`}
                   key={lang.id}
