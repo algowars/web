@@ -16,7 +16,7 @@ export default function CreateProblemDetails() {
       <CardHeader>
         <CardTitle>Problem Details</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-5">
         <div className="flex flex-col gap-3">
           <Label htmlFor="title">Title</Label>
           <Input

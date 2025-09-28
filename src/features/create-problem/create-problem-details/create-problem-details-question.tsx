@@ -16,7 +16,7 @@ const initialValue = {
             format: 0,
             mode: "normal",
             style: "",
-            text: "Enter problem description...",
+            text: "",
             type: "text",
             version: 1,
           },
@@ -53,6 +53,7 @@ export default function CreateProblemDetailsQuestion() {
       <Editor
         editorSerializedState={editorState}
         onSerializedChange={handleEditorChange}
+        className="bg-card text-card-foreground"
       />
     </div>
   );
