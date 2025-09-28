@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AdminProblemsTable from "@/features/problems/admin-problems-table/admin-problems-table";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function AdminDashboard() {
   return (
@@ -29,14 +32,24 @@ export default function AdminDashboard() {
             <CardDescription>View, edit, or remove users.</CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Add user management table/component here */}
             <div className="text-muted-foreground">Coming soon</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
-            <CardTitle>Problem Management</CardTitle>
-            <CardDescription>Manage coding problems.</CardDescription>
+          <CardHeader className="flex gap-1">
+            <div>
+              <CardTitle>Problem Management</CardTitle>
+              <CardDescription>Manage coding problems.</CardDescription>
+            </div>
+            <Link
+              href={routerConfig.createProblem.path}
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "w-24 ml-auto"
+              )}
+            >
+              Create
+            </Link>
           </CardHeader>
           <CardContent>
             <AdminProblemsTable />
