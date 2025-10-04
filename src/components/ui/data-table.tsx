@@ -4,10 +4,10 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -16,12 +16,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { useRouter } from "next/navigation";
-import { routerConfig } from "@/router-config";
-import { Button } from "./button";
-import { DataTablePagination } from "./data-table-pagination";
+import React, { Dispatch, SetStateAction } from "react";
 import DataTableToolbar from "./data-table-toolbar";
+import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -29,6 +26,10 @@ interface DataTableProps<TData, TValue> {
   rowCount: number;
   pagination: PaginationState;
   setPagination: Dispatch<SetStateAction<PaginationState>>;
+  columnFilters?: any[];
+  setColumnFilters?: (updater: any) => void;
+  isLoading?: boolean;
+  manual?: boolean;
   getRowUrl?: (row: TData) => string;
 }
 
@@ -36,23 +37,24 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   rowCount,
-  getRowUrl,
   pagination,
   setPagination,
+  columnFilters = [],
+  setColumnFilters,
+  isLoading,
+  manual = false,
+  getRowUrl,
 }: DataTableProps<TData, TValue>) {
-  const router = useRouter();
-
   const table = useReactTable({
     data,
     columns,
-    enableRowSelection: true,
-    state: {
-      pagination,
-    },
-    rowCount: rowCount,
+    state: { pagination, columnFilters },
     onPaginationChange: setPagination,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
+    getFilteredRowModel: getFilteredRowModel(),
+    manualPagination: manual,
+    rowCount: manual ? rowCount : undefined,
   });
 
   return (
@@ -60,40 +62,31 @@ export function DataTable<TData, TValue>({
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+            {table.getHeaderGroups().map((hg) => (
+              <TableRow key={hg.id}>
+                {hg.headers.map((h) => (
+                  <TableHead key={h.id} colSpan={h.colSpan}>
+                    {h.isPlaceholder
+                      ? null
+                      : flexRender(h.column.columnDef.header, h.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => {
-                    if (getRowUrl) {
-                      const url = getRowUrl(row.original);
-                      void router.push(url);
-                    } else {
-                      const slug = (row.original as { slug: string }).slug;
-                      void router.push(routerConfig.problem.execute({ slug }));
-                    }
-                  }}
-                  className="hover:cursor-pointer"
+            {!isLoading && table.getRowModel().rows.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
                 >
+                  No results.
+                </TableCell>
+              </TableRow>
+            ) : (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} className="hover:cursor-pointer">
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -104,22 +97,11 @@ export function DataTable<TData, TValue>({
                   ))}
                 </TableRow>
               ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <DataTablePagination table={table} />
-      </div>
+      <DataTablePagination table={table} />
     </div>
   );
 }

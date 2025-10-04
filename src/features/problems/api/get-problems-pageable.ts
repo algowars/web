@@ -22,7 +22,7 @@ export const getProblemsPageable = ({
       params: {
         page: pagination.pageIndex + 1,
         size: pagination.pageSize,
-        timestamp: timestamp ? timestamp.toISOString() : undefined,
+        timestamp: timestamp?.toISOString(),
       },
     },
   });
@@ -31,13 +31,12 @@ export const getProblemsPageable = ({
 export const getProblemsPageableQueryOptions = (
   pagination: PaginationState,
   timestamp?: Date
-) => {
-  return queryOptions({
+) =>
+  queryOptions({
     queryKey: ["problems", pagination, timestamp],
     queryFn: () => getProblemsPageable({ pagination, timestamp }),
     placeholderData: keepPreviousData,
   });
-};
 
 type UseProblemsOptions = {
   pagination: PaginationState;
@@ -49,9 +48,8 @@ export const useProblems = ({
   pagination,
   timestamp,
   queryConfig = {},
-}: UseProblemsOptions) => {
-  return useQuery({
+}: UseProblemsOptions) =>
+  useQuery({
     ...getProblemsPageableQueryOptions(pagination, timestamp),
     ...queryConfig,
   });
-};

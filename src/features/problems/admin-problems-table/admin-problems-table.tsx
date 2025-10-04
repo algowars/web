@@ -6,11 +6,18 @@ import { useAdminProblems } from "../api/get-admin-problems";
 import { adminColumns } from "./admin-problems-column";
 import { useAuth0 } from "@auth0/auth0-react";
 import { routerConfig } from "@/router-config";
+import { ColumnFiltersState, PaginationState } from "@tanstack/react-table";
+import { problemColumnsV2 } from "../problems-table-v2/problems-columns-v2";
 
 export default function AdminProblemsTable() {
-  const [timestamp] = useState(new Date());
   const { getAccessTokenSilently } = useAuth0();
+  const [timestamp] = useState(new Date());
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 25,
+  });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   React.useEffect(() => {
     async function fetchToken() {
@@ -24,9 +31,8 @@ export default function AdminProblemsTable() {
     fetchToken();
   }, [getAccessTokenSilently]);
 
-  const { data } = useAdminProblems({
-    page: 1,
-    size: 25,
+  const { data, isFetching } = useAdminProblems({
+    pagination,
     timestamp,
     accessToken: accessToken ?? "",
   });
@@ -34,8 +40,14 @@ export default function AdminProblemsTable() {
   return (
     <DataTable
       data={data?.results ?? []}
-      pagination={{ pageIndex: data?.page ?? 1, pageSize: data?.size ?? 25 }}
+      rowCount={data?.total ?? 0}
+      pagination={pagination}
+      setPagination={setPagination}
+      columnFilters={columnFilters}
+      setColumnFilters={setColumnFilters}
       columns={adminColumns}
+      isLoading={isFetching}
+      manual
       getRowUrl={(row) => routerConfig.adminProblem.execute({ slug: row.slug })}
     />
   );

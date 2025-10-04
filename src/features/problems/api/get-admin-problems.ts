@@ -1,18 +1,21 @@
 import { PageResult } from "@/common/pagination/page-result";
 import { AdminProblem } from "../models/admin-problem";
 import { api } from "@/lib/api-client";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  queryOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 import { access } from "fs";
+import { PaginationState } from "@tanstack/react-table";
 
 export const getAdminProblems = ({
-  page,
-  size,
+  pagination,
   timestamp,
   accessToken,
 }: {
-  page?: number;
-  size?: number;
+  pagination: PaginationState;
   timestamp?: Date;
   accessToken: string;
 }) => {
@@ -20,9 +23,9 @@ export const getAdminProblems = ({
     url: "/api/v1/problem/admin",
     config: {
       params: {
-        page,
-        size,
-        timestamp: timestamp ? timestamp.toISOString() : undefined,
+        page: pagination.pageIndex + 1,
+        size: pagination.pageSize,
+        timestamp: timestamp?.toISOString(),
       },
     },
     accessToken,
@@ -31,33 +34,31 @@ export const getAdminProblems = ({
 
 export const getAdminProblemsQueryOptions = (
   accessToken: string,
-  page?: number,
-  size?: number,
+  pagination: PaginationState,
   timestamp?: Date
 ) => {
   return queryOptions({
-    queryKey: ["problems", page, size, timestamp, accessToken],
-    queryFn: () => getAdminProblems({ page, size, timestamp, accessToken }),
+    queryKey: ["problems", pagination, timestamp, accessToken],
+    queryFn: () => getAdminProblems({ pagination, timestamp, accessToken }),
+    placeholderData: keepPreviousData,
   });
 };
 
 type UseProblemsOptions = {
-  page?: number;
-  size?: number;
+  pagination: PaginationState;
   timestamp?: Date;
   accessToken: string;
   queryConfig?: QueryConfig<typeof getAdminProblemsQueryOptions>;
 };
 
 export const useAdminProblems = ({
-  page,
-  size,
+  pagination,
   timestamp,
   accessToken,
   queryConfig = {},
 }: UseProblemsOptions) => {
   return useQuery({
-    ...getAdminProblemsQueryOptions(accessToken, page, size, timestamp),
+    ...getAdminProblemsQueryOptions(accessToken, pagination, timestamp),
     ...queryConfig,
   });
 };
