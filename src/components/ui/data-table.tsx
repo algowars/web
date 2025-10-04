@@ -17,8 +17,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React, { Dispatch, SetStateAction } from "react";
-import DataTableToolbar from "./data-table-toolbar";
 import { DataTablePagination } from "./data-table-pagination";
+import { Spinner } from "@/components/ui/spinner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
   setPagination,
   columnFilters = [],
   setColumnFilters,
-  isLoading,
+  isLoading = false,
   manual = false,
   getRowUrl,
 }: DataTableProps<TData, TValue>) {
@@ -57,10 +57,12 @@ export function DataTable<TData, TValue>({
     rowCount: manual ? rowCount : undefined,
   });
 
+  const noResults = !isLoading && table.getRowModel().rows.length === 0;
+
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
-        <Table>
+        <Table aria-busy={isLoading} aria-live="polite">
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
               <TableRow key={hg.id}>
@@ -74,8 +76,20 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {!isLoading && table.getRowModel().rows.length === 0 ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-32">
+                  <div className="flex items-center justify-center gap-3">
+                    <Spinner className="size-5" />
+                    <span className="text-sm text-muted-foreground">
+                      Loading…
+                    </span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : noResults ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
@@ -101,6 +115,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+
       <DataTablePagination table={table} />
     </div>
   );
