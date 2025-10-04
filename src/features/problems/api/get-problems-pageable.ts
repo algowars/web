@@ -1,24 +1,27 @@
 import { api } from "@/lib/api-client";
 import { Problem } from "../models/problem";
 import { PageResult } from "@/common/pagination/page-result";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  queryOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
+import { PaginationState } from "@tanstack/react-table";
 
 export const getProblemsPageable = ({
-  page,
-  size,
+  pagination,
   timestamp,
 }: {
-  page?: number;
-  size?: number;
+  pagination: PaginationState;
   timestamp?: Date;
 }) => {
   return api.get<PageResult<Problem>>({
     url: "/api/v1/problem",
     config: {
       params: {
-        page,
-        size,
+        page: pagination.pageIndex + 1,
+        size: pagination.pageSize,
         timestamp: timestamp ? timestamp.toISOString() : undefined,
       },
     },
@@ -26,31 +29,29 @@ export const getProblemsPageable = ({
 };
 
 export const getProblemsPageableQueryOptions = (
-  page?: number,
-  size?: number,
+  pagination: PaginationState,
   timestamp?: Date
 ) => {
   return queryOptions({
-    queryKey: ["problems", page, size, timestamp],
-    queryFn: () => getProblemsPageable({ page, size, timestamp }),
+    queryKey: ["problems", pagination, timestamp],
+    queryFn: () => getProblemsPageable({ pagination, timestamp }),
+    placeholderData: keepPreviousData,
   });
 };
 
 type UseProblemsOptions = {
-  page?: number;
-  size?: number;
+  pagination: PaginationState;
   timestamp?: Date;
   queryConfig?: QueryConfig<typeof getProblemsPageableQueryOptions>;
 };
 
 export const useProblems = ({
-  page,
-  size,
+  pagination,
   timestamp,
   queryConfig = {},
 }: UseProblemsOptions) => {
   return useQuery({
-    ...getProblemsPageableQueryOptions(page, size, timestamp),
+    ...getProblemsPageableQueryOptions(pagination, timestamp),
     ...queryConfig,
   });
 };

@@ -4,12 +4,16 @@ import React, { useState } from "react";
 import { columns } from "./problems-columns";
 import { DataTable } from "@/components/ui/data-table";
 import { useProblems } from "../api/get-problems-pageable";
+import { PaginationState } from "@tanstack/react-table";
 
 export default function ProblemsDataTable() {
   const [timestamp] = useState(new Date());
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 25,
+  });
   const { data } = useProblems({
-    page: 1,
-    size: 25,
+    pagination,
     timestamp,
   });
 

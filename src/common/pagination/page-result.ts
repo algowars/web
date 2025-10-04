@@ -4,4 +4,5 @@ export interface PageResult<T> {
   size: number;
   totalPages: number;
   hasMore: boolean;
+  total: number;
 }
