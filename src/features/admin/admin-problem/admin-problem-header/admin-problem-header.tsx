@@ -36,12 +36,9 @@ export default function AdminProblemHeader() {
               {problem.title}
             </CardTitle>
             <CardDescription className="flex items-center flex-wrap gap-2">
-              <span className="text-muted-foreground">/{problem.slug}</span>
-              <span className="text-muted-foreground">|</span>
               <span className="text-muted-foreground">
                 Created by <b>{problem.createdBy.username}</b>
               </span>
-              <Dot />
               <span className="text-muted-foreground">
                 {problem.createdOn instanceof Date
                   ? problem.createdOn.toDateString()

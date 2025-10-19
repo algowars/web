@@ -19,6 +19,7 @@ import {
 import React, { Dispatch, SetStateAction } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { Spinner } from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,6 +46,8 @@ export function DataTable<TData, TValue>({
   manual = false,
   getRowUrl,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
+
   const table = useReactTable({
     data,
     columns,
@@ -99,18 +102,39 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             ) : (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="hover:cursor-pointer">
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => {
+                const handleOpen = () => {
+                  if (!getRowUrl) return;
+                  const url = getRowUrl(row.original as TData);
+                  if (url) router.push(url);
+                };
+                const handleKey = (e: React.KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleOpen();
+                  }
+                };
+
+                return (
+                  <TableRow
+                    key={row.id}
+                    className={getRowUrl ? "hover:cursor-pointer" : undefined}
+                    role={getRowUrl ? "button" : undefined}
+                    tabIndex={getRowUrl ? 0 : undefined}
+                    onClick={handleOpen}
+                    onKeyDown={handleKey}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>

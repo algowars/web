@@ -36,7 +36,6 @@ export default function CreateProblemTestSuites() {
     languageId: number;
     versionId: number;
   }) => {
-    // Mock language lookup - replace with your actual language data
     const languages = [
       {
         id: 1,

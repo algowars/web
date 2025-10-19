@@ -1,6 +1,14 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { useAvailableLanguages } from "../problems/api/get-available-languages";
+import { useAuth0 } from "@auth0/auth0-react";
 
 type CreateProblemState = {
   title: string;
@@ -29,10 +37,24 @@ const CreateProblemContext = createContext<
 export function CreateProblemProvider({ children }: { children: ReactNode }) {
   const [createProblem, setCreateProblem] =
     useState<CreateProblemState>(defaultState);
+  const [accessToken, setAccessToken] = useState<string>("");
+  const { getAccessTokenSilently } = useAuth0();
+
+  const availableLanguages = useAvailableLanguages({ accessToken });
 
   const updateCreateProblem = (fields: Partial<CreateProblemState>) => {
     setCreateProblem((prev) => ({ ...prev, ...fields }));
   };
+
+  useEffect(() => {
+    (async () => {
+      const accessToken = await getAccessTokenSilently();
+
+      if (accessToken) {
+        setAccessToken(accessToken);
+      }
+    })();
+  }, [accessToken, getAccessTokenSilently]);
 
   return (
     <CreateProblemContext.Provider
