@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import dynamic from "next/dynamic";
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Toaster } from "sonner";
@@ -22,6 +22,15 @@ type AppProviderProps = {
     error?: Error;
   };
 };
+
+// Load React Query Devtools only on the client to avoid SSR localStorage access
+const ReactQueryDevtools = dynamic(
+  () =>
+    import("@tanstack/react-query-devtools").then(
+      (mod) => mod.ReactQueryDevtools
+    ),
+  { ssr: false }
+);
 
 export const AppProvider = ({
   children,
