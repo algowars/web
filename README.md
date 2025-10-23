@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# Algowars SSR
 
-First, run the development server:
+Online competitive coding platform with server-side rendered Next.js, Auth0 authentication, rich code editor, and problem management.
+
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs) ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=222) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript) ![Vitest](https://img.shields.io/badge/Vitest-3-6E9F18?logo=vitest)
+
+</div>
+
+## Overview
+
+Algowars SSR is a Next.js App Router application for practicing and competing on algorithmic challenges. It includes authentication (Auth0), an admin interface for creating problems and test suites, rich text/code editors, user profiles, and a problems catalog — all rendered with SSR for performance and SEO.
+
+Key routes:
+- `/` Home (Landing or Dashboard based on auth state)
+- `/problems` Problems list and filtering
+- `/problems/[slug]` Problem details and attempt flow
+- `/admin` Admin dashboard
+- `/admin/problems/create` Create problems and test suites
+- `/profile/[username]` Public profile
+- `/settings/*` Authenticated user settings
+- `/editor-x` Rich editor demo
+
+## Tech Stack
+- Next.js 15 (App Router) + React 19
+- TypeScript
+- Auth0 (authentication/authorization)
+- Lexical + CodeMirror (rich editor + code highlighting)
+- Tailwind CSS
+- TanStack Query / Table
+- Vitest + Testing Library (unit/integration)
+- Playwright (e2e)
+
+## Quick Start
+
+1) Install dependencies (pnpm recommended):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2) Configure environment variables:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env
+# then fill in values for your Auth0 tenant and API server
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3) Run the development server:
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open http://localhost:3000 to view the app.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create a `.env` file based on `.env.example`.
 
-## Deploy on Vercel
+Public (exposed to browser via NEXT_PUBLIC_):
+- `NEXT_PUBLIC_AUTH0_DOMAIN`
+- `NEXT_PUBLIC_AUTH0_CLIENT_ID`
+- `NEXT_PUBLIC_AUTH0_CALLBACK_URL`
+- `NEXT_PUBLIC_AUTH0_AUDIENCE`
+- `NEXT_PUBLIC_API_SERVER_URL`
+- `NEXT_PUBLIC_AUTH0_NAMESPACE`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Server-side only:
+- `AUTH0_DOMAIN`
+- `AUTH0_CLIENT_ID`
+- `AUTH0_CLIENT_SECRET`
+- `AUTH0_SECRET`
+- `AUTH0_AUDIENCE`
+- `API_SERVER_URL`
+- `AUTH0_NAMESPACE`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Note: Do not commit your real `.env`. This repository’s `.gitignore` already excludes `.env*`.
+
+## NPM Scripts
+
+- `pnpm dev` — Start dev server (Turbopack)
+- `pnpm build` — Production build
+- `pnpm start` — Start production server
+- `pnpm lint` — Run ESLint
+- `pnpm test` — Run unit/integration tests (Vitest)
+- `pnpm test:watch` — Watch mode
+- `pnpm test:coverage` — Coverage
+- `pnpm test:e2e` — Run Playwright e2e tests
+- `pnpm test:e2e:ui` — Playwright UI mode
+
+For Playwright, ensure browsers are installed once:
+
+```bash
+npx playwright install
+```
+
+## Project Structure
+
+```
+src/
+  app/                 # App Router pages/layouts (SSR)
+  components/          # Reusable UI components and editor blocks
+  features/            # Feature-oriented modules (auth, problems, profile, admin, etc.)
+  lib/                 # Utilities and shared libs
+  hooks/               # Custom React hooks
+  common/              # Common types and helpers
+```
+
+## Development Notes
+
+- Auth: App uses Auth0; configure callback URL and allowed origins in the Auth0 dashboard to match your `.env`.
+- API: Set `API_SERVER_URL` to your backend (default `http://localhost:5035`).
+- Styling: TailwindCSS with PostCSS; adjust global styles in `src/app/globals.css`.
+
+## Deployment
+
+This app is optimized for deployment on Vercel. See Next.js docs for SSR deployment: https://nextjs.org/docs/app/building-your-application/deploying
+
+## Contributing
+
+Issues and PRs are welcome. If contributing:
+- Create a feature branch
+- Add/adjust tests when applicable
+- Follow existing code style and structure
+
+## License
+
+Proprietary unless stated otherwise by the repository owner.
