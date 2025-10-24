@@ -4,19 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { AppProvider } from "./provider";
 
-// Ensure server runtime does not expose a faulty `localStorage`
-if (
-  typeof window === "undefined" &&
-  typeof (globalThis as any).localStorage !== "undefined"
-) {
-  try {
-    // Remove Node's experimental localStorage to prevent SSR breakage
-    delete (globalThis as any).localStorage;
-  } catch {
-    (globalThis as any).localStorage = undefined;
-  }
-}
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

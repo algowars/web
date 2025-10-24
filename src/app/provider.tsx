@@ -22,9 +22,6 @@ type AppProviderProps = {
   };
 };
 
-// Lazily load React Query Devtools after mount to avoid SSR importing
-let DevtoolsComponent: React.ComponentType | null = null;
-
 export const AppProvider = ({
   children,
   initialAccount,
@@ -37,26 +34,6 @@ export const AppProvider = ({
       })
   );
 
-  // Ensure devtools never attempt to load during SSR
-  const [isClient, setIsClient] = React.useState(false);
-  const [Devtools, setDevtools] = React.useState<React.ComponentType | null>(
-    null
-  );
-  React.useEffect(() => {
-    setIsClient(true);
-    if (process.env.NODE_ENV === "development") {
-      // Dynamically import on the client after mount only
-      import("@tanstack/react-query-devtools")
-        .then((mod) => {
-          DevtoolsComponent = mod.ReactQueryDevtools;
-          setDevtools(() => DevtoolsComponent);
-        })
-        .catch(() => {
-          // no-op if devtools fail to load
-        });
-    }
-  }, []);
-
   return (
     <ErrorBoundary FallbackComponent={MainErrorFallback}>
       <QueryClientProvider client={queryClient}>
@@ -64,9 +41,6 @@ export const AppProvider = ({
           initialAccount={initialAccount}
           initialAuth0State={initialAuth0State}
         >
-          {process.env.NODE_ENV === "development" && isClient && Devtools && (
-            <Devtools />
-          )}
           <Toaster position="top-right" />
           {children}
         </AuthProvider>
