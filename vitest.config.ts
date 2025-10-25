@@ -10,8 +10,6 @@ export default defineConfig({
     },
   },
   test: {
-    // Colocated unit tests: put Component.test.tsx beside the component.
-    // Integration tests: place in tests/integration/
     include: [
       "src/**/*.test.{ts,tsx}",
       "src/**/*.spec.{ts,tsx}",
@@ -22,7 +20,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     globals: true,
-    css: true, // allow importing component CSS/Tailwind layers
+    css: true,
     coverage: {
       reporter: ["text", "html", "lcov"],
       reportsDirectory: "./coverage",
