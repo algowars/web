@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -9,11 +9,9 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import AuthLoginButton, {
-  useAuthLogin,
-} from "@/features/auth/auth-login/auth-login-button"; // existing hook in repo
-import Link from "next/link";
 import AuthSignupButton from "@/features/auth/auth-signup/auth-signup-button";
+import AuthLoginButton from "@/features/auth/auth-login/auth-login-button";
+import { cn } from "@/lib/utils";
 
 export function UnauthenticatedAccount({
   message = "Join the community to interact with this content",
@@ -22,7 +20,6 @@ export function UnauthenticatedAccount({
   message?: string;
   ctaText?: string;
 }) {
-  const login = useAuthLogin();
   return (
     <Card className="overflow-visible -mx-2">
       <CardHeader className="px-2.5">
@@ -31,8 +28,14 @@ export function UnauthenticatedAccount({
       </CardHeader>
       <CardContent className="px-2.5">
         <div className="-mx-6 px-6 flex flex-col gap-2">
-          <AuthLoginButton className="w-full">Login</AuthLoginButton>
-          <AuthSignupButton className="w-full" variant="secondary">
+          <AuthLoginButton
+            className={cn(buttonVariants({ variant: "default" }), "w-full")}
+          >
+            Login
+          </AuthLoginButton>
+          <AuthSignupButton
+            className={cn(buttonVariants({ variant: "default" }), "w-full")}
+          >
             Get Started
           </AuthSignupButton>
         </div>

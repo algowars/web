@@ -7,8 +7,8 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
-import { access } from "fs";
 import { PaginationState } from "@tanstack/react-table";
+import { createEmptyPageResult } from "@/common/pagination/empty-page-result";
 
 export const getAdminProblems = ({
   pagination,
@@ -19,6 +19,10 @@ export const getAdminProblems = ({
   timestamp?: Date;
   accessToken: string;
 }) => {
+  if (!accessToken) {
+    return createEmptyPageResult();
+  }
+
   return api.get<PageResult<AdminProblem>>({
     url: "/api/v1/problem/admin",
     config: {

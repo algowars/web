@@ -13,6 +13,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import AuthLogout from "@/features/auth/auth-logout/auth-logout";
+import { cn } from "@/lib/utils";
 
 export function PartiallyAuthenticatedAccount({
   message = "Please finish setting up your account to continue.",
@@ -21,9 +22,8 @@ export function PartiallyAuthenticatedAccount({
   message?: string;
   ctaText?: string;
 }) {
-  const router = useRouter();
   return (
-    <Card className="py-2 overflow-visible -mx-4">
+    <Card className="py-2 overflow-visible -mx-2">
       <CardHeader className="px-2">
         <CardTitle>Finish account setup</CardTitle>
         <CardDescription>{message}</CardDescription>
@@ -37,7 +37,9 @@ export function PartiallyAuthenticatedAccount({
           >
             {ctaText}
           </Link>
-          <AuthLogout variant="secondary">Logout</AuthLogout>
+          <AuthLogout className={buttonVariants({ variant: "secondary" })}>
+            Logout
+          </AuthLogout>
         </div>
       </CardContent>
     </Card>

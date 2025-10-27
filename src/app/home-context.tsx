@@ -7,9 +7,9 @@ import Landing from "@/features/landing/landing";
 import React from "react";
 
 export default function HomeContext() {
-  const { authStatus, isLoading } = useAccount();
+  const { authStatus, isPending } = useAccount();
 
-  if (isLoading) {
+  if (isPending) {
     return <PageLoader message="Loading..." />;
   }
 

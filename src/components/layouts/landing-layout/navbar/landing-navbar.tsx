@@ -6,7 +6,7 @@ import { routerConfig } from "@/router-config";
 import Link from "next/link";
 import React from "react";
 import { useAccount, AuthStatus } from "@/features/auth/account.context";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
 import {
   DropdownMenu,
@@ -19,9 +19,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AuthLoginButton from "@/features/auth/auth-login/auth-login-button";
 import AuthSignupButton from "@/features/auth/auth-signup/auth-signup-button";
+import { cn } from "@/lib/utils";
+import AuthLogout from "@/features/auth/auth-logout/auth-logout";
 
 function AuthButtons() {
-  const { authStatus, account, logout } = useAccount();
+  const { authStatus, account } = useAccount();
 
   if (authStatus === AuthStatus.UNAUTHENTICATED) {
     return (
@@ -32,7 +34,12 @@ function AuthButtons() {
         >
           Sign In
         </AuthLoginButton>
-        <AuthSignupButton variant="secondary" className="h-8 text-sm px-3">
+        <AuthSignupButton
+          className={cn(
+            buttonVariants({ variant: "secondary" }),
+            "h-8 text-sm px-3"
+          )}
+        >
           Sign Up
         </AuthSignupButton>
       </div>
@@ -63,16 +70,25 @@ function AuthButtons() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/profile" className="flex items-center">
-              <User className="mr-2 h-4 w-4" />
-              Profile
-            </Link>
-          </DropdownMenuItem>
+          {account?.username ? (
+            <DropdownMenuItem asChild>
+              <Link
+                href={routerConfig.profile.execute({
+                  username: account.username,
+                })}
+                className="flex items-center"
+              >
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </Link>
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={logout} className="text-destructive">
-            <LogOut className="mr-2 h-4 w-4" />
-            Log out
+          <DropdownMenuItem asChild className="text-destructive">
+            <AuthLogout>
+              <LogOut className="mr-2 h-4 w-4" />
+              Log out
+            </AuthLogout>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

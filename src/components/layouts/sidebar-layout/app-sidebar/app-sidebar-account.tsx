@@ -19,14 +19,13 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useAccount } from "@/features/auth/account.context";
-import { useAuthLogout } from "@/features/auth/auth-logout/auth-logout";
 import Link from "next/link";
 import { routerConfig } from "@/router-config";
+import AuthLogout from "@/features/auth/auth-logout/auth-logout";
 
 export function AppSidebarAccount() {
   const { account } = useAccount();
   const { isMobile } = useSidebar();
-  const { logout } = useAuthLogout();
 
   return (
     <SidebarMenu>
@@ -93,9 +92,11 @@ export function AppSidebarAccount() {
               </DropdownMenuGroup>
             ) : null}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => logout()}>
-              <LogOut />
-              Log out
+            <DropdownMenuItem asChild>
+              <AuthLogout>
+                <LogOut />
+                Log out
+              </AuthLogout>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

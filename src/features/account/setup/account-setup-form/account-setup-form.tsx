@@ -31,13 +31,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 
 export default function AccountSetupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
-  const { auth0, getAccessTokenSilently, refreshAccount } = useAccount();
+  const { auth0, refreshAccount } = useAccount();
 
   const signupForm = useForm<z.infer<typeof createAccountSchema>>({
     resolver: zodResolver(createAccountSchema),
@@ -67,7 +68,7 @@ export default function AccountSetupForm({
 
   async function onSubmit(values: z.infer<typeof createAccountSchema>) {
     try {
-      const accessToken = await getAccessTokenSilently();
+      const accessToken = await getAccessToken();
 
       createAccountMutation.mutate({
         data: values,

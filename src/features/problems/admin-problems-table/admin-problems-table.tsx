@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { useAdminProblems } from "../api/get-admin-problems";
 import { adminColumns } from "./admin-problems-column";
-import { useAuth0 } from "@auth0/auth0-react";
 import { routerConfig } from "@/router-config";
 import { ColumnFiltersState, PaginationState } from "@tanstack/react-table";
 import { problemColumnsV2 } from "../problems-table-v2/problems-columns-v2";
+import { getAccessToken } from "@auth0/nextjs-auth0";
+import { useAccount } from "@/features/auth/account.context";
 
 export default function AdminProblemsTable() {
-  const { getAccessTokenSilently } = useAuth0();
   const [timestamp] = useState(new Date());
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -18,18 +18,21 @@ export default function AdminProblemsTable() {
     pageSize: 25,
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { isAuthenticated } = useAccount();
 
   React.useEffect(() => {
     async function fetchToken() {
       try {
-        const token = await getAccessTokenSilently();
-        setAccessToken(token);
+        if (isAuthenticated) {
+          const token = await getAccessToken();
+          setAccessToken(token);
+        }
       } catch {
         setAccessToken(null);
       }
     }
     fetchToken();
-  }, [getAccessTokenSilently]);
+  }, [getAccessToken, isAuthenticated]);
 
   const { data, isFetching } = useAdminProblems({
     pagination,

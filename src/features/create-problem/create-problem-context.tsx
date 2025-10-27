@@ -8,7 +8,7 @@ import React, {
   useEffect,
 } from "react";
 import { useAvailableLanguages } from "../problems/api/get-available-languages";
-import { useAuth0 } from "@auth0/auth0-react";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 
 type CreateProblemState = {
   title: string;
@@ -38,7 +38,6 @@ export function CreateProblemProvider({ children }: { children: ReactNode }) {
   const [createProblem, setCreateProblem] =
     useState<CreateProblemState>(defaultState);
   const [accessToken, setAccessToken] = useState<string>("");
-  const { getAccessTokenSilently } = useAuth0();
 
   const availableLanguages = useAvailableLanguages({ accessToken });
 
@@ -48,13 +47,13 @@ export function CreateProblemProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     (async () => {
-      const accessToken = await getAccessTokenSilently();
+      const accessToken = await getAccessToken();
 
       if (accessToken) {
         setAccessToken(accessToken);
       }
     })();
-  }, [accessToken, getAccessTokenSilently]);
+  }, [accessToken, getAccessToken]);
 
   return (
     <CreateProblemContext.Provider

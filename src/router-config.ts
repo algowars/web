@@ -10,6 +10,15 @@ export const routerConfig = {
   home: {
     path: "/",
   },
+  authSignUp: {
+    path: "/auth/login?screen_hint=signup",
+  },
+  authLogIn: {
+    path: "/auth/login",
+  },
+  authLogOut: {
+    path: "/auth/logout",
+  },
   admin: {
     path: "/admin",
   },

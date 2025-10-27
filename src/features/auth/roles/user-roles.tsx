@@ -1,12 +1,11 @@
 "use client";
 
 import { env } from "@/env";
-import { useAuth0 } from "@auth0/auth0-react";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 
 export function useUserRoles() {
-  const { getAccessTokenSilently } = useAuth0();
   const [roles, setRoles] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -14,9 +13,9 @@ export function useUserRoles() {
     async function fetchRoles() {
       setIsLoading(true);
       try {
-        const token = await getAccessTokenSilently();
+        const token = await getAccessToken();
         const decoded: any = jwtDecode(token);
-        const claim = `${env.NEXT_PUBLIC_AUTH0_NAMESPACE}/roles`;
+        const claim = `${env.NEXT_PUBLIC_AUTH_NAMESPACE}/roles`;
         setRoles(decoded[claim] || []);
       } catch {
         setRoles([]);
@@ -25,7 +24,7 @@ export function useUserRoles() {
       }
     }
     fetchRoles();
-  }, [getAccessTokenSilently]);
+  }, [getAccessToken, jwtDecode]);
 
   return { roles, isLoading };
 }

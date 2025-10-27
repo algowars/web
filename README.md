@@ -1,8 +1,6 @@
 <div align="center">
 
-# Algowars SSR
-
-Online competitive coding platform with server-side rendered Next.js, Auth0 authentication, rich code editor, and problem management.
+# Algowars Client
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs) ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=222) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript) ![Vitest](https://img.shields.io/badge/Vitest-3-6E9F18?logo=vitest)
 
@@ -10,23 +8,20 @@ Online competitive coding platform with server-side rendered Next.js, Auth0 auth
 
 ## Overview
 
-Algowars SSR is a Next.js App Router application for practicing and competing on algorithmic challenges. It includes authentication (Auth0), an admin interface for creating problems and test suites, rich text/code editors, user profiles, and a problems catalog — all rendered with SSR for performance and SEO.
+Algowars SSR is a Next.js application for practicing and competing on algorithmic challenges. It includes authentication (Auth0), an admin interface for creating problems and test suites, rich text/code editors, user profiles, and a problems catalog — all rendered with SSR for performance and SEO.Key routes:
 
-Key routes:
 - `/` Home (Landing or Dashboard based on auth state)
-- `/problems` Problems list and filtering
-- `/problems/[slug]` Problem details and attempt flow
 - `/admin` Admin dashboard
-- `/admin/problems/create` Create problems and test suites
+- `/problems` Problems list and filtering
 - `/profile/[username]` Public profile
 - `/settings/*` Authenticated user settings
-- `/editor-x` Rich editor demo
 
 ## Tech Stack
+
 - Next.js 15 (App Router) + React 19
 - TypeScript
 - Auth0 (authentication/authorization)
-- Lexical + CodeMirror (rich editor + code highlighting)
+- CodeMirror (rich editor + code highlighting)
 - Tailwind CSS
 - TanStack Query / Table
 - Vitest + Testing Library (unit/integration)
@@ -34,20 +29,19 @@ Key routes:
 
 ## Quick Start
 
-1) Install dependencies (pnpm recommended):
+1. Install dependencies (pnpm recommended):
 
 ```bash
 pnpm install
 ```
 
-2) Configure environment variables:
+2. Configure environment variables:
 
 ```bash
-cp .env.example .env
-# then fill in values for your Auth0 tenant and API server
+cp .env.example .env.local
 ```
 
-3) Run the development server:
+3. Run the development server:
 
 ```bash
 pnpm dev
@@ -59,7 +53,8 @@ Open http://localhost:3000 to view the app.
 
 Create a `.env` file based on `.env.example`.
 
-Public (exposed to browser via NEXT_PUBLIC_):
+Public (exposed to browser via NEXT*PUBLIC*):
+
 - `NEXT_PUBLIC_AUTH0_DOMAIN`
 - `NEXT_PUBLIC_AUTH0_CLIENT_ID`
 - `NEXT_PUBLIC_AUTH0_CALLBACK_URL`
@@ -68,17 +63,14 @@ Public (exposed to browser via NEXT_PUBLIC_):
 - `NEXT_PUBLIC_AUTH0_NAMESPACE`
 
 Server-side only:
+
+- `AUTH0_SECRET`
+- `APP_BASE_URL`
 - `AUTH0_DOMAIN`
 - `AUTH0_CLIENT_ID`
 - `AUTH0_CLIENT_SECRET`
-- `AUTH0_SECRET`
-- `AUTH0_AUDIENCE`
-- `API_SERVER_URL`
-- `AUTH0_NAMESPACE`
 
-Note: Do not commit your real `.env`. This repository’s `.gitignore` already excludes `.env*`.
-
-## NPM Scripts
+## Scripts
 
 - `pnpm dev` — Start dev server (Turbopack)
 - `pnpm build` — Production build
@@ -89,12 +81,6 @@ Note: Do not commit your real `.env`. This repository’s `.gitignore` already e
 - `pnpm test:coverage` — Coverage
 - `pnpm test:e2e` — Run Playwright e2e tests
 - `pnpm test:e2e:ui` — Playwright UI mode
-
-For Playwright, ensure browsers are installed once:
-
-```bash
-npx playwright install
-```
 
 ## Project Structure
 
@@ -121,6 +107,7 @@ This app is optimized for deployment on Vercel. See Next.js docs for SSR deploym
 ## Contributing
 
 Issues and PRs are welcome. If contributing:
+
 - Create a feature branch
 - Add/adjust tests when applicable
 - Follow existing code style and structure

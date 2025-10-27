@@ -1,5 +1,7 @@
+import { buttonVariants } from "@/components/ui/button";
 import AuthLoginButton from "@/features/auth/auth-login/auth-login-button";
 import AuthSignupButton from "@/features/auth/auth-signup/auth-signup-button";
+import { cn } from "@/lib/utils";
 import React from "react";
 
 export default function Hero() {
@@ -16,12 +18,16 @@ export default function Hero() {
         </p>
         <ul className="flex items-center gap-3">
           <li>
-            <AuthLoginButton className="w-48" variant="default">
+            <AuthLoginButton
+              className={cn(buttonVariants({ variant: "default" }), "w-48")}
+            >
               Get Started
             </AuthLoginButton>
           </li>
           <li>
-            <AuthSignupButton className="w-48" variant="secondary">
+            <AuthSignupButton
+              className={cn(buttonVariants({ variant: "secondary" }), "w-48")}
+            >
               Join Today
             </AuthSignupButton>
           </li>

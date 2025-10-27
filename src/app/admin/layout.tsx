@@ -1,17 +1,18 @@
-"use client";
-
 import React from "react";
-import { PermissionGuard } from "@/features/auth/guards/permission.guard";
-import { PUBLIC_ROLES } from "@/features/auth/public-roles";
+import { auth0 } from "@/lib/auth0";
+import { routerConfig } from "@/router-config";
+import { redirect } from "next/navigation";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <PermissionGuard requiredPermissions={[PUBLIC_ROLES.ADMIN]}>
-      <>{children}</>
-    </PermissionGuard>
-  );
+  const session = await auth0.getSession();
+
+  if (!session) {
+    redirect(routerConfig.home.path);
+  }
+
+  return <>{children}</>;
 }
