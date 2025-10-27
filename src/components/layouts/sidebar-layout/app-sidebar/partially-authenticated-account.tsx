@@ -10,10 +10,9 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import AuthLogout from "@/features/auth/auth-logout/auth-logout";
-import { cn } from "@/lib/utils";
 
 export function PartiallyAuthenticatedAccount({
   message = "Please finish setting up your account to continue.",

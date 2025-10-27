@@ -6,112 +6,90 @@
 
 </div>
 
+# Getting Started
+
+---
+
+- [Overview](#overview)
+  - [Tech Stack](#tech-stack)
+  - [Architecture](#architecture)
+  - [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+  - [Setup Env File](#setup-env-file)
+- [Setup](#setup)
+  - [Setup Auth0](#setup-auth0)
+- [Testing](#testing)
+- [Development](#development)
+- [References](#references)
+
 ## Overview
 
-Algowars SSR is a Next.js application for practicing and competing on algorithmic challenges. It includes authentication (Auth0), an admin interface for creating problems and test suites, rich text/code editors, user profiles, and a problems catalog — all rendered with SSR for performance and SEO.Key routes:
+---
 
-- `/` Home (Landing or Dashboard based on auth state)
-- `/admin` Admin dashboard
-- `/problems` Problems list and filtering
-- `/profile/[username]` Public profile
-- `/settings/*` Authenticated user settings
+This repo is the client application for Algowars. This project was built with:
 
-## Tech Stack
+### Tech Stack
 
-- Next.js 15 (App Router) + React 19
-- TypeScript
-- Auth0 (authentication/authorization)
-- CodeMirror (rich editor + code highlighting)
-- Tailwind CSS
-- TanStack Query / Table
-- Vitest + Testing Library (unit/integration)
-- Playwright (e2e)
+This project is built with:
 
-## Quick Start
+- Next.js
+- Tailwindcss
+- Shadcn
+- Auth0
 
-1. Install dependencies (pnpm recommended):
+Testing with this project was built with:
+
+- Vitest (Unit Testing)
+- Playwright (End to End)
+
+### Architecture
+
+The client application was heavily inspired by [Bulletproof React](https://github.com/alan2207/bulletproof-react). It was built with Tailwindcss and Shadcn so it makes a lot of architecture decisions based off these libraries.
+
+### Project Structure
+
+This solution is broken up into multiple important directories:
+
+#### 1. App
+
+**Purpose:** Contains the routing and related page components. This is required for Next.js.
+
+---
+
+#### 2. Common
+
+**Purpose:** Directory containing common components and tools used throughout the application. This directory is meant to be small as a lot of common folders can become bloated.
+
+---
+
+#### 3. Components
+
+**Purpose:** This folder contains reusable components throughout the application. All of the Shadcn components stay in the `ui` folder.
+
+---
+
+#### 4. Features
+
+**Purpose:** This folder contains all the components and tools used for a specific feature in the product. These features should not interact with other features.
+
+---
+
+#### 5. Lib
+
+**Purpose:** This folder contains all the components and tools that are used for external libraries.
+
+---
+
+## Prerequisites
+
+Before you start, make sure you create a `.env` file and fill out the necessary information from Auth0.
+
+### Setup Env File
+
+Run the following command:
+
+**Bash:**
 
 ```bash
-pnpm install
+cp .env.example .env
 ```
-
-2. Configure environment variables:
-
-```bash
-cp .env.example .env.local
-```
-
-3. Run the development server:
-
-```bash
-pnpm dev
-```
-
-Open http://localhost:3000 to view the app.
-
-## Environment Variables
-
-Create a `.env` file based on `.env.example`.
-
-Public (exposed to browser via NEXT*PUBLIC*):
-
-- `NEXT_PUBLIC_AUTH0_DOMAIN`
-- `NEXT_PUBLIC_AUTH0_CLIENT_ID`
-- `NEXT_PUBLIC_AUTH0_CALLBACK_URL`
-- `NEXT_PUBLIC_AUTH0_AUDIENCE`
-- `NEXT_PUBLIC_API_SERVER_URL`
-- `NEXT_PUBLIC_AUTH0_NAMESPACE`
-
-Server-side only:
-
-- `AUTH0_SECRET`
-- `APP_BASE_URL`
-- `AUTH0_DOMAIN`
-- `AUTH0_CLIENT_ID`
-- `AUTH0_CLIENT_SECRET`
-
-## Scripts
-
-- `pnpm dev` — Start dev server (Turbopack)
-- `pnpm build` — Production build
-- `pnpm start` — Start production server
-- `pnpm lint` — Run ESLint
-- `pnpm test` — Run unit/integration tests (Vitest)
-- `pnpm test:watch` — Watch mode
-- `pnpm test:coverage` — Coverage
-- `pnpm test:e2e` — Run Playwright e2e tests
-- `pnpm test:e2e:ui` — Playwright UI mode
-
-## Project Structure
-
-```
-src/
-  app/                 # App Router pages/layouts (SSR)
-  components/          # Reusable UI components and editor blocks
-  features/            # Feature-oriented modules (auth, problems, profile, admin, etc.)
-  lib/                 # Utilities and shared libs
-  hooks/               # Custom React hooks
-  common/              # Common types and helpers
-```
-
-## Development Notes
-
-- Auth: App uses Auth0; configure callback URL and allowed origins in the Auth0 dashboard to match your `.env`.
-- API: Set `API_SERVER_URL` to your backend (default `http://localhost:5035`).
-- Styling: TailwindCSS with PostCSS; adjust global styles in `src/app/globals.css`.
-
-## Deployment
-
-This app is optimized for deployment on Vercel. See Next.js docs for SSR deployment: https://nextjs.org/docs/app/building-your-application/deploying
-
-## Contributing
-
-Issues and PRs are welcome. If contributing:
-
-- Create a feature branch
-- Add/adjust tests when applicable
-- Follow existing code style and structure
-
-## License
-
-Proprietary unless stated otherwise by the repository owner.

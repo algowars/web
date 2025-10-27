@@ -34,7 +34,7 @@ export function UnauthenticatedAccount({
             Login
           </AuthLoginButton>
           <AuthSignupButton
-            className={cn(buttonVariants({ variant: "default" }), "w-full")}
+            className={cn(buttonVariants({ variant: "secondary" }), "w-full")}
           >
             Get Started
           </AuthSignupButton>
