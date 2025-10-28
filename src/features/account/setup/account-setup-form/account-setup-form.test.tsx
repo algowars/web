@@ -24,11 +24,15 @@ vi.mock("@/features/auth/api/create-account", () => {
     imageUrl: z.string().optional(),
   });
 
+  type FormValues = z.infer<typeof createAccountSchema>;
+
   return {
     createAccountSchema,
-    useCreateAccount: ({ mutationConfig }: any) => ({
-      mutate: async (data: any) => {
-        await mutationConfig.onSuccess({ username: data.data.username });
+    useCreateAccount: (options: {
+      mutationConfig: { onSuccess: (data: FormValues) => void };
+    }) => ({
+      mutate: async (data: { data: FormValues; accessToken: string }) => {
+        await options.mutationConfig.onSuccess(data.data);
       },
       isPending: false,
       isError: false,
