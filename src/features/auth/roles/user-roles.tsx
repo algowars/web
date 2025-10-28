@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { env } from "@/env";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { jwtDecode } from "jwt-decode";

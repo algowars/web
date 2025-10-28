@@ -1,6 +1,4 @@
 import { Account } from "@/features/auth/models/account.model";
-import { ProblemDifficulty } from "./problem-difficulty";
-import { ProblemSetup } from "./problem-setup";
 import { ProblemStatus } from "./problem-status";
 import { Language } from "./language";
 

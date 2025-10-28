@@ -1,9 +1,5 @@
 import React from "react";
 import { useAdminProblemContext } from "../admin-problem-context";
-import { Badge } from "@/components/ui/badge";
-import { Dot } from "lucide-react";
-import { ProblemStatusBadge } from "@/features/problem/problem-status-badge/problem-status-badge";
-import { ProblemDifficultyBadge } from "@/features/problem/problem-difficulty-badge/problem-difficulty-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AdminProblemOverview() {

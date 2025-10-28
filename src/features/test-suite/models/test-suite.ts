@@ -1,5 +1,5 @@
 import { TestSuiteType } from "./test-suite-type";
-import { Testcase, TestCaseBase } from "./testcase";
+import { Testcase } from "./testcase";
 
 export interface TestSuite {
   id: number;

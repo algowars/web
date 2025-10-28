@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -7,22 +7,16 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { JSX, useCallback, useMemo, useState } from "react"
-import dynamic from "next/dynamic"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { useBasicTypeaheadTriggerMatch } from "@lexical/react/LexicalTypeaheadMenuPlugin"
-import { TextNode } from "lexical"
-import { createPortal } from "react-dom"
+import { JSX, useCallback, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useBasicTypeaheadTriggerMatch } from "@lexical/react/LexicalTypeaheadMenuPlugin";
+import { TextNode } from "lexical";
 
-import { useEditorModal } from "@/components/editor/editor-hooks/use-modal"
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
+import { useEditorModal } from "@/components/editor/editor-hooks/use-modal";
 
-import { ComponentPickerOption } from "./picker/component-picker-option"
+import { ComponentPickerOption } from "./picker/component-picker-option";
+import { Command } from "@/components/ui/command";
 
 const LexicalTypeaheadMenuPlugin = dynamic(
   () =>
@@ -30,33 +24,33 @@ const LexicalTypeaheadMenuPlugin = dynamic(
       (mod) => mod.LexicalTypeaheadMenuPlugin
     ),
   { ssr: false }
-)
+);
 
 export function ComponentPickerMenuPlugin({
   baseOptions = [],
   dynamicOptionsFn,
 }: {
-  baseOptions?: Array<ComponentPickerOption>
+  baseOptions?: Array<ComponentPickerOption>;
   dynamicOptionsFn?: ({
     queryString,
   }: {
-    queryString: string
-  }) => Array<ComponentPickerOption>
+    queryString: string;
+  }) => Array<ComponentPickerOption>;
 }): JSX.Element {
-  const [editor] = useLexicalComposerContext()
-  const [modal, showModal] = useEditorModal()
-  const [queryString, setQueryString] = useState<string | null>(null)
+  const [editor] = useLexicalComposerContext();
+  const [modal, showModal] = useEditorModal();
+  const [queryString, setQueryString] = useState<string | null>(null);
 
   const checkForTriggerMatch = useBasicTypeaheadTriggerMatch("/", {
     minLength: 0,
-  })
+  });
 
   const options = useMemo(() => {
     if (!queryString) {
-      return baseOptions
+      return baseOptions;
     }
 
-    const regex = new RegExp(queryString, "i")
+    const regex = new RegExp(queryString, "i");
 
     return [
       ...(dynamicOptionsFn?.({ queryString }) || []),
@@ -65,8 +59,8 @@ export function ComponentPickerMenuPlugin({
           regex.test(option.title) ||
           option.keywords.some((keyword) => regex.test(keyword))
       ),
-    ]
-  }, [editor, queryString, showModal])
+    ];
+  }, [editor, queryString, showModal]);
 
   const onSelectOption = useCallback(
     (
@@ -76,18 +70,18 @@ export function ComponentPickerMenuPlugin({
       matchingString: string
     ) => {
       editor.update(() => {
-        nodeToRemove?.remove()
-        selectedOption.onSelect(matchingString, editor, showModal)
-        closeMenu()
-      })
+        nodeToRemove?.remove();
+        selectedOption.onSelect(matchingString, editor, showModal);
+        closeMenu();
+      });
     },
     [editor]
-  )
+  );
 
   return (
     <>
       {modal}
-      {/* @ts-ignore */}
+      {/*@ts-expect-error fix for plugin*/}
       <LexicalTypeaheadMenuPlugin<ComponentPickerOption>
         onQueryChange={setQueryString}
         onSelectOption={onSelectOption}
@@ -103,20 +97,20 @@ export function ComponentPickerMenuPlugin({
                   <Command
                     onKeyDown={(e) => {
                       if (e.key === "ArrowUp") {
-                        e.preventDefault()
+                        e.preventDefault();
                         setHighlightedIndex(
                           selectedIndex !== null
                             ? (selectedIndex - 1 + options.length) %
                                 options.length
                             : options.length - 1
-                        )
+                        );
                       } else if (e.key === "ArrowDown") {
-                        e.preventDefault()
+                        e.preventDefault();
                         setHighlightedIndex(
                           selectedIndex !== null
                             ? (selectedIndex + 1) % options.length
                             : 0
-                        )
+                        );
                       }
                     }}
                   >
@@ -127,7 +121,7 @@ export function ComponentPickerMenuPlugin({
                             key={option.key}
                             value={option.title}
                             onSelect={() => {
-                              selectOptionAndCleanUp(option)
+                              selectOptionAndCleanUp(option);
                             }}
                             className={`flex items-center gap-2 ${
                               selectedIndex === index
@@ -145,9 +139,9 @@ export function ComponentPickerMenuPlugin({
                 </div>,
                 anchorElementRef.current
               )
-            : null
+            : null;
         }}
       />
     </>
-  )
+  );
 }

@@ -11,7 +11,7 @@ import {
 } from "react";
 import { useAdminProblem } from "../api/get-admin-problem";
 import { useAccount } from "@/features/auth/account.context";
-import { ProblemStatus } from "@/features/problems/models/problem-status";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 
 interface AdminProblemContextState {
   problem: AdminProblem | null;
@@ -34,7 +34,7 @@ export function AdminProblemProvider({
   slug,
 }: AdminProblemProviderProps) {
   const [accessToken, setAccessToken] = useState("");
-  const { getAccessTokenSilently } = useAccount();
+  const { isAuthenticated } = useAccount();
 
   const { data, isLoading, error } = useAdminProblem({
     slug,
@@ -50,13 +50,15 @@ export function AdminProblemProvider({
 
   useEffect(() => {
     (async () => {
-      const token = await getAccessTokenSilently();
+      if (isAuthenticated) {
+        const token = await getAccessToken();
 
-      if (token) {
-        setAccessToken(token);
+        if (token) {
+          setAccessToken(token);
+        }
       }
     })();
-  }, [getAccessTokenSilently]);
+  }, [getAccessToken]);
 
   return (
     <AdminProblemContext.Provider value={contextValue}>

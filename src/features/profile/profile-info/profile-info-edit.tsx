@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { useProfileContext } from "../profile-context";
 import { useAccount } from "@/features/auth/account.context";
 import Link from "next/link";

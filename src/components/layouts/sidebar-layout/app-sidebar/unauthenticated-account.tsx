@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 
 export function UnauthenticatedAccount({
   message = "Join the community to interact with this content",
-  ctaText = "Sign up / Log in",
 }: {
   message?: string;
   ctaText?: string;

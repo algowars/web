@@ -134,7 +134,7 @@ export default function AccountSettings({
                       <div className="flex flex-col gap-2">
                         <Input placeholder="username" {...field} />
                         <div className="text-sm text-yellow-600">
-                          You can't change your name for a week.
+                          You can&apos;t change your name for a week.
                         </div>
                       </div>
                     </FormControl>
