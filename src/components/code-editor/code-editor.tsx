@@ -33,9 +33,6 @@ export const CodeEditor = ({
   const languageKey = React.useMemo(() => {
     if (!language) return "";
     if (typeof language === "string") return language;
-    return (
-      (language as any).name ?? (language as any).label ?? String(language)
-    );
   }, [language]);
 
   React.useEffect(() => {

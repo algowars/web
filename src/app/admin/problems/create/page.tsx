@@ -8,7 +8,6 @@ import {
 import { CreateProblemProvider } from "@/features/create-problem/create-problem-context";
 import CreateProblemDetails from "@/features/create-problem/create-problem-details/create-problem-details";
 import CreateProblemTestSuites from "@/features/create-problem/create-problem-test-suites/create-problem-test-suites";
-import CreateProblemTestSuitesList from "@/features/create-problem/create-problem-test-suites/create-problem-test-suties-list";
 import { routerConfig } from "@/router-config";
 import React from "react";
 

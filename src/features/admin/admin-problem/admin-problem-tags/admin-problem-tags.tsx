@@ -3,7 +3,6 @@
 import React from "react";
 import { useAdminProblemContext } from "../admin-problem-context";
 import { Badge } from "@/components/ui/badge";
-import { Tag } from "lucide-react";
 
 export default function AdminProblemTags() {
   const context = useAdminProblemContext();

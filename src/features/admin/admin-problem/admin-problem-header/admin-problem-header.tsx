@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Dot, Edit, FolderGit2 } from "lucide-react";
+import { Edit, FolderGit2 } from "lucide-react";
 import { ProblemStatusBadge } from "@/features/problem/problem-status-badge/problem-status-badge";
 import { ProblemDifficultyBadge } from "@/features/problem/problem-difficulty-badge/problem-difficulty-badge";
 import AdminProblemSubmissions from "../admin-problem-submissions/admin-problem-submissions";

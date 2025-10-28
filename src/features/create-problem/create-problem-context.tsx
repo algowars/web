@@ -7,7 +7,6 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { useAvailableLanguages } from "../problems/api/get-available-languages";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 
 type CreateProblemState = {
@@ -38,8 +37,6 @@ export function CreateProblemProvider({ children }: { children: ReactNode }) {
   const [createProblem, setCreateProblem] =
     useState<CreateProblemState>(defaultState);
   const [accessToken, setAccessToken] = useState<string>("");
-
-  const availableLanguages = useAvailableLanguages({ accessToken });
 
   const updateCreateProblem = (fields: Partial<CreateProblemState>) => {
     setCreateProblem((prev) => ({ ...prev, ...fields }));

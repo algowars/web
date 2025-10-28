@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  PaginationState,
-} from "@tanstack/react-table";
+import { ColumnFiltersState, PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import { useProblems } from "../api/get-problems-pageable";
 import { DataTable } from "@/components/ui/data-table";

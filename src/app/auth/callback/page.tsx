@@ -1,5 +1,4 @@
-import React, { Suspense } from "react";
-import PageLoader from "@/components/loader/page-loader/page-loader";
+import React from "react";
 import { auth0 } from "@/lib/auth0";
 import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";

@@ -10,13 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { routerConfig } from "@/router-config";
-import {
-  Command,
-  LayoutDashboard,
-  ListTree,
-  Puzzle,
-  Shield,
-} from "lucide-react";
+import { Command, LayoutDashboard, Puzzle, Shield } from "lucide-react";
 import React from "react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import { AppSidebarAccount } from "./app-sidebar-account";

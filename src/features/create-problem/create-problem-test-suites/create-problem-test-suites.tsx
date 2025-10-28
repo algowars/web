@@ -114,7 +114,8 @@ export default function CreateProblemTestSuites() {
       <CardContent>
         {testSuites.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            No test suites created yet. Click "Add Setup" to get started.
+            No test suites created yet. Click &quot;Add Setup&quot; to get
+            started.
           </div>
         ) : (
           <div className="space-y-4">

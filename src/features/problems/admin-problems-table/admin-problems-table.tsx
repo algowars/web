@@ -6,7 +6,6 @@ import { useAdminProblems } from "../api/get-admin-problems";
 import { adminColumns } from "./admin-problems-column";
 import { routerConfig } from "@/router-config";
 import { ColumnFiltersState, PaginationState } from "@tanstack/react-table";
-import { problemColumnsV2 } from "../problems-table-v2/problems-columns-v2";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useAccount } from "@/features/auth/account.context";
 

@@ -58,7 +58,7 @@ export default function ProblemEditor() {
           <>
             <div className="px-1 py-1">
               <ProblemCodeEditorLanguageSelect
-                availableLanguages={problemSetup.languages}
+                availableLanguages={problemSetup.availableLanguages}
                 currentLanguage={currentLanguage}
                 currentVersion={currentVersion}
                 changeCurrentLanguage={changePreferredLanguage}
@@ -69,6 +69,7 @@ export default function ProblemEditor() {
               code={code}
               changeCode={changeCode}
               className="h-full overflow-auto"
+              language={problemSetup.availableLanguages[0]}
             />
           </>
         ),
