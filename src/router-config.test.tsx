@@ -39,7 +39,7 @@ describe("routerConfig basic shape", () => {
   });
 
   it("every route has a string path", () => {
-    for (const [k, v] of Object.entries(routerConfig)) {
+    for (const [, v] of Object.entries(routerConfig)) {
       expect(typeof v.path).toBe("string");
       expect(v.path.length).toBeGreaterThan(0);
     }
