@@ -19,21 +19,6 @@ export const metadata: Metadata = {
   description: "Online Competitive Coding Platform",
 };
 
-// Ensure server runtime does not expose a faulty `localStorage`
-
-if (
-  typeof window === "undefined" &&
-  typeof (globalThis as any).localStorage !== "undefined"
-) {
-  try {
-    // Remove Node's experimental localStorage to prevent SSR breakage
-
-    delete (globalThis as any).localStorage;
-  } catch {
-    (globalThis as any).localStorage = undefined;
-  }
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
