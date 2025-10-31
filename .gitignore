@@ -43,5 +43,3 @@ next-env.d.ts
 
 test-results/
 playwright-report/
-src/app/layout.tsx
-src/app/layout.tsx
