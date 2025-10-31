@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --debug",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "test:ci": "vitest run --coverage.enabled --coverage.reporter='text-summary'"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.11.0",
