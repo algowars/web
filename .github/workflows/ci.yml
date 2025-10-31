@@ -51,4 +51,4 @@ jobs:
         run: pnpm run test:coverage-report
 
       - name: Update badges
-        run: pnpm run make-badge
+        run: pnpm run make-badges
