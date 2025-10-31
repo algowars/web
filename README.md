@@ -82,6 +82,8 @@ This solution is broken up into multiple important directories:
 
 ## Prerequisites
 
+You need node 24 to work on this.
+
 Before you start, make sure you create a `.env` file and fill out the necessary information from Auth0.
 
 ### Setup Env File
