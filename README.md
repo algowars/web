@@ -1,10 +1,8 @@
-<div align="center">
-
 # Algowars Client
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs) ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=222) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript) ![Vitest](https://img.shields.io/badge/Vitest-3-6E9F18?logo=vitest)
+## Test Coverage Report
 
-</div>
+![Statements](https://img.shields.io/badge/statements-1.34%25-red.svg?style=flat) | ![Branches](https://img.shields.io/badge/branches-65.84%25-red.svg?style=flat) | ![Functions](https://img.shields.io/badge/functions-66.34%25-red.svg?style=flat) | ![Lines](https://img.shields.io/badge/lines-1.34%25-red.svg?style=flat) |
 
 # Getting Started
 
