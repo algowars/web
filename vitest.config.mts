@@ -22,7 +22,7 @@ export default defineConfig({
     globals: true,
     css: true,
     coverage: {
-      reporter: ["text", "html", "lcov"],
+      reporter: ["json-summary"],
       reportsDirectory: "./coverage",
       exclude: [
         "vitest.config.*",

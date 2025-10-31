@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [23]
+        node-version: [24]
 
     env:
       AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }}
@@ -47,5 +47,8 @@ jobs:
       - name: Run build
         run: pnpm build
 
-      - name: Run tests
-        run: pnpm run test
+      - name: Run tests and build coverage report
+        run: pnpm run test:coverage-report
+
+      - name: Update badges
+        run: pnpm run make-badges

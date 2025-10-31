@@ -6,7 +6,7 @@ type RouteEntry = {
   asArray?: string[];
 };
 
-export const routerConfig = {
+const _routerConfig = {
   home: {
     path: "/",
   },
@@ -101,3 +101,5 @@ export const routerConfig = {
     path: "/dmca",
   },
 } as const satisfies Record<string, RouteEntry>;
+
+export const routerConfig = Object.freeze(_routerConfig);
