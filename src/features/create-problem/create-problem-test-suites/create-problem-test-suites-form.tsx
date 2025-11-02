@@ -26,6 +26,8 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCreateProblemContext } from "../create-problem-context";
+import { Language } from "@/features/problems/models/language";
 
 interface CreateProblemTestSuitesFormProps {
   onSubmit: (data: { languageId: number; versionId: number }) => void;
@@ -36,38 +38,12 @@ export const createSetupForm = z.object({
   versionId: z.number().min(1, "Please select a version"),
 });
 
-const languages = [
-  {
-    id: 1,
-    name: "JavaScript",
-    versions: [
-      { id: 101, name: "ES6" },
-      { id: 102, name: "ES2020" },
-    ],
-  },
-  {
-    id: 2,
-    name: "Python",
-    versions: [
-      { id: 201, name: "3.8" },
-      { id: 202, name: "3.11" },
-    ],
-  },
-  {
-    id: 3,
-    name: "Java",
-    versions: [
-      { id: 301, name: "8" },
-      { id: 302, name: "17" },
-    ],
-  },
-];
-
 export default function CreateProblemTestSuitesForm({
   onSubmit,
 }: CreateProblemTestSuitesFormProps) {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [versionOpen, setVersionOpen] = useState(false);
+  const { availableLanguages } = useCreateProblemContext();
 
   const form = useForm<z.infer<typeof createSetupForm>>({
     resolver: zodResolver(createSetupForm),
@@ -76,6 +52,8 @@ export default function CreateProblemTestSuitesForm({
       versionId: 0,
     },
   });
+
+  const languages: Language[] = availableLanguages.data ?? [];
 
   const selectedLanguage = languages.find(
     (lang) => lang.id === form.watch("languageId")
@@ -188,7 +166,7 @@ export default function CreateProblemTestSuitesForm({
                         <CommandGroup heading={selectedLanguage.name}>
                           {selectedLanguage.versions.map((version) => (
                             <CommandItem
-                              value={`${selectedLanguage.name} ${version.name}`}
+                              value={`${selectedLanguage.name} ${version.version}`}
                               key={version.id}
                               onSelect={() => {
                                 form.setValue("versionId", version.id);
@@ -203,7 +181,7 @@ export default function CreateProblemTestSuitesForm({
                                     : "opacity-0"
                                 )}
                               />
-                              {version.name}
+                              {version.version}
                             </CommandItem>
                           ))}
                         </CommandGroup>

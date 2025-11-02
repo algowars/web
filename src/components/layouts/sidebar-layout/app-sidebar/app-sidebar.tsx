@@ -10,23 +10,21 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { routerConfig } from "@/router-config";
-import { Command, LayoutDashboard, Puzzle, Shield } from "lucide-react";
+import { BookOpenText, LayoutDashboard, Puzzle } from "lucide-react";
 import React from "react";
-import { SidebarMainNav } from "./sidebar-main-nav";
-import { AppSidebarAccount } from "./app-sidebar-account";
-import Link from "next/link";
-import { useUserRoles } from "@/features/auth/roles/user-roles";
-import { PUBLIC_ROLES } from "@/features/auth/public-roles";
 import { useAccount } from "@/features/auth/account.context";
+import { Command } from "@/components/ui/command";
+import Link from "next/link";
+import { SidebarMainNav } from "./sidebar-main-nav";
+import { AuthComponentGuard } from "@/features/auth/guards/auth-component.guard";
 import { UnauthenticatedAccount } from "./unauthenticated-account";
 import { PartiallyAuthenticatedAccount } from "./partially-authenticated-account";
-import { AuthComponentGuard } from "@/features/auth/guards/auth-component.guard";
-
+import { AppSidebarAccount } from "./app-sidebar-account";
+import { Permissions } from "@/features/auth/permissions/Permissions";
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
-  const { roles } = useUserRoles();
-  const { isAuthenticated } = useAccount();
+  const { isAuthenticated, account } = useAccount();
   const data = {
     navMain: [
       {
@@ -41,15 +39,13 @@ export default function AppSidebar(
         icon: Puzzle,
       },
     ],
-    navAdmin: roles.includes(PUBLIC_ROLES.ADMIN)
-      ? [
-          {
-            title: "Dashboard",
-            url: routerConfig.admin.path,
-            icon: Shield,
-          },
-        ]
-      : [],
+    navProblemManagement: [
+      {
+        title: "Problems",
+        icon: BookOpenText,
+        url: routerConfig.problemMangement.path,
+      },
+    ],
   };
 
   return (
@@ -73,7 +69,12 @@ export default function AppSidebar(
       </SidebarHeader>
       <SidebarContent>
         <SidebarMainNav items={data.navMain} />
-        <SidebarMainNav items={data.navAdmin} title="Admin" />
+        {account?.permissions.includes(Permissions.ReadProblem) ? (
+          <SidebarMainNav
+            items={data.navProblemManagement}
+            title="Problem Management"
+          />
+        ) : null}
       </SidebarContent>
       <SidebarFooter>
         <AuthComponentGuard

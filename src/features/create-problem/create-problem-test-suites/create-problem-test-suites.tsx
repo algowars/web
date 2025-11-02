@@ -19,6 +19,8 @@ import {
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import CreateProblemTestSuitesForm from "./create-problem-test-suites-form";
+import { getAvailableLanguages } from "@/features/problems/api/get-available-languages";
+import { useCreateProblemContext } from "../create-problem-context";
 
 type CreateProblemTestSuite = {
   id: string;
@@ -30,54 +32,10 @@ type CreateProblemTestSuite = {
 
 export default function CreateProblemTestSuites() {
   const [isOpen, setIsOpen] = useState(false);
-  const [testSuites, setTestSuites] = useState<CreateProblemTestSuite[]>([]);
+  const { availableLanguages } = useCreateProblemContext();
 
-  const handleAddTestSuite = (data: {
-    languageId: number;
-    versionId: number;
-  }) => {
-    const languages = [
-      {
-        id: 1,
-        name: "JavaScript",
-        versions: [
-          { id: 101, name: "ES6" },
-          { id: 102, name: "ES2020" },
-        ],
-      },
-      {
-        id: 2,
-        name: "Python",
-        versions: [
-          { id: 201, name: "3.8" },
-          { id: 202, name: "3.11" },
-        ],
-      },
-      {
-        id: 3,
-        name: "Java",
-        versions: [
-          { id: 301, name: "8" },
-          { id: 302, name: "17" },
-        ],
-      },
-    ];
-
-    const language = languages.find((lang) => lang.id === data.languageId);
-    const version = language?.versions.find((ver) => ver.id === data.versionId);
-
-    if (language && version) {
-      const newTestSuite: CreateProblemTestSuite = {
-        id: `${data.languageId}-${data.versionId}-${Date.now()}`,
-        languageId: data.languageId,
-        languageName: language.name,
-        versionId: data.versionId,
-        versionName: version.name,
-      };
-
-      setTestSuites((prev) => [...prev, newTestSuite]);
-      setIsOpen(false);
-    }
+  const handleAddTestSuite = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -104,7 +62,7 @@ export default function CreateProblemTestSuites() {
                   Select a language and version to create a new test suite.
                 </SheetDescription>
               </SheetHeader>
-              <div className="mt-6">
+              <div className="px-4">
                 <CreateProblemTestSuitesForm onSubmit={handleAddTestSuite} />
               </div>
             </SheetContent>
@@ -112,7 +70,7 @@ export default function CreateProblemTestSuites() {
         </div>
       </CardHeader>
       <CardContent>
-        {testSuites.length === 0 ? (
+        {/* {testSuites.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             No test suites created yet. Click &quot;Add Setup&quot; to get
             started.
@@ -133,9 +91,9 @@ export default function CreateProblemTestSuites() {
                   </Button>
                 </div>
               </Card>
-            ))}
-          </div>
-        )}
+            ))} */}
+        {/* </div> */}
+        {/* )} */}
       </CardContent>
     </Card>
   );

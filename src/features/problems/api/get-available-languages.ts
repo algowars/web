@@ -5,7 +5,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 
 export const getAvailableLanguages = (accessToken: string) => {
-  return api.get<PageResult<Language>>({
+  return api.get<Language[]>({
     url: "/api/v1/problem/languages",
     accessToken,
   });

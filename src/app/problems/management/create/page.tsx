@@ -1,9 +1,9 @@
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
 import {
   Card,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { CreateProblemProvider } from "@/features/create-problem/create-problem-context";
 import CreateProblemDetails from "@/features/create-problem/create-problem-details/create-problem-details";
@@ -11,7 +11,7 @@ import CreateProblemTestSuites from "@/features/create-problem/create-problem-te
 import { routerConfig } from "@/router-config";
 import React from "react";
 
-export default function AdminProblemCreatePage() {
+export default function ProblemsCreatePage() {
   return (
     <SidebarLayout
       breadcrumbs={[
@@ -20,8 +20,8 @@ export default function AdminProblemCreatePage() {
           name: "Home",
         },
         {
-          url: routerConfig.admin.path,
-          name: "Admin",
+          url: routerConfig.problemMangement.path,
+          name: "Problem Management",
         },
         {
           url: routerConfig.createProblem.path,

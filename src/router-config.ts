@@ -19,9 +19,6 @@ const _routerConfig = {
   authLogOut: {
     path: "/auth/logout",
   },
-  admin: {
-    path: "/admin",
-  },
   adminProblem: {
     path: "/admin/problems/:slug",
     execute: ({ slug }: { slug: string }) =>
@@ -41,8 +38,11 @@ const _routerConfig = {
     execute: ({ slug }: { slug: string }) =>
       `/problems/${encodeURIComponent(slug)}`,
   },
+  problemMangement: {
+    path: "/problems/management",
+  },
   createProblem: {
-    path: "/admin/problems/create",
+    path: "/problems/management/create",
   },
   contests: {
     path: "/contests",
