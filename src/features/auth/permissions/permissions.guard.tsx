@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAccount } from "../account.context";
+import { AuthStatus, useAccount } from "../account.context";
 import {
   HasPermissionMode,
   useHasPermissions,
@@ -21,11 +21,14 @@ export default function PermissionsGuard({
   permissions = [],
   mode,
 }: PermissionGuardProps) {
-  const { account } = useAccount();
+  const { account, isPending, authStatus } = useAccount();
 
   const isOk = useHasPermissions(account?.permissions, permissions, mode);
-
-  if (!isOk) {
+  if (
+    !isOk &&
+    !isPending &&
+    authStatus !== AuthStatus.PARTIALLY_AUTHENTICATED
+  ) {
     redirect(routerConfig.home.path);
   }
 

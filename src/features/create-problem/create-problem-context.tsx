@@ -9,8 +9,7 @@ import React, {
 } from "react";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useAvailableLanguages } from "../problems/api/get-available-languages";
-import { Language } from "../problems/models/language";
-import { PageResult } from "@/common/pagination/page-result";
+import { Language, LanguageVersion } from "../problems/models/language";
 import { UseQueryResult } from "@tanstack/react-query";
 
 type CreateProblemState = {
@@ -20,10 +19,17 @@ type CreateProblemState = {
   slug: string;
 };
 
+type CreateTestSuite = {
+  languageVersion: LanguageVersion;
+  testCases: [];
+};
+
 type CreateProblemContextType = {
   createProblem: CreateProblemState;
   availableLanguages: UseQueryResult<Language[]>;
+  testSuites: CreateTestSuite[];
   updateCreateProblem: (fields: Partial<CreateProblemState>) => void;
+  updateTestSuites: (payload: Partial<CreateTestSuite> & { index?: number }) => void;
 };
 
 const defaultState: CreateProblemState = {
@@ -33,19 +39,22 @@ const defaultState: CreateProblemState = {
   slug: "",
 };
 
-const CreateProblemContext = createContext<
-  CreateProblemContextType | undefined
->(undefined);
+const CreateProblemContext = createContext<CreateProblemContextType | null>(
+  null
+);
 
 export function CreateProblemProvider({ children }: { children: ReactNode }) {
   const [createProblem, setCreateProblem] =
     useState<CreateProblemState>(defaultState);
+  const [testSuites, setTestSuites] = useState<CreateTestSuite[]>([]);
   const [accessToken, setAccessToken] = useState<string>("");
   const availableLanguages = useAvailableLanguages({ accessToken });
 
   const updateCreateProblem = (fields: Partial<CreateProblemState>) => {
     setCreateProblem((prev) => ({ ...prev, ...fields }));
   };
+
+  const updateTestSuites = () => {};
 
   useEffect(() => {
     (async () => {
@@ -61,6 +70,8 @@ export function CreateProblemProvider({ children }: { children: ReactNode }) {
     createProblem,
     updateCreateProblem,
     availableLanguages,
+    testSuites,
+    updateTestSuites,
   };
 
   return (
