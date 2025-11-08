@@ -28,6 +28,6 @@ export function useHasPermissions(
 ) {
   return React.useMemo(
     () => hasRequiredPermissions(userPermissions, required, mode),
-    [userPermissions?.join(","), required.join(","), mode]
+    [userPermissions?.join(","), required.join(","), mode, required]
   );
 }

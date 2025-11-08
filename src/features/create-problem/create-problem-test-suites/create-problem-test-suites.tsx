@@ -19,20 +19,9 @@ import {
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import CreateProblemTestSuitesForm from "./create-problem-test-suites-form";
-import { getAvailableLanguages } from "@/features/problems/api/get-available-languages";
-import { useCreateProblemContext } from "../create-problem-context";
-
-type CreateProblemTestSuite = {
-  id: string;
-  languageId: number;
-  languageName: string;
-  versionId: number;
-  versionName: string;
-};
 
 export default function CreateProblemTestSuites() {
   const [isOpen, setIsOpen] = useState(false);
-  const { availableLanguages } = useCreateProblemContext();
 
   const handleAddTestSuite = () => {
     setIsOpen(false);

@@ -29,7 +29,9 @@ type CreateProblemContextType = {
   availableLanguages: UseQueryResult<Language[]>;
   testSuites: CreateTestSuite[];
   updateCreateProblem: (fields: Partial<CreateProblemState>) => void;
-  updateTestSuites: (payload: Partial<CreateTestSuite> & { index?: number }) => void;
+  updateTestSuites: (
+    payload: Partial<CreateTestSuite> & { index?: number }
+  ) => void;
 };
 
 const defaultState: CreateProblemState = {
@@ -46,7 +48,7 @@ const CreateProblemContext = createContext<CreateProblemContextType | null>(
 export function CreateProblemProvider({ children }: { children: ReactNode }) {
   const [createProblem, setCreateProblem] =
     useState<CreateProblemState>(defaultState);
-  const [testSuites, setTestSuites] = useState<CreateTestSuite[]>([]);
+  const [testSuites] = useState<CreateTestSuite[]>([]);
   const [accessToken, setAccessToken] = useState<string>("");
   const availableLanguages = useAvailableLanguages({ accessToken });
 

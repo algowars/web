@@ -51,7 +51,6 @@ export default function AccountSettings({
   function onSubmit(values: z.infer<typeof accountSettingsFormSchema>) {
     setOriginalUsername(values.username);
     setIsEditing(false);
-    console.log(values);
   }
 
   function onStartEdit() {

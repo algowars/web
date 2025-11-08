@@ -13,12 +13,6 @@ export default function ProfileInfoEdit() {
 
   const isOwner = profileAggregate?.profile.username === account?.username;
 
-  console.log(
-    profileAggregate?.profile,
-    account,
-    !profileAggregate?.profile || !account?.username || !isOwner
-  );
-
   if (!profileAggregate?.profile || !account?.username || !isOwner) {
     return null;
   }

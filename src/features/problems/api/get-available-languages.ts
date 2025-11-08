@@ -1,4 +1,3 @@
-import { PageResult } from "@/common/pagination/page-result";
 import { api } from "@/lib/api-client";
 import { Language } from "../models/language";
 import { queryOptions, useQuery } from "@tanstack/react-query";
