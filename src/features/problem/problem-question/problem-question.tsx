@@ -8,6 +8,7 @@ import { Problem } from "@/features/problems/models/problem";
 import { Tag } from "lucide-react";
 import React from "react";
 import ProblemEditorTags from "./problem-editor-tags";
+import MarkdownSafe from "@/components/markdown/markdown";
 
 type Props = {
   problem: Problem | null;
@@ -33,7 +34,7 @@ export default function ProblemQuestion({ problem }: Props) {
           </ul>
         </div>
 
-        {problem?.question}
+        <MarkdownSafe markdown={problem.question} />
       </div>
       <Accordion type="single" collapsible className="mt-auto border-t">
         <AccordionItem value="tags">
