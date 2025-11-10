@@ -42,7 +42,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
-:root {
+/* :root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -109,9 +109,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.439 0 0);
-}
+} */
 
-/* :root {
+:root {
   --radius: 0.65rem;
   --background: oklch(0.98 0 248);
   --foreground: oklch(0.13 0.04 265);
@@ -178,7 +178,7 @@
   --sidebar-accent-foreground: oklch(0.97 0.01 248);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-} */
+}
 
 @layer base {
   * {

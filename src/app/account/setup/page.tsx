@@ -1,6 +1,5 @@
 import LandingLayout from "@/components/layouts/landing-layout/landing-layout";
 import AccountSetupForm from "@/features/account/setup/account-setup-form/account-setup-form";
-import { AccountGuard } from "@/features/auth/guards/not-fully-authenticated.guard";
 import { auth0 } from "@/lib/auth0";
 import { routerConfig } from "@/router-config";
 import { redirect } from "next/navigation";
@@ -14,10 +13,8 @@ export default async function AccountSetupPage() {
   }
 
   return (
-    <AccountGuard>
-      <LandingLayout mainClassName="flex justify-center items-center py-9">
-        <AccountSetupForm className="w-full max-w-96" />
-      </LandingLayout>
-    </AccountGuard>
+    <LandingLayout mainClassName="flex justify-center items-center py-9">
+      <AccountSetupForm className="w-full max-w-96" />
+    </LandingLayout>
   );
 }

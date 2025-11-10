@@ -1,14 +1,13 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-// import { tokyoNightStorm } from "@uiw/codemirror-theme-tokyo-night-storm";
-// import { tokyoNightDay } from "@uiw/codemirror-theme-tokyo-night-day";
+import { tokyoNightStorm } from "@uiw/codemirror-theme-tokyo-night-storm";
+import { tokyoNightDay } from "@uiw/codemirror-theme-tokyo-night-day";
 
 import React from "react";
 import CodeMirror, { Extension } from "@uiw/react-codemirror";
 import { useTheme } from "next-themes";
 import { Language } from "@/features/problems/models/language";
-import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
 
 import {
   defaultCodeEditorExtensions,
@@ -71,8 +70,8 @@ export const CodeEditor = ({
         indentOnInput: false,
       }}
       extensions={[...defaultCodeEditorExtensions, ...langExtensions]}
-      // theme={theme.resolvedTheme === "light" ? tokyoNightDay : tokyoNightStorm}
-      theme={theme.resolvedTheme === "light" ? vscodeLight : vscodeDark}
+      theme={theme.resolvedTheme === "light" ? tokyoNightDay : tokyoNightStorm}
+      // theme={theme.resolvedTheme === "light" ? vscodeLight : vscodeDark}
     />
   );
 };
