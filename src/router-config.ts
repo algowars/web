@@ -11,10 +11,10 @@ const _routerConfig = {
     path: "/",
   },
   authSignUp: {
-    path: "/auth/login?screen_hint=signup",
+    path: `/auth/login?screen_hint=signup&returnTo=/account/callback`,
   },
   authLogIn: {
-    path: "/auth/login",
+    path: "/auth/login?returnTo=/account/callback",
   },
   authLogOut: {
     path: "/auth/logout",

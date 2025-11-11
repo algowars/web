@@ -12,6 +12,7 @@ import { Account } from "./models/account.model";
 import { useAccount as useAccountQuery } from "./api/get-account";
 import { User } from "@auth0/nextjs-auth0/types";
 import { getAccessToken, useUser } from "@auth0/nextjs-auth0";
+import { routerConfig } from "@/router-config";
 
 export enum AuthStatus {
   UNAUTHENTICATED = "unauthenticated",

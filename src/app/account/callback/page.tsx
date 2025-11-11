@@ -1,10 +1,9 @@
-import React from "react";
-import { auth0 } from "@/lib/auth0";
-import { redirect } from "next/navigation";
-import { routerConfig } from "@/router-config";
 import AuthCallback from "@/features/auth/auth-callback/auth-callback";
+import { auth0 } from "@/lib/auth0";
+import { routerConfig } from "@/router-config";
+import { redirect } from "next/navigation";
 
-export default async function AuthCallbackPage() {
+export default async function AccountCallbackPage() {
   const session = await auth0.getSession();
 
   if (!session) {

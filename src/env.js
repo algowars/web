@@ -22,7 +22,6 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_API_SERVER_URL: z.string(),
-    NEXT_PUBLIC_AUTH_NAMESPACE: z.string(),
   },
 
   /**

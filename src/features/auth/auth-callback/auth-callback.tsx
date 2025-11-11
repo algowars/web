@@ -8,20 +8,25 @@ import { routerConfig } from "@/router-config";
 import { toast } from "sonner";
 
 export default function AuthCallback() {
-  const { authStatus, error } = useAccount();
-
+  const { authStatus, isPending, error } = useAccount();
   useEffect(() => {
-    if (authStatus === AuthStatus.FULLY_AUTHENTICATED) {
-      redirect(routerConfig.dashboard.path);
-    }
+    if (!isPending) {
+      if (authStatus === AuthStatus.PARTIALLY_AUTHENTICATED) {
+        redirect(routerConfig.accountSetup.path);
+      }
 
-    if (error) {
-      toast.success("Error getting account information", {
-        description: error.message,
-      });
+      if (authStatus === AuthStatus.FULLY_AUTHENTICATED) {
+        redirect(routerConfig.dashboard.path);
+      }
+
+      if (error) {
+        toast.success("Error getting account information", {
+          description: error.message,
+        });
+      }
       redirect(routerConfig.home.path);
     }
-  }, [authStatus]);
+  }, [authStatus, isPending, error?.message]);
 
   return <PageLoader message="Getting account information" />;
 }
