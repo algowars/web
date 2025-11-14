@@ -1,5 +1,6 @@
 import LandingLayout from "@/components/layouts/landing-layout/landing-layout";
 import AccountSetupForm from "@/features/account/setup/account-setup-form/account-setup-form";
+import { AccountAlreadyExistsGuard } from "@/features/auth/guards/account-already-exists.guard";
 import { auth0 } from "@/lib/auth0";
 import { routerConfig } from "@/router-config";
 import { redirect } from "next/navigation";
@@ -13,8 +14,10 @@ export default async function AccountSetupPage() {
   }
 
   return (
-    <LandingLayout mainClassName="flex justify-center items-center py-9">
-      <AccountSetupForm className="w-full max-w-96" />
-    </LandingLayout>
+    <AccountAlreadyExistsGuard>
+      <LandingLayout mainClassName="flex justify-center items-center py-9">
+        <AccountSetupForm className="w-full max-w-96" />
+      </LandingLayout>
+    </AccountAlreadyExistsGuard>
   );
 }
