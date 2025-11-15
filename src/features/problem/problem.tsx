@@ -1,25 +1,55 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
+import { Problem as ProblemType } from "../problems/models/problem";
+import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
+import { routerConfig } from "@/router-config";
+import { useProblemEditor } from "./state/problem-editor-store";
+import { useProblemSetup } from "./api/get-problem-setup";
 import ProblemEditor from "./problem-editor/problem-editor";
-import { ProblemProvider } from "./problem-context";
-import ProblemActions from "./problem-actions/problem-actions";
 
 type ProblemProps = {
-  params: Promise<{ slug: string }>;
+  problem: ProblemType;
 };
 
-export default async function Problem({ params }: ProblemProps) {
-  const slug = (await params).slug;
+export default function Problem({ problem }: ProblemProps) {
+  const selectedLanguageId = problem.availableLanguages[0].id;
+
+  const setupQuery = useProblemSetup({
+    problemId: problem.id,
+    languageId: selectedLanguageId,
+  });
+  const setProblem = useProblemEditor((s) => s.setProblem);
+  const setSetup = useProblemEditor((s) => s.setSetup);
+
+  useEffect(() => {
+    if (setupQuery.data) {
+      setProblem(problem);
+      setSetup(setupQuery.data);
+    }
+  }, [problem, setupQuery.data, setProblem, setSetup]);
 
   return (
-    <ProblemProvider slug={slug} defaultPreferredLanguageId={1}>
-      <div className="flex flex-col h-full gap-3">
-        <div className="flex-1">
-          <ProblemEditor />
-        </div>
-        <footer className="flex">
-          <ProblemActions className="ml-auto" />
-        </footer>
+    <SidebarLayout
+      breadcrumbs={[
+        {
+          url: routerConfig.home.path,
+          name: "Home",
+        },
+        {
+          url: routerConfig.problems.path,
+          name: "Problems",
+        },
+        {
+          url: routerConfig.problem.execute({ slug: problem.slug }),
+          name: problem.title,
+        },
+      ]}
+      defaultOpen={false}
+    >
+      <div className="h-full">
+        <ProblemEditor />
       </div>
-    </ProblemProvider>
+    </SidebarLayout>
   );
 }

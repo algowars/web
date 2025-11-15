@@ -1,3 +1,4 @@
+import { Language } from "./language";
 import { ProblemDifficulty } from "./problem-difficulty";
 
 export interface Problem {
@@ -7,4 +8,5 @@ export interface Problem {
   question?: string;
   difficulty: ProblemDifficulty;
   tags: string[];
+  availableLanguages: Language[];
 }

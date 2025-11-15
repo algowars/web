@@ -5,25 +5,19 @@ import { CodeXml, FileText } from "lucide-react";
 import ProblemCodeEditorLanguageSelect from "./problem-editor-language-select/problem-editor-language-select";
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
-import { useProblemContext } from "../problem-context";
+import { useProblemEditor } from "../state/problem-editor-store";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 
 export default function ProblemEditor() {
-  const {
-    problemSetup,
-    isLoading,
-    error,
-    currentLanguage,
-    currentVersion,
-    code,
-    changePreferredLanguage,
-    changeCurrentVersion,
-    changeCode,
-  } = useProblemContext();
+  const setup = useProblemEditor((s) => s.setup);
+  const problem = useProblemEditor((s) => s.problem);
+  const code = useProblemEditor((s) => s.code);
+  const currentVersion = useProblemEditor((s) => s.currentVersion);
 
-  if (isLoading) {
+  const setCode = useProblemEditor((s) => s.setCode);
+  const setCurrentVersion = useProblemEditor((s) => s.setCurrentVersion);
+
+  if (!setup || !problem) {
     return (
       <div className="h-full p-6 space-y-4">
         <Skeleton className="h-8 w-64" />
@@ -33,16 +27,11 @@ export default function ProblemEditor() {
     );
   }
 
-  if (error || !problemSetup) {
-    return (
-      <Alert variant="destructive" className="m-6">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
-          Failed to load problem: {error?.message || "Problem not found"}
-        </AlertDescription>
-      </Alert>
+  const currentLanguage =
+    currentVersion &&
+    setup.availableLanguages.find((lang) =>
+      lang.versions.some((v) => v.id === currentVersion.id)
     );
-  }
 
   const tabs: Tab = {
     direction: "horizontal",
@@ -58,18 +47,16 @@ export default function ProblemEditor() {
           <>
             <div className="px-1 py-1">
               <ProblemCodeEditorLanguageSelect
-                availableLanguages={problemSetup.availableLanguages}
-                currentLanguage={currentLanguage}
+                availableLanguages={setup.availableLanguages}
                 currentVersion={currentVersion}
-                changeCurrentLanguage={changePreferredLanguage}
-                changeCurrentVersion={changeCurrentVersion}
+                changeCurrentVersion={setCurrentVersion}
               />
             </div>
             <CodeEditor
               code={code}
-              changeCode={changeCode}
+              changeCode={setCode}
               className="h-full overflow-auto"
-              language={problemSetup.availableLanguages[0]}
+              language={currentLanguage ?? setup.availableLanguages[0]}
             />
           </>
         ),
@@ -79,7 +66,7 @@ export default function ProblemEditor() {
         defaultSize: 45,
         children: [
           {
-            component: <ProblemQuestion problem={problemSetup.problem} />,
+            component: <ProblemQuestion problem={problem} />,
             key: "description",
             name: "Description",
             defaultSize: 70,
