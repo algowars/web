@@ -1,4 +1,5 @@
 import { ProblemSetup } from "@/features/problems/models/problem-setup";
+import { api } from "@/lib/api-client";
 import { QueryConfig } from "@/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
@@ -9,7 +10,14 @@ export const getProblemSetup = ({
   problemId: string;
   languageId: number;
 }): Promise<ProblemSetup | null> => {
-  return Promise.resolve(null);
+  return api.get<ProblemSetup>({
+    url: `/api/v1/problem/${encodeURIComponent(problemId)}/setup`,
+    config: {
+      params: {
+        languageId,
+      },
+    },
+  });
 };
 
 export const getProblemSetupQueryOptions = (
