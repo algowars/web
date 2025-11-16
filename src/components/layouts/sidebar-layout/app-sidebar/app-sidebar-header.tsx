@@ -19,10 +19,12 @@ export type BreadcrumbItem = {
 
 interface AppSidebarHeaderProps {
   breadcrumbs?: BreadcrumbItem[];
+  headerItems?: React.ReactNode;
 }
 
 export default function AppSidebarHeader({
   breadcrumbs = [],
+  headerItems,
 }: AppSidebarHeaderProps) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-2">
@@ -63,6 +65,7 @@ export default function AppSidebarHeader({
           </Breadcrumb>
         )}
       </div>
+      {headerItems}
       <ModeToggle className="ml-auto mr-3" />
     </header>
   );

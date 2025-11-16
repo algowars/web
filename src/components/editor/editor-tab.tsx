@@ -26,7 +26,7 @@ export const EditorTab = ({ tab }: EditorTabProps) => {
               <EditorTab tab={t} />
             </ResizablePanel>
             {tab.children && index !== tab?.children?.length - 1 ? (
-              <ResizableHandle className="bg-inherit p-2 hover:bg-muted" />
+              <ResizableHandle className="bg-inherit p-1 hover:bg-muted" />
             ) : null}
           </Fragment>
         ))}

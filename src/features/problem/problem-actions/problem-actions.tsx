@@ -7,7 +7,12 @@ export default function ProblemActions(props: ProblemActionsProps) {
   return (
     <ul {...props}>
       <li>
-        <Button className="w-28">Submit</Button>
+        <Button className="w-24" variant="secondary">
+          Run
+        </Button>
+      </li>
+      <li>
+        <Button className="w-24">Submit</Button>
       </li>
     </ul>
   );

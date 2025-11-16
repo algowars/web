@@ -12,12 +12,13 @@ export const EditorPanelHeader = ({
   currentTabIndex,
   setCurrentTab,
 }: EditorPanelHeaderProps) => {
+  console.log("TTABL: ", currentTabIndex, tab.children);
   if (tab.children) {
     return (
       <nav className="flex items-center gap-1 overflow-x-auto border-b px-2 py-1">
         {tab.children.map((t, index) => (
           <Button
-            variant="ghost"
+            variant={index === currentTabIndex ? "secondary" : "ghost"}
             className={`h-7 px-3 py-1 ${
               index === currentTabIndex
                 ? "text-primary"

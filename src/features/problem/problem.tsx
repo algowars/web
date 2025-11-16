@@ -7,6 +7,7 @@ import { routerConfig } from "@/router-config";
 import { useProblemEditor } from "./state/problem-editor-store";
 import { useProblemSetup } from "./api/get-problem-setup";
 import ProblemEditor from "./problem-editor/problem-editor";
+import ProblemActions from "./problem-actions/problem-actions";
 
 type ProblemProps = {
   problem: ProblemType;
@@ -46,6 +47,9 @@ export default function Problem({ problem }: ProblemProps) {
         },
       ]}
       defaultOpen={false}
+      headerItems={
+        <ProblemActions className="ml-auto flex items-center gap-2" />
+      }
     >
       <div className="h-full">
         <ProblemEditor />
