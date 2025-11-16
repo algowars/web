@@ -26,7 +26,11 @@ export const useProblemEditor = create<ProblemEditorStore>((set, get) => ({
     set(() => ({
       setup,
       code: setup?.initialCode ?? "",
-      currentVersion: setup?.availableLanguages[0]?.versions[0] ?? null,
+      currentVersion:
+        Array.isArray(get().problem?.availableLanguages) &&
+        get().problem?.availableLanguages.length
+          ? get().problem?.availableLanguages[0]?.versions[0]
+          : null,
     })),
 
   setProblem: (problem) => set(() => ({ problem })),

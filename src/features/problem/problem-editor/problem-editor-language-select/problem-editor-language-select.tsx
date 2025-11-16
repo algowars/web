@@ -29,6 +29,8 @@ export default function ProblemCodeEditorLanguageSelect({
       lang.versions.some((v) => v.id === currentVersion.id)
     );
 
+  console.log(availableLanguages, currentLanguage, currentVersion);
+
   return (
     <ul className="ml-auto flex items-center gap-2">
       <li>
@@ -36,7 +38,6 @@ export default function ProblemCodeEditorLanguageSelect({
           value={currentLanguage?.id.toString()}
           onValueChange={(v: string) => {
             const lang = availableLanguages.find((l) => l.id === parseInt(v));
-            // Select first version of the chosen language
             changeCurrentVersion(lang?.versions[0] ?? null);
           }}
         >

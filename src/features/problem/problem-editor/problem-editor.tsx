@@ -28,10 +28,11 @@ export default function ProblemEditor() {
   }
 
   const currentLanguage =
-    currentVersion &&
-    setup.availableLanguages.find((lang) =>
-      lang.versions.some((v) => v.id === currentVersion.id)
-    );
+    currentVersion && Array.isArray(problem.availableLanguages)
+      ? problem.availableLanguages.find((lang) =>
+          lang.versions.some((v) => v.id === currentVersion.id)
+        )
+      : null;
 
   const tabs: Tab = {
     direction: "horizontal",
@@ -47,7 +48,7 @@ export default function ProblemEditor() {
           <>
             <div className="px-1 py-1">
               <ProblemCodeEditorLanguageSelect
-                availableLanguages={setup.availableLanguages}
+                availableLanguages={problem.availableLanguages}
                 currentVersion={currentVersion}
                 changeCurrentVersion={setCurrentVersion}
               />
@@ -56,7 +57,7 @@ export default function ProblemEditor() {
               code={code}
               changeCode={setCode}
               className="h-full overflow-auto"
-              language={currentLanguage ?? setup.availableLanguages[0]}
+              language={currentLanguage ?? problem.availableLanguages[0]}
             />
           </>
         ),

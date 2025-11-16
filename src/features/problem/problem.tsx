@@ -15,7 +15,6 @@ type ProblemProps = {
 export default function Problem({ problem }: ProblemProps) {
   const selectedLanguageId = problem.availableLanguages[0].id;
 
-  console.log("PROBLEM:", problem);
   const setupQuery = useProblemSetup({
     problemId: problem.id,
     languageId: selectedLanguageId,
