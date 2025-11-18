@@ -14,7 +14,19 @@ type ProblemProps = {
 };
 
 export default function Problem({ problem }: ProblemProps) {
-  const selectedLanguageId = problem.availableLanguages[0].id;
+  const currentVersion = useProblemEditor((s) => s.currentVersion);
+
+  const selectedLanguageId = problem.availableLanguages.find((language) =>
+    language.versions.some((v) => v.id === (currentVersion?.id ?? -1))
+  )?.id;
+
+  console.log(
+    "SELECTED LANGUAGE: ",
+    selectedLanguageId,
+    problem.availableLanguages,
+    "V: ",
+    currentVersion
+  );
 
   const setupQuery = useProblemSetup({
     problemId: problem.id,
@@ -28,7 +40,13 @@ export default function Problem({ problem }: ProblemProps) {
       setProblem(problem);
       setSetup(setupQuery.data);
     }
-  }, [problem, setupQuery.data, setProblem, setSetup]);
+  }, [problem.id, setupQuery.data, setProblem, setSetup]);
+
+  useEffect(() => {
+    if (!currentVersion) {
+      setCurrent;
+    }
+  }, [problem.availableLanguages.length]);
 
   return (
     <SidebarLayout

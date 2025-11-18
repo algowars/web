@@ -11,7 +11,6 @@ type Props = {
 };
 
 const defaultComponents: Partial<Components> = {
-  // Headings
   h1: ({ ...props }) => (
     <h1 className="text-xl font-semibold tracking-tight" {...props} />
   ),
@@ -22,12 +21,10 @@ const defaultComponents: Partial<Components> = {
     <h3 className="text-xl font-semibold tracking-tight" {...props} />
   ),
 
-  // Paragraph
   p: ({ ...props }) => (
     <p className="leading-7 [&:not(:first-child)]:mt-6" {...props} />
   ),
 
-  // Links
   a: ({ href, ...props }) => (
     <a
       href={href ?? "#"}
@@ -38,7 +35,6 @@ const defaultComponents: Partial<Components> = {
     />
   ),
 
-  // Lists
   ul: ({ ...props }) => (
     <ul className="my-6 ml-6 list-disc [&>li]:mt-2" {...props} />
   ),
@@ -47,12 +43,10 @@ const defaultComponents: Partial<Components> = {
   ),
   li: ({ ...props }) => <li className="my-1" {...props} />,
 
-  // Blockquote
   blockquote: ({ ...props }) => (
     <blockquote className="mt-6 border-l-2 pl-6 italic" {...props} />
   ),
 
-  // Table (basic)
   table: ({ ...props }) => <table className="w-full" {...props} />,
   thead: ({ ...props }) => <thead className="bg-slate-100" {...props} />,
   tbody: ({ ...props }) => <tbody {...props} />,
@@ -72,7 +66,6 @@ const defaultComponents: Partial<Components> = {
     />
   ),
 
-  // Images
   img: ({ src, alt, ...props }) => (
     <img
       src={src ?? undefined}
@@ -82,7 +75,6 @@ const defaultComponents: Partial<Components> = {
     />
   ),
 
-  // pre is usually handled by code above, but keep a fallback
   pre: ({ ...props }) => (
     <pre
       className="bg-slate-800 text-slate-100 p-4 rounded my-4 overflow-auto"

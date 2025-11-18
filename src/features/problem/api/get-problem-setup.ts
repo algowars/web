@@ -8,7 +8,7 @@ export const getProblemSetup = ({
   languageId,
 }: {
   problemId: string;
-  languageId: number;
+  languageId?: number;
 }): Promise<ProblemSetup | null> => {
   return api.get<ProblemSetup>({
     url: `/api/v1/problem/${encodeURIComponent(problemId)}/setup`,
@@ -22,7 +22,7 @@ export const getProblemSetup = ({
 
 export const getProblemSetupQueryOptions = (
   problemId: string,
-  languageId: number
+  languageId?: number
 ) => {
   return queryOptions({
     queryKey: ["problem-setup", problemId, languageId],
@@ -32,7 +32,7 @@ export const getProblemSetupQueryOptions = (
 
 type UseProblemSetupOptions = {
   problemId: string;
-  languageId: number;
+  languageId?: number;
   queryConfig?: QueryConfig<typeof getProblemSetupQueryOptions>;
 };
 
