@@ -5,17 +5,17 @@ import { CodeXml, FileText } from "lucide-react";
 import ProblemCodeEditorLanguageSelect from "./problem-editor-language-select/problem-editor-language-select";
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
-import { useProblemEditor } from "../state/problem-editor-store";
 import { Skeleton } from "@/components/ui/skeleton";
+import { problemEditorStore } from "../state/problem-editor-store-old";
 
 export default function ProblemEditor() {
-  const setup = useProblemEditor((s) => s.setup);
-  const problem = useProblemEditor((s) => s.problem);
-  const code = useProblemEditor((s) => s.code);
-  const currentVersion = useProblemEditor((s) => s.currentVersion);
+  const setup = problemEditorStore((s) => s.setup);
+  const problem = problemEditorStore((s) => s.problem);
+  const code = problemEditorStore((s) => s.code);
+  const currentVersion = problemEditorStore((s) => s.currentVersion);
 
-  const setCode = useProblemEditor((s) => s.setCode);
-  const setCurrentVersion = useProblemEditor((s) => s.setCurrentVersion);
+  const setCode = problemEditorStore((s) => s.setCode);
+  const setCurrentVersion = problemEditorStore((s) => s.setCurrentVersion);
 
   if (!setup || !problem) {
     return (
@@ -57,7 +57,7 @@ export default function ProblemEditor() {
               code={code}
               changeCode={setCode}
               className="h-full overflow-auto"
-              language={currentLanguage ?? problem.availableLanguages[0]}
+              language={problem.availableLanguages.find((lang) => lang.versions.find((v) => v.id === currentVersion?.id))}
             />
           </>
         ),

@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Problem as ProblemType } from "../problems/models/problem";
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
 import { routerConfig } from "@/router-config";
-import { useProblemEditor } from "./state/problem-editor-store";
+import { problemEditorStore } from "./state/problem-editor-store-old";
 import { useProblemSetup } from "./api/get-problem-setup";
 import ProblemEditor from "./problem-editor/problem-editor";
 import ProblemActions from "./problem-actions/problem-actions";
@@ -14,39 +14,41 @@ type ProblemProps = {
 };
 
 export default function Problem({ problem }: ProblemProps) {
-  const currentVersion = useProblemEditor((s) => s.currentVersion);
+  const currentVersion = problemEditorStore((s) => s.currentVersion);
+  const setCurrentVersion = problemEditorStore((s) => s.setCurrentVersion);
 
   const selectedLanguageId = problem.availableLanguages.find((language) =>
     language.versions.some((v) => v.id === (currentVersion?.id ?? -1))
   )?.id;
 
-  console.log(
-    "SELECTED LANGUAGE: ",
-    selectedLanguageId,
-    problem.availableLanguages,
-    "V: ",
-    currentVersion
-  );
+  console.log("SELECTED LANGUAGE ID:", selectedLanguageId);
 
-  const setupQuery = useProblemSetup({
+  const { data : setup } = useProblemSetup({
     problemId: problem.id,
     languageId: selectedLanguageId,
   });
-  const setProblem = useProblemEditor((s) => s.setProblem);
-  const setSetup = useProblemEditor((s) => s.setSetup);
+
+  console.log("SETUP: ", setup);
+
+  const setProblem = problemEditorStore((s) => s.setProblem);
+  const setSetup = problemEditorStore((s) => s.setSetup);
 
   useEffect(() => {
-    if (setupQuery.data) {
-      setProblem(problem);
-      setSetup(setupQuery.data);
+    if (!selectedLanguageId) {
+      setCurrentVersion(
+        problem.availableLanguages[0]?.versions[0] ?? null
+      );
     }
-  }, [problem.id, setupQuery.data, setProblem, setSetup]);
+
+    setProblem(problem);
+  }, [problem]);
 
   useEffect(() => {
-    if (!currentVersion) {
-      setCurrent;
+    if (setup) {
+      setSetup(setup);
     }
-  }, [problem.availableLanguages.length]);
+  }, [setup, setSetup])
+
 
   return (
     <SidebarLayout

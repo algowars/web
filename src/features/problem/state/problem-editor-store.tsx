@@ -1,46 +1,53 @@
-import { Problem } from "@/features/problems/models/problem";
-import { ProblemSetup } from "@/features/problems/models/problem-setup";
 import { LanguageVersion } from "@/features/problems/models/language";
-
+import { Problem } from "@/features/problems/models/problem";
+import { ProblemSetup } from "@/features/problems/models/problem-setup"
 import { create } from "zustand";
+import { subscribeWithSelector } from 'zustand/middleware'
 
-type ProblemEditorStore = {
-  setup: ProblemSetup | null;
-  problem: Problem | null;
-  code: string;
-  currentVersion: LanguageVersion | null;
-  setSetup: (setup: ProblemSetup | null) => void;
-  setProblem: (problem: Problem | null) => void;
-  setCode: (code: string) => void;
-  resetCode: () => void;
-  setCurrentVersion: (version: LanguageVersion | null) => void;
-};
+type ProblemEditorState = {
+    setup: ProblemSetup | null;
+    problem: Problem | null;
+    code: string;
+    currentVersion: LanguageVersion | null;
+}
 
-export const useProblemEditor = create<ProblemEditorStore>((set, get) => ({
-  setup: null,
-  problem: null,
-  code: "",
-  currentVersion: null,
+type ProblemEditorActions = {
+    setSetup: (setup: ProblemSetup | null) => void;
+    setProblem: (problem: Problem | null) => void;
+    setCode: (code: string) => void;
+    resetCode: () => void;
+    setCurrentVersion: (version: LanguageVersion | null) => void;
+}
 
-  setSetup: (setup) =>
-    set(() => ({
-      setup,
-      code: setup?.initialCode ?? "",
-      currentVersion:
-        Array.isArray(get().problem?.availableLanguages) &&
-        get().problem?.availableLanguages.length
-          ? get().problem?.availableLanguages[0]?.versions[0]
-          : null,
-    })),
+type ProblemEditorStore = ProblemEditorState & ProblemEditorActions;
 
-  setProblem: (problem) => set(() => ({ problem })),
+const problemEditorStore = create<SubscribeWithSelector<ProblemEditorStore>(
+  subscribeWithSelector((set, get) => ({
+    setup: null,
+    problem: null,
+    code: "",
+    currentVersion: null,
 
-  setCode: (code) => set({ code }),
+    setSetup: (setup) =>
+      set(() => ({
+        setup,
+        code: setup?.initialCode ?? "",
+        currentVersion:
+          Array.isArray(get().problem?.availableLanguages) &&
+          get().problem?.availableLanguages.length
+            ? get().problem?.availableLanguages[0]?.versions[0]
+            : null,
+      })),
 
-  resetCode: () => {
-    const setup = get().setup;
-    set({ code: setup?.initialCode ?? "" });
-  },
+    setProblem: (problem) => set(() => ({ problem })),
 
-  setCurrentVersion: (version) => set({ currentVersion: version }),
-}));
+    setCode: (code) => set({ code }),
+
+    resetCode: () => {
+      const setup = get().setup;
+      set({ code: setup?.initialCode ?? "" }); // `setup?.initialCode ?? ""` will be safe
+    },
+
+    setCurrentVersion: (version) => set({ currentVersion: version }),
+  }))
+);
