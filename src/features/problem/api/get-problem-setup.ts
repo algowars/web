@@ -5,16 +5,20 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getProblemSetup = ({
   problemId,
-  languageId,
+  languageVersionId,
 }: {
   problemId: string;
-  languageId?: number;
+  languageVersionId?: number;
 }): Promise<ProblemSetup | null> => {
+  if (!languageVersionId) {
+    return Promise.resolve(null);
+  }
+
   return api.get<ProblemSetup>({
     url: `/api/v1/problem/${encodeURIComponent(problemId)}/setup`,
     config: {
       params: {
-        languageId,
+        languageVersionId,
       },
     },
   });
@@ -22,27 +26,27 @@ export const getProblemSetup = ({
 
 export const getProblemSetupQueryOptions = (
   problemId: string,
-  languageId?: number
+  languageVersionId?: number
 ) => {
   return queryOptions({
-    queryKey: ["problem-setup", problemId, languageId],
-    queryFn: () => getProblemSetup({ problemId, languageId }),
+    queryKey: ["problem-setup", problemId, languageVersionId],
+    queryFn: () => getProblemSetup({ problemId, languageVersionId }),
   });
 };
 
 type UseProblemSetupOptions = {
   problemId: string;
-  languageId?: number;
+  languageVersionId?: number;
   queryConfig?: QueryConfig<typeof getProblemSetupQueryOptions>;
 };
 
 export const useProblemSetup = ({
   problemId,
-  languageId,
+  languageVersionId,
   queryConfig,
 }: UseProblemSetupOptions) => {
   return useQuery({
-    ...getProblemSetupQueryOptions(problemId, languageId),
+    ...getProblemSetupQueryOptions(problemId, languageVersionId),
     ...queryConfig,
   });
 };

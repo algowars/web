@@ -15,15 +15,13 @@ type ProblemProps = {
 
 export default function Problem({ problem }: ProblemProps) {
   const currentVersion = useProblemEditorStore((s) => s.currentVersion);
-  const setCurrentVersion = useProblemEditorStore((s) => s.setCurrentVersion);
-  const getResolvedLanguage = useProblemEditorStore(
-    (s) => s.getResolveLanguage
-  );
-
-  const selectedLanguageId = getResolvedLanguage()?.id;
+  const getResolvedVersion = useProblemEditorStore((s) => s.getResolvedVersion);
+  const currentSetup = useProblemEditorStore((s) => s.setup);
+  const selectedLanguageVersionId =
+    getResolvedVersion()?.id ?? problem.availableLanguages[0].versions[0].id;
   const { data: setup } = useProblemSetup({
     problemId: problem.id,
-    languageId: selectedLanguageId,
+    languageVersionId: selectedLanguageVersionId,
   });
 
   const setProblem = useProblemEditorStore((s) => s.setProblem);
@@ -34,10 +32,10 @@ export default function Problem({ problem }: ProblemProps) {
   }, [problem]);
 
   useEffect(() => {
-    if (setup) {
-      setSetup(setup);
-    }
+    setSetup(setup);
   }, [setup, setSetup]);
+
+  console.log("DATA: ", currentSetup, currentVersion, setup);
 
   return (
     <SidebarLayout

@@ -5,6 +5,7 @@ export interface ProblemSetup {
   id: number;
   defaultLanguageId: number;
   defaultLanguageVersionId: number;
+  languageVersionId: number;
   createdOn: number;
   createdBy: Account;
   version: number;

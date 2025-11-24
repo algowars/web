@@ -52,6 +52,8 @@ export default async function ProblemPage({
     getProblemBySlugQueryOptions(slug).queryKey
   );
 
+  console.log("PROBLEM: ", problem);
+
   if (!problem) {
     return <div>Problem not found</div>;
   }

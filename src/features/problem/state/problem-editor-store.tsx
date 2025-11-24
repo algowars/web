@@ -12,7 +12,7 @@ type ProblemEditorState = {
 };
 
 type ProblemEditorActions = {
-  setSetup: (setup: ProblemSetup | null) => void;
+  setSetup: (setup: ProblemSetup | null | undefined) => void;
   setProblem: (problem: Problem | null) => void;
   setCode: (code: string) => void;
   resetCode: () => void;
@@ -35,10 +35,7 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
         set({
           setup,
           code: setup?.initialCode ?? "",
-          currentVersion:
-            get().currentVersion ??
-            setup?.problem.availableLanguages[0]?.versions[0] ??
-            null,
+          currentVersion: get().problem?.availableLanguages,
         }),
 
       setProblem: (problem) => set({ problem }),
