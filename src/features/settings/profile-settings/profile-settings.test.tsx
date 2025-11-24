@@ -10,13 +10,23 @@ vi.mock("@/features/profile/api/get-profile-settings", () => ({
 
 const mockUseProfileSettings = vi.mocked(useProfileSettings);
 
+const mockQueryState = (
+  state: Partial<ReturnType<typeof useProfileSettings>>
+) =>
+  mockUseProfileSettings.mockReturnValue(
+    {
+      data: undefined,
+      isLoading: false,
+      isError: false,
+      ...state,
+    } as ReturnType<typeof useProfileSettings>
+  );
+
 describe("ProfileSettings", () => {
   it("renders loading state", () => {
-    mockUseProfileSettings.mockReturnValue({
-      data: undefined,
+    mockQueryState({
       isLoading: true,
-      isError: false,
-    } as any);
+    });
 
     render(<ProfileSettings />);
 
@@ -24,11 +34,9 @@ describe("ProfileSettings", () => {
   });
 
   it("renders error state", () => {
-    mockUseProfileSettings.mockReturnValue({
-      data: undefined,
-      isLoading: false,
+    mockQueryState({
       isError: true,
-    } as any);
+    });
 
     render(<ProfileSettings />);
 
@@ -38,11 +46,9 @@ describe("ProfileSettings", () => {
   });
 
   it("shows the username in a disabled input", () => {
-    mockUseProfileSettings.mockReturnValue({
+    mockQueryState({
       data: { username: "jira-user" },
-      isLoading: false,
-      isError: false,
-    } as any);
+    });
 
     render(<ProfileSettings />);
 
