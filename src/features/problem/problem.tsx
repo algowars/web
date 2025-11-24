@@ -35,8 +35,6 @@ export default function Problem({ problem }: ProblemProps) {
     setSetup(setup);
   }, [setup, setSetup]);
 
-  console.log("DATA: ", currentSetup, currentVersion, setup);
-
   return (
     <SidebarLayout
       breadcrumbs={[
