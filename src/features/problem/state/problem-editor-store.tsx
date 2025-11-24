@@ -35,7 +35,13 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
         set({
           setup,
           code: setup?.initialCode ?? "",
-          currentVersion: get().problem?.availableLanguages,
+          currentVersion:
+            get()
+              .problem?.availableLanguages.reduce(
+                (prev: LanguageVersion[], curr) => [...prev, ...curr.versions],
+                []
+              )
+              .find((v) => v.id === setup?.languageVersionId) ?? null,
         }),
 
       setProblem: (problem) => set({ problem }),
