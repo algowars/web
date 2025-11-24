@@ -18,7 +18,7 @@ type Props = {
   code: string;
   changeCode: (value: string) => void;
   className?: string;
-  language?: Language;
+  language?: Language | null;
 };
 
 export const CodeEditor = ({

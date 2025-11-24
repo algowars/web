@@ -6,16 +6,16 @@ import ProblemCodeEditorLanguageSelect from "./problem-editor-language-select/pr
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
-import { problemEditorStore } from "../state/problem-editor-store-old";
+import { useProblemEditorStore } from "../state/problem-editor-store";
 
 export default function ProblemEditor() {
-  const setup = problemEditorStore((s) => s.setup);
-  const problem = problemEditorStore((s) => s.problem);
-  const code = problemEditorStore((s) => s.code);
-  const currentVersion = problemEditorStore((s) => s.currentVersion);
-
-  const setCode = problemEditorStore((s) => s.setCode);
-  const setCurrentVersion = problemEditorStore((s) => s.setCurrentVersion);
+  const setup = useProblemEditorStore((s) => s.setup);
+  const problem = useProblemEditorStore((s) => s.problem);
+  const code = useProblemEditorStore((s) => s.code);
+  const currentVersion = useProblemEditorStore((s) => s.currentVersion);
+  const setCode = useProblemEditorStore((s) => s.setCode);
+  const setCurrentVersion = useProblemEditorStore((s) => s.setCurrentVersion);
+  const getResolveLanguage = useProblemEditorStore((s) => s.getResolveLanguage);
 
   if (!setup || !problem) {
     return (
@@ -27,12 +27,7 @@ export default function ProblemEditor() {
     );
   }
 
-  const currentLanguage =
-    currentVersion && Array.isArray(problem.availableLanguages)
-      ? problem.availableLanguages.find((lang) =>
-          lang.versions.some((v) => v.id === currentVersion.id)
-        )
-      : null;
+  const currentLanguage = getResolveLanguage();
 
   const tabs: Tab = {
     direction: "horizontal",
@@ -57,7 +52,7 @@ export default function ProblemEditor() {
               code={code}
               changeCode={setCode}
               className="h-full overflow-auto"
-              language={problem.availableLanguages.find((lang) => lang.versions.find((v) => v.id === currentVersion?.id))}
+              language={currentLanguage}
             />
           </>
         ),

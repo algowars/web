@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import { Language, LanguageVersion } from "@/features/problems/models/language";
+import { useProblemEditorStore } from "../../state/problem-editor-store";
 
 type Props = {
   availableLanguages: Language[];
@@ -23,11 +24,8 @@ export default function ProblemCodeEditorLanguageSelect({
   currentVersion,
   changeCurrentVersion,
 }: Props) {
-  const currentLanguage =
-    currentVersion &&
-    availableLanguages.find((lang) =>
-      lang.versions.some((v) => v.id === currentVersion.id)
-    );
+  const getCurrentLanguage = useProblemEditorStore((s) => s.getResolveLanguage);
+  const currentLanguage = getCurrentLanguage();
 
   return (
     <ul className="ml-auto flex items-center gap-2">
@@ -36,7 +34,6 @@ export default function ProblemCodeEditorLanguageSelect({
           value={currentLanguage?.id.toString()}
           onValueChange={(v: string) => {
             const lang = availableLanguages.find((l) => l.id === parseInt(v));
-            console.log("LANG: ", lang);
             changeCurrentVersion(lang?.versions[0] ?? null);
           }}
         >
