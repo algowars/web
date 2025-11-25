@@ -7,99 +7,52 @@ type RouteEntry = {
 };
 
 const _routerConfig = {
-  home: {
-    path: "/",
-  },
-  authSignUp: {
-    path: `/auth/login?screen_hint=signup&returnTo=/account/callback`,
-  },
-  authLogIn: {
-    path: "/auth/login?returnTo=/account/callback",
-  },
-  authLogOut: {
-    path: "/auth/logout",
-  },
+  about: { path: "/about" },
+  accountSetup: { path: "/account/setup" },
   adminProblem: {
     path: "/admin/problems/:slug",
     execute: ({ slug }: { slug: string }) =>
       `/admin/problems/${encodeURIComponent(slug)}`,
   },
-  accountSetup: {
-    path: "/account/setup",
-  },
-  dashboard: {
-    path: "/",
-  },
-  problems: {
-    path: "/problems",
-  },
+  blog: { path: "/blog" },
+  careers: { path: "/careers" },
+  cookies: { path: "/cookies" },
+  contests: { path: "/contests" },
+  createProblem: { path: "/problems/management/create" },
+  dashboard: { path: "/" },
+  dmca: { path: "/dmca" },
+  home: { path: "/" },
   problem: {
     path: "/problems/:slug",
     execute: ({ slug }: { slug: string }) =>
       `/problems/${encodeURIComponent(slug)}`,
   },
-  problemMangement: {
-    path: "/problems/management",
-  },
-  createProblem: {
-    path: "/problems/management/create",
-  },
-  contests: {
-    path: "/contests",
-  },
-  leaderboard: {
-    path: "/leaderboard",
-  },
-  tutorials: {
-    path: "/tutorials",
-  },
-  about: {
-    path: "/about",
-  },
-  careers: {
-    path: "/careers",
-  },
-  blog: {
-    path: "/blog",
-  },
-  contact: {
-    path: "/contact",
-  },
-  privacy: {
-    path: "/privacy",
-  },
-  tags: {
-    path: "/tags",
-    execute: ({ tags }: { tags: string[] }) =>
-      `/tags?q=${encodeURIComponent(tags.join(","))}`,
-  },
+  problemManagement: { path: "/problems/management" },
+  problems: { path: "/problems" },
   profile: {
     path: "/profile/:username",
     execute: ({ username }: { username: string }) =>
       `/profile/${encodeURIComponent(username)}`,
   },
-  profileSettings: {
-    path: "/settings",
+  profileSettings: { path: "/settings" },
+  privacy: { path: "/privacy" },
+  settingsAccount: { path: "/settings/account" },
+  settingsPreferences: { path: "/settings/preferences" },
+  settingsProfile: { path: "/settings/profile" },
+  tags: {
+    path: "/tags",
+    execute: ({ tags }: { tags: string[] }) =>
+      `/tags?q=${encodeURIComponent(tags.join(","))}`,
   },
-
-  settingsProfile: {
-    path: "/settings/profile",
+  terms: { path: "/terms" },
+  tutorials: { path: "/tutorials" },
+  authLogIn: { path: "/auth/login?returnTo=/account/callback" },
+  authLogOut: { path: "/auth/logout" },
+  authSignUp: {
+    path: "/auth/login?screen_hint=signup&returnTo=/account/callback",
   },
-  settingsAccount: {
-    path: "/settings/account",
-  },
-  settingsPreferences: {
-    path: "/settings/preferences",
-  },
-  terms: {
-    path: "/terms",
-  },
-  cookies: {
-    path: "/cookies",
-  },
-  dmca: {
-    path: "/dmca",
-  },
+  leaderboard: { path: "/leaderboard" },
+  contact: { path: "/contact" },
 } as const satisfies Record<string, RouteEntry>;
 
 export const routerConfig = Object.freeze(_routerConfig);
