@@ -1,4 +1,4 @@
-import Problem from "@/features/problem/problem";
+import ProblemLayout from "@/features/problem/problem-layout";
 import {
   getProblemBySlug,
   getProblemBySlugQueryOptions,
@@ -58,7 +58,7 @@ export default async function ProblemPage({
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <Problem problem={problem} />
+      <ProblemLayout problem={problem} />
     </HydrationBoundary>
   );
 }

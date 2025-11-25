@@ -9,29 +9,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
-import { Language, LanguageVersion } from "@/features/problems/models/language";
-import { useProblemEditorStore } from "../../state/problem-editor-store";
+import { useProblemEditor } from "../../problem-editor-store";
 
-type Props = {
-  availableLanguages: Language[];
-  currentVersion: LanguageVersion | null;
-  changeCurrentVersion: (version: LanguageVersion | null) => void;
-};
-
-export default function ProblemCodeEditorLanguageSelect({
-  availableLanguages,
-  currentVersion,
-  changeCurrentVersion,
-}: Props) {
-  const getCurrentLanguage = useProblemEditorStore((s) => s.getResolveLanguage);
-  const currentLanguage = getCurrentLanguage();
+export default function ProblemCodeEditorLanguageSelect() {
+  const {
+    language,
+    languageVersion,
+    availableLanguages,
+    changeCurrentVersion,
+  } = useProblemEditor();
 
   return (
     <ul className="ml-auto flex items-center gap-2">
       <li>
         <Select
-          value={currentLanguage?.id.toString()}
+          value={language?.id.toString() ?? ""}
           onValueChange={(v: string) => {
             const lang = availableLanguages.find((l) => l.id === parseInt(v));
             changeCurrentVersion(lang?.versions[0] ?? null);
@@ -59,14 +51,13 @@ export default function ProblemCodeEditorLanguageSelect({
 
       <li>
         <Select
-          value={currentVersion?.id.toString()}
+          value={languageVersion?.id.toString() ?? ""}
           onValueChange={(v: string) =>
             changeCurrentVersion(
-              currentLanguage?.versions.find((ver) => ver.id === parseInt(v)) ??
-                null
+              language?.versions.find((ver) => ver.id === parseInt(v)) ?? null
             )
           }
-          disabled={!currentLanguage?.versions?.length}
+          disabled={!language?.versions?.length}
         >
           <SelectTrigger className="h-6 min-w-[8rem] text-xs px-2 py-1">
             <SelectValue placeholder="Select a version" />
@@ -74,7 +65,7 @@ export default function ProblemCodeEditorLanguageSelect({
           <SelectContent className="min-w-[8rem]">
             <SelectGroup>
               <SelectLabel className="text-xs py-1 px-2">Versions</SelectLabel>
-              {currentLanguage?.versions.map((version) => (
+              {language?.versions.map((version) => (
                 <SelectItem
                   value={version.id.toString()}
                   key={version.id}

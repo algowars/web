@@ -6,16 +6,10 @@ import ProblemCodeEditorLanguageSelect from "./problem-editor-language-select/pr
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProblemEditorStore } from "../state/problem-editor-store";
+import { useProblemEditor } from "../problem-editor-store";
 
 export default function ProblemEditor() {
-  const setup = useProblemEditorStore((s) => s.setup);
-  const problem = useProblemEditorStore((s) => s.problem);
-  const code = useProblemEditorStore((s) => s.code);
-  const currentVersion = useProblemEditorStore((s) => s.currentVersion);
-  const setCode = useProblemEditorStore((s) => s.setCode);
-  const setCurrentVersion = useProblemEditorStore((s) => s.setCurrentVersion);
-  const getResolveLanguage = useProblemEditorStore((s) => s.getResolveLanguage);
+  const { setup, problem } = useProblemEditor();
 
   if (!setup || !problem) {
     return (
@@ -26,8 +20,6 @@ export default function ProblemEditor() {
       </div>
     );
   }
-
-  const currentLanguage = getResolveLanguage();
 
   const tabs: Tab = {
     direction: "horizontal",
@@ -42,18 +34,9 @@ export default function ProblemEditor() {
         component: (
           <>
             <div className="px-1 py-1">
-              <ProblemCodeEditorLanguageSelect
-                availableLanguages={problem.availableLanguages}
-                currentVersion={currentVersion}
-                changeCurrentVersion={setCurrentVersion}
-              />
+              <ProblemCodeEditorLanguageSelect />
             </div>
-            <CodeEditor
-              code={code}
-              changeCode={setCode}
-              className="h-full overflow-auto"
-              language={currentLanguage}
-            />
+            <CodeEditor className="h-full overflow-auto" />
           </>
         ),
       },

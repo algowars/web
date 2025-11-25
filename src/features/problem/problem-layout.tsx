@@ -1,38 +1,32 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { Problem as ProblemType } from "../problems/models/problem";
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
+import { Problem } from "../problems/models/problem";
 import { routerConfig } from "@/router-config";
-import { useProblemSetup } from "./api/get-problem-setup";
-import ProblemEditor from "./problem-editor/problem-editor";
 import ProblemActions from "./problem-actions/problem-actions";
-import { useProblemEditorStore } from "./state/problem-editor-store";
+import { useProblemSetup } from "./api/get-problem-setup";
+import { useEffect } from "react";
+import ProblemEditor from "./problem-editor/problem-editor";
+import { useProblemEditor } from "./problem-editor-store";
 
-type ProblemProps = {
-  problem: ProblemType;
+type ProblemLayoutProps = {
+  problem: Problem;
 };
 
-export default function Problem({ problem }: ProblemProps) {
-  const currentVersion = useProblemEditorStore((s) => s.currentVersion);
-  const getResolvedVersion = useProblemEditorStore((s) => s.getResolvedVersion);
-  const currentSetup = useProblemEditorStore((s) => s.setup);
-  const selectedLanguageVersionId =
-    getResolvedVersion()?.id ?? problem.availableLanguages[0].versions[0].id;
+export default function ProblemLayout({ problem }: ProblemLayoutProps) {
+  const { languageVersion, setProblem, setSetup } = useProblemEditor();
+
   const { data: setup } = useProblemSetup({
     problemId: problem.id,
-    languageVersionId: selectedLanguageVersionId,
+    languageVersionId: languageVersion?.id,
   });
-
-  const setProblem = useProblemEditorStore((s) => s.setProblem);
-  const setSetup = useProblemEditorStore((s) => s.setSetup);
 
   useEffect(() => {
     setProblem(problem);
-  }, [problem]);
+  }, [problem, setProblem]);
 
   useEffect(() => {
-    setSetup(setup);
+    setSetup(setup ?? null);
   }, [setup, setSetup]);
 
   return (
