@@ -19,6 +19,10 @@ export default function ProblemQuestion({ problem }: Props) {
     return null;
   }
 
+  const questionMemo = React.useMemo(() => {
+    return <MarkdownSafe markdown={problem.question} />;
+  }, [problem.question]);
+
   return (
     <div className="flex h-full flex-col overflow-auto bg-sidebar">
       <div className="p-5">
@@ -34,7 +38,7 @@ export default function ProblemQuestion({ problem }: Props) {
           </ul>
         </div>
 
-        <MarkdownSafe markdown={problem.question} />
+        {questionMemo}
       </div>
       <Accordion type="single" collapsible className="mt-auto border-t">
         <AccordionItem value="tags">
