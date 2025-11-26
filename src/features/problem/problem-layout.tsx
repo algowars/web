@@ -7,14 +7,18 @@ import ProblemActions from "./problem-actions/problem-actions";
 import { useProblemSetup } from "./api/get-problem-setup";
 import { useEffect } from "react";
 import ProblemEditor from "./problem-editor/problem-editor";
-import { useProblemEditor } from "./problem-editor-store";
+import { useProblemEditorStore } from "./problem-editor-store";
 
 type ProblemLayoutProps = {
   problem: Problem;
 };
 
 export default function ProblemLayout({ problem }: ProblemLayoutProps) {
-  const { languageVersion, setProblem, setSetup } = useProblemEditor();
+  const getLanguageVersion = useProblemEditorStore((s) => s.getLanguageVersion);
+  const setProblem = useProblemEditorStore((s) => s.setProblem);
+  const setSetup = useProblemEditorStore((s) => s.setSetup);
+
+  const languageVersion = getLanguageVersion();
 
   const { data: setup } = useProblemSetup({
     problemId: problem.id,

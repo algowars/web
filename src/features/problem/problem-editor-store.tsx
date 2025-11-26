@@ -20,11 +20,10 @@ type ProblemEditorActions = {
   getLanguage: () => Language | null;
   getLanguageVersion: () => LanguageVersion | null;
   getAvailableLanguages: () => Language[];
+  findVersionById: (id: number) => LanguageVersion | null;
 };
 
-type ProblemEditorStore = ProblemEditorState & {
-  actions: ProblemEditorActions;
-};
+type ProblemEditorStore = ProblemEditorState & ProblemEditorActions;
 
 export const useProblemEditorStore = create<ProblemEditorStore>()(
   subscribeWithSelector(
@@ -34,65 +33,38 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
       code: "",
       currentVersionId: null,
 
-      actions: {
-        setSetup: (setup) => set({ setup, code: setup?.initialCode }),
+      setSetup: (setup) => set({ setup, code: setup?.initialCode }),
 
-        setProblem: (problem) =>
-          set({
-            problem,
-            currentVersionId:
-              problem?.availableLanguages[0]?.versions[0]?.id ?? null,
-          }),
+      setProblem: (problem) =>
+        set({
+          problem,
+          currentVersionId:
+            problem?.availableLanguages[0]?.versions[0]?.id ?? null,
+        }),
 
-        changeCode: (code) => set({ code }),
+      changeCode: (code) => set({ code }),
 
-        resetCode: () => set({ code: get().setup?.initialCode ?? "" }),
+      resetCode: () => set({ code: get().setup?.initialCode ?? "" }),
 
-        changeCurrentVersion: (version: LanguageVersion) =>
-          set({ currentVersionId: version?.id }),
+      changeCurrentVersion: (version) =>
+        set({ currentVersionId: version?.id ?? null }),
 
-        getLanguage: () =>
-          get().problem?.availableLanguages.find((l) =>
-            l.versions.some((v) => v.id === get().currentVersionId)
-          ) ?? null,
+      getLanguage: () =>
+        get().problem?.availableLanguages.find((l) =>
+          l.versions.some((v) => v.id === get().currentVersionId)
+        ) ?? null,
 
-        getLanguageVersion: () =>
-          get()
-            .problem?.availableLanguages.flatMap((l) => l.versions)
-            .find((v) => v.id === get().currentVersionId) ?? null,
+      getLanguageVersion: () =>
+        get()
+          .problem?.availableLanguages.flatMap((l) => l.versions)
+          .find((v) => v.id === get().currentVersionId) ?? null,
 
-        getAvailableLanguages: () => get().problem?.availableLanguages ?? [],
-      },
+      getAvailableLanguages: () => get().problem?.availableLanguages ?? [],
+
+      findVersionById: (id: number) =>
+        get()
+          .problem?.availableLanguages.flatMap((l) => l.versions)
+          .find((v) => v.id === id) ?? null,
     }))
   )
 );
-
-export function useProblemEditor() {
-  const actions = useProblemEditorStore((s) => s.actions);
-
-  const setup = useProblemEditorStore((s) => s.setup);
-  const problem = useProblemEditorStore((s) => s.problem);
-  const code = useProblemEditorStore((s) => s.code);
-  const currentVersionId = useProblemEditorStore((s) => s.currentVersionId);
-
-  const language = useProblemEditorStore((s) => s.actions.getLanguage());
-  const languageVersion = useProblemEditorStore((s) =>
-    s.actions.getLanguageVersion()
-  );
-  const availableLanguages = useProblemEditorStore((s) =>
-    s.actions.getAvailableLanguages()
-  );
-
-  return {
-    setup,
-    problem,
-    code,
-    currentVersionId,
-
-    language,
-    languageVersion,
-    availableLanguages,
-
-    ...actions,
-  };
-}

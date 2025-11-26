@@ -34,19 +34,32 @@ vi.mock("./problem-editor/problem-editor", () => ({
   default: () => <div data-testid="problem-editor">Editor</div>,
 }));
 
+// Mock useProblemSetup
 const mockUseProblemSetup = vi.fn();
 vi.mock("./api/get-problem-setup", () => ({
   useProblemSetup: (...args: any) => mockUseProblemSetup(...args),
 }));
 
+// Mock Zustand store
 const setProblem = vi.fn();
 const setSetup = vi.fn();
 
 vi.mock("./problem-editor-store", () => ({
-  useProblemEditor: () => ({
-    languageVersion: { id: 99 },
-    setProblem,
-    setSetup,
+  useProblemEditorStore: () => ({
+    setup: null,
+    problem: null,
+    code: "",
+    currentVersionId: 99,
+    actions: {
+      setProblem,
+      setSetup,
+      changeCode: vi.fn(),
+      resetCode: vi.fn(),
+      changeCurrentVersion: vi.fn(),
+      getLanguage: vi.fn(),
+      getLanguageVersion: vi.fn(),
+      getAvailableLanguages: vi.fn(),
+    },
   }),
 }));
 

@@ -9,20 +9,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useProblemEditor } from "../../problem-editor-store";
+import { use } from "react";
+import { useProblemEditorStore } from "../../problem-editor-store";
 
 export default function ProblemCodeEditorLanguageSelect() {
-  const {
-    language,
-    languageVersion,
-    availableLanguages,
-    changeCurrentVersion,
-  } = useProblemEditor();
+  const changeCurrentVersion = useProblemEditorStore(
+    (s) => s.changeCurrentVersion
+  );
+  const language = useProblemEditorStore((s) => s.getLanguage());
+  const languageVersion = useProblemEditorStore((s) => s.getLanguageVersion());
+  const availableLanguages = useProblemEditorStore((s) =>
+    s.getAvailableLanguages()
+  );
+  const findVersionById = useProblemEditorStore((s) => s.findVersionById);
 
+  console.log(language, languageVersion);
   return (
     <ul className="ml-auto flex items-center gap-2">
       <li>
-        <Select value={language?.id.toString() ?? ""}>
+        <Select
+          value={language?.id.toString() ?? ""}
+          onValueChange={(value: string) => {
+            console.log("VALUE: ", value);
+            changeCurrentVersion(
+              availableLanguages.find((l) => l.id === Number(value))
+                ?.versions[0]
+            );
+          }}
+        >
           <SelectTrigger
             className="h-6 min-w-[6rem] text-xs px-2 py-1"
             data-testid="language-select"
@@ -40,10 +54,6 @@ export default function ProblemCodeEditorLanguageSelect() {
                   key={lang.id}
                   data-testid={`language-option-${lang.name}`}
                   className="text-xs py-1 px-2 min-h-[1.5rem]"
-                  onClick={() => {
-                    console.log("CLICKED:", lang);
-                    changeCurrentVersion(lang.versions[0]);
-                  }}
                 >
                   {lang.name}
                 </SelectItem>
@@ -57,6 +67,9 @@ export default function ProblemCodeEditorLanguageSelect() {
         <Select
           value={languageVersion?.id.toString() ?? ""}
           disabled={!language?.versions?.length}
+          onValueChange={(value: string) =>
+            changeCurrentVersion(findVersionById(Number(value)))
+          }
         >
           <SelectTrigger
             className="h-6 min-w-[8rem] text-xs px-2 py-1"
@@ -75,7 +88,6 @@ export default function ProblemCodeEditorLanguageSelect() {
                   key={version.id}
                   data-testid={`version-option-${version.version}`}
                   className="text-xs py-1 px-2 min-h-[1.5rem]"
-                  onClick={() => changeCurrentVersion(version)}
                 >
                   {version.version}
                 </SelectItem>

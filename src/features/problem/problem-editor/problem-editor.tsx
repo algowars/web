@@ -6,10 +6,11 @@ import ProblemCodeEditorLanguageSelect from "./problem-editor-language-select/pr
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProblemEditor } from "../problem-editor-store";
+import { useProblemEditorStore } from "../problem-editor-store";
 
 export default function ProblemEditor() {
-  const { setup, problem } = useProblemEditor();
+  const setup = useProblemEditorStore((s) => s.setup);
+  const problem = useProblemEditorStore((s) => s.problem);
 
   if (!setup || !problem) {
     return (
