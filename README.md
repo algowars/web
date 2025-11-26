@@ -93,3 +93,7 @@ Run the following command:
 ```bash
 cp .env.example .env
 ```
+
+## Testing
+
+To setup testing. You will need to create a `.env.test` file and fill out the values similar to .env.example.

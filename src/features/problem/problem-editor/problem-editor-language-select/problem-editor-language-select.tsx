@@ -22,13 +22,7 @@ export default function ProblemCodeEditorLanguageSelect() {
   return (
     <ul className="ml-auto flex items-center gap-2">
       <li>
-        <Select
-          value={language?.id.toString() ?? ""}
-          onValueChange={(v: string) => {
-            const lang = availableLanguages.find((l) => l.id === parseInt(v));
-            changeCurrentVersion(lang?.versions[0] ?? null);
-          }}
-        >
+        <Select value={language?.id.toString() ?? ""}>
           <SelectTrigger
             className="h-6 min-w-[6rem] text-xs px-2 py-1"
             data-testid="language-select"
@@ -46,6 +40,10 @@ export default function ProblemCodeEditorLanguageSelect() {
                   key={lang.id}
                   data-testid={`language-option-${lang.name}`}
                   className="text-xs py-1 px-2 min-h-[1.5rem]"
+                  onClick={() => {
+                    console.log("CLICKED:", lang);
+                    changeCurrentVersion(lang.versions[0]);
+                  }}
                 >
                   {lang.name}
                 </SelectItem>
@@ -58,11 +56,6 @@ export default function ProblemCodeEditorLanguageSelect() {
       <li>
         <Select
           value={languageVersion?.id.toString() ?? ""}
-          onValueChange={(v: string) =>
-            changeCurrentVersion(
-              language?.versions.find((ver) => ver.id === parseInt(v)) ?? null
-            )
-          }
           disabled={!language?.versions?.length}
         >
           <SelectTrigger
@@ -82,6 +75,7 @@ export default function ProblemCodeEditorLanguageSelect() {
                   key={version.id}
                   data-testid={`version-option-${version.version}`}
                   className="text-xs py-1 px-2 min-h-[1.5rem]"
+                  onClick={() => changeCurrentVersion(version)}
                 >
                   {version.version}
                 </SelectItem>
