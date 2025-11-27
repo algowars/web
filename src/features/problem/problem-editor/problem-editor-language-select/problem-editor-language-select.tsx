@@ -9,10 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { use } from "react";
 import { useProblemEditorStore } from "../../problem-editor-store";
+import { cn } from "@/lib/utils";
 
-export default function ProblemCodeEditorLanguageSelect() {
+export default function ProblemCodeEditorLanguageSelect({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLUListElement>) {
   const changeCurrentVersion = useProblemEditorStore(
     (s) => s.changeCurrentVersion
   );
@@ -23,14 +26,12 @@ export default function ProblemCodeEditorLanguageSelect() {
   );
   const findVersionById = useProblemEditorStore((s) => s.findVersionById);
 
-  console.log(language, languageVersion);
   return (
-    <ul className="ml-auto flex items-center gap-2">
+    <ul {...props} className={cn("ml-auto flex items-center gap-2", className)}>
       <li>
         <Select
           value={language?.id.toString() ?? ""}
           onValueChange={(value: string) => {
-            console.log("VALUE: ", value);
             changeCurrentVersion(
               availableLanguages.find((l) => l.id === Number(value))
                 ?.versions[0]

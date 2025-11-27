@@ -34,9 +34,6 @@ export default function ProblemEditor() {
         ),
         component: (
           <>
-            <div className="px-1 py-1">
-              <ProblemCodeEditorLanguageSelect />
-            </div>
             <CodeEditor className="h-full overflow-auto" />
           </>
         ),

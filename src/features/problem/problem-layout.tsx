@@ -8,6 +8,7 @@ import { useProblemSetup } from "./api/get-problem-setup";
 import { useEffect } from "react";
 import ProblemEditor from "./problem-editor/problem-editor";
 import { useProblemEditorStore } from "./problem-editor-store";
+import ProblemCodeEditorLanguageSelect from "./problem-editor/problem-editor-language-select/problem-editor-language-select";
 
 type ProblemLayoutProps = {
   problem: Problem;
@@ -51,7 +52,10 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
       ]}
       defaultOpen={false}
       headerItems={
-        <ProblemActions className="ml-auto flex items-center gap-2" />
+        <div className="px-1 py-1 flex flex-1 gap-3 w-fit">
+          <ProblemActions className="flex items-center gap-2 ml-auto" />
+          <ProblemCodeEditorLanguageSelect className="ml-auto" />
+        </div>
       }
     >
       <div className="h-full">
