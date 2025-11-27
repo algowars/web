@@ -64,6 +64,7 @@ export const CodeEditor = ({ className }: Props) => {
         dropCursor: false,
         allowMultipleSelections: false,
         indentOnInput: false,
+        tabSize: 4,
       }}
       extensions={[...defaultCodeEditorExtensions, ...langExtensions]}
       theme={theme.resolvedTheme === "light" ? tokyoNightDay : tokyoNightStorm}
