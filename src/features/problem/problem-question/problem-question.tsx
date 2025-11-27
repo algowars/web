@@ -15,13 +15,13 @@ type Props = {
 };
 
 export default function ProblemQuestion({ problem }: Props) {
+  const questionMemo = React.useMemo(() => {
+    return <MarkdownSafe markdown={problem?.question} />;
+  }, [problem?.question]);
+
   if (!problem) {
     return null;
   }
-
-  const questionMemo = React.useMemo(() => {
-    return <MarkdownSafe markdown={problem.question} />;
-  }, [problem.question]);
 
   return (
     <div className="flex h-full flex-col overflow-auto bg-sidebar">

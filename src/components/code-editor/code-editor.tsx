@@ -4,7 +4,7 @@
 import { tokyoNightStorm } from "@uiw/codemirror-theme-tokyo-night-storm";
 import { tokyoNightDay } from "@uiw/codemirror-theme-tokyo-night-day";
 
-import React, { use } from "react";
+import React from "react";
 import CodeMirror, { Extension } from "@uiw/react-codemirror";
 import { useTheme } from "next-themes";
 

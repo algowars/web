@@ -2,7 +2,6 @@
 
 import { Editor, Tab } from "@/components/editor/editor";
 import { CodeXml, FileText } from "lucide-react";
-import ProblemCodeEditorLanguageSelect from "./problem-editor-language-select/problem-editor-language-select";
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
