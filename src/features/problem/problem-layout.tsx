@@ -15,11 +15,9 @@ type ProblemLayoutProps = {
 };
 
 export default function ProblemLayout({ problem }: ProblemLayoutProps) {
-  const getLanguageVersion = useProblemEditorStore((s) => s.getLanguageVersion);
+  const languageVersion = useProblemEditorStore((s) => s.getLanguageVersion());
   const setProblem = useProblemEditorStore((s) => s.setProblem);
   const setSetup = useProblemEditorStore((s) => s.setSetup);
-
-  const languageVersion = getLanguageVersion();
 
   const { data: setup } = useProblemSetup({
     problemId: problem.id,

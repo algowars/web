@@ -20,13 +20,11 @@ type Props = {
 
 export const CodeEditor = ({ className }: Props) => {
   const changeCode = useProblemEditorStore((s) => s.changeCode);
-  const getLanguage = useProblemEditorStore((s) => s.getLanguage);
+  const language = useProblemEditorStore((s) => s.getLanguage());
 
   const theme = useTheme();
   const [langExtensions, setLangExtensions] = React.useState<Extension[]>([]);
   const code = useProblemEditorStore((s) => s.code);
-
-  const language = getLanguage();
 
   const languageKey = React.useMemo(() => {
     if (!language) return "";
