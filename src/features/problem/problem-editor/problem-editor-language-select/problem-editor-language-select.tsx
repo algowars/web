@@ -30,7 +30,7 @@ export default function ProblemCodeEditorLanguageSelect({
     <ul {...props} className={cn("ml-auto flex items-center gap-2", className)}>
       <li>
         <Select
-          value={language?.id.toString() ?? ""}
+          value={language?.id?.toString() ?? ""}
           onValueChange={(value: string) => {
             changeCurrentVersion(
               availableLanguages.find((l) => l.id === Number(value))
@@ -49,7 +49,7 @@ export default function ProblemCodeEditorLanguageSelect({
             <SelectGroup>
               <SelectLabel className="text-xs py-1 px-2">Languages</SelectLabel>
 
-              {availableLanguages.map((lang) => (
+              {availableLanguages?.map((lang) => (
                 <SelectItem
                   value={lang.id.toString()}
                   key={lang.id}
@@ -66,7 +66,7 @@ export default function ProblemCodeEditorLanguageSelect({
 
       <li>
         <Select
-          value={languageVersion?.id.toString() ?? ""}
+          value={languageVersion?.id?.toString() ?? ""}
           disabled={!language?.versions?.length}
           onValueChange={(value: string) =>
             changeCurrentVersion(findVersionById(Number(value)))
