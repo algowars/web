@@ -43,7 +43,7 @@ export default function AppSidebar(
       {
         title: "Problems",
         icon: BookOpenText,
-        url: routerConfig.problemMangement.path,
+        url: routerConfig.problemManagement.path,
       },
     ],
   };
@@ -69,7 +69,7 @@ export default function AppSidebar(
       </SidebarHeader>
       <SidebarContent>
         <SidebarMainNav items={data.navMain} />
-        {account?.permissions.includes(Permissions.ReadProblem) ? (
+        {account?.permissions?.includes(Permissions.ReadProblem) ? (
           <SidebarMainNav
             items={data.navProblemManagement}
             title="Problem Management"

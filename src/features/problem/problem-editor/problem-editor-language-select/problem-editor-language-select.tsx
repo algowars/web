@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Select,
   SelectContent,
@@ -7,41 +9,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
-import { Language, LanguageVersion } from "@/features/problems/models/language";
-
-type Props = {
-  availableLanguages: Language[];
-  currentLanguage: Language | null;
-  currentVersion: LanguageVersion | null;
-  changeCurrentLanguage: (languageId: number) => void;
-  changeCurrentVersion: (versionId: number) => void;
-};
+import { cn } from "@/lib/utils";
+import { useProblemEditorStore } from "../../problem-editor-store";
 
 export default function ProblemCodeEditorLanguageSelect({
-  availableLanguages,
-  currentLanguage,
-  currentVersion,
-  changeCurrentLanguage,
-  changeCurrentVersion,
-}: Props) {
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLUListElement>) {
+  const changeCurrentVersion = useProblemEditorStore(
+    (s) => s.changeCurrentVersion
+  );
+  const language = useProblemEditorStore((s) => s.getLanguage());
+  const languageVersion = useProblemEditorStore((s) => s.getLanguageVersion());
+  const availableLanguages = useProblemEditorStore((s) =>
+    s.getAvailableLanguages()
+  );
+  const findVersionById = useProblemEditorStore((s) => s.findVersionById);
+
   return (
-    <ul className="ml-auto flex items-center gap-2">
+    <ul {...props} className={cn("ml-auto flex items-center gap-2", className)}>
       <li>
         <Select
-          value={currentLanguage ? `${currentLanguage.id}` : undefined}
-          onValueChange={(v: string) => changeCurrentLanguage(parseInt(v))}
+          value={language?.id?.toString() ?? ""}
+          onValueChange={(value: string) => {
+            changeCurrentVersion(
+              availableLanguages.find((l) => l.id === Number(value))
+                ?.versions[0]
+            );
+          }}
         >
-          <SelectTrigger className="h-6 min-w-[6rem] text-xs px-2 py-1">
+          <SelectTrigger
+            className="h-6 min-w-[6rem] text-xs px-2 py-1"
+            data-testid="language-select"
+          >
             <SelectValue placeholder="Select a language" />
           </SelectTrigger>
+
           <SelectContent className="min-w-[6rem]">
             <SelectGroup>
               <SelectLabel className="text-xs py-1 px-2">Languages</SelectLabel>
+
               {availableLanguages?.map((lang) => (
                 <SelectItem
-                  value={`${lang.id}`}
+                  value={lang.id.toString()}
                   key={lang.id}
+                  data-testid={`language-option-${lang.name}`}
                   className="text-xs py-1 px-2 min-h-[1.5rem]"
                 >
                   {lang.name}
@@ -51,22 +63,31 @@ export default function ProblemCodeEditorLanguageSelect({
           </SelectContent>
         </Select>
       </li>
+
       <li>
         <Select
-          value={currentVersion ? `${currentVersion.id}` : undefined}
-          onValueChange={(v: string) => changeCurrentVersion(parseInt(v))}
-          disabled={!currentLanguage?.versions?.length}
+          value={languageVersion?.id?.toString() ?? ""}
+          disabled={!language?.versions?.length}
+          onValueChange={(value: string) =>
+            changeCurrentVersion(findVersionById(Number(value)))
+          }
         >
-          <SelectTrigger className="h-6 min-w-[8rem] text-xs px-2 py-1">
+          <SelectTrigger
+            className="h-6 min-w-[8rem] text-xs px-2 py-1"
+            data-testid="version-select"
+          >
             <SelectValue placeholder="Select a version" />
           </SelectTrigger>
+
           <SelectContent className="min-w-[8rem]">
             <SelectGroup>
               <SelectLabel className="text-xs py-1 px-2">Versions</SelectLabel>
-              {currentLanguage?.versions?.map((version) => (
+
+              {language?.versions.map((version) => (
                 <SelectItem
-                  value={`${version.id}`}
+                  value={version.id.toString()}
                   key={version.id}
+                  data-testid={`version-option-${version.version}`}
                   className="text-xs py-1 px-2 min-h-[1.5rem]"
                 >
                   {version.version}

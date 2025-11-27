@@ -1,39 +1,64 @@
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import Problem from "@/features/problem/problem";
-import { routerConfig } from "@/router-config";
+import ProblemLayout from "@/features/problem/problem-layout";
+import {
+  getProblemBySlug,
+  getProblemBySlugQueryOptions,
+} from "@/features/problems/api/get-problem-by-slug";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const slug = (await params).slug;
+
+  const problem = await getProblemBySlug({ slug });
+
+  return {
+    title: problem.title,
+    description: problem.question,
+  };
+};
+
+const preloadData = async (slug: string) => {
+  const queryClient = new QueryClient();
+
+  await Promise.all([
+    queryClient.prefetchQuery(getProblemBySlugQueryOptions(slug)),
+  ]);
+
+  const dehydratedState = dehydrate(queryClient);
+
+  return {
+    dehydratedState,
+    queryClient,
+  };
+};
 
 export default async function ProblemPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = await Promise.resolve(params);
+  const slug = (await params).slug;
 
-  if (!resolvedParams.slug) {
-    throw new Error("Missing slug");
+  const { dehydratedState, queryClient } = await preloadData(slug);
+
+  const problem = queryClient.getQueryData(
+    getProblemBySlugQueryOptions(slug).queryKey
+  );
+
+  if (!problem) {
+    return <div>Problem not found</div>;
   }
 
   return (
-    <SidebarLayout
-      breadcrumbs={[
-        {
-          url: routerConfig.home.path,
-          name: "Home",
-        },
-        {
-          url: routerConfig.problems.path,
-          name: "Problems",
-        },
-        {
-          url: routerConfig.problem.execute({ slug: resolvedParams.slug }),
-          name: resolvedParams.slug,
-        },
-      ]}
-      defaultOpen={false}
-    >
-      <div className="h-full">
-        <Problem params={Promise.resolve(resolvedParams)} />
-      </div>
-    </SidebarLayout>
+    <HydrationBoundary state={dehydratedState}>
+      <ProblemLayout problem={problem} />
+    </HydrationBoundary>
   );
 }

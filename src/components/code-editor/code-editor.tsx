@@ -7,28 +7,24 @@ import { tokyoNightDay } from "@uiw/codemirror-theme-tokyo-night-day";
 import React from "react";
 import CodeMirror, { Extension } from "@uiw/react-codemirror";
 import { useTheme } from "next-themes";
-import { Language } from "@/features/problems/models/language";
 
 import {
   defaultCodeEditorExtensions,
   loadLanguageExtensions,
 } from "./code-editor-extensions";
+import { useProblemEditorStore } from "@/features/problem/problem-editor-store";
 
 type Props = {
-  code: string;
-  changeCode: (value: string) => void;
   className?: string;
-  language: Language;
 };
 
-export const CodeEditor = ({
-  code,
-  changeCode,
-  language,
-  className,
-}: Props) => {
+export const CodeEditor = ({ className }: Props) => {
+  const changeCode = useProblemEditorStore((s) => s.changeCode);
+  const language = useProblemEditorStore((s) => s.getLanguage());
+
   const theme = useTheme();
   const [langExtensions, setLangExtensions] = React.useState<Extension[]>([]);
+  const code = useProblemEditorStore((s) => s.code);
 
   const languageKey = React.useMemo(() => {
     if (!language) return "";
@@ -68,6 +64,7 @@ export const CodeEditor = ({
         dropCursor: false,
         allowMultipleSelections: false,
         indentOnInput: false,
+        tabSize: 4,
       }}
       extensions={[...defaultCodeEditorExtensions, ...langExtensions]}
       theme={theme.resolvedTheme === "light" ? tokyoNightDay : tokyoNightStorm}

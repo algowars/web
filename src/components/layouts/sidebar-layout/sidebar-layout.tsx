@@ -9,18 +9,20 @@ type SidebarProps = {
   breadcrumbs: BreadcrumbItem[];
   children?: ReactNode;
   defaultOpen?: boolean;
+  headerItems?: React.ReactNode;
 };
 
 export default function SidebarLayout({
   breadcrumbs,
   children,
   defaultOpen,
+  headerItems,
 }: SidebarProps) {
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <SidebarInset>
-        <AppSidebarHeader breadcrumbs={breadcrumbs} />
+        <AppSidebarHeader breadcrumbs={breadcrumbs} headerItems={headerItems} />
         <div className="px-4 pb-4 h-full">{children}</div>
       </SidebarInset>
     </SidebarProvider>

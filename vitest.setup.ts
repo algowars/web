@@ -1,8 +1,16 @@
 import "@testing-library/jest-dom";
 import { afterEach } from "vitest";
 import { cleanup } from "@testing-library/react";
+import { config } from "dotenv";
+config({ path: ".env.test" });
 
-// Auto-clean DOM after each test
+const requiredEnvVars = ["NEXT_PUBLIC_API_SERVER_URL", "AUTH0_SECRET"];
+requiredEnvVars.forEach((key) => {
+  if (!process.env[key]) {
+    throw new Error(`Environment variable ${key} is required for tests`);
+  }
+});
+
 afterEach(() => {
   cleanup();
 });

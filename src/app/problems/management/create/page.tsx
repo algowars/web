@@ -20,7 +20,7 @@ export default function ProblemsCreatePage() {
           name: "Home",
         },
         {
-          url: routerConfig.problemMangement.path,
+          url: routerConfig.problemManagement.path,
           name: "Problem Management",
         },
         {

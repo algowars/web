@@ -9,7 +9,10 @@ export default function ProblemsManagementPage() {
     <SidebarLayout
       breadcrumbs={[
         { name: "Home", url: routerConfig.home.path },
-        { name: "Problem Management", url: routerConfig.problemMangement.path },
+        {
+          name: "Problem Management",
+          url: routerConfig.problemManagement.path,
+        },
       ]}
     >
       <div className="grid gap-4">

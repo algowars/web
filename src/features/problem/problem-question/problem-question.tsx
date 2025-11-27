@@ -15,6 +15,10 @@ type Props = {
 };
 
 export default function ProblemQuestion({ problem }: Props) {
+  const questionMemo = React.useMemo(() => {
+    return <MarkdownSafe markdown={problem?.question} />;
+  }, [problem?.question]);
+
   if (!problem) {
     return null;
   }
@@ -34,7 +38,7 @@ export default function ProblemQuestion({ problem }: Props) {
           </ul>
         </div>
 
-        <MarkdownSafe markdown={problem.question} />
+        {questionMemo}
       </div>
       <Accordion type="single" collapsible className="mt-auto border-t">
         <AccordionItem value="tags">
