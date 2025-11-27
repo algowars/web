@@ -13,7 +13,7 @@ describe("useProblemEditorStore", () => {
   it("changes code correctly", () => {
     const store = useProblemEditorStore.getState();
 
-    store.actions.changeCode("Test code");
+    store.changeCode("Test code");
 
     expect(useProblemEditorStore.getState().code).toBe("Test code");
   });
@@ -32,7 +32,7 @@ describe("useProblemEditorStore", () => {
       ],
     };
 
-    useProblemEditorStore.getState().actions.setProblem(fakeProblem as any);
+    useProblemEditorStore.getState().setProblem(fakeProblem as any);
 
     const state = useProblemEditorStore.getState();
     expect(state.problem).toBe(fakeProblem);
