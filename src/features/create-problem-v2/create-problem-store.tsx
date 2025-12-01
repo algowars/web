@@ -22,6 +22,7 @@ type CreateProblemStoreActions = {
   changeDifficulty: (difficulty: number) => void;
   addSetup: (setup: CreateProblemSetup) => void;
   removeSetup: (index: number) => void;
+  getLanguageByVersionId: (versionId: number) => Language | null;
 };
 
 type CreateProblemStore = CreateProblemState & CreateProblemStoreActions;
@@ -86,6 +87,11 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
         set({
           setups: get().setups.filter((_, i) => i !== index),
         }),
+
+      getLanguageByVersionId: (versionId) =>
+        get().availableLanguages.find((lang) =>
+          lang.versions.some((v) => v.id === versionId)
+        ),
     }))
   )
 );

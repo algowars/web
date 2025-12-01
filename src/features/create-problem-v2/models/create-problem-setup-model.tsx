@@ -1,5 +1,5 @@
 export interface CreateProblemSetup {
-  languageVersionIds: string[];
+  languageVersionIds: number[];
   initialCode: string;
   solution: string;
 }

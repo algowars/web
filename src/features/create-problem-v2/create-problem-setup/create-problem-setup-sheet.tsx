@@ -118,7 +118,7 @@ export default function CreateProblemSetupSheet({
                 if (!selectedLanguageId || !selectedVersionId) return;
 
                 addSetup({
-                  languageVersionIds: [selectedVersionId.toString()],
+                  languageVersionIds: [selectedVersionId],
                   initialCode: "",
                   solution: "",
                 });

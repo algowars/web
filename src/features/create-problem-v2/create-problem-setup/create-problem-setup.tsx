@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Empty,
   EmptyContent,
@@ -10,6 +16,7 @@ import {
 import { FolderCode } from "lucide-react";
 import CreateProblemSetupSheet from "./create-problem-setup-sheet";
 import { useCreateProblemStore } from "../create-problem-store";
+import CreateProblemSetupList from "./create-problem-setup-list";
 
 export function CreateProblemSetup() {
   const setups = useCreateProblemStore((s) => s.setups);
@@ -19,6 +26,7 @@ export function CreateProblemSetup() {
       <CardHeader className="flex items-start">
         <div>
           <CardTitle>Setups</CardTitle>
+          <CardDescription>Minimum of 1 setup is required.</CardDescription>
         </div>
         {!!setups.length && (
           <CreateProblemSetupSheet buttonClassName="ml-auto" />
@@ -43,7 +51,9 @@ export function CreateProblemSetup() {
               </div>
             </EmptyContent>
           </Empty>
-        ) : null}
+        ) : (
+          <CreateProblemSetupList />
+        )}
       </CardContent>
     </Card>
   );
