@@ -24,6 +24,8 @@ type CreateProblemStoreActions = {
   removeSetup: (index: number) => void;
   getLanguageByVersionId: (versionId: number) => Language | null;
   getLanguageVersionById: (versionId: number) => LanguageVersion | null;
+  getLanguagesByVersionIds: (versionIds: number[]) => Language[];
+  getLanguageVersionsByIds: (versionIds: number[]) => LanguageVersion[];
 };
 
 type CreateProblemStore = CreateProblemState & CreateProblemStoreActions;
@@ -110,6 +112,16 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
         get()
           .availableLanguages.flatMap((l) => l.versions)
           .find((v) => v.id === versionId),
+
+      getLanguagesByVersionIds: (versionIds) =>
+        get().availableLanguages.filter((lang) =>
+          lang.versions.some((v) => versionIds.includes(v.id))
+        ),
+
+      getLanguageVersionsByIds: (versionIds) =>
+        get()
+          .availableLanguages.flatMap((l) => l.versions)
+          .filter((v) => versionIds.includes(v.id)),
     }))
   )
 );

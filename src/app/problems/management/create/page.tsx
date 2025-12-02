@@ -8,5 +8,7 @@ export default async function ProblemsCreatePage() {
 
   const languages = await getAvailableLanguages(accessToken?.token ?? "");
 
+  console.log("LANGUAGES: ", languages);
+
   return <CreateProblemV2 availableLanguages={languages ?? []} />;
 }

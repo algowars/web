@@ -36,6 +36,9 @@ export default function CreateProblemSetupSheet({
   const availableLanguages = useCreateProblemStore((s) => s.availableLanguages);
   const setups = useCreateProblemStore((s) => s.setups);
   const addSetup = useCreateProblemStore((s) => s.addSetup);
+  const getLanguageVersionById = useCreateProblemStore(
+    (s) => s.getLanguageVersionById
+  );
 
   const [selectedLanguageId, setSelectedLanguageId] = useState<number | null>(
     null
@@ -112,7 +115,6 @@ export default function CreateProblemSetupSheet({
             </Select>
           </div>
 
-          {/* Version */}
           {selectedLanguage && (
             <div className="grid gap-3">
               <Label>Version</Label>
@@ -150,10 +152,10 @@ export default function CreateProblemSetupSheet({
               disabled={!selectedVersionId}
               onClick={() => {
                 if (!selectedLanguageId || !selectedVersionId) return;
-
+                const version = getLanguageVersionById(selectedVersionId);
                 addSetup({
                   languageVersionIds: [selectedVersionId],
-                  initialCode: "",
+                  initialCode: version?.initialCode ?? "",
                   solution: "",
                 });
 
