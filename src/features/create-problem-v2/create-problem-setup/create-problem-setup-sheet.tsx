@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -34,6 +34,7 @@ export default function CreateProblemSetupSheet({
   ...props
 }: CreateProblemSetupSheetProps) {
   const availableLanguages = useCreateProblemStore((s) => s.availableLanguages);
+  const setups = useCreateProblemStore((s) => s.setups);
   const addSetup = useCreateProblemStore((s) => s.addSetup);
 
   const [selectedLanguageId, setSelectedLanguageId] = useState<number | null>(
@@ -46,6 +47,24 @@ export default function CreateProblemSetupSheet({
   const selectedLanguage = availableLanguages.find(
     (l) => l.id === selectedLanguageId
   );
+
+  const usedVersionIds = useMemo(
+    () => setups.flatMap((s) => s.languageVersionIds),
+    [setups]
+  );
+
+  const availableLanguageVersions = useMemo(() => {
+    if (!selectedLanguage) return [];
+    return selectedLanguage.versions.filter(
+      (v) => !usedVersionIds.includes(v.id)
+    );
+  }, [selectedLanguage, usedVersionIds]);
+
+  const languagesWithRemainingVersions = useMemo(() => {
+    return availableLanguages.filter((lang) =>
+      lang.versions.some((v) => !usedVersionIds.includes(v.id))
+    );
+  }, [availableLanguages, usedVersionIds]);
 
   return (
     <Sheet {...props}>
@@ -62,8 +81,10 @@ export default function CreateProblemSetupSheet({
         </SheetHeader>
 
         <div className="grid flex-1 auto-rows-min gap-6 px-4">
+          {/* Language */}
           <div className="grid gap-3">
             <Label>Language</Label>
+
             <Select
               onValueChange={(v) => {
                 setSelectedLanguageId(Number(v));
@@ -76,7 +97,13 @@ export default function CreateProblemSetupSheet({
               </SelectTrigger>
 
               <SelectContent>
-                {availableLanguages.map((lang) => (
+                {languagesWithRemainingVersions.length === 0 && (
+                  <div className="px-3 py-2 text-sm text-muted-foreground">
+                    All languages already used
+                  </div>
+                )}
+
+                {languagesWithRemainingVersions.map((lang) => (
                   <SelectItem key={lang.id} value={lang.id.toString()}>
                     {lang.name}
                   </SelectItem>
@@ -85,26 +112,33 @@ export default function CreateProblemSetupSheet({
             </Select>
           </div>
 
+          {/* Version */}
           {selectedLanguage && (
             <div className="grid gap-3">
               <Label>Version</Label>
 
-              <Select
-                onValueChange={(v) => setSelectedVersionId(Number(v))}
-                value={selectedVersionId?.toString() ?? ""}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select version" />
-                </SelectTrigger>
+              {availableLanguageVersions.length > 0 ? (
+                <Select
+                  onValueChange={(v) => setSelectedVersionId(Number(v))}
+                  value={selectedVersionId?.toString() ?? ""}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select version" />
+                  </SelectTrigger>
 
-                <SelectContent>
-                  {selectedLanguage.versions.map((ver) => (
-                    <SelectItem key={ver.id} value={ver.id.toString()}>
-                      {ver.version}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                  <SelectContent>
+                    {availableLanguageVersions.map((ver) => (
+                      <SelectItem key={ver.id} value={ver.id.toString()}>
+                        {ver.version}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="px-3 py-2 text-sm text-muted-foreground">
+                  No available versions
+                </div>
+              )}
             </div>
           )}
         </div>

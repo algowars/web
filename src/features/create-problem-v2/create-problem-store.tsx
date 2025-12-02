@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Language } from "../problems/models/language";
+import { Language, LanguageVersion } from "../problems/models/language";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { SerializedEditorState } from "lexical";
 import { CreateProblemSetup } from "./models/create-problem-setup-model";
@@ -23,6 +23,7 @@ type CreateProblemStoreActions = {
   addSetup: (setup: CreateProblemSetup) => void;
   removeSetup: (index: number) => void;
   getLanguageByVersionId: (versionId: number) => Language | null;
+  getLanguageVersionById: (versionId: number) => LanguageVersion | null;
 };
 
 type CreateProblemStore = CreateProblemState & CreateProblemStoreActions;
@@ -81,7 +82,19 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
 
       changeDifficulty: (difficulty) => set({ difficulty }),
 
-      addSetup: (setup) => set({ setups: [...get().setups, setup] }),
+      addSetup: (setup) => {
+        const existing = get().setups;
+
+        const isDuplicate = setup.languageVersionIds.some((id) =>
+          existing.some((s) => s.languageVersionIds.includes(id))
+        );
+
+        if (isDuplicate) {
+          return;
+        }
+
+        set({ setups: [...existing, setup] });
+      },
 
       removeSetup: (index) =>
         set({
@@ -92,6 +105,11 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
         get().availableLanguages.find((lang) =>
           lang.versions.some((v) => v.id === versionId)
         ),
+
+      getLanguageVersionById: (versionId) =>
+        get()
+          .availableLanguages.flatMap((l) => l.versions)
+          .find((v) => v.id === versionId),
     }))
   )
 );
