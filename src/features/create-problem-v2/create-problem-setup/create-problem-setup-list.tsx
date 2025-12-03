@@ -22,28 +22,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { Language } from "@/features/problems/models/language";
 import { getLanguageIconClass } from "@/features/language/get-language-icon";
+
+import CreateProblemSetupInfoInitialCode from "./create-problem-setup-info-initial-code";
+import { Label } from "@/components/ui/label";
 import {
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import CreateProblemSetupInfo from "./create-problem-setup-info";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 function LanguageIcons({ languages }: { languages: Language[] }) {
   return (
     <div className="flex gap-2">
       {languages.map((language) => {
         const cls = getLanguageIconClass(language.name);
-
         return (
           <div key={language.id} className="flex items-center justify-center">
             <i className={`${cls} text-xl`} />
@@ -81,6 +78,7 @@ export default function CreateProblemSetupList() {
         {setups.map((setup, i) => {
           const rowKey = setup.languageVersionIds.join("-");
           const versions = getLanguageVersionsByIds(setup.languageVersionIds);
+
           return (
             <TableRow key={rowKey}>
               <Dialog>
@@ -106,13 +104,30 @@ export default function CreateProblemSetupList() {
                   </TableCell>
                 </DialogTrigger>
 
-                <DialogContent className="max-w-7xl">
-                  <DialogHeader>
-                    <DialogTitle>Setup Details</DialogTitle>
-                  </DialogHeader>
-                  <CreateProblemSetupInfo setup={setup} />
+                <DialogContent className="p-4 overflow-auto !max-w-3/4 h-[80vh] w-full items-start">
+                  <div className="flex flex-col space-y-5">
+                    <DialogHeader className="mb-6">
+                      <DialogTitle>Edit Setup Details</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex flex-col space-y-3">
+                      <Label>Initial Code</Label>
+                      <CreateProblemSetupInfoInitialCode
+                        setup={setup}
+                        setupIndex={i}
+                      />
+                    </div>
+                    <div className="sticky bottom-0 pt-4 flex gap-2 mt-auto">
+                      <DialogClose asChild>
+                        <Button type="submit">Save Changes</Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                        <Button variant="secondary">Cancel</Button>
+                      </DialogClose>
+                    </div>
+                  </div>
                 </DialogContent>
               </Dialog>
+
               <TableCell className="text-right">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>

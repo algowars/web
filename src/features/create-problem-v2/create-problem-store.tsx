@@ -26,6 +26,7 @@ type CreateProblemStoreActions = {
   getLanguageVersionById: (versionId: number) => LanguageVersion | null;
   getLanguagesByVersionIds: (versionIds: number[]) => Language[];
   getLanguageVersionsByIds: (versionIds: number[]) => LanguageVersion[];
+  changeSetupInitialCode: (index: number, initialCode: string) => void;
 };
 
 type CreateProblemStore = CreateProblemState & CreateProblemStoreActions;
@@ -122,6 +123,13 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
         get()
           .availableLanguages.flatMap((l) => l.versions)
           .filter((v) => versionIds.includes(v.id)),
+
+      changeSetupInitialCode: (index, initialCode) =>
+        set({
+          setups: get().setups.map((setup, i) =>
+            i === index ? { ...setup, initialCode } : setup
+          ),
+        }),
     }))
   )
 );
