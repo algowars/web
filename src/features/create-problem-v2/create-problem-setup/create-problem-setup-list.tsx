@@ -35,6 +35,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import CreateProblemSetupInfoSolution from "./create-problem-setup-info-solution";
+import CreateProblemSetupTestSuite from "./create-problem-setup-test-suite";
 
 function LanguageIcons({ languages }: { languages: Language[] }) {
   return (
@@ -116,6 +118,14 @@ export default function CreateProblemSetupList() {
                         setupIndex={i}
                       />
                     </div>
+                    <div className="flex flex-col space-y-3">
+                      <Label>Solution</Label>
+                      <CreateProblemSetupInfoSolution
+                        setup={setup}
+                        setupIndex={i}
+                      />
+                    </div>
+                    <CreateProblemSetupTestSuite setupIndex={i} />
                     <div className="sticky bottom-0 pt-4 flex gap-2 mt-auto">
                       <DialogClose asChild>
                         <Button type="submit">Save Changes</Button>

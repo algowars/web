@@ -84,9 +84,8 @@ export default function CreateProblemSetupSheet({
         </SheetHeader>
 
         <div className="grid flex-1 auto-rows-min gap-6 px-4">
-          {/* Language */}
           <div className="grid gap-3">
-            <Label>Language</Label>
+            <Label htmlFor="language">Language</Label>
 
             <Select
               onValueChange={(v) => {
@@ -95,7 +94,7 @@ export default function CreateProblemSetupSheet({
               }}
               value={selectedLanguageId?.toString() ?? ""}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full" id="language">
                 <SelectValue placeholder="Select language" />
               </SelectTrigger>
 
@@ -157,6 +156,7 @@ export default function CreateProblemSetupSheet({
                   languageVersionIds: [selectedVersionId],
                   initialCode: version?.initialCode ?? "",
                   solution: "",
+                  testSuites: [],
                 });
 
                 setSelectedLanguageId(null);

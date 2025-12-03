@@ -3,6 +3,8 @@ import { Language, LanguageVersion } from "../problems/models/language";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { SerializedEditorState } from "lexical";
 import { CreateProblemSetup } from "./models/create-problem-setup-model";
+import { setupDevBundler } from "next/dist/server/lib/router-utils/setup-dev-bundler";
+import { CreateProblemTestSuiteModel } from "./models/create-problem-test-suite-model";
 
 type CreateProblemState = {
   title: string;
@@ -27,6 +29,14 @@ type CreateProblemStoreActions = {
   getLanguagesByVersionIds: (versionIds: number[]) => Language[];
   getLanguageVersionsByIds: (versionIds: number[]) => LanguageVersion[];
   changeSetupInitialCode: (index: number, initialCode: string) => void;
+  changeSetupSolutionCode: (index: number, solutionCode: string) => void;
+  addSetupTestSuite: (testSuite: CreateProblemTestSuiteModel) => void;
+  removeSetupTestSuite: (index: number) => void;
+  changeSetupTestSuite: (
+    index: number,
+    testSuite: CreateProblemTestSuiteModel
+  ) => void;
+  getTestSuitesBySetupIndex: (index: number) => CreateProblemTestSuiteModel[];
 };
 
 type CreateProblemStore = CreateProblemState & CreateProblemStoreActions;
@@ -130,6 +140,42 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
             i === index ? { ...setup, initialCode } : setup
           ),
         }),
+
+      changeSetupSolutionCode: (index, solutionCode) =>
+        set({
+          setups: get().setups.map((setup, i) =>
+            i === index ? { ...setup, solutionCode } : setup
+          ),
+        }),
+
+      addSetupTestSuite: (testSuite) =>
+        set({
+          setups: get().setups.map((setup) => ({
+            ...setup,
+            testSuites: [...(setup.testSuites ?? []), testSuite],
+          })),
+        }),
+
+      removeSetupTestSuite: (index) =>
+        set({
+          setups: get().setups.map((setup) => ({
+            ...setup,
+            testSuites: (setup.testSuites ?? []).filter((_, i) => i !== index),
+          })),
+        }),
+
+      changeSetupTestSuite: (index, testSuite) =>
+        set({
+          setups: get().setups.map((setup) => ({
+            ...setup,
+            testSuites: (setup.testSuites ?? []).map((ts, i) =>
+              i === index ? testSuite : ts
+            ),
+          })),
+        }),
+
+      getTestSuitesBySetupIndex: (index) =>
+        get().setups[index]?.testSuites || [],
     }))
   )
 );
