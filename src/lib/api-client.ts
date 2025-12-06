@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { toast } from "sonner";
 import { env } from "@/env";
 
 type ApiRequestConfig = {
@@ -68,24 +67,6 @@ const createApiClient = (): AxiosInstance => {
     },
     (error) => {
       return Promise.reject(error);
-    }
-  );
-
-  client.interceptors.response.use(
-    (response: AxiosResponse) => {
-      return response;
-    },
-    (error) => {
-      const message =
-        error.response?.data?.message || error.message || "An error occurred";
-
-      if (typeof window !== "undefined") {
-        toast.error("Error", {
-          description: message,
-        });
-      }
-
-      return Promise.reject(new Error(message));
     }
   );
 

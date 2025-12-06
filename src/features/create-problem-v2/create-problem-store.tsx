@@ -3,8 +3,12 @@ import { Language, LanguageVersion } from "../problems/models/language";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { SerializedEditorState } from "lexical";
 import { CreateProblemSetup } from "./models/create-problem-setup-model";
-import { setupDevBundler } from "next/dist/server/lib/router-utils/setup-dev-bundler";
-import { CreateProblemTestSuiteModel } from "./models/create-problem-test-suite-model";
+import {
+  CreateProblemTestSuiteModel,
+  CreateProblemTestSuiteTestCaseModel,
+} from "./models/create-problem-test-suite-model";
+import { CreateProblemModel } from "./models/create-problem-model";
+import { lexicalToMarkdown } from "@/lib/lexical";
 
 type CreateProblemState = {
   title: string;
@@ -37,6 +41,27 @@ type CreateProblemStoreActions = {
     testSuite: CreateProblemTestSuiteModel
   ) => void;
   getTestSuitesBySetupIndex: (index: number) => CreateProblemTestSuiteModel[];
+  addTestCaseToSetupTestSuite: (
+    setupIndex: number,
+    testSuiteIndex: number,
+    testCase: CreateProblemTestSuiteTestCaseModel
+  ) => void;
+  getTestCasesBySetupTestSuiteIndex: (
+    setupIndex: number,
+    testSuiteIndex: number
+  ) => CreateProblemTestSuiteTestCaseModel[];
+  updateSetupTestCase: (
+    setupIndex: number,
+    testSuiteIndex: number,
+    testCaseIndex: number,
+    testCase: CreateProblemTestSuiteTestCaseModel
+  ) => void;
+  removeTestCaseToSetupTestSuite: (
+    setupIndex: number,
+    testSuiteIndex: number,
+    testCaseIndex: number
+  ) => void;
+  createProblem: () => CreateProblemModel;
 };
 
 type CreateProblemStore = CreateProblemState & CreateProblemStoreActions;
@@ -176,6 +201,111 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
 
       getTestSuitesBySetupIndex: (index) =>
         get().setups[index]?.testSuites || [],
+
+      updateSetupTestSuite: (
+        setupIndex: number,
+        testSuiteIndex: number,
+        testSuite: CreateProblemTestSuiteModel
+      ) =>
+        set({
+          setups: get().setups.map((setup, sIndex) =>
+            sIndex === setupIndex
+              ? {
+                  ...setup,
+                  testSuites: (setup.testSuites ?? []).map((ts, tIndex) =>
+                    tIndex === testSuiteIndex ? testSuite : ts
+                  ),
+                }
+              : setup
+          ),
+        }),
+      addTestCaseToSetupTestSuite: (setupIndex, testSuiteIndex, testCase) =>
+        set({
+          setups: get().setups.map((setup, sIndex) => {
+            if (sIndex !== setupIndex) return setup;
+
+            const suites = setup.testSuites ?? [];
+            return {
+              ...setup,
+              testSuites: suites.map((suite, tIndex) =>
+                tIndex === testSuiteIndex
+                  ? {
+                      ...suite,
+                      testCases: [...(suite.testCases ?? []), testCase],
+                    }
+                  : suite
+              ),
+            };
+          }),
+        }),
+
+      updateSetupTestCase: (
+        setupIndex,
+        testSuiteIndex,
+        testCaseIndex,
+        testCase
+      ) =>
+        set({
+          setups: get().setups.map((setup, sIndex) => {
+            if (sIndex !== setupIndex) return setup;
+
+            return {
+              ...setup,
+              testSuites: (setup.testSuites ?? []).map((suite, tIndex) =>
+                tIndex === testSuiteIndex
+                  ? {
+                      ...suite,
+                      testCases: (suite.testCases ?? []).map((tc, cIndex) =>
+                        cIndex === testCaseIndex ? testCase : tc
+                      ),
+                    }
+                  : suite
+              ),
+            };
+          }),
+        }),
+      removeTestCaseToSetupTestSuite: (
+        setupIndex,
+        testSuiteIndex,
+        testCaseIndex
+      ) =>
+        set({
+          setups: get().setups.map((setup, sIndex) => {
+            if (sIndex !== setupIndex) return setup;
+
+            return {
+              ...setup,
+              testSuites: (setup.testSuites ?? []).map((suite, tIndex) =>
+                tIndex === testSuiteIndex
+                  ? {
+                      ...suite,
+                      testCases: (suite.testCases ?? []).filter(
+                        (_, cIndex) => cIndex !== testCaseIndex
+                      ),
+                    }
+                  : suite
+              ),
+            };
+          }),
+        }),
+      getTestCasesBySetupTestSuiteIndex: (setupIndex, testSuiteIndex) =>
+        get().setups[setupIndex]?.testSuites?.[testSuiteIndex]?.testCases || [],
+
+      createProblem: () => {
+        const state = get();
+
+        const markdownQuestion = lexicalToMarkdown(state.questionState);
+
+        const problem: CreateProblemModel = {
+          title: state.title,
+          question: markdownQuestion,
+          tags: state.tags,
+          difficulty: state.difficulty,
+          setups: state.setups,
+        };
+
+        return problem;
+      },
     }))
   )
 );

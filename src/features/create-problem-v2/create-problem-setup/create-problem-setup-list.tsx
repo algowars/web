@@ -31,6 +31,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -110,6 +111,10 @@ export default function CreateProblemSetupList() {
                   <div className="flex flex-col space-y-5">
                     <DialogHeader className="mb-6">
                       <DialogTitle>Edit Setup Details</DialogTitle>
+                      <DialogDescription>
+                        Make sure initial code and solution have the same
+                        function signature
+                      </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col space-y-3">
                       <Label>Initial Code</Label>
@@ -126,14 +131,6 @@ export default function CreateProblemSetupList() {
                       />
                     </div>
                     <CreateProblemSetupTestSuite setupIndex={i} />
-                    <div className="sticky bottom-0 pt-4 flex gap-2 mt-auto">
-                      <DialogClose asChild>
-                        <Button type="submit">Save Changes</Button>
-                      </DialogClose>
-                      <DialogClose asChild>
-                        <Button variant="secondary">Cancel</Button>
-                      </DialogClose>
-                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
