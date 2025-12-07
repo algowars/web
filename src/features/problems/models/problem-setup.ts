@@ -11,4 +11,5 @@ export interface ProblemSetup {
   version: number;
   problem: Problem;
   initialCode: string;
+  testSuites: [];
 }

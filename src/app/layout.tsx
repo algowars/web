@@ -26,10 +26,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/devicons/devicon@master/devicon.min.css"
-      />
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/devicons/devicon@master/devicon.min.css"
+          precedence="default"
+        />
+      </head>
 
       <body
         suppressHydrationWarning
