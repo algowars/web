@@ -1,9 +1,5 @@
-import { TestSuiteType } from "./test-suite-type";
-import { Testcase } from "./testcase";
+import { TestCase } from "./test-case";
 
 export interface TestSuite {
-  id: number;
-  code: TestSuiteType;
-  description: string;
-  testcases: Testcase[];
+  testCases: TestCase[];
 }

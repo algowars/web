@@ -24,8 +24,6 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
     languageVersionId: languageVersion?.id,
   });
 
-  console.log("SETUP: ", setup);
-
   useEffect(() => {
     setProblem(problem);
   }, [problem, setProblem]);

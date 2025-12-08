@@ -3,6 +3,8 @@ import { Language, LanguageVersion } from "../problems/models/language";
 import { Problem } from "../problems/models/problem";
 import { ProblemSetup } from "../problems/models/problem-setup";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
+import { TestCase } from "../test-suite/models/test-case";
+import { TestSuite } from "../test-suite/models/test-suite";
 
 type ProblemEditorState = {
   setup: ProblemSetup | null;
@@ -21,6 +23,7 @@ type ProblemEditorActions = {
   getLanguageVersion: () => LanguageVersion | null;
   getAvailableLanguages: () => Language[];
   findVersionById: (id: number) => LanguageVersion | null;
+  getTestSuites: () => TestSuite[];
 };
 
 type ProblemEditorStore = ProblemEditorState & ProblemEditorActions;
@@ -65,6 +68,8 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
         get()
           .problem?.availableLanguages.flatMap((l) => l.versions)
           .find((v) => v.id === id) ?? null,
+
+      getTestSuites: () => get().setup?.testSuites ?? [],
     }))
   )
 );

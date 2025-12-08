@@ -1,11 +1,12 @@
 "use client";
 
 import { Editor, Tab } from "@/components/editor/editor";
-import { CodeXml, FileText } from "lucide-react";
+import { CodeXml, FileText, FlaskConical } from "lucide-react";
 import ProblemQuestion from "../problem-question/problem-question";
 import { CodeEditor } from "@/components/code-editor/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProblemEditorStore } from "../problem-editor-store";
+import ProblemTestCases from "../problem-test-cases/problem-test-cases";
 
 export default function ProblemEditor() {
   const setup = useProblemEditorStore((s) => s.setup);
@@ -48,6 +49,18 @@ export default function ProblemEditor() {
             defaultSize: 70,
             icon: (
               <FileText
+                size={16}
+                className="text-blue-600 dark:text-blue-400"
+              />
+            ),
+          },
+          {
+            component: <ProblemTestCases />,
+            key: "test-cases",
+            name: "Test Cases",
+            defaultSize: 30,
+            icon: (
+              <FlaskConical
                 size={16}
                 className="text-blue-600 dark:text-blue-400"
               />
