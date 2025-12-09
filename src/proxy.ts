@@ -1,7 +1,7 @@
 import { auth0 } from "@/lib/auth0";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (process.env.NEXT_PUBLIC_TEST_MODE === "true") {
     return NextResponse.next();
   }
