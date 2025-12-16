@@ -3,6 +3,8 @@ import {
   getProblemBySlug,
   getProblemBySlugQueryOptions,
 } from "@/features/problems/api/get-problem-by-slug";
+import { auth0 } from "@/lib/auth0";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 import {
   dehydrate,
   HydrationBoundary,
@@ -45,6 +47,7 @@ export default async function ProblemPage({
   params: Promise<{ slug: string }>;
 }) {
   const slug = (await params).slug;
+  const accessToken = await auth0.getAccessToken();
 
   const { dehydratedState, queryClient } = await preloadData(slug);
 
@@ -58,7 +61,7 @@ export default async function ProblemPage({
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProblemLayout problem={problem} />
+      <ProblemLayout problem={problem} accessToken={accessToken.token} />
     </HydrationBoundary>
   );
 }
