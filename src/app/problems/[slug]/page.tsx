@@ -47,7 +47,8 @@ export default async function ProblemPage({
   params: Promise<{ slug: string }>;
 }) {
   const slug = (await params).slug;
-  const accessToken = await auth0.getAccessToken();
+  const session = await auth0.getSession();
+  const accessToken = session ? (await auth0.getAccessToken()).token : "";
 
   const { dehydratedState, queryClient } = await preloadData(slug);
 
@@ -61,7 +62,7 @@ export default async function ProblemPage({
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProblemLayout problem={problem} accessToken={accessToken.token} />
+      <ProblemLayout problem={problem} accessToken={accessToken} />
     </HydrationBoundary>
   );
 }
