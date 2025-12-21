@@ -15,7 +15,7 @@ export const runSubmission = ({
     url: "/api/v1/submission/run",
     body: {
       code,
-      problemSetupId: 19,
+      problemSetupId,
     },
     accessToken,
   });

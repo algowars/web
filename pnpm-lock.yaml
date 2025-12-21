@@ -15,6 +15,9 @@ importers:
       '@auth0/nextjs-auth0':
         specifier: ^4.13.2
         version: 4.13.2(next@16.0.8(@babel/core@7.28.5)(@playwright/test@1.57.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      '@babel/runtime':
+        specifier: ^7.28.4
+        version: 7.28.4
       '@codemirror/lang-cpp':
         specifier: ^6.0.3
         version: 6.0.3
