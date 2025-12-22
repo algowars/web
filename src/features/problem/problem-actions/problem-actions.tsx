@@ -14,6 +14,7 @@ export default function ProblemActions({
 }: ProblemActionsProps) {
   const code = useProblemEditorStore((s) => s.code);
   const setup = useProblemEditorStore((s) => s.setup);
+  const setLastRunResult = useProblemEditorStore((s) => s.setLastRunResult);
   const problemSetupId = setup?.id ?? 1;
   const [isRunning, setIsRunning] = useState(false);
 
@@ -22,13 +23,14 @@ export default function ProblemActions({
   const handleRun = async () => {
     setIsRunning(true);
     try {
+      setLastRunResult(null);
       const result = await submissionMutation.mutateAsync({
         code,
         problemSetupId,
         accessToken,
       });
-      toast.success("Submission created! Token saved for evaluation.");
-      console.log("Submission result:", result);
+      toast.success("Submission created");
+      setLastRunResult(result);
     } catch (error: any) {
       toast.error(error?.message || "Failed to run submission.");
     } finally {
@@ -40,7 +42,6 @@ export default function ProblemActions({
     toast("Submit button clicked — implement your submission flow!");
   };
 
-  console.log(isRunning, code, problemSetupId, accessToken);
   return (
     <ul {...props}>
       <li>

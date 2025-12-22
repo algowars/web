@@ -1,6 +1,7 @@
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { RunResult } from "../models/run-result";
 
 export const runSubmission = ({
   code,
@@ -11,7 +12,7 @@ export const runSubmission = ({
   problemSetupId: number;
   accessToken: string;
 }) => {
-  return api.post({
+  return api.post<RunResult | null>({
     url: "/api/v1/submission/run",
     body: {
       code,

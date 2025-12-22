@@ -5,12 +5,14 @@ import { ProblemSetup } from "../problems/models/problem-setup";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { TestCase } from "../test-suite/models/test-case";
 import { TestSuite } from "../test-suite/models/test-suite";
+import { RunResult } from "./models/run-result";
 
 type ProblemEditorState = {
   setup: ProblemSetup | null;
   problem: Problem | null;
   code: string;
   currentVersionId: number | null;
+  lastRunResult: RunResult | null;
 };
 
 type ProblemEditorActions = {
@@ -24,6 +26,7 @@ type ProblemEditorActions = {
   getAvailableLanguages: () => Language[];
   findVersionById: (id: number) => LanguageVersion | null;
   getTestSuites: () => TestSuite[];
+  setLastRunResult: (result: RunResult | null) => void;
 };
 
 type ProblemEditorStore = ProblemEditorState & ProblemEditorActions;
@@ -70,6 +73,8 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
           .find((v) => v.id === id) ?? null,
 
       getTestSuites: () => get().setup?.testSuites ?? [],
+
+      setLastRunResult: (result) => set({ lastRunResult: result }),
     }))
   )
 );
