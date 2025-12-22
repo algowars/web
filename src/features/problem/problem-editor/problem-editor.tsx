@@ -7,10 +7,16 @@ import { CodeEditor } from "@/components/code-editor/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProblemEditorStore } from "../problem-editor-store";
 import ProblemTestCases from "../problem-test-cases/problem-test-cases";
+import SubmissionResult from "../submission-result/submission-result";
 
-export default function ProblemEditor() {
+type ProblemEditorProps = {
+  accessToken?: string;
+};
+
+export default function ProblemEditor({ accessToken }: ProblemEditorProps) {
   const setup = useProblemEditorStore((s) => s.setup);
   const problem = useProblemEditorStore((s) => s.problem);
+  const lastRunResult = useProblemEditorStore((s) => s.lastRunResult);
 
   if (!setup || !problem) {
     return (
@@ -55,16 +61,49 @@ export default function ProblemEditor() {
             ),
           },
           {
-            component: <ProblemTestCases />,
-            key: "test-cases",
-            name: "Test Cases",
+            key: "test-cases-results",
             defaultSize: 30,
-            icon: (
-              <FlaskConical
-                size={16}
-                className="text-blue-600 dark:text-blue-400"
-              />
-            ),
+            children: !!lastRunResult
+              ? [
+                  {
+                    component: (
+                      <SubmissionResult accessToken={accessToken ?? ""} />
+                    ),
+                    key: "submission-result",
+                    name: "Results",
+                    icon: (
+                      <FileText
+                        size={16}
+                        className="text-yellow-600 dark:text-yellow-400"
+                      />
+                    ),
+                  },
+                  {
+                    component: <ProblemTestCases />,
+                    key: "test-cases",
+                    name: "Test Cases",
+                    icon: (
+                      <FlaskConical
+                        size={16}
+                        className="text-blue-600 dark:text-blue-400"
+                      />
+                    ),
+                  },
+                ]
+              : [
+                  {
+                    component: <ProblemTestCases />,
+                    key: "test-cases",
+                    name: "Test Cases",
+                    defaultSize: 30,
+                    icon: (
+                      <FlaskConical
+                        size={16}
+                        className="text-blue-600 dark:text-blue-400"
+                      />
+                    ),
+                  },
+                ],
           },
         ],
       },

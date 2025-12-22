@@ -64,7 +64,7 @@ export default function ProblemLayout({
       }
     >
       <div className="h-full">
-        <ProblemEditor />
+        <ProblemEditor accessToken={accessToken} />
       </div>
     </SidebarLayout>
   );
