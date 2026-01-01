@@ -18,7 +18,7 @@ export function AccountAlreadyExistsGuard({
     if (authStatus === AuthStatus.FULLY_AUTHENTICATED) {
       redirect(redirectRoute);
     }
-  }, [authStatus]);
+  }, [authStatus, redirectRoute]);
 
   return children;
 }

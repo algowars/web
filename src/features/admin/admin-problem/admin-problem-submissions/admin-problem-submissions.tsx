@@ -9,7 +9,7 @@ type AdminProblemSubmissionsProps = React.ComponentProps<typeof Card>;
 export default function AdminProblemSubmissions(
   props: AdminProblemSubmissionsProps
 ) {
-  const totalSubmissions = Math.floor(Math.random() * 1000) + 1;
+  const totalSubmissions = Math.floor(1000) + 1;
 
   return (
     <Card {...props}>

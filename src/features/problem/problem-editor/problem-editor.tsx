@@ -9,11 +9,7 @@ import { useProblemEditorStore } from "../problem-editor-store";
 import ProblemTestCases from "../problem-test-cases/problem-test-cases";
 import SubmissionResult from "../submission-result/submission-result";
 
-type ProblemEditorProps = {
-  accessToken?: string;
-};
-
-export default function ProblemEditor({ accessToken }: ProblemEditorProps) {
+export default function ProblemEditor() {
   const setup = useProblemEditorStore((s) => s.setup);
   const problem = useProblemEditorStore((s) => s.problem);
   const lastRunResult = useProblemEditorStore((s) => s.lastRunResult);
@@ -66,9 +62,7 @@ export default function ProblemEditor({ accessToken }: ProblemEditorProps) {
             children: !!lastRunResult
               ? [
                   {
-                    component: (
-                      <SubmissionResult accessToken={accessToken ?? ""} />
-                    ),
+                    component: <SubmissionResult />,
                     key: "submission-result",
                     name: "Results",
                     icon: (

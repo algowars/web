@@ -3,7 +3,6 @@ import { Language, LanguageVersion } from "../problems/models/language";
 import { Problem } from "../problems/models/problem";
 import { ProblemSetup } from "../problems/models/problem-setup";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
-import { TestCase } from "../test-suite/models/test-case";
 import { TestSuite } from "../test-suite/models/test-suite";
 import { RunResult } from "./models/run-result";
 

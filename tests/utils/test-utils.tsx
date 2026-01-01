@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export function createTestQueryClient() {
@@ -11,6 +11,7 @@ export function createTestQueryClient() {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function renderWithClient(ui: ReactNode) {
   const queryClient = createTestQueryClient();
   return {

@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { tokyoNightStorm } from "@uiw/codemirror-theme-tokyo-night-storm";
 import { tokyoNightDay } from "@uiw/codemirror-theme-tokyo-night-day";
 

@@ -58,7 +58,7 @@ export function AdminProblemProvider({
         }
       }
     })();
-  }, [getAccessToken]);
+  }, [isAuthenticated]);
 
   return (
     <AdminProblemContext.Provider value={contextValue}>

@@ -27,7 +27,7 @@ export default function CreateProblemV2({
     if (availableLanguages.length) {
       setAvailableLanguages(availableLanguages);
     }
-  }, [availableLanguages?.length]);
+  }, [availableLanguages, availableLanguages.length, setAvailableLanguages]);
 
   return (
     <SidebarLayout

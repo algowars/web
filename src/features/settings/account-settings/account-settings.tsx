@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAccountSettings } from "@/features/auth/api/get-account-settings";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
@@ -43,7 +43,6 @@ export default function AccountSettings({
   useEffect(() => {
     if (data) {
       const username = data?.account?.username ?? "";
-      setOriginalUsername(username);
       form.reset({ username });
     }
   }, [data, form]);

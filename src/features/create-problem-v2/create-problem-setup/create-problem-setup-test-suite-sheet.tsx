@@ -35,7 +35,7 @@ export default function CreateProblemSetupTestSuiteSheet({
 }: CreateProblemSetupTestSuiteSheetProps) {
   const addSetupTestSuite = useCreateProblemStore((s) => s.addSetupTestSuite);
   const [createTestSuite, setCreateTestSuite] =
-    useState<CreateProblemTestSuiteModel>({ type: "public" });
+    useState<CreateProblemTestSuiteModel>({ type: "public", testCases: [] });
 
   return (
     <Sheet {...props}>

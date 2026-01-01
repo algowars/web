@@ -20,19 +20,6 @@ export default function CreateProblemFooter({
     mutation.mutate(
       { data: problemData, accessToken: accessToken ?? "" },
       {
-        onError: (error: any) => {
-          const errors = error.response?.data?.errors;
-
-          if (errors && Array.isArray(errors)) {
-            errors.forEach((e: any) => {
-              toast.error(e.Field, { description: e.Message });
-            });
-          } else {
-            toast.error("Error", {
-              description: error.message || "An error occurred",
-            });
-          }
-        },
         onSuccess: () => {
           toast.success("Problem created successfully!");
         },

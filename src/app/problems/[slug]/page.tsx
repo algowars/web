@@ -4,7 +4,6 @@ import {
   getProblemBySlugQueryOptions,
 } from "@/features/problems/api/get-problem-by-slug";
 import { auth0 } from "@/lib/auth0";
-import { getAccessToken } from "@auth0/nextjs-auth0";
 import {
   dehydrate,
   HydrationBoundary,
