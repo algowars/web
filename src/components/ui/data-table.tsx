@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

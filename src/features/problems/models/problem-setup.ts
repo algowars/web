@@ -1,6 +1,5 @@
 import { Account } from "@/features/auth/models/account.model";
 import { Problem } from "./problem";
-import { TestCase } from "@/features/test-suite/models/test-case";
 import { TestSuite } from "@/features/test-suite/models/test-suite";
 
 export interface ProblemSetup {

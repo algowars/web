@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   createContext,
   useContext,
   ReactNode,
@@ -56,7 +56,7 @@ export function AccountProvider({ children }: AccountProviderProps) {
         }
       }
     })();
-  }, [getAccessToken, user]);
+  }, [user]);
 
   const {
     data: account,

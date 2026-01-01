@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { AuthStatus, useAccount } from "../account.context";
 import PageLoader from "@/components/loader/page-loader/page-loader";
 import { redirect } from "next/navigation";
@@ -26,7 +26,7 @@ export default function AuthCallback() {
       }
       redirect(routerConfig.home.path);
     }
-  }, [authStatus, isPending, error?.message]);
+  }, [authStatus, isPending, error?.message, error]);
 
   return <PageLoader message="Getting account information" />;
 }

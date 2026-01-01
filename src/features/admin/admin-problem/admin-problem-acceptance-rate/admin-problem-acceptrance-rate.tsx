@@ -9,7 +9,7 @@ type AdminProblemAcceptanceRateProps = React.ComponentProps<typeof Card>;
 export default function AdminProblemAcceptanceRate(
   props: AdminProblemAcceptanceRateProps
 ) {
-  const acceptanceRate = (Math.random() * 100).toFixed(2);
+  const acceptanceRate = (100).toFixed(2);
 
   return (
     <Card className="" {...props}>

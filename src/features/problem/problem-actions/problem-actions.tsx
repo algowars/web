@@ -31,8 +31,8 @@ export default function ProblemActions({
       });
       toast.success("Submission created");
       setLastRunResult(result);
-    } catch (error: any) {
-      toast.error(error?.message || "Failed to run submission.");
+    } catch {
+      toast.error("Failed to run submission.");
     } finally {
       setIsRunning(false);
     }

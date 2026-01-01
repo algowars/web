@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import * as zustand from "zustand";
 
 const { create } = zustand;
@@ -12,7 +11,9 @@ export const createMock = (<T>(initializer: zustand.StateCreator<T>) => {
   return store;
 }) as typeof create;
 
-export default {
+const zustandExport = {
   ...zustand,
   create: createMock,
 };
+
+export default zustandExport;

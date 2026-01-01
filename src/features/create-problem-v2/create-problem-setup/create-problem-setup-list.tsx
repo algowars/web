@@ -29,7 +29,6 @@ import CreateProblemSetupInfoInitialCode from "./create-problem-setup-info-initi
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
