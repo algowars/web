@@ -101,7 +101,7 @@ function AuthButtons() {
 export default function LandingNavbar() {
   return (
     <nav className="p-3">
-      <div className="mx-auto max-w-7xl flex items-center">
+      <div className="container mx-auto flex items-center">
         <Link href={routerConfig.home.path}>
           <AppLogo />
         </Link>
