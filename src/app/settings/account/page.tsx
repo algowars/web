@@ -4,5 +4,3 @@ export default function SettingsAccountPage() {
   return <AccountSettings />;
 }
 
-
-{}  SettingsAccountPage.auth = true;
