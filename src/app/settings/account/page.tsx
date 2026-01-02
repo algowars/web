@@ -3,3 +3,6 @@ import AccountSettings from "@/features/settings/account-settings/account-settin
 export default function SettingsAccountPage() {
   return <AccountSettings />;
 }
+
+
+{}  SettingsAccountPage.auth = true;
