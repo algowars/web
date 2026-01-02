@@ -9,12 +9,13 @@ export default function Hero() {
     <section>
       <article className="flex flex-col gap-5 items-center text-center py-34">
         <h1 className="text-6xl font-bold">
-          Battle and Compete
-          <br /> in Fast-Paced Coding Challenges
+          Battle against other Developers in
+          <br /> Fast-Paced Coding Challenges
         </h1>
         <p className="text-muted-foreground max-w-2xl">
-          Code and compete in fast-paced coding challenges, sharpening your
-          problem-solving skills while racing against time and other coders.
+          Solve as many challenges as you can within the allotted time. Compete
+          with your peers, collaborate, and communicate with other developers in
+          real time.
         </p>
         <ul className="flex items-center gap-3">
           <li>
