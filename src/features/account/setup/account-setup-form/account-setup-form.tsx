@@ -50,10 +50,8 @@ export default function AccountSetupForm({
 
   const createAccountMutation = useCreateAccount({
     mutationConfig: {
-      onSuccess: (account) => {
-        toast.success("Account created successfully!", {
-          description: `Welcome, ${account.username}!`,
-        });
+      onSuccess: () => {
+        toast.success("Account created successfully!");
         refreshAccount();
 
         router.push(routerConfig.home.path);
