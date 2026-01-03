@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export default function Hero() {
   return (
     <section>
-      <article className="flex flex-col gap-5 items-center text-center px-4 py-34">
+      <article className="flex flex-col gap-5 items-center text-center px-3 py-34">
         <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold">
           Battle against other Developers in
           <br /> Fast-Paced Coding Challenges
@@ -21,7 +21,7 @@ export default function Hero() {
             <AuthLoginButton
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "max-[375px]:w-full w-52 sm:w-64 md:w-48"
+                "max-[375px]:w-full w-52 sm:w-64 md:w-48",
               )}
             >
               Get Started
@@ -31,7 +31,7 @@ export default function Hero() {
             <AuthSignupButton
               className={cn(
                 buttonVariants({ variant: "secondary" }),
-                "max-[375px]:w-full w-52 sm:w-64 md:w-48"
+                "max-[375px]:w-full w-52 sm:w-64 md:w-48",
               )}
             >
               Join Today

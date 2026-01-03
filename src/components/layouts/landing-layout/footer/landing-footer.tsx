@@ -1,9 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Github, Twitter, Linkedin, Mail } from "lucide-react";
-import { routerConfig } from "@/router-config";
+import { Github, Linkedin, Mail } from "lucide-react";
+import { externalLinks, routerConfig } from "@/router-config";
 import AppLogo from "@/components/logos/app-logo";
 
 export default function LandingFooter() {
@@ -13,30 +13,32 @@ export default function LandingFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <AppLogo />
-            <p className="text-sm text-muted-foreground">
-              Master algorithms through competitive programming challenges.
-            </p>
             <div className="flex space-x-2">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="https://github.com" aria-label="GitHub">
-                  <Github className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="https://twitter.com" aria-label="Twitter">
-                  <Twitter className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="https://linkedin.com" aria-label="LinkedIn">
-                  <Linkedin className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="mailto:contact@algowars.com" aria-label="Email">
-                  <Mail className="h-4 w-4" />
-                </Link>
-              </Button>
+              <a
+                href={externalLinks.github.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                <Github className="h-4 w-4" />
+              </a>
+              <a
+                href={externalLinks.github.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Linkedin"
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                <Linkedin className="h-4 w-4" />
+              </a>
+              <a
+                href={`mailto:${externalLinks.mail.path}`}
+                aria-label="Mail"
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                <Mail className="h-4 w-h" />
+              </a>
             </div>
           </div>
           <div className="space-y-4">
