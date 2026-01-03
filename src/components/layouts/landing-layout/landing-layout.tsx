@@ -20,7 +20,13 @@ export default function LandingLayout({
         <AccountVerificationBanner />
         <LandingNavbar />
       </header>
-      <main className={cn("grow", mainClassName)}>{children}</main>
+      <main
+        id="main-content"
+        className={cn("grow", mainClassName)}
+        tabIndex={-1}
+      >
+        {children}
+      </main>
       <LandingFooter />
     </div>
   );

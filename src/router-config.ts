@@ -6,7 +6,7 @@ type RouteEntry = {
   asArray?: string[];
 };
 
-const _routerConfig = {
+export const routerConfig = Object.freeze({
   about: { path: "/about" },
   accountSetup: { path: "/account/setup" },
   adminProblem: {
@@ -53,6 +53,16 @@ const _routerConfig = {
   },
   leaderboard: { path: "/leaderboard" },
   contact: { path: "/contact" },
-} as const satisfies Record<string, RouteEntry>;
+} as const satisfies Record<string, RouteEntry>);
 
-export const routerConfig = Object.freeze(_routerConfig);
+export const externalLinks = Object.freeze({
+  github: {
+    path: "https://github.com/algowars",
+  },
+  linkedin: {
+    path: "https://www.linkedin.com/company/106262028",
+  },
+  mail: {
+    path: "algowarsdev@gmail.com",
+  },
+} as const satisfies Record<string, RouteEntry>);
