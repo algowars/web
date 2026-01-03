@@ -4,7 +4,6 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 
 export const getAccount = ({ accessToken }: { accessToken: string }) => {
-  console.log("ACCESS TOKEN IN API: ", accessToken);
   if (!accessToken) {
     return null;
   }
@@ -31,7 +30,6 @@ export const useAccount = ({
   accessToken,
   queryConfig = {},
 }: UseAccountOptions) => {
-  console.log("QUERY CONFIG: ", queryConfig, "TOKEN: ", accessToken);
   return useQuery({
     ...getAccountQueryOptions(accessToken),
     ...queryConfig,

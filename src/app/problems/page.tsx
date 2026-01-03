@@ -1,5 +1,6 @@
 import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import ProblemsDataTable from "@/features/problems/problems-table/problems-data-table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ProblemsTableV2 from "@/features/problems/problems-table-v2/problems-table-v2";
 import { routerConfig } from "@/router-config";
 import React from "react";
 
@@ -17,7 +18,14 @@ export default function ProblemsPage() {
         },
       ]}
     >
-      <ProblemsDataTable />
+      <Card>
+        <CardHeader>
+          <CardTitle>Problems</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProblemsTableV2 />
+        </CardContent>
+      </Card>
     </SidebarLayout>
   );
 }

@@ -1,21 +1,16 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   PaginationState,
-  SortingState,
   useReactTable,
-  VisibilityState,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -24,96 +19,83 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { DataTablePagination } from "./data-table-pagination";
-import { routerConfig } from "@/router-config";
-import DataTableToolbar from "./data-table-toolbar";
+import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  rowCount: number;
   pagination: PaginationState;
+  setPagination: Dispatch<SetStateAction<PaginationState>>;
+  columnFilters?: any[];
+  setColumnFilters?: (updater: any) => void;
+  isLoading?: boolean;
+  manual?: boolean;
+  getRowUrl?: (row: TData) => string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  rowCount,
+  pagination,
+  setPagination,
+  columnFilters = [],
+  setColumnFilters,
+  isLoading = false,
+  manual = false,
+  getRowUrl,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,
     columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
+    state: { pagination, columnFilters },
+    onPaginationChange: setPagination,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    manualPagination: manual,
+    rowCount: manual ? rowCount : undefined,
   });
+
+  const noResults = !isLoading && table.getRowModel().rows.length === 0;
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
       <div className="rounded-md border">
-        <Table>
+        <Table aria-busy={isLoading} aria-live="polite">
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+            {table.getHeaderGroups().map((hg) => (
+              <TableRow key={hg.id}>
+                {hg.headers.map((h) => (
+                  <TableHead key={h.id} colSpan={h.colSpan}>
+                    {h.isPlaceholder
+                      ? null
+                      : flexRender(h.column.columnDef.header, h.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => {
-                    const slug = (row.original as { slug: string }).slug;
-                    void router.push(routerConfig.problem.execute({ slug }));
-                  }}
-                  className="hover:cursor-pointer"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-32">
+                  <div className="flex items-center justify-center gap-3">
+                    <Spinner className="size-5" />
+                    <span className="text-sm text-muted-foreground">
+                      Loading…
+                    </span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : noResults ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
@@ -122,10 +104,45 @@ export function DataTable<TData, TValue>({
                   No results.
                 </TableCell>
               </TableRow>
+            ) : (
+              table.getRowModel().rows.map((row) => {
+                const handleOpen = () => {
+                  if (!getRowUrl) return;
+                  const url = getRowUrl(row.original as TData);
+                  if (url) router.push(url);
+                };
+                const handleKey = (e: React.KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleOpen();
+                  }
+                };
+
+                return (
+                  <TableRow
+                    key={row.id}
+                    className={getRowUrl ? "hover:cursor-pointer" : undefined}
+                    role={getRowUrl ? "button" : undefined}
+                    tabIndex={getRowUrl ? 0 : undefined}
+                    onClick={handleOpen}
+                    onKeyDown={handleKey}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>
       </div>
+
       <DataTablePagination table={table} />
     </div>
   );

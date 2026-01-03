@@ -31,13 +31,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 
 export default function AccountSetupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
-  const { auth0, getAccessTokenSilently, refreshAccount } = useAccount();
+  const { auth0, refreshAccount } = useAccount();
 
   const signupForm = useForm<z.infer<typeof createAccountSchema>>({
     resolver: zodResolver(createAccountSchema),
@@ -57,17 +58,12 @@ export default function AccountSetupForm({
 
         router.push(routerConfig.home.path);
       },
-      onError: (error) => {
-        toast.error("Failed to create account", {
-          description: error.message || "Please try again.",
-        });
-      },
     },
   });
 
   async function onSubmit(values: z.infer<typeof createAccountSchema>) {
     try {
-      const accessToken = await getAccessTokenSilently();
+      const accessToken = await getAccessToken();
 
       createAccountMutation.mutate({
         data: values,
@@ -87,6 +83,11 @@ export default function AccountSetupForm({
           <CardTitle>Finish setting up your account</CardTitle>
           <CardDescription>Please fill out the required fields</CardDescription>
         </CardHeader>
+        {createAccountMutation.isError ? (
+          <p className="text-sm text-center text-destructive px-3">
+            {createAccountMutation.error.message}
+          </p>
+        ) : null}
         <CardContent>
           <Form {...signupForm}>
             <form
@@ -107,7 +108,8 @@ export default function AccountSetupForm({
                       />
                     </FormControl>
                     <FormDescription>
-                      This is your public display name.
+                      Max 16 characters. Only letters, numbers, hyphens, and
+                      underscores allowed.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -118,10 +120,13 @@ export default function AccountSetupForm({
                 type="submit"
                 variant="outline"
                 className="w-full"
-                disabled={createAccountMutation.isPending}
+                disabled={
+                  createAccountMutation.isPending ||
+                  !signupForm.formState.isValid
+                }
               >
                 {createAccountMutation.isPending
-                  ? "Setting up..."
+                  ? "Loading..."
                   : "Setup Account"}
               </Button>
             </form>

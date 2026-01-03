@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/theme/mode-toggle";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,6 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import Link from "next/link";
 import React from "react";
 
 export type BreadcrumbItem = {
@@ -17,10 +19,12 @@ export type BreadcrumbItem = {
 
 interface AppSidebarHeaderProps {
   breadcrumbs?: BreadcrumbItem[];
+  headerItems?: React.ReactNode;
 }
 
 export default function AppSidebarHeader({
   breadcrumbs = [],
+  headerItems,
 }: AppSidebarHeaderProps) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-2">
@@ -44,8 +48,8 @@ export default function AppSidebarHeader({
                       {isLast || !breadcrumb.url ? (
                         <BreadcrumbPage>{breadcrumb.name}</BreadcrumbPage>
                       ) : (
-                        <BreadcrumbLink href={breadcrumb.url}>
-                          {breadcrumb.name}
+                        <BreadcrumbLink asChild>
+                          <Link href={breadcrumb.url}>{breadcrumb.name}</Link>
                         </BreadcrumbLink>
                       )}
                     </BreadcrumbItem>
@@ -61,6 +65,8 @@ export default function AppSidebarHeader({
           </Breadcrumb>
         )}
       </div>
+      {headerItems}
+      <ModeToggle className="ml-auto mr-3" />
     </header>
   );
 }

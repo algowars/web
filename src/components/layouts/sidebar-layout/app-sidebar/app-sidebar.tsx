@@ -10,26 +10,40 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { routerConfig } from "@/router-config";
-import { Command, ListTree, SquareTerminal } from "lucide-react";
+import { BookOpenText, LayoutDashboard, Puzzle } from "lucide-react";
 import React from "react";
+import { useAccount } from "@/features/auth/account.context";
+import { Command } from "@/components/ui/command";
+import Link from "next/link";
 import { SidebarMainNav } from "./sidebar-main-nav";
-import { AppSidebaraccount } from "./app-sidebar-user";
-
+import { AuthComponentGuard } from "@/features/auth/guards/auth-component.guard";
+import { UnauthenticatedAccount } from "./unauthenticated-account";
+import { PartiallyAuthenticatedAccount } from "./partially-authenticated-account";
+import { AppSidebarAccount } from "./app-sidebar-account";
+import { Permissions } from "@/features/auth/permissions/Permissions";
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
+  const { isAuthenticated, account } = useAccount();
   const data = {
     navMain: [
       {
-        title: "Dashboard",
+        title: isAuthenticated ? "Dashboard" : "Home",
         url: routerConfig.dashboard.path,
-        icon: SquareTerminal,
+        icon: LayoutDashboard,
         isActive: true,
       },
       {
         title: "Problems",
         url: routerConfig.problems.path,
-        icon: ListTree,
+        icon: Puzzle,
+      },
+    ],
+    navProblemManagement: [
+      {
+        title: "Problems",
+        icon: BookOpenText,
+        url: routerConfig.problemManagement.path,
       },
     ],
   };
@@ -40,7 +54,7 @@ export default function AppSidebar(
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href={routerConfig.dashboard.path}>
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
                 </div>
@@ -48,16 +62,27 @@ export default function AppSidebar(
                   <span className="truncate font-medium">Algowars</span>
                   <span className="truncate text-xs">Competitive Coding</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMainNav items={data.navMain} />
+        {account?.permissions?.includes(Permissions.ReadProblem) ? (
+          <SidebarMainNav
+            items={data.navProblemManagement}
+            title="Problem Management"
+          />
+        ) : null}
       </SidebarContent>
       <SidebarFooter>
-        <AppSidebaraccount />
+        <AuthComponentGuard
+          unauthenticated={<UnauthenticatedAccount />}
+          partiallyAuthenticated={<PartiallyAuthenticatedAccount />}
+        >
+          <AppSidebarAccount />
+        </AuthComponentGuard>
       </SidebarFooter>
     </Sidebar>
   );

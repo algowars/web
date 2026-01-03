@@ -5,8 +5,10 @@ import z from "zod";
 import { Account } from "../models/account.model";
 
 export const createAccountSchema = z.object({
-  username: z.string().min(1, "Required"),
-  imageUrl: z.string(),
+  username: z.string().min(1, {
+    message: "Username must be at least 1 characters.",
+  }),
+  imageUrl: z.string().optional(),
 });
 
 export type CreateAccountInput = z.infer<typeof createAccountSchema>;
