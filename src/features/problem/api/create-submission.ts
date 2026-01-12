@@ -1,24 +1,23 @@
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import z from "zod";
-
-export const createSubmissionSchema = z.object({
-  code: z.string(),
-});
-
-export type CreateSubmissionInput = z.infer<typeof createSubmissionSchema>;
+import { RunResult } from "../models/run-result";
 
 export const createSubmission = ({
-  data,
+  code,
+  problemSetupId,
   accessToken,
 }: {
-  data: CreateSubmissionInput;
+  code: string;
+  problemSetupId: number;
   accessToken: string;
 }) => {
-  return api.post<string>({
-    url: "/api/v1/submission",
-    body: data,
+  return api.post<RunResult>({
+    url: "/api/v1/submission/execute",
+    body: {
+      code,
+      problemSetupId,
+    },
     accessToken,
   });
 };

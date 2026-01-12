@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useProblemEditorStore } from "../problem-editor-store";
 import { useRunSubmission } from "../api/run-submission";
 import { toast } from "sonner";
+import { useCreateSubmission } from "../api/create-submission";
 
 type ProblemActionsProps = React.HTMLAttributes<HTMLUListElement> & {
   accessToken: string;
@@ -18,13 +19,15 @@ export default function ProblemActions({
   const problemSetupId = setup?.id ?? 1;
   const [isRunning, setIsRunning] = useState(false);
 
-  const submissionMutation = useRunSubmission();
+  const runSubmissionMutation = useRunSubmission();
+
+  const submitSubmissionMutation = useCreateSubmission();
 
   const handleRun = async () => {
     setIsRunning(true);
     try {
       setLastRunResult(null);
-      const result = await submissionMutation.mutateAsync({
+      const result = await runSubmissionMutation.mutateAsync({
         code,
         problemSetupId,
         accessToken,
@@ -38,8 +41,22 @@ export default function ProblemActions({
     }
   };
 
-  const handleSubmit = () => {
-    toast("Submit button clicked — implement your submission flow!");
+  const handleSubmit = async () => {
+    setIsRunning(true);
+    try {
+      setLastRunResult(null);
+      const result = await submitSubmissionMutation.mutateAsync({
+        code,
+        problemSetupId,
+        accessToken,
+      });
+      toast.success("Submission created");
+      setLastRunResult(result);
+    } catch {
+      toast.error("Failed to run submission.");
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   return (

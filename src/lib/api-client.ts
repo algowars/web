@@ -52,7 +52,7 @@ export async function getServerCookies() {
 const createApiClient = (): AxiosInstance => {
   const client = axios.create({
     baseURL: env.NEXT_PUBLIC_API_SERVER_URL,
-    timeout: 10_000,
+    timeout: 20_000,
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",
