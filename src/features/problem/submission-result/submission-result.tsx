@@ -1,10 +1,34 @@
+"use client";
+
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { useProblemEditorStore } from "../problem-editor-store";
+import { useGetSubmission } from "../api/get-submission";
+import { useEffect } from "react";
 
-export default function SubmissionResult() {
+type SubmissionResultProps = {
+  accessToken: string;
+};
+
+export default function SubmissionResult({
+  accessToken,
+}: SubmissionResultProps) {
   const result = useProblemEditorStore((s) => s.lastRunResult);
+  const setLastRunResult = useProblemEditorStore((s) => s.setLastRunResult);
 
-  console.log("RESULT:", result);
+  const { data, isSuccess } = useGetSubmission({
+    submissionId: result?.submissionId,
+    accessToken: accessToken,
+    queryConfig: {
+      retry: result?.submissionId ? 10 : 0,
+      retryDelay: 2_000,
+    },
+  });
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      setLastRunResult(data);
+    }
+  }, [isSuccess, data, setLastRunResult]);
 
   if (!result) {
     return <div>You must run your code first.</div>;
@@ -20,7 +44,7 @@ export default function SubmissionResult() {
   return (
     <div className="p-5">
       <Alert variant="default">
-        <AlertTitle>{statuses[result?.status]}</AlertTitle>
+        <AlertTitle>{statuses[result?.status] ?? result.status}</AlertTitle>
       </Alert>
     </div>
   );

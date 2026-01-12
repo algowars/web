@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React from "react";
 import { useProblemEditorStore } from "../problem-editor-store";
 import { useRunSubmission } from "../api/run-submission";
 import { toast } from "sonner";
@@ -17,14 +17,12 @@ export default function ProblemActions({
   const setup = useProblemEditorStore((s) => s.setup);
   const setLastRunResult = useProblemEditorStore((s) => s.setLastRunResult);
   const problemSetupId = setup?.id ?? 1;
-  const [isRunning, setIsRunning] = useState(false);
 
   const runSubmissionMutation = useRunSubmission();
 
   const submitSubmissionMutation = useCreateSubmission();
 
   const handleRun = async () => {
-    setIsRunning(true);
     try {
       setLastRunResult(null);
       const result = await runSubmissionMutation.mutateAsync({
@@ -36,13 +34,10 @@ export default function ProblemActions({
       setLastRunResult(result);
     } catch {
       toast.error("Failed to run submission.");
-    } finally {
-      setIsRunning(false);
     }
   };
 
   const handleSubmit = async () => {
-    setIsRunning(true);
     try {
       setLastRunResult(null);
       const result = await submitSubmissionMutation.mutateAsync({
@@ -50,12 +45,11 @@ export default function ProblemActions({
         problemSetupId,
         accessToken,
       });
+      setLastRunResult(result);
       toast.success("Submission created");
       setLastRunResult(result);
     } catch {
       toast.error("Failed to run submission.");
-    } finally {
-      setIsRunning(false);
     }
   };
 
@@ -66,14 +60,28 @@ export default function ProblemActions({
           className="w-24"
           variant="secondary"
           onClick={handleRun}
-          disabled={isRunning || !code || !problemSetupId}
+          disabled={
+            runSubmissionMutation.isPending ||
+            submitSubmissionMutation.isPending ||
+            !code ||
+            !problemSetupId
+          }
         >
-          {isRunning ? "Running..." : "Run"}
+          {runSubmissionMutation.isPending ? "Running..." : "Run"}
         </Button>
       </li>
       <li>
-        <Button className="w-24" onClick={handleSubmit} disabled={!code}>
-          Submit
+        <Button
+          className="w-24"
+          onClick={handleSubmit}
+          disabled={
+            runSubmissionMutation.isPending ||
+            submitSubmissionMutation.isPending ||
+            !code ||
+            !problemSetupId
+          }
+        >
+          {submitSubmissionMutation.isPending ? "Running..." : "Submit"}
         </Button>
       </li>
     </ul>
