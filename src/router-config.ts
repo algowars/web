@@ -29,6 +29,11 @@ export const routerConfig = Object.freeze({
   },
   problemManagement: { path: "/problems/management" },
   problems: { path: "/problems" },
+  problemSubmissions: {
+    path: "/problems/:slug/submissions",
+    execute: ({ slug }: { slug: string }) =>
+      `/problems/${encodeURIComponent(slug)}/submissions`,
+  },
   profile: {
     path: "/profile/:username",
     execute: ({ username }: { username: string }) =>

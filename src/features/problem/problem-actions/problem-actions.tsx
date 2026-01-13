@@ -1,16 +1,20 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import React from "react";
 import { useProblemEditorStore } from "../problem-editor-store";
 import { useRunSubmission } from "../api/run-submission";
 import { toast } from "sonner";
 import { useCreateSubmission } from "../api/create-submission";
+import { routerConfig } from "@/router-config";
+import { cn } from "@/lib/utils";
 
 type ProblemActionsProps = React.HTMLAttributes<HTMLUListElement> & {
   accessToken: string;
+  slug: string;
 };
 
 export default function ProblemActions({
   accessToken,
+  slug,
   ...props
 }: ProblemActionsProps) {
   const code = useProblemEditorStore((s) => s.code);
@@ -83,6 +87,14 @@ export default function ProblemActions({
         >
           {submitSubmissionMutation.isPending ? "Running..." : "Submit"}
         </Button>
+      </li>
+      <li>
+        <a
+          href={routerConfig.problemSubmissions.execute({ slug })}
+          className={cn(buttonVariants({ variant: "ghost" }))}
+        >
+          View Submissions
+        </a>
       </li>
     </ul>
   );
