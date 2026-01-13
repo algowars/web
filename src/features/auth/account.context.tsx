@@ -20,6 +20,7 @@ export enum AuthStatus {
 }
 
 interface AccountContextType {
+  accessToken: string;
   auth0: {
     user: User | null | undefined;
     isAuthenticated: boolean;
@@ -83,6 +84,7 @@ export function AccountProvider({ children }: AccountProviderProps) {
   };
 
   const contextValue: AccountContextType = {
+    accessToken,
     isPending: isPendingAccount || isAuthLoading,
     error: accountError ?? auth0Error,
     isAuthenticated: isAuth0Authenticated && !!account,
