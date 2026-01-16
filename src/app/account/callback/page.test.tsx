@@ -1,3 +1,9 @@
+import AccountCallbackPage from "./page";
+import { auth0 } from "@/lib/auth0";
+import { redirect } from "next/navigation";
+import { routerConfig } from "@/router-config";
+import AuthCallback from "@/features/auth/auth-callback/auth-callback";
+
 vi.mock("next/navigation", () => ({
     redirect: vi.fn(),
 }));
@@ -8,13 +14,12 @@ vi.mock("@/lib/auth0", () => ({
     },
 }));
 
-import AccountCallbackPage from "./page";
-import { auth0 } from "@/lib/auth0";
-import { redirect } from "next/navigation";
-import { routerConfig } from "@/router-config";
-import AuthCallback from "@/features/auth/auth-callback/auth-callback";
 
 describe("AccountCallbackPage", () => {
+    it("can be initialized", () => {
+        expect(AccountCallbackPage).toBeDefined();
+    });
+
     it("redirects to home if no session", async () => {
         vi.mocked(auth0.getSession).mockResolvedValueOnce(null);
         await AccountCallbackPage();
