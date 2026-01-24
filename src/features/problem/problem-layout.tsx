@@ -58,6 +58,7 @@ export default function ProblemLayout({
           <ProblemActions
             className="flex items-center gap-2 ml-auto"
             accessToken={accessToken ?? ""}
+            slug={problem.slug}
           />
           <ProblemCodeEditorLanguageSelect className="ml-auto" />
         </div>
