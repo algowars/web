@@ -1,26 +1,32 @@
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import z from "zod";
+import { SubmissionStatus } from "../models/submission-status";
+import { RunResult } from "../models/run-result";
 
-export const createSubmissionSchema = z.object({
-  code: z.string(),
-});
-
-export type CreateSubmissionInput = z.infer<typeof createSubmissionSchema>;
-
-export const createSubmission = ({
-  data,
+export const createSubmission = async ({
+  code,
+  problemSetupId,
   accessToken,
 }: {
-  data: CreateSubmissionInput;
+  code: string;
+  problemSetupId: number;
   accessToken: string;
-}) => {
-  return api.post<string>({
-    url: "/api/v1/submission",
-    body: data,
+}): Promise<RunResult> => {
+  const submissionId = await api.post<string>({
+    url: "/api/v1/submission/execute",
+    body: {
+      code,
+      problemSetupId,
+    },
     accessToken,
   });
+
+  return {
+    submissionId,
+    status: SubmissionStatus.Pending,
+    testCases: [],
+  };
 };
 
 type UseCreateSubmissionOptions = {

@@ -23,6 +23,7 @@ export default defineConfig({
     globals: true,
     css: true,
     coverage: {
+      provider: "v8",
       reporter: ["json-summary"],
       reportsDirectory: "./coverage",
       exclude: [

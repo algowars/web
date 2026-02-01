@@ -4,7 +4,6 @@ import { AccountAlreadyExistsGuard } from "@/features/auth/guards/account-alread
 import { auth0 } from "@/lib/auth0";
 import { routerConfig } from "@/router-config";
 import { redirect } from "next/navigation";
-import React from "react";
 
 export default async function AccountSetupPage() {
   const session = await auth0.getSession();
