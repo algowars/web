@@ -1,11 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCreateProblemStore } from "./create-problem-store";
 import { useCreateProblem } from "./api/create-problem";
 import { toast } from "sonner";
 import { ApiError } from "@/lib/api-client";
-import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";
+import { useRouter } from "next/navigation";
 
 type CreateProblemFooterProps = {
   accessToken?: string;
@@ -16,6 +18,7 @@ export default function CreateProblemFooter({
 }: CreateProblemFooterProps) {
   const createProblemModel = useCreateProblemStore((s) => s.createProblem);
   const mutation = useCreateProblem();
+  const router = useRouter();
 
   const handleCreate = async () => {
     const problemData = createProblemModel();
@@ -25,7 +28,7 @@ export default function CreateProblemFooter({
       {
         onSuccess: () => {
           toast.success("Problem created successfully!");
-          redirect(routerConfig.problemManagement.path);
+          router.push(routerConfig.problemManagement.path);
         },
         onError: (error: ApiError) => {
           toast.error("Error creating problem", {
