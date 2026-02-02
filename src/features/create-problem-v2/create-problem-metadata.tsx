@@ -8,6 +8,7 @@ import {
   FieldLabel,
   FieldSet,
 } from "@/components/ui/field";
+import CreateProblemTags from "./create-problem-tags";
 
 export default function CreateProblemMetadata() {
   const title = useCreateProblemStore((s) => s.title);
@@ -52,6 +53,10 @@ export default function CreateProblemMetadata() {
                   Difficulty rating for the problem (less than 1000 = Easy,
                   1000-2000 = Medium, 2000 greater = Hard)
                 </FieldDescription>
+              </Field>
+              <Field>
+                <FieldLabel>Tags</FieldLabel>
+                <CreateProblemTags />
               </Field>
             </FieldGroup>
           </FieldSet>

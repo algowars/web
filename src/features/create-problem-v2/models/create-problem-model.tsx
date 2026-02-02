@@ -4,6 +4,6 @@ export interface CreateProblemModel {
   title: string;
   question: string;
   tags: string[];
-  difficulty: number;
+  estimatedDifficulty: number;
   setups: CreateProblemSetup[];
 }

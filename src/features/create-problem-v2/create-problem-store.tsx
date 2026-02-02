@@ -1,14 +1,41 @@
 import { create } from "zustand";
 import { Language, LanguageVersion } from "../problems/models/language";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
-import { SerializedEditorState } from "lexical";
+import { createEditor, SerializedEditorState } from "lexical";
 import { CreateProblemSetup } from "./models/create-problem-setup-model";
 import {
   CreateProblemTestSuiteModel,
   CreateProblemTestSuiteTestCaseModel,
 } from "./models/create-problem-test-suite-model";
 import { CreateProblemModel } from "./models/create-problem-model";
-import { lexicalToMarkdown } from "@/lib/lexical";
+import { nodes } from "@/components/blocks/editor-x/nodes";
+import { editorTheme } from "@/components/editor/themes/editor-theme";
+import { $convertToMarkdownString } from "@lexical/markdown";
+
+export function lexicalToMarkdown(
+  serializedState: SerializedEditorState
+): string {
+  const editor = createEditor({
+    namespace: "MarkdownExport",
+    nodes,
+    theme: editorTheme,
+    onError: () => {},
+  });
+
+  const editorState = editor.parseEditorState(
+    JSON.stringify(serializedState)
+  );
+
+  let markdown = "";
+
+  editor.setEditorState(editorState);
+
+  editorState.read(() => {
+    markdown = $convertToMarkdownString();
+  });
+
+  return markdown;
+}
 
 type CreateProblemState = {
   title: string;
@@ -293,14 +320,13 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
 
       createProblem: () => {
         const state = get();
-
         const markdownQuestion = lexicalToMarkdown(state.questionState);
 
         const problem: CreateProblemModel = {
           title: state.title,
           question: markdownQuestion,
           tags: state.tags,
-          difficulty: state.difficulty,
+          estimatedDifficulty: state.difficulty,
           setups: state.setups,
         };
 

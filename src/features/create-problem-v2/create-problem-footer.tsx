@@ -3,6 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCreateProblemStore } from "./create-problem-store";
 import { useCreateProblem } from "./api/create-problem";
 import { toast } from "sonner";
+import { ApiError } from "@/lib/api-client";
+import { redirect } from "next/navigation";
+import { routerConfig } from "@/router-config";
 
 type CreateProblemFooterProps = {
   accessToken?: string;
@@ -22,7 +25,13 @@ export default function CreateProblemFooter({
       {
         onSuccess: () => {
           toast.success("Problem created successfully!");
+          redirect(routerConfig.problemManagement.path);
         },
+        onError: (error: ApiError) => {
+          toast.error("Error creating problem", {
+            description: error.message
+          })
+        }
       }
     );
   };
