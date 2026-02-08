@@ -22,7 +22,7 @@ export const getProblem = ({
 
 export const getProblemQueryOptions = (
   slug: string,
-  preferredLanguageId?: number
+  preferredLanguageId?: number,
 ) => {
   return queryOptions({
     queryKey: ["problem", slug, preferredLanguageId],

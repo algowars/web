@@ -22,7 +22,7 @@ import { PartiallyAuthenticatedAccount } from "./partially-authenticated-account
 import { AppSidebarAccount } from "./app-sidebar-account";
 import { Permissions } from "@/features/auth/permissions/Permissions";
 export default function AppSidebar(
-  props: React.ComponentProps<typeof Sidebar>
+  props: React.ComponentProps<typeof Sidebar>,
 ) {
   const { isAuthenticated, account } = useAccount();
   const data = {

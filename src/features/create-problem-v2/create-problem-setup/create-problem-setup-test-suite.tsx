@@ -17,7 +17,7 @@ export default function CreateProblemSetupTestSuite({
   setupIndex,
 }: CreateProblemSetupTestSuiteProps) {
   const getTestSuitesBySetupIndex = useCreateProblemStore(
-    (s) => s.getTestSuitesBySetupIndex
+    (s) => s.getTestSuitesBySetupIndex,
   );
   const testSuites = getTestSuitesBySetupIndex(setupIndex);
   return (

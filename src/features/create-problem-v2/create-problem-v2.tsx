@@ -20,7 +20,7 @@ export default function CreateProblemV2({
   accessToken,
 }: CreateProblemV2Props) {
   const setAvailableLanguages = useCreateProblemStore(
-    (s) => s.setAvailableLanguages
+    (s) => s.setAvailableLanguages,
   );
 
   useEffect(() => {

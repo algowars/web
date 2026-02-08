@@ -57,10 +57,10 @@ export default function CreateProblemSetupList() {
   const setups = useCreateProblemStore((s) => s.setups);
   const removeSetup = useCreateProblemStore((s) => s.removeSetup);
   const getLanguagesByVersionIds = useCreateProblemStore(
-    (s) => s.getLanguagesByVersionIds
+    (s) => s.getLanguagesByVersionIds,
   );
   const getLanguageVersionsByIds = useCreateProblemStore(
-    (s) => s.getLanguageVersionsByIds
+    (s) => s.getLanguageVersionsByIds,
   );
 
   return (
@@ -94,7 +94,7 @@ export default function CreateProblemSetupList() {
                   <TableCell className="cursor-pointer hover:text-blue-600">
                     <LanguageIcons
                       languages={getLanguagesByVersionIds(
-                        setup.languageVersionIds
+                        setup.languageVersionIds,
                       )}
                     />
                   </TableCell>

@@ -6,7 +6,7 @@ export type HasPermissionMode = "any" | "all";
 function hasRequiredPermissions(
   userPermissions: Permissions[] | undefined = [],
   required: Permissions[],
-  mode?: HasPermissionMode
+  mode?: HasPermissionMode,
 ) {
   if (!required.length) {
     return true;
@@ -24,10 +24,10 @@ function hasRequiredPermissions(
 export function useHasPermissions(
   userPermissions: Permissions[] | undefined,
   required: Permissions[],
-  mode?: HasPermissionMode
+  mode?: HasPermissionMode,
 ) {
   return React.useMemo(
     () => hasRequiredPermissions(userPermissions, required, mode),
-    [mode, required, userPermissions]
+    [mode, required, userPermissions],
   );
 }

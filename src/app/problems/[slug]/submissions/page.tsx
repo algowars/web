@@ -1,6 +1,10 @@
 import ProblemSubmissionsLayout from "@/features/problem-submissions/problem-submissions-layout";
 import { getProblemSubmissionsQueryOptions } from "@/features/problem/api/get-problem-submissions";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 const preloadData = async (slug: string) => {
   const queryClient = new QueryClient();
@@ -11,7 +15,7 @@ const preloadData = async (slug: string) => {
 
   const dehydratedState = dehydrate(queryClient);
   const problemSubmission = queryClient.getQueryData(
-    getProblemSubmissionsQueryOptions(slug).queryKey
+    getProblemSubmissionsQueryOptions(slug).queryKey,
   );
 
   return {
@@ -29,12 +33,12 @@ export default async function ProblemSubmissionPage({
   const { dehydratedState, problemSubmission } = await preloadData(slug);
 
   if (!problemSubmission) {
-    return <h1>Error loading problem submissions.</h1>
+    return <h1>Error loading problem submissions.</h1>;
   }
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProblemSubmissionsLayout problemSubmission={problemSubmission}/>
+      <ProblemSubmissionsLayout problemSubmission={problemSubmission} />
     </HydrationBoundary>
-  )
+  );
 }

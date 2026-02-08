@@ -30,7 +30,7 @@ export const getProblemsPageable = ({
 
 export const getProblemsPageableQueryOptions = (
   pagination: PaginationState,
-  timestamp?: Date
+  timestamp?: Date,
 ) =>
   queryOptions({
     queryKey: ["problems", pagination, timestamp],

@@ -18,7 +18,7 @@ export const getRunSubmission = async ({
 
 export const getRunSubmissionQueryOptions = (
   submissionId: string,
-  accessToken: string
+  accessToken: string,
 ) => {
   return {
     queryKey: ["run-submission", submissionId],

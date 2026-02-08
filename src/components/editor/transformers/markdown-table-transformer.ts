@@ -67,8 +67,8 @@ export const TABLE: ElementTransformer = {
           rowOutput.push(
             $convertToMarkdownString(OTHER_MARKDOWN_TRANSFORMERS, cell).replace(
               /\n/g,
-              "\\n"
-            )
+              "\\n",
+            ),
           );
           if (cell.__headerState === TableCellHeaderStates.ROW) {
             isHeaderRow = true;
@@ -106,7 +106,7 @@ export const TABLE: ElementTransformer = {
         }
         cell.setHeaderStyles(
           TableCellHeaderStates.ROW,
-          TableCellHeaderStates.ROW
+          TableCellHeaderStates.ROW,
         );
       });
 

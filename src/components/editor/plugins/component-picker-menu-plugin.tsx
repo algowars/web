@@ -21,9 +21,9 @@ import { Command } from "@/components/ui/command";
 const LexicalTypeaheadMenuPlugin = dynamic(
   () =>
     import("@lexical/react/LexicalTypeaheadMenuPlugin").then(
-      (mod) => mod.LexicalTypeaheadMenuPlugin
+      (mod) => mod.LexicalTypeaheadMenuPlugin,
     ),
-  { ssr: false }
+  { ssr: false },
 );
 
 export function ComponentPickerMenuPlugin({
@@ -57,7 +57,7 @@ export function ComponentPickerMenuPlugin({
       ...baseOptions.filter(
         (option) =>
           regex.test(option.title) ||
-          option.keywords.some((keyword) => regex.test(keyword))
+          option.keywords.some((keyword) => regex.test(keyword)),
       ),
     ];
   }, [editor, queryString, showModal]);
@@ -67,7 +67,7 @@ export function ComponentPickerMenuPlugin({
       selectedOption: ComponentPickerOption,
       nodeToRemove: TextNode | null,
       closeMenu: () => void,
-      matchingString: string
+      matchingString: string,
     ) => {
       editor.update(() => {
         nodeToRemove?.remove();
@@ -75,7 +75,7 @@ export function ComponentPickerMenuPlugin({
         closeMenu();
       });
     },
-    [editor]
+    [editor],
   );
 
   return (
@@ -89,7 +89,7 @@ export function ComponentPickerMenuPlugin({
         options={options}
         menuRenderFn={(
           anchorElementRef,
-          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
+          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
         ) => {
           return anchorElementRef.current && options.length
             ? createPortal(
@@ -102,14 +102,14 @@ export function ComponentPickerMenuPlugin({
                           selectedIndex !== null
                             ? (selectedIndex - 1 + options.length) %
                                 options.length
-                            : options.length - 1
+                            : options.length - 1,
                         );
                       } else if (e.key === "ArrowDown") {
                         e.preventDefault();
                         setHighlightedIndex(
                           selectedIndex !== null
                             ? (selectedIndex + 1) % options.length
-                            : 0
+                            : 0,
                         );
                       }
                     }}
@@ -137,7 +137,7 @@ export function ComponentPickerMenuPlugin({
                     </CommandList>
                   </Command>
                 </div>,
-                anchorElementRef.current
+                anchorElementRef.current,
               )
             : null;
         }}

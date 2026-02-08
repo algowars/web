@@ -139,7 +139,7 @@ function FloatingTextFormat({
         rangeRect,
         popupCharStylesEditorElem,
         anchorElem,
-        isLink
+        isLink,
       );
     }
   }, [editor, anchorElem, isLink]);
@@ -183,8 +183,8 @@ function FloatingTextFormat({
           $updateTextFormatFloatingToolbar();
           return false;
         },
-        COMMAND_PRIORITY_LOW
-      )
+        COMMAND_PRIORITY_LOW,
+      ),
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
 
@@ -305,7 +305,7 @@ function FloatingTextFormat({
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLDivElement | null,
-  setIsLinkEditMode: Dispatch<boolean>
+  setIsLinkEditMode: Dispatch<boolean>,
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
@@ -393,7 +393,7 @@ function useFloatingTextFormatToolbar(
         if (editor.getRootElement() === null) {
           setIsText(false);
         }
-      })
+      }),
     );
   }, [editor, updatePopup]);
 
@@ -415,7 +415,7 @@ function useFloatingTextFormatToolbar(
       isCode={isCode}
       setIsLinkEditMode={setIsLinkEditMode}
     />,
-    anchorElem
+    anchorElem,
   );
 }
 

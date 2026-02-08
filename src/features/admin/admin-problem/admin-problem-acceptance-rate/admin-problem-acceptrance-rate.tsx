@@ -7,7 +7,7 @@ import { Percent } from "lucide-react";
 type AdminProblemAcceptanceRateProps = React.ComponentProps<typeof Card>;
 
 export default function AdminProblemAcceptanceRate(
-  props: AdminProblemAcceptanceRateProps
+  props: AdminProblemAcceptanceRateProps,
 ) {
   const acceptanceRate = (100).toFixed(2);
 

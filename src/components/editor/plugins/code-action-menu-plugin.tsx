@@ -84,7 +84,7 @@ function CodeActionMenuContainer({
       }
     },
     50,
-    1000
+    1000,
   );
 
   useEffect(() => {
@@ -123,7 +123,7 @@ function CodeActionMenuContainer({
         });
         setShouldListenMouseMove(codeSetRef.current.size > 0);
       },
-      { skipInitialization: false }
+      { skipInitialization: false },
     );
   }, [editor]);
 
@@ -149,7 +149,7 @@ function getMouseInfo(event: MouseEvent): {
 
   if (isHTMLElement(target)) {
     const codeDOMNode = target.closest<HTMLElement>(
-      "code.PlaygroundEditorTheme__code"
+      "code.PlaygroundEditorTheme__code",
     );
     const isOutside = !(
       codeDOMNode ||
@@ -173,6 +173,6 @@ export function CodeActionMenuPlugin({
 
   return createPortal(
     <CodeActionMenuContainer anchorElem={anchorElem} />,
-    anchorElem
+    anchorElem,
   );
 }

@@ -7,7 +7,7 @@ import { BarChart3 } from "lucide-react";
 type AdminProblemSubmissionsProps = React.ComponentProps<typeof Card>;
 
 export default function AdminProblemSubmissions(
-  props: AdminProblemSubmissionsProps
+  props: AdminProblemSubmissionsProps,
 ) {
   const totalSubmissions = Math.floor(1000) + 1;
 

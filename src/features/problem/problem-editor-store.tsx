@@ -56,7 +56,7 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
 
       getLanguage: () =>
         get().problem?.availableLanguages.find((l) =>
-          l.versions.some((v) => v.id === get().currentVersionId)
+          l.versions.some((v) => v.id === get().currentVersionId),
         ) ?? null,
 
       getLanguageVersion: () =>
@@ -74,6 +74,6 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
       getTestSuites: () => get().setup?.testSuites ?? [],
 
       setLastRunResult: (result) => set({ lastRunResult: result }),
-    }))
-  )
+    })),
+  ),
 );

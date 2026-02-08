@@ -110,7 +110,7 @@ export const TwitterEmbedConfig: CustomEmbedConfig = {
   parseUrl: (text: string) => {
     const match =
       /^https:\/\/(twitter|x)\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)/.exec(
-        text
+        text,
       );
 
     if (match != null) {
@@ -157,13 +157,13 @@ export function AutoEmbedDialog({
           Promise.resolve(embedConfig.parseUrl(inputText)).then(
             (parseResult) => {
               setEmbedResult(parseResult);
-            }
+            },
           );
         } else if (embedResult != null) {
           setEmbedResult(null);
         }
       }, 200),
-    [embedConfig, embedResult]
+    [embedConfig, embedResult],
   );
 
   const onClick = () => {
@@ -213,7 +213,7 @@ export function AutoEmbedPlugin(): JSX.Element {
   const getMenuOptions = (
     activeEmbedConfig: CustomEmbedConfig,
     embedFn: () => void,
-    dismissFn: () => void
+    dismissFn: () => void,
   ) => {
     return [
       new AutoEmbedOption("Dismiss", {
@@ -234,7 +234,7 @@ export function AutoEmbedPlugin(): JSX.Element {
         getMenuOptions={getMenuOptions}
         menuRenderFn={(
           anchorElementRef,
-          { options, selectOptionAndCleanUp }
+          { options, selectOptionAndCleanUp },
         ) => {
           return anchorElementRef.current ? (
             <Popover open={true}>

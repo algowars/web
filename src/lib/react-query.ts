@@ -19,7 +19,7 @@ export type QueryConfig<T extends (...args: any[]) => any> = Omit<
 >;
 
 export type MutationConfig<
-  MutationFnType extends (...args: any) => Promise<any>
+  MutationFnType extends (...args: any) => Promise<any>,
 > = UseMutationOptions<
   ApiFnReturnType<MutationFnType>,
   Error,

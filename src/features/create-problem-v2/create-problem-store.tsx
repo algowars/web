@@ -38,28 +38,28 @@ type CreateProblemStoreActions = {
   removeSetupTestSuite: (index: number) => void;
   changeSetupTestSuite: (
     index: number,
-    testSuite: CreateProblemTestSuiteModel
+    testSuite: CreateProblemTestSuiteModel,
   ) => void;
   getTestSuitesBySetupIndex: (index: number) => CreateProblemTestSuiteModel[];
   addTestCaseToSetupTestSuite: (
     setupIndex: number,
     testSuiteIndex: number,
-    testCase: CreateProblemTestSuiteTestCaseModel
+    testCase: CreateProblemTestSuiteTestCaseModel,
   ) => void;
   getTestCasesBySetupTestSuiteIndex: (
     setupIndex: number,
-    testSuiteIndex: number
+    testSuiteIndex: number,
   ) => CreateProblemTestSuiteTestCaseModel[];
   updateSetupTestCase: (
     setupIndex: number,
     testSuiteIndex: number,
     testCaseIndex: number,
-    testCase: CreateProblemTestSuiteTestCaseModel
+    testCase: CreateProblemTestSuiteTestCaseModel,
   ) => void;
   removeTestCaseToSetupTestSuite: (
     setupIndex: number,
     testSuiteIndex: number,
-    testCaseIndex: number
+    testCaseIndex: number,
   ) => void;
   createProblem: () => CreateProblemModel;
 };
@@ -124,7 +124,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
         const existing = get().setups;
 
         const isDuplicate = setup.languageVersionIds.some((id) =>
-          existing.some((s) => s.languageVersionIds.includes(id))
+          existing.some((s) => s.languageVersionIds.includes(id)),
         );
 
         if (isDuplicate) {
@@ -141,7 +141,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
 
       getLanguageByVersionId: (versionId) =>
         get().availableLanguages.find((lang) =>
-          lang.versions.some((v) => v.id === versionId)
+          lang.versions.some((v) => v.id === versionId),
         ),
 
       getLanguageVersionById: (versionId) =>
@@ -151,7 +151,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
 
       getLanguagesByVersionIds: (versionIds) =>
         get().availableLanguages.filter((lang) =>
-          lang.versions.some((v) => versionIds.includes(v.id))
+          lang.versions.some((v) => versionIds.includes(v.id)),
         ),
 
       getLanguageVersionsByIds: (versionIds) =>
@@ -162,14 +162,14 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
       changeSetupInitialCode: (index, initialCode) =>
         set({
           setups: get().setups.map((setup, i) =>
-            i === index ? { ...setup, initialCode } : setup
+            i === index ? { ...setup, initialCode } : setup,
           ),
         }),
 
       changeSetupSolutionCode: (index, solutionCode) =>
         set({
           setups: get().setups.map((setup, i) =>
-            i === index ? { ...setup, solutionCode } : setup
+            i === index ? { ...setup, solutionCode } : setup,
           ),
         }),
 
@@ -194,7 +194,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
           setups: get().setups.map((setup) => ({
             ...setup,
             testSuites: (setup.testSuites ?? []).map((ts, i) =>
-              i === index ? testSuite : ts
+              i === index ? testSuite : ts,
             ),
           })),
         }),
@@ -205,7 +205,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
       updateSetupTestSuite: (
         setupIndex: number,
         testSuiteIndex: number,
-        testSuite: CreateProblemTestSuiteModel
+        testSuite: CreateProblemTestSuiteModel,
       ) =>
         set({
           setups: get().setups.map((setup, sIndex) =>
@@ -213,10 +213,10 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
               ? {
                   ...setup,
                   testSuites: (setup.testSuites ?? []).map((ts, tIndex) =>
-                    tIndex === testSuiteIndex ? testSuite : ts
+                    tIndex === testSuiteIndex ? testSuite : ts,
                   ),
                 }
-              : setup
+              : setup,
           ),
         }),
       addTestCaseToSetupTestSuite: (setupIndex, testSuiteIndex, testCase) =>
@@ -233,7 +233,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
                       ...suite,
                       testCases: [...(suite.testCases ?? []), testCase],
                     }
-                  : suite
+                  : suite,
               ),
             };
           }),
@@ -243,7 +243,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
         setupIndex,
         testSuiteIndex,
         testCaseIndex,
-        testCase
+        testCase,
       ) =>
         set({
           setups: get().setups.map((setup, sIndex) => {
@@ -256,10 +256,10 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
                   ? {
                       ...suite,
                       testCases: (suite.testCases ?? []).map((tc, cIndex) =>
-                        cIndex === testCaseIndex ? testCase : tc
+                        cIndex === testCaseIndex ? testCase : tc,
                       ),
                     }
-                  : suite
+                  : suite,
               ),
             };
           }),
@@ -267,7 +267,7 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
       removeTestCaseToSetupTestSuite: (
         setupIndex,
         testSuiteIndex,
-        testCaseIndex
+        testCaseIndex,
       ) =>
         set({
           setups: get().setups.map((setup, sIndex) => {
@@ -280,10 +280,10 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
                   ? {
                       ...suite,
                       testCases: (suite.testCases ?? []).filter(
-                        (_, cIndex) => cIndex !== testCaseIndex
+                        (_, cIndex) => cIndex !== testCaseIndex,
                       ),
                     }
-                  : suite
+                  : suite,
               ),
             };
           }),
@@ -306,6 +306,6 @@ export const useCreateProblemStore = create<CreateProblemStore>()(
 
         return problem;
       },
-    }))
-  )
+    })),
+  ),
 );

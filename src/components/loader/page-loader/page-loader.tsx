@@ -11,7 +11,7 @@ export default function PageLoader({ className, message }: PageLoaderProps) {
     <div
       className={cn(
         "fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm",
-        className
+        className,
       )}
     >
       <div className="flex flex-col items-center space-y-4">

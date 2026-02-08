@@ -39,7 +39,7 @@ export const getAdminProblems = ({
 export const getAdminProblemsQueryOptions = (
   accessToken: string,
   pagination: PaginationState,
-  timestamp?: Date
+  timestamp?: Date,
 ) => {
   return queryOptions({
     queryKey: ["problems", pagination, timestamp, accessToken],

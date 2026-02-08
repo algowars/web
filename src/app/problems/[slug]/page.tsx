@@ -52,7 +52,7 @@ export default async function ProblemPage({
   const { dehydratedState, queryClient } = await preloadData(slug);
 
   const problem = queryClient.getQueryData(
-    getProblemBySlugQueryOptions(slug).queryKey
+    getProblemBySlugQueryOptions(slug).queryKey,
   );
 
   if (!problem) {

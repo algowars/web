@@ -37,35 +37,35 @@ export default function CreateProblemSetupSheet({
   const setups = useCreateProblemStore((s) => s.setups);
   const addSetup = useCreateProblemStore((s) => s.addSetup);
   const getLanguageVersionById = useCreateProblemStore(
-    (s) => s.getLanguageVersionById
+    (s) => s.getLanguageVersionById,
   );
 
   const [selectedLanguageId, setSelectedLanguageId] = useState<number | null>(
-    null
+    null,
   );
   const [selectedVersionId, setSelectedVersionId] = useState<number | null>(
-    null
+    null,
   );
 
   const selectedLanguage = availableLanguages.find(
-    (l) => l.id === selectedLanguageId
+    (l) => l.id === selectedLanguageId,
   );
 
   const usedVersionIds = useMemo(
     () => setups.flatMap((s) => s.languageVersionIds),
-    [setups]
+    [setups],
   );
 
   const availableLanguageVersions = useMemo(() => {
     if (!selectedLanguage) return [];
     return selectedLanguage.versions.filter(
-      (v) => !usedVersionIds.includes(v.id)
+      (v) => !usedVersionIds.includes(v.id),
     );
   }, [selectedLanguage, usedVersionIds]);
 
   const languagesWithRemainingVersions = useMemo(() => {
     return availableLanguages.filter((lang) =>
-      lang.versions.some((v) => !usedVersionIds.includes(v.id))
+      lang.versions.some((v) => !usedVersionIds.includes(v.id)),
     );
   }, [availableLanguages, usedVersionIds]);
 

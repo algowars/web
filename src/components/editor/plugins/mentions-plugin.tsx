@@ -31,9 +31,9 @@ import {
 const LexicalTypeaheadMenuPlugin = dynamic(
   () =>
     import("@lexical/react/LexicalTypeaheadMenuPlugin").then(
-      (mod) => mod.LexicalTypeaheadMenuPlugin
+      (mod) => mod.LexicalTypeaheadMenuPlugin,
     ),
-  { ssr: false }
+  { ssr: false },
 );
 
 const PUNCTUATION =
@@ -76,7 +76,7 @@ const AtSignMentionsRegex = new RegExp(
     "){0," +
     LENGTH_LIMIT +
     "})" +
-    ")$"
+    ")$",
 );
 
 // 50 is the longest alias length limit.
@@ -93,7 +93,7 @@ const AtSignMentionsRegexAliasRegex = new RegExp(
     "){0," +
     ALIAS_LENGTH_LIMIT +
     "})" +
-    ")$"
+    ")$",
 );
 
 // At most, 5 suggestions are shown in the popup.
@@ -511,7 +511,7 @@ const dummyLookupService = {
   search(string: string, callback: (results: Array<string>) => void): void {
     setTimeout(() => {
       const results = dummyMentionsData.filter((mention) =>
-        mention.toLowerCase().includes(string.toLowerCase())
+        mention.toLowerCase().includes(string.toLowerCase()),
       );
       callback(results);
     }, 500);
@@ -548,7 +548,7 @@ function useMentionLookupService(mentionString: string | null) {
 
 function checkForAtSignMentions(
   text: string,
-  minMatchLength: number
+  minMatchLength: number,
 ): MenuTextMatch | null {
   let match = AtSignMentionsRegex.exec(text);
 
@@ -606,18 +606,18 @@ export function MentionsPlugin(): JSX.Element | null {
           (result) =>
             new MentionTypeaheadOption(
               result,
-              <CircleUserRoundIcon className="size-4" />
-            )
+              <CircleUserRoundIcon className="size-4" />,
+            ),
         )
         .slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
-    [results]
+    [results],
   );
 
   const onSelectOption = useCallback(
     (
       selectedOption: MentionTypeaheadOption,
       nodeToReplace: TextNode | null,
-      closeMenu: () => void
+      closeMenu: () => void,
     ) => {
       editor.update(() => {
         const mentionNode = $createMentionNode(selectedOption.name);
@@ -628,7 +628,7 @@ export function MentionsPlugin(): JSX.Element | null {
         closeMenu();
       });
     },
-    [editor]
+    [editor],
   );
 
   const checkForMentionMatch = useCallback(
@@ -639,7 +639,7 @@ export function MentionsPlugin(): JSX.Element | null {
       }
       return getPossibleQueryMatch(text);
     },
-    [checkForSlashTriggerMatch, editor]
+    [checkForSlashTriggerMatch, editor],
   );
 
   return (
@@ -651,7 +651,7 @@ export function MentionsPlugin(): JSX.Element | null {
       options={options}
       menuRenderFn={(
         anchorElementRef,
-        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
+        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
       ) => {
         return anchorElementRef.current && results.length
           ? createPortal(
@@ -664,14 +664,14 @@ export function MentionsPlugin(): JSX.Element | null {
                         selectedIndex !== null
                           ? (selectedIndex - 1 + options.length) %
                               options.length
-                          : options.length - 1
+                          : options.length - 1,
                       );
                     } else if (e.key === "ArrowDown") {
                       e.preventDefault();
                       setHighlightedIndex(
                         selectedIndex !== null
                           ? (selectedIndex + 1) % options.length
-                          : 0
+                          : 0,
                       );
                     }
                   }}
@@ -699,7 +699,7 @@ export function MentionsPlugin(): JSX.Element | null {
                   </CommandList>
                 </Command>
               </div>,
-              anchorElementRef.current
+              anchorElementRef.current,
             )
           : null;
       }}

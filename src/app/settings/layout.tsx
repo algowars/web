@@ -55,7 +55,7 @@ export default function SettingsLayout({
                           buttonVariants({
                             variant: active ? "secondary" : "ghost",
                           }),
-                          "flex text-start justify-start items-center gap-2 px-3 py-2 rounded-md text-sm w-full"
+                          "flex text-start justify-start items-center gap-2 px-3 py-2 rounded-md text-sm w-full",
                         )}
                         aria-current={active ? "page" : undefined}
                       >

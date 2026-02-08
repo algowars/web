@@ -17,12 +17,12 @@ export default function ProblemCodeEditorLanguageSelect({
   ...props
 }: React.HTMLAttributes<HTMLUListElement>) {
   const changeCurrentVersion = useProblemEditorStore(
-    (s) => s.changeCurrentVersion
+    (s) => s.changeCurrentVersion,
   );
   const language = useProblemEditorStore((s) => s.getLanguage());
   const languageVersion = useProblemEditorStore((s) => s.getLanguageVersion());
   const availableLanguages = useProblemEditorStore((s) =>
-    s.getAvailableLanguages()
+    s.getAvailableLanguages(),
   );
   const findVersionById = useProblemEditorStore((s) => s.findVersionById);
 
@@ -34,7 +34,7 @@ export default function ProblemCodeEditorLanguageSelect({
           onValueChange={(value: string) => {
             changeCurrentVersion(
               availableLanguages.find((l) => l.id === Number(value))
-                ?.versions[0]
+                ?.versions[0],
             );
           }}
         >

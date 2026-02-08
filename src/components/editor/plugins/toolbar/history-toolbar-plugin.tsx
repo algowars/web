@@ -40,7 +40,7 @@ export function HistoryToolbarPlugin() {
           setCanUndo(payload);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL
+        COMMAND_PRIORITY_CRITICAL,
       ),
       activeEditor.registerCommand<boolean>(
         CAN_REDO_COMMAND,
@@ -48,8 +48,8 @@ export function HistoryToolbarPlugin() {
           setCanRedo(payload);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL
-      )
+        COMMAND_PRIORITY_CRITICAL,
+      ),
     );
   }, [$updateToolbar, activeEditor, editor]);
 

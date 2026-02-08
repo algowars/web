@@ -23,10 +23,10 @@ export default function CreateProblemSetupInfoInitialCode({
 }: CreateProblemSetupInfoInitialCodeProps) {
   const theme = useTheme();
   const getLanguageByVersionId = useCreateProblemStore(
-    (s) => s.getLanguageByVersionId
+    (s) => s.getLanguageByVersionId,
   );
   const changeSetupInitialCode = useCreateProblemStore(
-    (s) => s.changeSetupInitialCode
+    (s) => s.changeSetupInitialCode,
   );
   const language = getLanguageByVersionId(setup.languageVersionIds[0]);
   const [langExtensions, setLangExtensions] = React.useState<Extension[]>([]);

@@ -64,8 +64,8 @@ const createApiClient = (): AxiosInstance => {
     if (config.params) {
       config.params = Object.fromEntries(
         Object.entries(config.params).filter(
-          ([, value]) => value !== undefined && value !== null
-        )
+          ([, value]) => value !== undefined && value !== null,
+        ),
       );
     }
 
@@ -84,7 +84,7 @@ const apiClient = createApiClient();
 
 const addAuthToken = (
   config: AxiosRequestConfig,
-  accessToken?: string
+  accessToken?: string,
 ): AxiosRequestConfig => {
   if (accessToken) {
     return {
@@ -106,7 +106,7 @@ const handleRequest = async <T>(request: Promise<any>): Promise<T> => {
     if (payload.errors && payload.errors.length > 0) {
       throw new ApiException(
         payload.message ?? "API returned errors",
-        payload.errors
+        payload.errors,
       );
     }
 
@@ -128,7 +128,7 @@ const handleRequest = async <T>(request: Promise<any>): Promise<T> => {
 
     throw new ApiException(
       err instanceof Error ? err.message : "An unexpected error occurred",
-      [{ message: err instanceof Error ? err.message : "Unknown error" }]
+      [{ message: err instanceof Error ? err.message : "Unknown error" }],
     );
   }
 };
@@ -136,41 +136,41 @@ export const api = {
   get: <T>(request: ApiRequestConfig): Promise<T> => {
     const { url, config = {}, accessToken } = request;
     return handleRequest<T>(
-      apiClient.get(url, addAuthToken(config, accessToken))
+      apiClient.get(url, addAuthToken(config, accessToken)),
     );
   },
 
   post: <T, TBody = unknown>(
-    request: ApiRequestWithBodyConfig<TBody>
+    request: ApiRequestWithBodyConfig<TBody>,
   ): Promise<T> => {
     const { url, body, config = {}, accessToken } = request;
     return handleRequest<T>(
-      apiClient.post(url, body, addAuthToken(config, accessToken))
+      apiClient.post(url, body, addAuthToken(config, accessToken)),
     );
   },
 
   put: <T, TBody = unknown>(
-    request: ApiRequestWithBodyConfig<TBody>
+    request: ApiRequestWithBodyConfig<TBody>,
   ): Promise<T> => {
     const { url, body, config = {}, accessToken } = request;
     return handleRequest<T>(
-      apiClient.put(url, body, addAuthToken(config, accessToken))
+      apiClient.put(url, body, addAuthToken(config, accessToken)),
     );
   },
 
   patch: <T, TBody = unknown>(
-    request: ApiRequestWithBodyConfig<TBody>
+    request: ApiRequestWithBodyConfig<TBody>,
   ): Promise<T> => {
     const { url, body, config = {}, accessToken } = request;
     return handleRequest<T>(
-      apiClient.patch(url, body, addAuthToken(config, accessToken))
+      apiClient.patch(url, body, addAuthToken(config, accessToken)),
     );
   },
 
   delete: <T>(request: ApiRequestConfig): Promise<T> => {
     const { url, config = {}, accessToken } = request;
     return handleRequest<T>(
-      apiClient.delete(url, addAuthToken(config, accessToken))
+      apiClient.delete(url, addAuthToken(config, accessToken)),
     );
   },
 };

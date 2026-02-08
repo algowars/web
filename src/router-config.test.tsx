@@ -34,7 +34,7 @@ describe("routerConfig basic shape", () => {
         "tags",
         "terms",
         "tutorials",
-      ])
+      ]),
     );
   });
 

@@ -23,7 +23,7 @@ export default function CreateProblemFooter({
         onSuccess: () => {
           toast.success("Problem created successfully!");
         },
-      }
+      },
     );
   };
 

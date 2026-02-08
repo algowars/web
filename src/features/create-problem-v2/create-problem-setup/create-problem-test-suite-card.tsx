@@ -29,7 +29,7 @@ export default function CreateProblemTestSuiteCard({
   index,
 }: CreateProblemTestSuiteCardProps) {
   const removeSetupTestSuite = useCreateProblemStore(
-    (s) => s.removeSetupTestSuite
+    (s) => s.removeSetupTestSuite,
   );
 
   return (

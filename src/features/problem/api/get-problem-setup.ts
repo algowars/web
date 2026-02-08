@@ -26,7 +26,7 @@ export const getProblemSetup = ({
 
 export const getProblemSetupQueryOptions = (
   problemId: string,
-  languageVersionId?: number
+  languageVersionId?: number,
 ) => {
   return queryOptions({
     queryKey: ["problem-setup", problemId, languageVersionId],

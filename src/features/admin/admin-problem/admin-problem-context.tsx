@@ -21,7 +21,7 @@ interface AdminProblemContextState {
 }
 
 const AdminProblemContext = createContext<AdminProblemContextState | null>(
-  null
+  null,
 );
 
 interface AdminProblemProviderProps {
@@ -71,7 +71,7 @@ export function useAdminProblemContext() {
   const context = useContext(AdminProblemContext);
   if (context === undefined) {
     throw new Error(
-      "useAdminProblemContext must be used within an AdminProblemProvider"
+      "useAdminProblemContext must be used within an AdminProblemProvider",
     );
   }
 

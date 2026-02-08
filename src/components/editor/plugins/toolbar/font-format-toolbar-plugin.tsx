@@ -57,7 +57,7 @@ export function FontFormatToolbarPlugin({
       onClick={() => {
         activeEditor.dispatchCommand(
           FORMAT_TEXT_COMMAND,
-          format as TextFormatType
+          format as TextFormatType,
         );
       }}
     >

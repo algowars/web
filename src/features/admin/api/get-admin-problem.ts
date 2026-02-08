@@ -22,7 +22,7 @@ export const getAdminProblem = ({
 
 export const getAdminProblemQueryOptions = (
   slug: string,
-  accessToken?: string
+  accessToken?: string,
 ) => {
   return queryOptions({
     queryKey: ["problem", slug, accessToken],

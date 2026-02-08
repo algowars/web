@@ -40,7 +40,7 @@ export function Editor({
     <div
       className={cn(
         "bg-background overflow-hidden rounded-lg border shadow",
-        className
+        className,
       )}
     >
       <LexicalComposer

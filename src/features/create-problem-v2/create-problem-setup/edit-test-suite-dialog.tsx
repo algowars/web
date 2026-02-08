@@ -16,14 +16,14 @@ export function EditTestSuiteDialog({
   setupIndex,
 }: EditTestSuiteDialogProps) {
   const addTestCase = useCreateProblemStore(
-    (s) => s.addTestCaseToSetupTestSuite
+    (s) => s.addTestCaseToSetupTestSuite,
   );
   const removeTestCase = useCreateProblemStore(
-    (s) => s.removeTestCaseToSetupTestSuite
+    (s) => s.removeTestCaseToSetupTestSuite,
   );
   const updateTestCase = useCreateProblemStore((s) => s.updateSetupTestCase);
   const getTestCases = useCreateProblemStore(
-    (s) => s.getTestCasesBySetupTestSuiteIndex
+    (s) => s.getTestCasesBySetupTestSuiteIndex,
   );
 
   const testCases = getTestCases(setupIndex, testSuiteIndex);

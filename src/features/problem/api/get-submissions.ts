@@ -1,4 +1,3 @@
-
-export const getSubmissions = ({
-    problemId,
-})
+export const getSubmissions = {
+  problemId,
+};
