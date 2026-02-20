@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { useHasPermissions } from "./use-has-permissions";
-import { Permissions } from "@/features/auth/permissions/Permissions";
+import { Permissions } from "@/features/auth/permissions/models/permissions";
 
 describe("useHasPermissions", () => {
   describe("with empty required permissions", () => {

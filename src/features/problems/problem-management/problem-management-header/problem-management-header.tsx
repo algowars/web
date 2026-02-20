@@ -3,13 +3,11 @@
 import { buttonVariants } from "@/components/ui/button";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { useAccount } from "@/features/auth/account.context";
-import { Permissions } from "@/features/auth/permissions/Permissions";
 import { useHasPermissions } from "@/hooks/use-has-permissions";
+import { Permissions } from "@/features/auth/permissions/models/permissions";
 import { cn } from "@/lib/utils";
 import { routerConfig } from "@/router-config";
 import Link from "next/link";
-
-import React from "react";
 
 export default function ProblemManagementHeader() {
   const { account } = useAccount();

@@ -38,6 +38,12 @@ export default defineConfig({
         "src/components/ui/**",
         "**/models/**",
         "src/components/blocks/**",
+        "**/api/**",
+        "src/components/editor/**",
+        "eslint.config.mjs",
+        "playwright.config.ts",
+        "postcss.config.mjs",
+        "proxy.ts"
       ],
       thresholds: {
         lines: 80,
