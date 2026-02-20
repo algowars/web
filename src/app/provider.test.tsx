@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, vi, afterAll } from "vitest";
 import { AppProvider } from "./provider";
 
 vi.mock("@tanstack/react-query", () => ({

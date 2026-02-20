@@ -1,3 +1,4 @@
+import React from "react";
 import { render, screen, renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { ProfileProvider, useProfileContext } from "./profile-context";
@@ -128,9 +129,7 @@ describe("ProfileContext", () => {
       );
 
       expect(screen.getByTestId("username").textContent).toBe("testuser");
-      expect(screen.getByTestId("profileUsername").textContent).toBe(
-        "testuser"
-      );
+      expect(screen.getByTestId("profileUsername").textContent).toBe("testuser");
     });
 
     it("provides null profileAggregate when data is undefined", () => {
@@ -216,9 +215,8 @@ describe("ProfileContext", () => {
     });
 
     it("provides refetch function that calls underlying refetch", async () => {
-      const mockRefetch = vi
-        .fn()
-        .mockResolvedValue({ data: mockProfileAggregate });
+      const mockRefetch = vi.fn().mockResolvedValue({ data: mockProfileAggregate });
+
       (useProfile as Mock).mockReturnValue({
         data: mockProfileAggregate,
         isLoading: false,
@@ -228,27 +226,21 @@ describe("ProfileContext", () => {
         refetch: mockRefetch,
       });
 
-      let capturedRefetch: (() => Promise<unknown>) | undefined;
-      const TestComponent = () => {
-        const ctx = useProfileContext();
-        capturedRefetch = ctx.refetch;
-        return <div>Child</div>;
-      };
-
-      render(
-        <ProfileProvider username="testuser">
-          <TestComponent />
-        </ProfileProvider>
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ProfileProvider username="testuser">{children}</ProfileProvider>
       );
 
-      expect(capturedRefetch).toBeDefined();
-      await capturedRefetch!();
+      const { result } = renderHook(() => useProfileContext(), { wrapper });
+
+      await result.current.refetch();
+
       expect(mockRefetch).toHaveBeenCalled();
     });
 
     it("refetch rejects when underlying refetch throws", async () => {
       const mockError = new Error("Refetch failed");
       const mockRefetch = vi.fn().mockRejectedValue(mockError);
+
       (useProfile as Mock).mockReturnValue({
         data: undefined,
         isLoading: false,
@@ -258,21 +250,13 @@ describe("ProfileContext", () => {
         refetch: mockRefetch,
       });
 
-      let capturedRefetch: (() => Promise<unknown>) | undefined;
-      const TestComponent = () => {
-        const ctx = useProfileContext();
-        capturedRefetch = ctx.refetch;
-        return <div>Child</div>;
-      };
-
-      render(
-        <ProfileProvider username="testuser">
-          <TestComponent />
-        </ProfileProvider>
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ProfileProvider username="testuser">{children}</ProfileProvider>
       );
 
-      expect(capturedRefetch).toBeDefined();
-      await expect(capturedRefetch!()).rejects.toThrow("Refetch failed");
+      const { result } = renderHook(() => useProfileContext(), { wrapper });
+
+      await expect(result.current.refetch()).rejects.toThrow("Refetch failed");
     });
   });
 

@@ -31,7 +31,6 @@ vi.mock("@/components/ui/collapsible", () => ({
   ),
   CollapsibleTrigger: ({
     children,
-    asChild,
   }: {
     children: React.ReactNode;
     asChild?: boolean;
@@ -50,14 +49,12 @@ vi.mock("@/components/ui/sidebar", () => ({
   ),
   SidebarMenuAction: ({
     children,
-    className,
   }: {
     children: React.ReactNode;
     className?: string;
   }) => <button data-testid="sidebar-menu-action">{children}</button>,
   SidebarMenuButton: ({
     children,
-    asChild,
     tooltip,
   }: {
     children: React.ReactNode;
@@ -76,7 +73,6 @@ vi.mock("@/components/ui/sidebar", () => ({
   ),
   SidebarMenuSubButton: ({
     children,
-    asChild,
   }: {
     children: React.ReactNode;
     asChild?: boolean;

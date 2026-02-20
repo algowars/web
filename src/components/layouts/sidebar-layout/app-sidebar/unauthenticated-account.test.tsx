@@ -5,14 +5,12 @@ import { UnauthenticatedAccount } from "./unauthenticated-account";
 vi.mock("@/components/ui/card", () => ({
   Card: ({
     children,
-    className,
   }: {
     children: React.ReactNode;
     className?: string;
   }) => <div data-testid="card">{children}</div>,
   CardContent: ({
     children,
-    className,
   }: {
     children: React.ReactNode;
     className?: string;
@@ -22,7 +20,6 @@ vi.mock("@/components/ui/card", () => ({
   ),
   CardHeader: ({
     children,
-    className,
   }: {
     children: React.ReactNode;
     className?: string;

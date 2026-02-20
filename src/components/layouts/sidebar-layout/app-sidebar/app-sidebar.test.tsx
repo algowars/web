@@ -27,7 +27,6 @@ vi.mock("@/components/ui/sidebar", () => ({
   ),
   SidebarMenuButton: ({
     children,
-    asChild,
   }: {
     children: React.ReactNode;
     asChild?: boolean;
@@ -65,8 +64,6 @@ vi.mock("./sidebar-main-nav", () => ({
 vi.mock("@/features/auth/guards/auth-component.guard", () => ({
   AuthComponentGuard: ({
     children,
-    unauthenticated,
-    partiallyAuthenticated,
   }: {
     children: React.ReactNode;
     unauthenticated: React.ReactNode;
