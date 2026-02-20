@@ -21,7 +21,7 @@ export default function Hero() {
             <AuthLoginButton
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "max-[375px]:w-full w-52 sm:w-64 md:w-48",
+                "max-[375px]:w-full w-52 sm:w-64 md:w-48"
               )}
             >
               Get Started
@@ -31,7 +31,7 @@ export default function Hero() {
             <AuthSignupButton
               className={cn(
                 buttonVariants({ variant: "secondary" }),
-                "max-[375px]:w-full w-52 sm:w-64 md:w-48",
+                "max-[375px]:w-full w-52 sm:w-64 md:w-48"
               )}
             >
               Join Today

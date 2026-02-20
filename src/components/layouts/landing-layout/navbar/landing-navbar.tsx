@@ -43,7 +43,7 @@ function AuthButtons() {
         <AuthSignupButton
           className={cn(
             buttonVariants({ variant: "secondary" }),
-            "h-8 text-sm px-3",
+            "h-8 text-sm px-3"
           )}
         >
           Sign Up
@@ -172,7 +172,7 @@ export default function LandingNavbar() {
                       <AuthLoginButton
                         className={cn(
                           buttonVariants({ variant: "outline" }),
-                          "flex-1",
+                          "flex-1"
                         )}
                       >
                         Sign In
@@ -181,7 +181,7 @@ export default function LandingNavbar() {
                       <AuthSignupButton
                         className={cn(
                           buttonVariants({ variant: "secondary" }),
-                          "flex-1",
+                          "flex-1"
                         )}
                       >
                         Sign Up

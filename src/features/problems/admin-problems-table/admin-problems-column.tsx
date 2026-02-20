@@ -20,8 +20,8 @@ export const adminColumns = [
           row.original.status === "published"
             ? "text-green-600"
             : row.original.status === "draft"
-            ? "text-yellow-600"
-            : "text-gray-400"
+              ? "text-yellow-600"
+              : "text-gray-400"
         }
       >
         {row.original.status}

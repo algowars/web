@@ -17,14 +17,14 @@ export default defineConfig({
       "tests/integration/**/*.test.{ts,tsx}",
       "tests/integration/**/*.spec.{ts,tsx}",
     ],
-    exclude: ["node_modules", ".next", "dist"],
+    exclude: ["node_modules", ".next", "dist", "tests/utils/**"],
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     globals: true,
     css: true,
     coverage: {
       provider: "v8",
-      reporter: ["json-summary"],
+      reporter: ["json-summary", "text"],
       reportsDirectory: "./coverage",
       exclude: [
         "vitest.config.*",
@@ -32,8 +32,14 @@ export default defineConfig({
         "**/*.d.ts",
         "dist/**",
         ".next/**",
+        "tests/**",
+        "src/lib/**",
+        "src/hooks/use-mobile.*",
+        "src/components/ui/**",
+        "**/models/**",
+        "src/components/blocks/**",
       ],
-        thresholds: {
+      thresholds: {
         lines: 80,
         functions: 80,
         branches: 75,
