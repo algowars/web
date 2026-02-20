@@ -87,7 +87,9 @@ describe("Settings", () => {
       mockUsePathname.mockReturnValue("/settings/preferences");
       render(<Settings />);
 
-      const preferencesLink = screen.getByRole("link", { name: /Preferences/i });
+      const preferencesLink = screen.getByRole("link", {
+        name: /Preferences/i,
+      });
       expect(preferencesLink).toHaveClass("bg-primary");
     });
 

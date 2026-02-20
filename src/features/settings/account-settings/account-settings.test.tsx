@@ -88,10 +88,10 @@ describe("AccountSettings", () => {
 
       await user.click(screen.getByRole("button", { name: "Edit" }));
 
+      expect(screen.getByPlaceholderText("username")).toBeInTheDocument();
       expect(
-        screen.getByPlaceholderText("username")
+        screen.getByRole("button", { name: "Cancel" })
       ).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
     });
 
@@ -103,9 +103,7 @@ describe("AccountSettings", () => {
       await user.click(screen.getByRole("button", { name: "Cancel" }));
 
       expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
-      expect(
-        screen.queryByPlaceholderText("username")
-      ).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText("username")).not.toBeInTheDocument();
     });
 
     it("shows warning message when editing", async () => {
