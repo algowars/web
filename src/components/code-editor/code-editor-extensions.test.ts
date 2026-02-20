@@ -64,60 +64,6 @@ describe("code-editor-extensions", () => {
       expect(result.length).toBeGreaterThan(0);
     });
 
-    it("loads Java extensions", async () => {
-      const result = await loadLanguageExtensions("java");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads Rust extensions", async () => {
-      const result = await loadLanguageExtensions("rust");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads Go extensions", async () => {
-      const result = await loadLanguageExtensions("go");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads C extensions", async () => {
-      const result = await loadLanguageExtensions("c");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads C++ extensions", async () => {
-      const result = await loadLanguageExtensions("c++");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads cpp alias extensions", async () => {
-      const result = await loadLanguageExtensions("cpp");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads PHP extensions", async () => {
-      const result = await loadLanguageExtensions("php");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads SQL extensions", async () => {
-      const result = await loadLanguageExtensions("sql");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
-    it("loads Kotlin extensions (falls back to Java)", async () => {
-      const result = await loadLanguageExtensions("kotlin");
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-    });
-
     it("is case-insensitive", async () => {
       const result = await loadLanguageExtensions("JAVASCRIPT");
       expect(Array.isArray(result)).toBe(true);

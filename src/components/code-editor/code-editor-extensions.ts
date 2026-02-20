@@ -44,37 +44,6 @@ export async function loadLanguageExtensions(
       // Python
       python: async () => (await import("@codemirror/lang-python")).python(),
       py: async () => (await import("@codemirror/lang-python")).python(),
-
-      // Java
-      java: async () => (await import("@codemirror/lang-java")).java(),
-
-      // Rust
-      rust: async () => (await import("@codemirror/lang-rust")).rust(),
-
-      // Go
-      go: async () => (await import("@codemirror/lang-go")).go(),
-
-      // C / C++
-      c: async () => (await import("@codemirror/lang-cpp")).cpp(),
-      "c++": async () => (await import("@codemirror/lang-cpp")).cpp(),
-      cpp: async () => (await import("@codemirror/lang-cpp")).cpp(),
-
-      // PHP
-      php: async () => (await import("@codemirror/lang-php")).php(),
-
-      // SQL
-      sql: async () => (await import("@codemirror/lang-sql")).sql(),
-
-      // Kotlin: reuse Java/clike support (best-effort)
-      kotlin: async () => {
-        // prefer java mode, it's closer to Kotlin than nothing
-        try {
-          return (await import("@codemirror/lang-java")).java();
-        } catch {
-          return null;
-        }
-      },
-
       // Fallbacks / legacy modes could be added here if you include legacy packages
       // e.g. lua, visual basic, etc. For now return null so editor uses plain text.
     };
