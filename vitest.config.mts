@@ -33,6 +33,12 @@ export default defineConfig({
         "dist/**",
         ".next/**",
       ],
+        thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 75,
+        statements: 80,
+      },
     },
   },
 });
