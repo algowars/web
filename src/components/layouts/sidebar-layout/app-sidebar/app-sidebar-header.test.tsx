@@ -94,11 +94,7 @@ describe("AppSidebarHeader", () => {
   });
 
   it("renders breadcrumb when breadcrumbs provided", () => {
-    render(
-      <AppSidebarHeader
-        breadcrumbs={[{ name: "Home", url: "/" }]}
-      />
-    );
+    render(<AppSidebarHeader breadcrumbs={[{ name: "Home", url: "/" }]} />);
 
     expect(screen.getByTestId("breadcrumb")).toBeInTheDocument();
   });
@@ -120,10 +116,7 @@ describe("AppSidebarHeader", () => {
   it("renders last breadcrumb without link", () => {
     render(
       <AppSidebarHeader
-        breadcrumbs={[
-          { name: "Home", url: "/" },
-          { name: "Current Page" },
-        ]}
+        breadcrumbs={[{ name: "Home", url: "/" }, { name: "Current Page" }]}
       />
     );
 

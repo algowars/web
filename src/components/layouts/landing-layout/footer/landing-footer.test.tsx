@@ -104,9 +104,10 @@ describe("LandingFooter", () => {
     expect(
       screen.getByRole("link", { name: "Terms of Service" })
     ).toHaveAttribute("href", "/terms");
-    expect(
-      screen.getByRole("link", { name: "Cookie Policy" })
-    ).toHaveAttribute("href", "/cookies");
+    expect(screen.getByRole("link", { name: "Cookie Policy" })).toHaveAttribute(
+      "href",
+      "/cookies"
+    );
     expect(screen.getByRole("link", { name: "DMCA" })).toHaveAttribute(
       "href",
       "/dmca"
@@ -138,6 +139,8 @@ describe("LandingFooter", () => {
   it("renders made with love message", () => {
     render(<LandingFooter />);
 
-    expect(screen.getByText(/Made with ❤️ for developers/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Made with ❤️ for developers/i)
+    ).toBeInTheDocument();
   });
 });

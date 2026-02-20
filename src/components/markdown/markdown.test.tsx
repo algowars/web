@@ -49,8 +49,12 @@ describe("MarkdownSafe", () => {
   });
 
   it("renders unordered lists", () => {
-    render(<MarkdownSafe markdown={`- Item 1
-- Item 2`} />);
+    render(
+      <MarkdownSafe
+        markdown={`- Item 1
+- Item 2`}
+      />
+    );
 
     expect(screen.getByRole("list")).toBeInTheDocument();
     expect(screen.getByText("Item 1")).toBeInTheDocument();
@@ -58,8 +62,12 @@ describe("MarkdownSafe", () => {
   });
 
   it("renders ordered lists", () => {
-    render(<MarkdownSafe markdown={`1. First
-2. Second`} />);
+    render(
+      <MarkdownSafe
+        markdown={`1. First
+2. Second`}
+      />
+    );
 
     expect(screen.getByRole("list")).toBeInTheDocument();
     expect(screen.getByText("First")).toBeInTheDocument();
@@ -79,9 +87,13 @@ describe("MarkdownSafe", () => {
   });
 
   it("renders code blocks", () => {
-    render(<MarkdownSafe markdown={`\`\`\`
+    render(
+      <MarkdownSafe
+        markdown={`\`\`\`
 code block
-\`\`\``} />);
+\`\`\``}
+      />
+    );
 
     expect(screen.getByText("code block")).toBeInTheDocument();
   });
@@ -110,7 +122,9 @@ code block
   it("uses default className", () => {
     const { container } = render(<MarkdownSafe markdown="Test" />);
 
-    expect(container.querySelector("article")).toHaveClass("text-card-foreground");
+    expect(container.querySelector("article")).toHaveClass(
+      "text-card-foreground"
+    );
   });
 
   it("handles null markdown", () => {

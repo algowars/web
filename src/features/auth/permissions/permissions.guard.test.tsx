@@ -121,7 +121,9 @@ describe("PermissionsGuard", () => {
 
   it("passes permissions and mode to useHasPermissions hook", () => {
     (useAccount as Mock).mockReturnValue({
-      account: { permissions: [Permissions.CreateProblem, Permissions.ReadProblem] },
+      account: {
+        permissions: [Permissions.CreateProblem, Permissions.ReadProblem],
+      },
       isPending: false,
       authStatus: AuthStatus.FULLY_AUTHENTICATED,
     });

@@ -32,7 +32,9 @@ describe("ModeToggle", () => {
 
     expect(screen.getByRole("menuitem", { name: "Light" })).toBeInTheDocument();
     expect(screen.getByRole("menuitem", { name: "Dark" })).toBeInTheDocument();
-    expect(screen.getByRole("menuitem", { name: "System" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("menuitem", { name: "System" })
+    ).toBeInTheDocument();
   });
 
   it("sets light theme when Light is clicked", async () => {

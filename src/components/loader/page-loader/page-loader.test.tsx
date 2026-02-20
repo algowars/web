@@ -42,7 +42,11 @@ describe("PageLoader", () => {
   it("renders centered content", () => {
     const { container } = render(<PageLoader />);
 
-    expect(container.firstChild).toHaveClass("flex", "items-center", "justify-center");
+    expect(container.firstChild).toHaveClass(
+      "flex",
+      "items-center",
+      "justify-center"
+    );
   });
 
   it("message has animation class", () => {

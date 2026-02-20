@@ -37,7 +37,9 @@ describe("NotFound", () => {
     render(<NotFound />);
 
     expect(
-      screen.getByText("The link may be broken or the page may have been removed.")
+      screen.getByText(
+        "The link may be broken or the page may have been removed."
+      )
     ).toBeInTheDocument();
   });
 

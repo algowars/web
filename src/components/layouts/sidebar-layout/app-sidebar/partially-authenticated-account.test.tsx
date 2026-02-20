@@ -3,12 +3,9 @@ import { describe, it, expect, vi } from "vitest";
 import { PartiallyAuthenticatedAccount } from "./partially-authenticated-account";
 
 vi.mock("@/components/ui/card", () => ({
-  Card: ({
-    children,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div data-testid="card">{children}</div>,
+  Card: ({ children }: { children: React.ReactNode; className?: string }) => (
+    <div data-testid="card">{children}</div>
+  ),
   CardContent: ({
     children,
   }: {
@@ -83,9 +80,7 @@ describe("PartiallyAuthenticatedAccount", () => {
   });
 
   it("renders custom message", () => {
-    render(
-      <PartiallyAuthenticatedAccount message="Custom setup message" />
-    );
+    render(<PartiallyAuthenticatedAccount message="Custom setup message" />);
 
     expect(screen.getByTestId("card-description")).toHaveTextContent(
       "Custom setup message"

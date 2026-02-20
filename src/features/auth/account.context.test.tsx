@@ -199,7 +199,9 @@ describe("AccountProvider", () => {
 
 describe("useAccount", () => {
   it("throws error when used outside AccountProvider", () => {
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     expect(() => render(<TestConsumer />)).toThrow(
       "useAccount must be used within an AccountProvider"

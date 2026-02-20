@@ -85,9 +85,12 @@ describe("AuthCallback", () => {
 
     render(<AuthCallback />);
 
-    expect(toast.success).toHaveBeenCalledWith("Error getting account information", {
-      description: "Something went wrong",
-    });
+    expect(toast.success).toHaveBeenCalledWith(
+      "Error getting account information",
+      {
+        description: "Something went wrong",
+      }
+    );
     expect(redirect).toHaveBeenCalledWith("/");
   });
 

@@ -31,12 +31,9 @@ vi.mock("@/components/ui/sidebar", () => ({
 }));
 
 vi.mock("@/components/ui/avatar", () => ({
-  Avatar: ({
-    children,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <span data-testid="avatar">{children}</span>,
+  Avatar: ({ children }: { children: React.ReactNode; className?: string }) => (
+    <span data-testid="avatar">{children}</span>
+  ),
   AvatarFallback: ({
     children,
   }: {
@@ -112,7 +109,10 @@ describe("AppSidebarAccount", () => {
 
   it("renders account menu", () => {
     (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser", imageUrl: "https://example.com/avatar.jpg" },
+      account: {
+        username: "testuser",
+        imageUrl: "https://example.com/avatar.jpg",
+      },
     });
 
     render(<AppSidebarAccount />);
@@ -137,7 +137,9 @@ describe("AppSidebarAccount", () => {
 
     render(<AppSidebarAccount />);
 
-    expect(screen.getAllByTestId("avatar-fallback").length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getAllByTestId("avatar-fallback").length
+    ).toBeGreaterThanOrEqual(1);
   });
 
   it("renders profile link when username exists", () => {

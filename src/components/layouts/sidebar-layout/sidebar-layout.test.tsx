@@ -33,10 +33,7 @@ vi.mock("./app-sidebar/app-sidebar-header", () => ({
 }));
 
 describe("SidebarLayout", () => {
-  const mockBreadcrumbs = [
-    { name: "Home", url: "/" },
-    { name: "Settings" },
-  ];
+  const mockBreadcrumbs = [{ name: "Home", url: "/" }, { name: "Settings" }];
 
   it("renders sidebar provider", () => {
     render(
@@ -99,7 +96,9 @@ describe("SidebarLayout", () => {
       </SidebarLayout>
     );
 
-    expect(screen.getByRole("button", { name: "Header Button" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Header Button" })
+    ).toBeInTheDocument();
   });
 
   it("applies custom className to content container", () => {

@@ -129,7 +129,9 @@ describe("ProfileContext", () => {
       );
 
       expect(screen.getByTestId("username").textContent).toBe("testuser");
-      expect(screen.getByTestId("profileUsername").textContent).toBe("testuser");
+      expect(screen.getByTestId("profileUsername").textContent).toBe(
+        "testuser"
+      );
     });
 
     it("provides null profileAggregate when data is undefined", () => {
@@ -215,7 +217,9 @@ describe("ProfileContext", () => {
     });
 
     it("provides refetch function that calls underlying refetch", async () => {
-      const mockRefetch = vi.fn().mockResolvedValue({ data: mockProfileAggregate });
+      const mockRefetch = vi
+        .fn()
+        .mockResolvedValue({ data: mockProfileAggregate });
 
       (useProfile as Mock).mockReturnValue({
         data: mockProfileAggregate,

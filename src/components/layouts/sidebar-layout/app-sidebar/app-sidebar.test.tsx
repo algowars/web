@@ -58,7 +58,11 @@ vi.mock("./sidebar-main-nav", () => ({
   }: {
     items: unknown[];
     title?: string;
-  }) => <nav data-testid="sidebar-main-nav" data-title={title}>{items.length} items</nav>,
+  }) => (
+    <nav data-testid="sidebar-main-nav" data-title={title}>
+      {items.length} items
+    </nav>
+  ),
 }));
 
 vi.mock("@/features/auth/guards/auth-component.guard", () => ({

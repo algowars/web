@@ -43,7 +43,7 @@ export default defineConfig({
         "eslint.config.mjs",
         "playwright.config.ts",
         "postcss.config.mjs",
-        "proxy.ts"
+        "proxy.ts",
       ],
       thresholds: {
         lines: 80,

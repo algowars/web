@@ -10,7 +10,8 @@ import { toast } from "sonner";
 
 vi.mock("@/features/auth/account.context");
 vi.mock("@/features/auth/api/create-account", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/features/auth/api/create-account")>();
+  const actual =
+    await importOriginal<typeof import("@/features/auth/api/create-account")>();
   return {
     ...actual,
     useCreateAccount: vi.fn(),
@@ -192,9 +193,7 @@ describe("AccountSetupForm", () => {
   });
 
   it("applies custom className", () => {
-    const { container } = render(
-      <AccountSetupForm className="custom-class" />
-    );
+    const { container } = render(<AccountSetupForm className="custom-class" />);
 
     expect(container.firstChild).toHaveClass("custom-class");
   });

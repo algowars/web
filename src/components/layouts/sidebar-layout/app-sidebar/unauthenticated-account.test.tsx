@@ -3,12 +3,9 @@ import { describe, it, expect, vi } from "vitest";
 import { UnauthenticatedAccount } from "./unauthenticated-account";
 
 vi.mock("@/components/ui/card", () => ({
-  Card: ({
-    children,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div data-testid="card">{children}</div>,
+  Card: ({ children }: { children: React.ReactNode; className?: string }) => (
+    <div data-testid="card">{children}</div>
+  ),
   CardContent: ({
     children,
   }: {

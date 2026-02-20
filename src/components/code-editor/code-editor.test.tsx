@@ -73,7 +73,9 @@ describe("CodeEditor", () => {
   it("displays the current code value", () => {
     render(<CodeEditor />);
 
-    expect(screen.getByTestId("codemirror-textarea")).toHaveValue("const x = 1;");
+    expect(screen.getByTestId("codemirror-textarea")).toHaveValue(
+      "const x = 1;"
+    );
   });
 
   it("handles undefined language", () => {

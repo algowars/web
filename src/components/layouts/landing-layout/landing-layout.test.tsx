@@ -10,9 +10,12 @@ vi.mock("./footer/landing-footer", () => ({
   default: () => <footer data-testid="landing-footer">Footer</footer>,
 }));
 
-vi.mock("@/features/auth/account-verification-banner/account-verification-banner", () => ({
-  default: () => <div data-testid="verification-banner">Banner</div>,
-}));
+vi.mock(
+  "@/features/auth/account-verification-banner/account-verification-banner",
+  () => ({
+    default: () => <div data-testid="verification-banner">Banner</div>,
+  })
+);
 
 describe("LandingLayout", () => {
   it("renders children content", () => {

@@ -61,7 +61,9 @@ vi.mock("@/router-config", () => ({
   routerConfig: {
     home: { path: "/" },
     problems: { path: "/problems" },
-    profile: { execute: ({ username }: { username: string }) => `/profile/${username}` },
+    profile: {
+      execute: ({ username }: { username: string }) => `/profile/${username}`,
+    },
   },
 }));
 
@@ -140,7 +142,10 @@ describe("LandingNavbar", () => {
   it("shows user avatar for fully authenticated users", () => {
     (useAccount as Mock).mockReturnValue({
       authStatus: AuthStatus.FULLY_AUTHENTICATED,
-      account: { username: "testuser", imageUrl: "https://example.com/avatar.jpg" },
+      account: {
+        username: "testuser",
+        imageUrl: "https://example.com/avatar.jpg",
+      },
     });
 
     render(<LandingNavbar />);

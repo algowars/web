@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
-import { getAccountSettings, getAccountSettingsQueryOptions } from "./get-account-settings";
+import {
+  getAccountSettings,
+  getAccountSettingsQueryOptions,
+} from "./get-account-settings";
 import { api } from "@/lib/api-client";
 
 vi.mock("@/lib/api-client", () => ({

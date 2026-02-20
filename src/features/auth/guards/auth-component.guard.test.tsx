@@ -48,9 +48,7 @@ describe("AuthComponentGuard", () => {
     });
 
     render(
-      <AuthComponentGuard
-        partiallyAuthenticated={<div>Partial Content</div>}
-      >
+      <AuthComponentGuard partiallyAuthenticated={<div>Partial Content</div>}>
         <div>Authenticated Content</div>
       </AuthComponentGuard>
     );
@@ -66,9 +64,7 @@ describe("AuthComponentGuard", () => {
     });
 
     render(
-      <AuthComponentGuard
-        unauthenticated={<div>Login Required</div>}
-      >
+      <AuthComponentGuard unauthenticated={<div>Login Required</div>}>
         <div>Authenticated Content</div>
       </AuthComponentGuard>
     );

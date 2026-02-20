@@ -48,7 +48,9 @@ describe("MainErrorFallback", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "Try Again" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Try Again" })
+    ).toBeInTheDocument();
   });
 
   it("renders Reload Page button", () => {
@@ -151,7 +153,9 @@ describe("MinimalErrorFallback", () => {
       />
     );
 
-    expect(screen.getByText("An unexpected error occurred")).toBeInTheDocument();
+    expect(
+      screen.getByText("An unexpected error occurred")
+    ).toBeInTheDocument();
   });
 
   it("renders Try again button", () => {

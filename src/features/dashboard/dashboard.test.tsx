@@ -10,7 +10,10 @@ vi.mock("@/components/layouts/sidebar-layout/sidebar-layout", () => ({
     children: React.ReactNode;
     breadcrumbs: { name: string; url: string }[];
   }) => (
-    <div data-testid="sidebar-layout" data-breadcrumbs={JSON.stringify(breadcrumbs)}>
+    <div
+      data-testid="sidebar-layout"
+      data-breadcrumbs={JSON.stringify(breadcrumbs)}
+    >
       {children}
     </div>
   ),
