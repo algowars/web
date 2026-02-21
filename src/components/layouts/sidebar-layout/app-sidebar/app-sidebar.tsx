@@ -20,7 +20,7 @@ import { AuthComponentGuard } from "@/features/auth/guards/auth-component.guard"
 import { UnauthenticatedAccount } from "./unauthenticated-account";
 import { PartiallyAuthenticatedAccount } from "./partially-authenticated-account";
 import { AppSidebarAccount } from "./app-sidebar-account";
-import { Permissions } from "@/features/auth/permissions/Permissions";
+import { Permissions } from "@/features/auth/permissions/models/permissions";
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {

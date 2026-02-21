@@ -1,16 +1,16 @@
-import { JSX } from "react"
-import { MenuOption } from "@lexical/react/LexicalTypeaheadMenuPlugin"
-import { LexicalEditor } from "lexical"
+import { JSX } from "react";
+import { MenuOption } from "@lexical/react/LexicalTypeaheadMenuPlugin";
+import { LexicalEditor } from "lexical";
 
 export class ComponentPickerOption extends MenuOption {
   // What shows up in the editor
-  title: string
+  title: string;
   // Icon for display
-  icon?: JSX.Element
+  icon?: JSX.Element;
   // For extra searching.
-  keywords: Array<string>
+  keywords: Array<string>;
   // TBD
-  keyboardShortcut?: string
+  keyboardShortcut?: string;
   // What happens when you select this option?
   onSelect: (
     queryString: string,
@@ -19,14 +19,14 @@ export class ComponentPickerOption extends MenuOption {
       title: string,
       showModal: (onClose: () => void) => JSX.Element
     ) => void
-  ) => void
+  ) => void;
 
   constructor(
     title: string,
     options: {
-      icon?: JSX.Element
-      keywords?: Array<string>
-      keyboardShortcut?: string
+      icon?: JSX.Element;
+      keywords?: Array<string>;
+      keyboardShortcut?: string;
       onSelect: (
         queryString: string,
         editor: LexicalEditor,
@@ -34,14 +34,14 @@ export class ComponentPickerOption extends MenuOption {
           title: string,
           showModal: (onClose: () => void) => JSX.Element
         ) => void
-      ) => void
+      ) => void;
     }
   ) {
-    super(title)
-    this.title = title
-    this.keywords = options.keywords || []
-    this.icon = options.icon
-    this.keyboardShortcut = options.keyboardShortcut
-    this.onSelect = options.onSelect.bind(this)
+    super(title);
+    this.title = title;
+    this.keywords = options.keywords || [];
+    this.icon = options.icon;
+    this.keyboardShortcut = options.keyboardShortcut;
+    this.onSelect = options.onSelect.bind(this);
   }
 }

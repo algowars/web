@@ -6,7 +6,7 @@ import {
   HasPermissionMode,
   useHasPermissions,
 } from "@/hooks/use-has-permissions";
-import { Permissions } from "./Permissions";
+import { Permissions } from "./models/permissions";
 import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";
 

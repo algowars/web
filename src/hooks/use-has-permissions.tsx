@@ -1,4 +1,4 @@
-import { Permissions } from "@/features/auth/permissions/Permissions";
+import { Permissions } from "@/features/auth/permissions/models/permissions";
 import React from "react";
 
 export type HasPermissionMode = "any" | "all";

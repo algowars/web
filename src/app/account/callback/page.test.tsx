@@ -5,34 +5,32 @@ import { routerConfig } from "@/router-config";
 import AuthCallback from "@/features/auth/auth-callback/auth-callback";
 
 vi.mock("next/navigation", () => ({
-    redirect: vi.fn(),
+  redirect: vi.fn(),
 }));
 
 vi.mock("@/lib/auth0", () => ({
-    auth0: {
-        getSession: vi.fn().mockResolvedValue({ user: { sub: "auth0|123456" } }),
-    },
+  auth0: {
+    getSession: vi.fn().mockResolvedValue({ user: { sub: "auth0|123456" } }),
+  },
 }));
 
-
 describe("AccountCallbackPage", () => {
-    it("can be initialized", () => {
-        expect(AccountCallbackPage).toBeDefined();
-    });
+  it("can be initialized", () => {
+    expect(AccountCallbackPage).toBeDefined();
+  });
 
-    it("redirects to home if no session", async () => {
-        vi.mocked(auth0.getSession).mockResolvedValueOnce(null);
-        await AccountCallbackPage();
+  it("redirects to home if no session", async () => {
+    vi.mocked(auth0.getSession).mockResolvedValueOnce(null);
+    await AccountCallbackPage();
 
-        expect(auth0.getSession).toHaveBeenCalled();
-        expect(redirect).toHaveBeenCalledWith(routerConfig.home.path);
-    });
+    expect(auth0.getSession).toHaveBeenCalled();
+    expect(redirect).toHaveBeenCalledWith(routerConfig.home.path);
+  });
 
-    it("displays AuthCallback if session exists", async () => {
-       
-        const result = await AccountCallbackPage();
+  it("displays AuthCallback if session exists", async () => {
+    const result = await AccountCallbackPage();
 
-        expect(auth0.getSession).toHaveBeenCalled();
-        expect(result).toEqual(<AuthCallback />);
-    });
+    expect(auth0.getSession).toHaveBeenCalled();
+    expect(result).toEqual(<AuthCallback />);
+  });
 });
