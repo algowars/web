@@ -1,0 +1,71 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev: api (PublicApi)",
+      "type": "shell",
+      "command": "dotnet",
+      "args": ["run"],
+      "options": {
+        "cwd": "C:/Users/zhizh/OneDrive/Desktop/Algowars/src/PublicApi"
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": [
+        {
+          "owner": "custom",
+          "pattern": [
+            {
+              "regexp": ".*"
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "^.*(Building\\.\\.\\.|watch : Started|Starting\\.\\.\\.).*$",
+            "endsPattern": "^.*Now listening on: http://localhost:5035.*$"
+          }
+        }
+      ]
+    },
+    {
+      "label": "dev: web (Next.js)",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["dev"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": [
+        {
+          "owner": "custom",
+          "pattern": [
+            {
+              "regexp": ".*"
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "^.*Starting\\.\\.\\..*$",
+            "endsPattern": "^.*Ready in .*ms.*$"
+          }
+        }
+      ]
+    },
+    {
+      "label": "dev: api + web",
+      "dependsOrder": "parallel",
+      "dependsOn": ["dev: api (PublicApi)", "dev: web (Next.js)"],
+      "problemMatcher": []
+    }
+  ]
+}

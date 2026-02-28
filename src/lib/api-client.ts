@@ -50,8 +50,9 @@ export async function getServerCookies() {
 }
 
 const createApiClient = (): AxiosInstance => {
+  const isBrowser = typeof window !== "undefined";
   const client = axios.create({
-    baseURL: env.NEXT_PUBLIC_API_SERVER_URL,
+    baseURL: isBrowser ? "" : env.NEXT_PUBLIC_API_SERVER_URL,
     timeout: 10_000,
     withCredentials: true,
     headers: {
