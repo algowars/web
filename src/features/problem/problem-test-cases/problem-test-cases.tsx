@@ -9,7 +9,7 @@ export default function ProblemTestCases() {
   const testCases = getTestSuites().flatMap((suite) => suite.testCases);
 
   if (testCases.length === 0) {
-    return <div>No test cases available</div>;
+    return <div className="p-4">No test cases available</div>;
   }
 
   return (
