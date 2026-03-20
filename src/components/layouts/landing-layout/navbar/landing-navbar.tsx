@@ -45,6 +45,7 @@ function AuthButtons() {
             buttonVariants({ variant: "secondary" }),
             "h-8 text-sm px-3"
           )}
+          data-cy="signup-btn"
         >
           Sign Up
         </AuthSignupButton>
