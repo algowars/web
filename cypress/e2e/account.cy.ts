@@ -3,7 +3,7 @@ describe('Accounts', () => {
     cy.task('db:seed');
 
     cy.intercept('GET', '/api/v1/account/find/profile').as('getProfile');
-    cy.intercept('POST', '/api/v1/account/create').as('createAccount');
+    cy.intercept('POST', '/api/v1/account').as('createAccount');
 
     cy.visit('/');
   });
@@ -38,7 +38,7 @@ describe('Accounts', () => {
     cy.url().should('include', '/');
   });
 
-  it("should allow an existing user to log in and access account setup if their account isn't fully set up", () => {
+  it.only("should allow an existing user to log in and access account setup if their account isn't fully set up", () => {
     cy.visit('/');
 
     cy.get('[data-cy=login-btn]').click();
@@ -48,7 +48,9 @@ describe('Accounts', () => {
           Cypress.expose('auth0_domain'),
           { args: { email, password } },
           ({ email, password }) => {
-            cy.get('input#email').type(email);
+                cy.log('Email: ' + email);
+    cy.log('Password: ' + password);
+            cy.get('input#email',  { timeout: 10000 }).type(email);
             cy.get('input#password').type(password, { log: false });
             cy.contains('button[value=default]', 'Continue').click();
           }

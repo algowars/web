@@ -73,8 +73,8 @@ export default defineConfig({
   },
 
   env: {
-    AUTH0_EMAIL: process.env.AUTH0_EMAIL,
-    AUTH0_PASSWORD: process.env.AUTH0_PASSWORD,
+    TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
+    TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
     DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING,
     DB_PROJECT_PATH: process.env.DB_PROJECT_PATH,
   },
