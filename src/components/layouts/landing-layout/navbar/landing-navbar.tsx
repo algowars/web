@@ -63,8 +63,8 @@ function AuthButtons() {
 
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <DropdownMenuTrigger>
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full" data-cy="account-dropdown-trigger" asChild>
             <Avatar className="h-8 w-8">
               <AvatarImage src={account?.imageUrl} alt={displayName} />
               <AvatarFallback>{userInitials}</AvatarFallback>
@@ -92,7 +92,7 @@ function AuthButtons() {
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild className="text-destructive">
+          <DropdownMenuItem asChild className="text-destructive" data-cy="logout-btn">
             <AuthLogout>
               <LogOut className="mr-2 h-4 w-4" />
               Log out
