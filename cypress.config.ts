@@ -73,10 +73,10 @@ export default defineConfig({
   },
 
   env: {
-    TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
-    TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
-    DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING,
-    DB_PROJECT_PATH: process.env.DB_PROJECT_PATH,
+    TEST_USER_EMAIL: process.env.CYPRESS_TEST_USER_EMAIL,
+    TEST_USER_PASSWORD: process.env.CYPRESS_TEST_USER_PASSWORD,
+    DB_CONNECTION_STRING: process.env.CYPRESS_DB_CONNECTION_STRING,
+    DB_PROJECT_PATH: process.env.CYPRESS_DB_PROJECT_PATH,
   },
   expose: {
     auth0_domain: process.env.AUTH0_DOMAIN,
