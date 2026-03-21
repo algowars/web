@@ -16,14 +16,14 @@ describe('Accounts', () => {
 
     cy.get('[data-cy=signup-btn]').click();
 
-     const randomString = () => Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-     const email = `${randomString()}@example.com`;
-     const password = randomString();
+    //  const randomString = () => Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+    //  const email = `${randomString()}@example.com`;
+    //  const password = randomString();
 
-      cy.origin('https://aw-dev01.us.auth0.com', () => {
-        cy.get('input[name="email"]').type(email);
-        cy.get('input[name="password"]').type(password);
-        cy.get('button[type="submit"]').click();
-      });
+    //   cy.origin('https://aw-dev01.us.auth0.com', () => {
+    //     cy.get('input[name="email"]').type(email);
+    //     cy.get('input[name="password"]').type(password);
+    //     cy.get('button[type="submit"]').click();
+    //   });
   });
 })

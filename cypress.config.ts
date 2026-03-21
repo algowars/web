@@ -8,16 +8,20 @@ export default defineConfig({
   e2e: {
     baseUrl: process.env.CYPRESS_BASE_URL ?? "http://localhost:3000",
     setupNodeEvents(on, config) {
-       const connString = process.env.TEST_DB_CONN || config.env.TEST_DB_CONN
-
       on('task', {
-        async 'db:truncate'({ projectPath, args = [], env = {} }) {
+        async 'db:truncate'() {
             return new Promise((resolve, reject) => {
-              const runArgs = ['run', env.DB_CONNECTION_STRING, '--project', projectPath, '--truncate'];
+              const projectPath = config.env.DB_PROJECT_PATH;
+              const dbConnectionString = config.env.DB_CONNECTION_STRING;
+              if (!projectPath || !dbConnectionString) {
+                reject({ message: 'Missing DB_PROJECT_PATH or DB_CONNECTION_STRING in environment variables.' });
+                return;
+              }
+              const runArgs = ['run', '--connectionString', dbConnectionString, '--project', projectPath, '--truncate'];
 
               const child = spawn('dotnet', runArgs, {
                 stdio: 'inherit',
-                env: { ...process.env, ...env }
+                env: { ...process.env }
               });
 
               child.on('error', (err) => {
@@ -31,16 +35,22 @@ export default defineConfig({
                   reject({ message: `DbUp exited with code ${code}`, code });
                 }
               });
-            }
+            });
         },
 
-        async 'db:seed'({ projectPath, args = [], env = {} }) {
+        async 'db:seed'() {
             return new Promise((resolve, reject) => {
-              const runArgs = ['run', env.DB_CONNECTION_STRING, '--project', projectPath, '--configuration', 'Release', '--', ...args];
+              const projectPath = config.env.DB_PROJECT_PATH;
+              const dbConnectionString = config.env.DB_CONNECTION_STRING;
+              if (!projectPath || !dbConnectionString) {
+                reject({ message: 'Missing DB_PROJECT_PATH or DB_CONNECTION_STRING in environment variables.' });
+                return;
+              }
+              const runArgs = ['run', '--connectionString', dbConnectionString, '--project', projectPath, '--init', '--dev'];
 
               const child = spawn('dotnet', runArgs, {
                 stdio: 'inherit',
-                env: { ...process.env, ...env }
+                env: { ...process.env }
               });
 
               child.on('error', (err) => {
@@ -54,7 +64,7 @@ export default defineConfig({
                   reject({ message: `DbUp exited with code ${code}`, code });
                 }
               });
-            }
+            });
         },
       })
 
@@ -65,6 +75,8 @@ export default defineConfig({
   env: {
     AUTH0_EMAIL: process.env.AUTH0_EMAIL,
     AUTH0_PASSWORD: process.env.AUTH0_PASSWORD,
+    DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING,
+    DB_PROJECT_PATH: process.env.DB_PROJECT_PATH,
   },
   expose: {
     auth0_domain: process.env.AUTH0_DOMAIN,
