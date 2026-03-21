@@ -37,6 +37,7 @@ function AuthButtons() {
         <AuthLoginButton
           variant="link"
           className="text-muted-foreground hover:text-primary pl-0 pr-3 text-sm hover:no-underline"
+          data-cy="login-btn"
         >
           Sign In
         </AuthLoginButton>

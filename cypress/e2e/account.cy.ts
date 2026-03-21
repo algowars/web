@@ -39,7 +39,21 @@ describe('Accounts', () => {
   });
 
   it("should allow an existing user to log in and access account setup if their account isn't fully set up", () => {
-  
+    cy.visit('/');
+
+    cy.get('[data-cy=login-btn]').click();
+
+    cy.env(['TEST_USER_EMAIL', 'TEST_USER_PASSWORD']).then(({ TEST_USER_EMAIL: email, TEST_USER_PASSWORD: password }) => {
+        cy.origin(
+          Cypress.expose('auth0_domain'),
+          { args: { email, password } },
+          ({ email, password }) => {
+            cy.get('input#email').type(email);
+            cy.get('input#password').type(password, { log: false });
+            cy.contains('button[value=default]', 'Continue').click();
+          }
+        );
+    });
   });
 
   it("should allow user to log in successfully and access home page if their account is already set up", () => {
@@ -47,4 +61,4 @@ describe('Accounts', () => {
   });
 
   it("should allow a user to log out successfully", () => {});
-})
+});
