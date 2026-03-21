@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress';
 import 'dotenv/config';
 
 export default defineConfig({
-  allowCypressEnv: false,
+  allowCypressEnv: true,
 
   e2e: {
     baseUrl: process.env.CYPRESS_BASE_URL ?? "http://localhost:3000",

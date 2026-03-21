@@ -102,6 +102,7 @@ export default function AccountSetupForm({
                       <Input
                         placeholder="Enter your username"
                         disabled={createAccountMutation.isPending}
+                        data-cy="username-input"
                         {...field}
                       />
                     </FormControl>
@@ -118,6 +119,7 @@ export default function AccountSetupForm({
                 type="submit"
                 variant="outline"
                 className="w-full"
+                data-cy="complete-setup-btn"
                 disabled={
                   createAccountMutation.isPending ||
                   !signupForm.formState.isValid

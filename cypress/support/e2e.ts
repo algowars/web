@@ -15,3 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+import './auth-provider-commands/auth0'
+import './faker-commands/faker-data'
