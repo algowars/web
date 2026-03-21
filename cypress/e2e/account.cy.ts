@@ -8,19 +8,12 @@ describe('Accounts', () => {
     cy.visit('/');
   });
 
-  it('should create an account successfully', () => {
+  it('Creating an account', () => {
     cy.get('[data-cy=signup-btn]').click();
+
     cy.generateRandomEmail().then((email) => {
-    cy.generateRandomPassword().then((password) => {
-        cy.origin(
-          Cypress.expose('auth0_domain'),
-          { args: { email, password } },
-          ({ email, password }) => {
-            cy.get('input#email').type(email);
-            cy.get('input#password').type(password, { log: false });
-            cy.contains('button[value=default]', 'Continue').click();
-          }
-        );
+      cy.generateRandomPassword().then((password) => {
+        cy.signupViaAuth0Ui(email, password);
       });
     });
 
@@ -36,38 +29,27 @@ describe('Accounts', () => {
     cy.url().should('include', '/');
   });
 
-  it.only("should allow an existing user to log in and access account setup if their account isn't fully set up", async () => {
+  it("Existing user can login and access account setup if they haven't completed it", () => {
     cy.get('[data-cy=signup-btn]').click();
 
     cy.generateRandomEmail().then((email) => {
       cy.generateRandomPassword().then((password) => {
-        cy.origin(
-          Cypress.expose('auth0_domain'),
-          { args: { email, password } },
-          ({ email, password }) => {
-            cy.get('input#email').type(email);
-            cy.get('input#password').type(password, { log: false });
-            cy.contains('button[value=default]', 'Continue').click();
-          }
-        );
+        cy.signupViaAuth0Ui(email, password);
 
+        cy.wait('@getProfile').its('response.statusCode').should('eq', 404);
         cy.url().should('include', '/account/setup');
-    cy.wait('@getProfile').its('response.statusCode').should('eq', 404);
 
-    cy.get('[data-cy=account-dropdown-trigger]').click();
-    cy.get('[data-cy=logout-btn]').click();
+        cy.get('[data-cy=account-dropdown-trigger]').click();
+        cy.get('[data-cy=logout-btn]').click();
 
-    cy.get('[data-cy=login-btn]').click();
-    
-    cy.origin(
-      Cypress.expose('auth0_domain'),
-      { args: { email, password } },
-      ({ email, password }) => {
-        cy.get('input#username').type(email);
-        cy.get('input#password').type(password, { log: false });
-        cy.contains('button[value=default]', 'Continue').click();
-      }
-    );
+        cy.get('[data-cy=login-btn]').click();
+
+        cy.loginViaAuth0Ui(email, password);
+
+        cy.wait('@getProfile').its('response.statusCode').should('eq', 404);
+        cy.url().should('include', '/account/setup');
+      });
+    });
 
     cy.generateRandomUsername().then((username) => {
       cy.get('[data-cy=username-input]').type(username);
@@ -76,28 +58,36 @@ describe('Accounts', () => {
 
     cy.wait('@createAccount').its('response.statusCode').should('eq', 200);
     cy.url().should('include', '/');
+  });
+
+  it("Log in successfully and access home page if their account is already set up", () => {
+    cy.get('[data-cy=signup-btn]').click();
+
+    cy.generateRandomEmail().then((email) => {
+      cy.generateRandomPassword().then((password) => {
+        cy.signupViaAuth0Ui(email, password);
+
+        cy.wait('@getProfile').its('response.statusCode').should('eq', 404);
+        cy.url().should('include', '/account/setup');
+
+        cy.generateRandomUsername().then((username) => {
+          cy.get('[data-cy=username-input]').type(username);
+          cy.get('[data-cy=complete-setup-btn]').click();
+        });
+
+        cy.wait('@createAccount').its('response.statusCode').should('eq', 200);
+
+        cy.get('[data-cy=account-dropdown-trigger]').click();
+        cy.get('[data-cy=logout-btn]').click();
+
+        cy.get('[data-cy=login-btn]').click();
+
+        cy.loginViaAuth0Ui(email, password);
+
+        cy.wait('@getProfile').its('response.statusCode').should('eq', 200);
+        cy.url().should('include', '/');
       });
     });
+
   });
-
-  it("should allow user to log in successfully and access home page if their account is already set up", () => {
-    cy.get('[data-cy=login-btn]').click();
-
-    cy.env(['TEST_USER_EMAIL', 'TEST_USER_PASSWORD']).then(({ TEST_USER_EMAIL: email, TEST_USER_PASSWORD: password }) => {
-        cy.origin(
-          Cypress.expose('auth0_domain'),
-          { args: { email, password } },
-          ({ email, password }) => {
-            cy.get('input#username').type(email);
-            cy.get('input#password').type(password, { log: false });
-            cy.contains('button[value=default]', 'Continue').click();
-          }
-        );
-    });
-
-    cy.wait('@getProfile').its('response.statusCode').should('eq', 200);
-    cy.url().should('include', '/');
-  });
-
-  it("should allow a user to log out successfully", () => {});
 });

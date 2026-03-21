@@ -150,5 +150,7 @@ declare namespace Cypress {
     generateRandomEmail(): Chainable<string>;
     generateRandomUsername(): Chainable<string>;
     generateRandomPassword(): Chainable<string>;
+    loginViaAuth0Ui(email: string, password: string): Chainable<any>;
+    signupViaAuth0Ui(email: string, password: string): Chainable<any>;
   }
 }
