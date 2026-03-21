@@ -19,11 +19,7 @@
     "test:coverage": "vitest run --coverage",
     "test:coverage-report": "vitest run --coverage.enabled --coverage.reporter='json-summary'",
     "test:int": "vitest run tests/integration",
-    "test:int:watch": "vitest tests/integration --watch",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed",
-    "test:e2e:ui": "playwright test --debug",
-    "test:e2e:report": "playwright show-report"
+    "test:int:watch": "vitest tests/integration --watch"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.13.2",

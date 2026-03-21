@@ -1,4 +1,16 @@
 describe('Accounts', () => {
+  beforeEach(function () {
+    cy.task('db:seed')
+    cy.intercept('POST', '/graphql').as('createBankAccount')
+
+    cy.env(['AUTH0_USERNAME', 'AUTH0_PASSWORD']).then(
+      ({ username, password }) => {
+        cy.loginToAuth0(username, password)
+      }
+    )
+    cy.visit('/')
+  });
+
   it('should create an account successfully', () => {
     cy.visit('/');
 
@@ -13,5 +25,5 @@ describe('Accounts', () => {
         cy.get('input[name="password"]').type(password);
         cy.get('button[type="submit"]').click();
       });
-  })
+  });
 })
