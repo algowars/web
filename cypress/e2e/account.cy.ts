@@ -37,4 +37,14 @@ describe('Accounts', () => {
     cy.wait('@createAccount').its('response.statusCode').should('eq', 200);
     cy.url().should('include', '/');
   });
+
+  it("should allow an existing user to log in and access account setup if their account isn't fully set up", () => {
+  
+  });
+
+  it("should allow user to log in successfully and access home page if their account is already set up", () => {
+    
+  });
+
+  it("should allow a user to log out successfully", () => {});
 })
