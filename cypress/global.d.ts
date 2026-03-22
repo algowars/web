@@ -7,7 +7,7 @@ declare namespace Cypress {
   import { publicTransactionService } from "../src/machines/publicTransactionsMachine";
   import { contactsTransactionService } from "../src/machines/contactsTransactionsMachine";
   import { personalTransactionService } from "../src/machines/personalTransactionsMachine";
-  
+
   interface CustomWindow extends Window {
     authService: typeof authService;
     createTransactionService: typeof createTransactionService;
@@ -36,8 +36,14 @@ declare namespace Cypress {
      */
     visualSnapshot(maybeName?): Chainable<any>;
 
-    getBySel(dataTestAttribute: string, args?: any): Chainable<JQuery<HTMLElement>>;
-    getBySelLike(dataTestPrefixAttribute: string, args?: any): Chainable<JQuery<HTMLElement>>;
+    getBySel(
+      dataTestAttribute: string,
+      args?: any
+    ): Chainable<JQuery<HTMLElement>>;
+    getBySelLike(
+      dataTestPrefixAttribute: string,
+      args?: any
+    ): Chainable<JQuery<HTMLElement>>;
 
     /**
      *  Cypress task for directly querying to the database within tests
@@ -60,12 +66,22 @@ declare namespace Cypress {
     /**
      * Find a single entity via database query
      */
-    database(operation: "find", entity: string, query?: object, log?: boolean): Chainable<any>;
+    database(
+      operation: "find",
+      entity: string,
+      query?: object,
+      log?: boolean
+    ): Chainable<any>;
 
     /**
      * Filter for data entities via database query
      */
-    database(operation: "filter", entity: string, query?: object, log?: boolean): Chainable<any>;
+    database(
+      operation: "filter",
+      entity: string,
+      query?: object,
+      log?: boolean
+    ): Chainable<any>;
 
     /**
      * Fetch React component instance associated with received element subject
@@ -90,7 +106,11 @@ declare namespace Cypress {
     /**
      * Logs-in user by using UI
      */
-    login(username: string, password: string, loginOptions?: LoginOptions): void;
+    login(
+      username: string,
+      password: string,
+      loginOptions?: LoginOptions
+    ): void;
 
     /**
      * Logs-in user by using API request

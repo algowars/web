@@ -1,5 +1,5 @@
-import { defineConfig } from 'cypress';
-import 'dotenv/config';
+import { defineConfig } from "cypress";
+import "dotenv/config";
 
 export default defineConfig({
   allowCypressEnv: true,
@@ -7,7 +7,7 @@ export default defineConfig({
   e2e: {
     baseUrl: process.env.CYPRESS_BASE_URL ?? "http://localhost:3000",
     setupNodeEvents(on, config) {
-      return config
+      return config;
     },
   },
 
@@ -17,4 +17,4 @@ export default defineConfig({
     auth0_scope: "",
     auth0_client_id: process.env.AUTH0_CLIENT_ID,
   },
-})
+});
