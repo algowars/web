@@ -1,7 +1,5 @@
 describe("Accounts", () => {
   beforeEach(function () {
-    cy.task("db:seed");
-
     cy.intercept("GET", "/api/v1/account/find/profile").as("getProfile");
     cy.intercept("POST", "/api/v1/account").as("createAccount");
 
