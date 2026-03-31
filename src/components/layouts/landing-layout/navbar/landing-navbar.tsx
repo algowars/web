@@ -37,6 +37,7 @@ function AuthButtons() {
         <AuthLoginButton
           variant="link"
           className="text-muted-foreground hover:text-primary pl-0 pr-3 text-sm hover:no-underline"
+          data-cy="login-btn"
         >
           Sign In
         </AuthLoginButton>
@@ -45,6 +46,7 @@ function AuthButtons() {
             buttonVariants({ variant: "secondary" }),
             "h-8 text-sm px-3"
           )}
+          data-cy="signup-btn"
         >
           Sign Up
         </AuthSignupButton>
@@ -61,8 +63,13 @@ function AuthButtons() {
 
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <DropdownMenuTrigger>
+          <Button
+            variant="ghost"
+            className="relative h-8 w-8 rounded-full"
+            data-cy="account-dropdown-trigger"
+            asChild
+          >
             <Avatar className="h-8 w-8">
               <AvatarImage src={account?.imageUrl} alt={displayName} />
               <AvatarFallback>{userInitials}</AvatarFallback>
@@ -90,7 +97,11 @@ function AuthButtons() {
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild className="text-destructive">
+          <DropdownMenuItem
+            asChild
+            className="text-destructive"
+            data-cy="logout-btn"
+          >
             <AuthLogout>
               <LogOut className="mr-2 h-4 w-4" />
               Log out

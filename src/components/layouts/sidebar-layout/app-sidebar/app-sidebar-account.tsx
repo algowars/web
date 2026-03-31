@@ -31,7 +31,7 @@ export function AppSidebarAccount() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild data-cy="account-dropdown-trigger">
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -92,7 +92,7 @@ export function AppSidebarAccount() {
               </DropdownMenuGroup>
             ) : null}
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem asChild data-cy="logout-btn">
               <AuthLogout>
                 <LogOut />
                 Log out
