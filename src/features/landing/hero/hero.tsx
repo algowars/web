@@ -1,7 +1,5 @@
-import { buttonVariants } from "@/components/ui/button";
 import AuthLoginButton from "@/features/auth/auth-login/auth-login-button";
 import AuthSignupButton from "@/features/auth/auth-signup/auth-signup-button";
-import { cn } from "@/lib/utils";
 
 export default function Hero() {
   return (
@@ -19,20 +17,18 @@ export default function Hero() {
         <ul className="flex max-[520px]:flex-col justify-center items-center gap-3 w-full">
           <li className="w-full sm:w-fit">
             <AuthLoginButton
-              className={cn(
-                buttonVariants({ variant: "default" }),
-                "max-[375px]:w-full w-52 sm:w-64 md:w-48"
-              )}
+              variant="default"
+              size="lg"
+              className={"max-[375px]:w-full w-52 sm:w-64 md:w-48"}
             >
               Get Started
             </AuthLoginButton>
           </li>
           <li className="w-full sm:w-fit">
             <AuthSignupButton
-              className={cn(
-                buttonVariants({ variant: "secondary" }),
-                "max-[375px]:w-full w-52 sm:w-64 md:w-48"
-              )}
+              variant="secondary"
+              size="lg"
+              className={"max-[375px]:w-full w-52 sm:w-64 md:w-48"}
             >
               Join Today
             </AuthSignupButton>

@@ -18,6 +18,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export function SidebarMainNav({
   items,
@@ -36,7 +37,8 @@ export function SidebarMainNav({
   title?: string;
 }) {
   return (
-    <SidebarGroup>
+   <TooltipProvider>
+     <SidebarGroup>
       <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
@@ -76,5 +78,6 @@ export function SidebarMainNav({
         ))}
       </SidebarMenu>
     </SidebarGroup>
+   </TooltipProvider>
   );
 }
