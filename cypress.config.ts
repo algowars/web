@@ -11,8 +11,6 @@ export default defineConfig({
     },
   },
 
-  record: true,
-
   expose: {
     auth0_domain: process.env.AUTH0_DOMAIN,
     auth0_audience: process.env.AUTH0_AUDIENCE,

@@ -46,3 +46,4 @@ jobs:
         with:
           build: pnpm run build
           start: pnpm start
+          record: true
