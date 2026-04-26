@@ -13,16 +13,10 @@ import { createEmptyPageResult } from "@/common/pagination/empty-page-result";
 export const getAdminProblems = ({
   pagination,
   timestamp,
-  accessToken,
 }: {
   pagination: PaginationState;
   timestamp?: Date;
-  accessToken: string;
 }) => {
-  if (!accessToken) {
-    return createEmptyPageResult();
-  }
-
   return api.get<PageResult<AdminProblem>>({
     url: "/api/v1/problem/admin",
     config: {
@@ -32,18 +26,16 @@ export const getAdminProblems = ({
         timestamp: timestamp?.toISOString(),
       },
     },
-    accessToken,
   });
 };
 
 export const getAdminProblemsQueryOptions = (
-  accessToken: string,
   pagination: PaginationState,
   timestamp?: Date
 ) => {
   return queryOptions({
-    queryKey: ["problems", pagination, timestamp, accessToken],
-    queryFn: () => getAdminProblems({ pagination, timestamp, accessToken }),
+    queryKey: ["problems", pagination, timestamp],
+    queryFn: () => getAdminProblems({ pagination, timestamp }),
     placeholderData: keepPreviousData,
   });
 };
@@ -51,18 +43,16 @@ export const getAdminProblemsQueryOptions = (
 type UseProblemsOptions = {
   pagination: PaginationState;
   timestamp?: Date;
-  accessToken: string;
   queryConfig?: QueryConfig<typeof getAdminProblemsQueryOptions>;
 };
 
 export const useAdminProblems = ({
   pagination,
   timestamp,
-  accessToken,
   queryConfig = {},
 }: UseProblemsOptions) => {
   return useQuery({
-    ...getAdminProblemsQueryOptions(accessToken, pagination, timestamp),
+    ...getAdminProblemsQueryOptions(pagination, timestamp),
     ...queryConfig,
   });
 };

@@ -7,11 +7,9 @@ import { RunResult } from "../models/run-result";
 export const createSubmission = async ({
   code,
   problemSetupId,
-  accessToken,
 }: {
   code: string;
   problemSetupId: number;
-  accessToken: string;
 }): Promise<RunResult> => {
   const submissionId = await api.post<string>({
     url: "/api/v1/submission/execute",
@@ -19,7 +17,6 @@ export const createSubmission = async ({
       code,
       problemSetupId,
     },
-    accessToken,
   });
 
   return {

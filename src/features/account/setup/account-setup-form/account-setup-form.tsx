@@ -31,7 +31,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { getAccessToken } from "@auth0/nextjs-auth0";
 
 export default function AccountSetupForm({
   className,
@@ -59,19 +58,8 @@ export default function AccountSetupForm({
     },
   });
 
-  async function onSubmit(values: z.infer<typeof createAccountSchema>) {
-    try {
-      const accessToken = await getAccessToken();
-
-      createAccountMutation.mutate({
-        data: values,
-        accessToken,
-      });
-    } catch {
-      toast.error("Authentication error", {
-        description: "Unable to get access token. Please try logging in again.",
-      });
-    }
+  function onSubmit(values: z.infer<typeof createAccountSchema>) {
+    createAccountMutation.mutate({ data: values });
   }
 
   return (

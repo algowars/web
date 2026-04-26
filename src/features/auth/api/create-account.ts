@@ -13,14 +13,8 @@ export const createAccountSchema = z.object({
 
 export type CreateAccountInput = z.infer<typeof createAccountSchema>;
 
-export const createAccount = ({
-  data,
-  accessToken,
-}: {
-  data: CreateAccountInput;
-  accessToken: string;
-}) => {
-  return api.post<Account>({ url: "/api/v1/account", body: data, accessToken });
+export const createAccount = ({ data }: { data: CreateAccountInput }) => {
+  return api.post<Account>({ url: "/api/v1/account", body: data });
 };
 
 type UseCreateAccountOptions = {

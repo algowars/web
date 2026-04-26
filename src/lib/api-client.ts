@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { env } from "@/env";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 
 type ApiRequestConfig = {
   url: string;
   config?: AxiosRequestConfig;
-  accessToken?: string;
 };
 
 type ApiRequestWithBodyConfig<T = unknown> = {
   url: string;
   body?: T;
   config?: AxiosRequestConfig;
-  accessToken?: string;
 };
 
 export interface ApiError {
@@ -72,6 +71,9 @@ const createApiClient = (): AxiosInstance => {
     if (typeof window === "undefined") {
       const cookieHeader = await getServerCookies();
       if (cookieHeader) config.headers.Cookie = cookieHeader;
+    } else if (!config.headers.Authorization) {
+      const token = await getAccessToken();
+      if (token) config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
@@ -81,22 +83,6 @@ const createApiClient = (): AxiosInstance => {
 };
 
 const apiClient = createApiClient();
-
-const addAuthToken = (
-  config: AxiosRequestConfig,
-  accessToken?: string
-): AxiosRequestConfig => {
-  if (accessToken) {
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
-  }
-  return config;
-};
 
 const handleRequest = async <T>(request: Promise<any>): Promise<T> => {
   try {
@@ -134,44 +120,34 @@ const handleRequest = async <T>(request: Promise<any>): Promise<T> => {
 };
 export const api = {
   get: <T>(request: ApiRequestConfig): Promise<T> => {
-    const { url, config = {}, accessToken } = request;
-    return handleRequest<T>(
-      apiClient.get(url, addAuthToken(config, accessToken))
-    );
+    const { url, config = {} } = request;
+    return handleRequest<T>(apiClient.get(url, config));
   },
 
   post: <T, TBody = unknown>(
     request: ApiRequestWithBodyConfig<TBody>
   ): Promise<T> => {
-    const { url, body, config = {}, accessToken } = request;
-    return handleRequest<T>(
-      apiClient.post(url, body, addAuthToken(config, accessToken))
-    );
+    const { url, body, config = {} } = request;
+    return handleRequest<T>(apiClient.post(url, body, config));
   },
 
   put: <T, TBody = unknown>(
     request: ApiRequestWithBodyConfig<TBody>
   ): Promise<T> => {
-    const { url, body, config = {}, accessToken } = request;
-    return handleRequest<T>(
-      apiClient.put(url, body, addAuthToken(config, accessToken))
-    );
+    const { url, body, config = {} } = request;
+    return handleRequest<T>(apiClient.put(url, body, config));
   },
 
   patch: <T, TBody = unknown>(
     request: ApiRequestWithBodyConfig<TBody>
   ): Promise<T> => {
-    const { url, body, config = {}, accessToken } = request;
-    return handleRequest<T>(
-      apiClient.patch(url, body, addAuthToken(config, accessToken))
-    );
+    const { url, body, config = {} } = request;
+    return handleRequest<T>(apiClient.patch(url, body, config));
   },
 
   delete: <T>(request: ApiRequestConfig): Promise<T> => {
-    const { url, config = {}, accessToken } = request;
-    return handleRequest<T>(
-      apiClient.delete(url, addAuthToken(config, accessToken))
-    );
+    const { url, config = {} } = request;
+    return handleRequest<T>(apiClient.delete(url, config));
   },
 };
 

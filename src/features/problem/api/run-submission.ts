@@ -6,11 +6,9 @@ import { RunResult } from "../models/run-result";
 export const runSubmission = ({
   code,
   problemSetupId,
-  accessToken,
 }: {
   code: string;
   problemSetupId: number;
-  accessToken: string;
 }) => {
   return api.post<RunResult | null>({
     url: "/api/v1/submission/run",
@@ -18,7 +16,6 @@ export const runSubmission = ({
       code,
       problemSetupId,
     },
-    accessToken,
   });
 };
 
@@ -35,11 +32,8 @@ export const useRunSubmission = ({
 
   return useMutation({
     ...restConfig,
-    mutationFn: (variables: {
-      code: string;
-      problemSetupId: number;
-      accessToken: string;
-    }) => runSubmission(variables),
+    mutationFn: (variables: { code: string; problemSetupId: number }) =>
+      runSubmission(variables),
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
         queryKey: ["create-submission"],
