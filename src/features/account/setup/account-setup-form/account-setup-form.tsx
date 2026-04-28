@@ -10,15 +10,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-  createAccountSchema,
-  useCreateAccount,
-} from "@/features/auth/api/create-account";
-import { useAccount } from "@/features/auth/account.context";
+  updateUsernameSchema,
+  useUpdateUsername,
+} from "@/features/auth/api/update-username";
+import { accountStore } from "@/features/account/account-store";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/router-config";
 import {
@@ -37,29 +37,37 @@ export default function AccountSetupForm({
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
-  const { auth0, refreshAccount } = useAccount();
+  const account = accountStore((state) => state.account);
 
-  const signupForm = useForm<z.infer<typeof createAccountSchema>>({
-    resolver: zodResolver(createAccountSchema),
+  useEffect(() => {
+    if (
+      account?.usernameLastChangedAt !== null &&
+      account?.usernameLastChangedAt !== undefined
+    ) {
+      router.replace(routerConfig.dashboard.path);
+    }
+  }, [account?.usernameLastChangedAt, router]);
+
+  const signupForm = useForm<z.infer<typeof updateUsernameSchema>>({
+    resolver: zodResolver(updateUsernameSchema),
     defaultValues: {
       username: "",
-      imageUrl: auth0.user?.picture,
     },
   });
 
-  const createAccountMutation = useCreateAccount({
+  const updateUsernameMutation = useUpdateUsername({
     mutationConfig: {
-      onSuccess: () => {
+      onSuccess: (account) => {
+        accountStore.getState().init(account);
         toast.success("Account created successfully!");
-        refreshAccount();
 
         router.push(routerConfig.home.path);
       },
     },
   });
 
-  function onSubmit(values: z.infer<typeof createAccountSchema>) {
-    createAccountMutation.mutate({ data: values });
+  function onSubmit(values: z.infer<typeof updateUsernameSchema>) {
+    updateUsernameMutation.mutate({ data: values });
   }
 
   return (
@@ -69,9 +77,9 @@ export default function AccountSetupForm({
           <CardTitle>Finish setting up your account</CardTitle>
           <CardDescription>Please fill out the required fields</CardDescription>
         </CardHeader>
-        {createAccountMutation.isError ? (
+        {updateUsernameMutation.isError ? (
           <p className="text-sm text-center text-destructive px-3">
-            {createAccountMutation.error.message}
+            {updateUsernameMutation.error.message}
           </p>
         ) : null}
         <CardContent>
@@ -89,13 +97,13 @@ export default function AccountSetupForm({
                     <FormControl>
                       <Input
                         placeholder="Enter your username"
-                        disabled={createAccountMutation.isPending}
+                        disabled={updateUsernameMutation.isPending}
                         data-cy="username-input"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Max 16 characters. Only letters, numbers, hyphens, and
+                      Max 36 characters. Only letters, numbers, hyphens, and
                       underscores allowed.
                     </FormDescription>
                     <FormMessage />
@@ -109,11 +117,11 @@ export default function AccountSetupForm({
                 className="w-full"
                 data-cy="complete-setup-btn"
                 disabled={
-                  createAccountMutation.isPending ||
+                  updateUsernameMutation.isPending ||
                   !signupForm.formState.isValid
                 }
               >
-                {createAccountMutation.isPending
+                {updateUsernameMutation.isPending
                   ? "Loading..."
                   : "Setup Account"}
               </Button>

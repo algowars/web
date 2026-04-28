@@ -18,13 +18,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useAccount } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 import Link from "next/link";
 import { routerConfig } from "@/router-config";
 import AuthLogout from "@/features/auth/auth-logout/auth-logout";
 
 export function AppSidebarAccount() {
-  const { account } = useAccount();
+  const account = accountStore((state) => state.account);
   const { isMobile } = useSidebar();
 
   return (

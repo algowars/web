@@ -1,7 +1,32 @@
-import { auth0 } from "@/lib/auth0";
+"use client";
 
-export default async function AccountInitializer() {
-  const session = await auth0.getSession();
+import { useEffect } from "react";
+import { useUser } from "@auth0/nextjs-auth0";
+import { useUpsertAccount } from "./api/upsert-account";
+import { accountStore } from "./account-store";
 
-  return;
+export default function AccountInitializer() {
+  const { user, isLoading: isUserLoading } = useUser();
+  const { mutate: upsertAccount } = useUpsertAccount({
+    mutationConfig: {
+      onSuccess: (account) => {
+        accountStore.getState().init(account);
+      },
+      onError: () => {
+        accountStore.getState().setLoading(false);
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (isUserLoading) return;
+
+    if (user?.sub) {
+      upsertAccount({ data: { sub: user.sub, imageUrl: user.picture } });
+    } else {
+      accountStore.getState().setLoading(false);
+    }
+  }, [user, isUserLoading, upsertAccount]);
+
+  return null;
 }

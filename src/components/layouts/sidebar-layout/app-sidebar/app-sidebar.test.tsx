@@ -1,11 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, Mock } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import AppSidebar from "./app-sidebar";
-import { useAccount } from "@/features/auth/account.context";
-
-vi.mock("@/features/auth/account.context", () => ({
-  useAccount: vi.fn(),
-}));
+import { accountStore } from "@/features/account/account-store";
 
 vi.mock("@/components/ui/sidebar", () => ({
   Sidebar: ({ children, ...props }: { children: React.ReactNode }) => (
@@ -31,6 +27,7 @@ vi.mock("@/components/ui/sidebar", () => ({
     children: React.ReactNode;
     asChild?: boolean;
     size?: string;
+    disabled?: boolean;
   }) => <div data-testid="sidebar-menu-button">{children}</div>,
   SidebarMenuItem: ({ children }: { children: React.ReactNode }) => (
     <li data-testid="sidebar-menu-item">{children}</li>
@@ -39,6 +36,12 @@ vi.mock("@/components/ui/sidebar", () => ({
 
 vi.mock("@/components/ui/command", () => ({
   Command: () => <span data-testid="command-icon" />,
+}));
+
+vi.mock("@/components/ui/skeleton", () => ({
+  Skeleton: ({ className }: { className?: string }) => (
+    <div data-testid="skeleton" className={className} />
+  ),
 }));
 
 vi.mock("next/link", () => ({
@@ -65,16 +68,6 @@ vi.mock("./sidebar-main-nav", () => ({
   ),
 }));
 
-vi.mock("@/features/auth/guards/auth-component.guard", () => ({
-  AuthComponentGuard: ({
-    children,
-  }: {
-    children: React.ReactNode;
-    unauthenticated: React.ReactNode;
-    partiallyAuthenticated: React.ReactNode;
-  }) => <div data-testid="auth-guard">{children}</div>,
-}));
-
 vi.mock("./unauthenticated-account", () => ({
   UnauthenticatedAccount: () => <div data-testid="unauthenticated-account" />,
 }));
@@ -90,57 +83,86 @@ vi.mock("./app-sidebar-account", () => ({
 }));
 
 describe("AppSidebar", () => {
-  it("renders the sidebar", () => {
-    (useAccount as Mock).mockReturnValue({
-      isAuthenticated: false,
-      account: null,
-    });
+  beforeEach(() => {
+    accountStore.setState({ account: null, isLoading: false });
+  });
 
+  it("renders the sidebar", () => {
     render(<AppSidebar />);
 
     expect(screen.getByTestId("sidebar")).toBeInTheDocument();
   });
 
   it("renders sidebar header with Algowars branding", () => {
-    (useAccount as Mock).mockReturnValue({
-      isAuthenticated: false,
-      account: null,
-    });
-
     render(<AppSidebar />);
 
     expect(screen.getByText("Algowars")).toBeInTheDocument();
     expect(screen.getByText("Competitive Coding")).toBeInTheDocument();
   });
 
-  it("shows Home title when not authenticated", () => {
-    (useAccount as Mock).mockReturnValue({
-      isAuthenticated: false,
-      account: null,
-    });
+  it("shows skeleton when loading", () => {
+    accountStore.setState({ account: null, isLoading: true });
 
     render(<AppSidebar />);
 
-    const navs = screen.getAllByTestId("sidebar-main-nav");
-    expect(navs[0]).toHaveAttribute("data-title", "Platform");
+    expect(screen.getAllByTestId("skeleton").length).toBeGreaterThan(0);
   });
 
-  it("renders sidebar footer with auth guard", () => {
-    (useAccount as Mock).mockReturnValue({
-      isAuthenticated: true,
-      account: { username: "testuser" },
+  it("shows unauthenticated account when not logged in", () => {
+    accountStore.setState({ account: null, isLoading: false });
+
+    render(<AppSidebar />);
+
+    expect(screen.getByTestId("unauthenticated-account")).toBeInTheDocument();
+  });
+
+  it("shows partially authenticated account when username not set", () => {
+    accountStore.setState({
+      account: {
+        id: "1",
+        username: "",
+        createdAt: new Date(),
+        updatedAt: null,
+        usernameLastChangedAt: null,
+      },
+      isLoading: false,
     });
 
     render(<AppSidebar />);
 
-    expect(screen.getByTestId("auth-guard")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("partially-authenticated-account")
+    ).toBeInTheDocument();
+  });
+
+  it("shows app sidebar account when fully authenticated", () => {
+    accountStore.setState({
+      account: {
+        id: "1",
+        username: "testuser",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        usernameLastChangedAt: new Date(),
+      },
+      isLoading: false,
+    });
+
+    render(<AppSidebar />);
+
     expect(screen.getByTestId("app-sidebar-account")).toBeInTheDocument();
   });
 
   it("shows Problem Management nav when user has ReadProblem permission", () => {
-    (useAccount as Mock).mockReturnValue({
-      isAuthenticated: true,
-      account: { username: "admin", permissions: ["read:admin-problems"] },
+    accountStore.setState({
+      account: {
+        id: "1",
+        username: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        usernameLastChangedAt: new Date(),
+        permissions: ["read:admin-problems" as never],
+      },
+      isLoading: false,
     });
 
     render(<AppSidebar />);
@@ -151,9 +173,16 @@ describe("AppSidebar", () => {
   });
 
   it("hides Problem Management nav when user lacks ReadProblem permission", () => {
-    (useAccount as Mock).mockReturnValue({
-      isAuthenticated: true,
-      account: { username: "user", permissions: [] },
+    accountStore.setState({
+      account: {
+        id: "1",
+        username: "user",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        usernameLastChangedAt: new Date(),
+        permissions: [],
+      },
+      isLoading: false,
     });
 
     render(<AppSidebar />);

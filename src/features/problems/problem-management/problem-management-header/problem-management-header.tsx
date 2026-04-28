@@ -2,7 +2,7 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { useAccount } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 import { useHasPermissions } from "@/hooks/use-has-permissions";
 import { Permissions } from "@/features/auth/permissions/models/permissions";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,7 @@ import { routerConfig } from "@/router-config";
 import Link from "next/link";
 
 export default function ProblemManagementHeader() {
-  const { account } = useAccount();
+  const account = accountStore((state) => state.account);
 
   const isAbleToCreate = useHasPermissions(account?.permissions, [
     Permissions.CreateProblem,
