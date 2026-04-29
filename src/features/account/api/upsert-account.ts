@@ -14,13 +14,13 @@ export const upsertAccount = ({ data }: { data: UpsertAccountInput }) => {
   return api.put<Account>({ url: "/api/v1/account", body: data });
 };
 
-type UserUpsertAccountOptions = {
+type UseUpsertAccountOptions = {
   mutationConfig?: MutationConfig<typeof upsertAccount>;
 };
 
 export const useUpsertAccount = ({
   mutationConfig,
-}: UserUpsertAccountOptions = {}) => {
+}: UseUpsertAccountOptions = {}) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
