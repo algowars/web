@@ -18,6 +18,7 @@ import {
   updateUsernameSchema,
   useUpdateUsername,
 } from "@/features/auth/api/update-username";
+import { useAccount } from "@/features/auth/api/get-account";
 import { accountStore } from "@/features/account/account-store";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/router-config";
@@ -37,13 +38,10 @@ export default function AccountSetupForm({
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
-  const account = accountStore((state) => state.account);
+  const { data: account } = useAccount();
 
   useEffect(() => {
-    if (
-      account?.usernameLastChangedAt !== null &&
-      account?.usernameLastChangedAt !== undefined
-    ) {
+    if (!!account?.usernameLastChangedAt) {
       router.replace(routerConfig.dashboard.path);
     }
   }, [account?.usernameLastChangedAt, router]);

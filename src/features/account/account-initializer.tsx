@@ -22,7 +22,7 @@ export default function AccountInitializer() {
     if (isUserLoading) return;
 
     if (user?.sub) {
-      upsertAccount({ data: { sub: user.sub, imageUrl: user.picture } });
+      upsertAccount({ data: { imageUrl: user.picture } });
     } else {
       accountStore.getState().setLoading(false);
     }

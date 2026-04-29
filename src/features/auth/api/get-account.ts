@@ -4,6 +4,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 
 export const getAccount = () => {
+  console.log("QUERYING");
   return api.get<Account | null>({
     url: "/api/v1/account/find/profile",
   });

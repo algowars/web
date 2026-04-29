@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import z from "zod";
 
 export const upsertAccountSchema = z.object({
-  sub: z.string().min(1),
   imageUrl: z.string().optional(),
 });
 
