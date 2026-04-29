@@ -5,7 +5,6 @@ import { QueryConfig } from "@/lib/react-query";
 
 export const getSubmission = async ({
   submissionId,
-  accessToken,
 }: {
   submissionId?: string;
   accessToken: string;
@@ -16,7 +15,6 @@ export const getSubmission = async ({
 
   return api.get<RunResult>({
     url: `/api/v1/submission/${encodeURIComponent(submissionId)}`,
-    accessToken,
   });
 };
 

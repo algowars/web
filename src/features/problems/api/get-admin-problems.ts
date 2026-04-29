@@ -8,7 +8,6 @@ import {
 } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 import { PaginationState } from "@tanstack/react-table";
-import { createEmptyPageResult } from "@/common/pagination/empty-page-result";
 
 export const getAdminProblems = ({
   pagination,
