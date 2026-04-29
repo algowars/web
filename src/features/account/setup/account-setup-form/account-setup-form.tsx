@@ -57,7 +57,7 @@ export default function AccountSetupForm({
     mutationConfig: {
       onSuccess: (account) => {
         accountStore.getState().init(account);
-        toast.success("Account created successfully!");
+        toast.success("Account setup complete!");
 
         router.push(routerConfig.home.path);
       },
