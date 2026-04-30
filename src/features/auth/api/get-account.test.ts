@@ -13,7 +13,7 @@ describe("getAccount", () => {
     vi.clearAllMocks();
   });
 
-  it("calls api.get with correct parameters", async () => {
+  it("calls api.get with correct url", async () => {
     const mockAccount = { id: "123", username: "testuser" };
     (api.get as Mock).mockResolvedValue(mockAccount);
 

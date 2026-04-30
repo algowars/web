@@ -7,7 +7,6 @@ export const getSubmission = async ({
   submissionId,
 }: {
   submissionId?: string;
-  accessToken: string;
 }): Promise<RunResult | null> => {
   if (!submissionId) {
     return null;
@@ -18,29 +17,24 @@ export const getSubmission = async ({
   });
 };
 
-export const getSubmissionQueryOptions = (
-  accessToken: string,
-  submissionId?: string
-) => {
+export const getSubmissionQueryOptions = (submissionId?: string) => {
   return {
     queryKey: ["run-submission", submissionId],
-    queryFn: () => getSubmission({ submissionId, accessToken }),
+    queryFn: () => getSubmission({ submissionId }),
   };
 };
 
 type UseGetRunSubmissionOptions = {
   submissionId?: string;
-  accessToken: string;
   queryConfig?: QueryConfig<typeof getSubmissionQueryOptions>;
 };
 
 export const useGetSubmission = ({
   submissionId,
-  accessToken,
   queryConfig,
 }: UseGetRunSubmissionOptions) => {
   return useQuery({
-    ...getSubmissionQueryOptions(accessToken, submissionId),
+    ...getSubmissionQueryOptions(submissionId),
     ...queryConfig,
   });
 };

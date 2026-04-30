@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import AuthCallback from "./auth-callback";
 import { accountStore } from "@/features/account/account-store";
+import { accountStore } from "@/features/account/account-store";
 import { redirect } from "next/navigation";
 
 vi.mock("next/navigation", () => ({
@@ -24,6 +25,7 @@ vi.mock("@/components/loader/page-loader/page-loader", () => ({
 describe("AuthCallback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    accountStore.setState({ account: null, isLoading: false });
     accountStore.setState({ account: null, isLoading: false });
   });
 
