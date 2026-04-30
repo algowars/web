@@ -2,7 +2,6 @@ import { render } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import AuthCallback from "./auth-callback";
 import { accountStore } from "@/features/account/account-store";
-import { accountStore } from "@/features/account/account-store";
 import { redirect } from "next/navigation";
 
 vi.mock("next/navigation", () => ({
@@ -11,6 +10,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/router-config", () => ({
   routerConfig: {
+    accountSetup: { path: "/account/setup" },
     dashboard: { path: "/" },
     home: { path: "/" },
   },
@@ -25,7 +25,6 @@ vi.mock("@/components/loader/page-loader/page-loader", () => ({
 describe("AuthCallback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    accountStore.setState({ account: null, isLoading: false });
     accountStore.setState({ account: null, isLoading: false });
   });
 
@@ -44,7 +43,7 @@ describe("AuthCallback", () => {
         username: "testuser",
         createdAt: new Date(),
         updatedAt: null,
-        usernameLastChangedAt: null,
+        usernameLastChangedAt: new Date(),
       },
       isLoading: false,
     });

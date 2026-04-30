@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import PermissionsGuard from "./permissions.guard";
-import { accountStore } from "@/features/account/account-store";
 import { accountStore } from "@/features/account/account-store";
 import { useHasPermissions } from "@/hooks/use-has-permissions";
 import { Permissions } from "./models/permissions";
@@ -39,7 +38,6 @@ describe("PermissionsGuard", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    accountStore.setState({ account: null, isLoading: false });
   });
 
   it("renders children when user has required permissions", () => {
