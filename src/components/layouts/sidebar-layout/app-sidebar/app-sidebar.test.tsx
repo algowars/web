@@ -72,12 +72,6 @@ vi.mock("./unauthenticated-account", () => ({
   UnauthenticatedAccount: () => <div data-testid="unauthenticated-account" />,
 }));
 
-vi.mock("./partially-authenticated-account", () => ({
-  PartiallyAuthenticatedAccount: () => (
-    <div data-testid="partially-authenticated-account" />
-  ),
-}));
-
 vi.mock("./app-sidebar-account", () => ({
   AppSidebarAccount: () => <div data-testid="app-sidebar-account" />,
 }));
@@ -116,7 +110,7 @@ describe("AppSidebar", () => {
     expect(screen.getByTestId("unauthenticated-account")).toBeInTheDocument();
   });
 
-  it("shows partially authenticated account when username not set", () => {
+  it("shows app sidebar account when account has no username", () => {
     accountStore.setState({
       account: {
         id: "1",
@@ -130,9 +124,7 @@ describe("AppSidebar", () => {
 
     render(<AppSidebar />);
 
-    expect(
-      screen.getByTestId("partially-authenticated-account")
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("app-sidebar-account")).toBeInTheDocument();
   });
 
   it("shows app sidebar account when fully authenticated", () => {

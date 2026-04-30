@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, Mock } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { AppSidebarAccount } from "./app-sidebar-account";
-import { useAccount } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 import { useSidebar } from "@/components/ui/sidebar";
 
-vi.mock("@/features/auth/account.context", () => ({
-  useAccount: vi.fn(),
+vi.mock("@/features/account/account-store", () => ({
+  accountStore: vi.fn(),
 }));
 
 vi.mock("@/components/ui/sidebar", () => ({
@@ -103,17 +103,19 @@ vi.mock("@/features/auth/auth-logout/auth-logout", () => ({
 }));
 
 describe("AppSidebarAccount", () => {
+  const mockAccount = (account: Record<string, unknown> | null) => {
+    (accountStore as unknown as Mock).mockImplementation(
+      (selector: (state: { account: typeof account }) => unknown) =>
+        selector({ account })
+    );
+  };
+
   beforeEach(() => {
     (useSidebar as Mock).mockReturnValue({ isMobile: false });
   });
 
   it("renders account menu", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {
-        username: "testuser",
-        imageUrl: "https://example.com/avatar.jpg",
-      },
-    });
+    mockAccount({ username: "testuser", imageUrl: "https://example.com/avatar.jpg" });
 
     render(<AppSidebarAccount />);
 
@@ -121,9 +123,7 @@ describe("AppSidebarAccount", () => {
   });
 
   it("displays username", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser", imageUrl: "" },
-    });
+    mockAccount({ username: "testuser", imageUrl: "" });
 
     render(<AppSidebarAccount />);
 
@@ -131,9 +131,7 @@ describe("AppSidebarAccount", () => {
   });
 
   it("renders avatar with fallback", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser" },
-    });
+    mockAccount({ username: "testuser" });
 
     render(<AppSidebarAccount />);
 
@@ -143,9 +141,7 @@ describe("AppSidebarAccount", () => {
   });
 
   it("renders profile link when username exists", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser" },
-    });
+    mockAccount({ username: "testuser" });
 
     render(<AppSidebarAccount />);
 
@@ -153,9 +149,7 @@ describe("AppSidebarAccount", () => {
   });
 
   it("renders settings link when username exists", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser" },
-    });
+    mockAccount({ username: "testuser" });
 
     render(<AppSidebarAccount />);
 
@@ -163,9 +157,7 @@ describe("AppSidebarAccount", () => {
   });
 
   it("renders logout button", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser" },
-    });
+    mockAccount({ username: "testuser" });
 
     render(<AppSidebarAccount />);
 
@@ -174,9 +166,7 @@ describe("AppSidebarAccount", () => {
   });
 
   it("does not render profile/settings when no username", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {},
-    });
+    mockAccount({});
 
     render(<AppSidebarAccount />);
 
@@ -186,9 +176,7 @@ describe("AppSidebarAccount", () => {
 
   it("positions dropdown on bottom when mobile", () => {
     (useSidebar as Mock).mockReturnValue({ isMobile: true });
-    (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser" },
-    });
+    mockAccount({ username: "testuser" });
 
     render(<AppSidebarAccount />);
 
@@ -200,9 +188,7 @@ describe("AppSidebarAccount", () => {
 
   it("positions dropdown on right when not mobile", () => {
     (useSidebar as Mock).mockReturnValue({ isMobile: false });
-    (useAccount as Mock).mockReturnValue({
-      account: { username: "testuser" },
-    });
+    mockAccount({ username: "testuser" });
 
     render(<AppSidebarAccount />);
 

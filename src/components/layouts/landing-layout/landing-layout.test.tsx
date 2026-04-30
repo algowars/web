@@ -10,13 +10,6 @@ vi.mock("./footer/landing-footer", () => ({
   default: () => <footer data-testid="landing-footer">Footer</footer>,
 }));
 
-vi.mock(
-  "@/features/auth/account-verification-banner/account-verification-banner",
-  () => ({
-    default: () => <div data-testid="verification-banner">Banner</div>,
-  })
-);
-
 describe("LandingLayout", () => {
   it("renders children content", () => {
     render(
@@ -46,16 +39,6 @@ describe("LandingLayout", () => {
     );
 
     expect(screen.getByTestId("landing-footer")).toBeInTheDocument();
-  });
-
-  it("renders verification banner", () => {
-    render(
-      <LandingLayout>
-        <div>Content</div>
-      </LandingLayout>
-    );
-
-    expect(screen.getByTestId("verification-banner")).toBeInTheDocument();
   });
 
   it("applies mainClassName to main element", () => {

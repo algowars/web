@@ -87,7 +87,7 @@ describe("ProblemActions", () => {
   it("renders Run button", () => {
     setupMocks();
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("button", { name: "Run" })).toBeInTheDocument();
   });
@@ -95,7 +95,7 @@ describe("ProblemActions", () => {
   it("renders Submit button", () => {
     setupMocks();
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
   });
@@ -103,7 +103,7 @@ describe("ProblemActions", () => {
   it("renders View Submissions link", () => {
     setupMocks();
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     const link = screen.getByRole("link", { name: "View Submissions" });
     expect(link).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe("ProblemActions", () => {
   it("disables buttons when code is empty", () => {
     setupMocks({ code: "" });
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("button", { name: "Run" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled();
@@ -122,7 +122,7 @@ describe("ProblemActions", () => {
   it("uses default problemSetupId of 1 when setup is null", () => {
     setupMocks({ setup: null });
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("button", { name: "Run" })).not.toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).not.toBeDisabled();
@@ -131,7 +131,7 @@ describe("ProblemActions", () => {
   it("disables buttons when run mutation is pending", () => {
     setupMocks({}, true, false);
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("button", { name: "Running..." })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled();
@@ -140,7 +140,7 @@ describe("ProblemActions", () => {
   it("disables buttons when submit mutation is pending", () => {
     setupMocks({}, false, true);
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("button", { name: "Run" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Running..." })).toBeDisabled();
@@ -149,7 +149,7 @@ describe("ProblemActions", () => {
   it("shows 'Running...' text when run is pending", () => {
     setupMocks({}, true, false);
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByText("Running...")).toBeInTheDocument();
   });
@@ -157,7 +157,7 @@ describe("ProblemActions", () => {
   it("shows 'Running...' text when submit is pending", () => {
     setupMocks({}, false, true);
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByText("Running...")).toBeInTheDocument();
   });
@@ -167,14 +167,13 @@ describe("ProblemActions", () => {
     mockRunMutateAsync.mockResolvedValue({ submissionId: "123" });
     const user = userEvent.setup();
 
-    render(<ProblemActions accessToken="test-token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     await user.click(screen.getByRole("button", { name: "Run" }));
 
     expect(mockRunMutateAsync).toHaveBeenCalledWith({
       code: "function solution() { return 1; }",
       problemSetupId: 1,
-      accessToken: "test-token",
     });
   });
 
@@ -183,21 +182,20 @@ describe("ProblemActions", () => {
     mockSubmitMutateAsync.mockResolvedValue({ submissionId: "123" });
     const user = userEvent.setup();
 
-    render(<ProblemActions accessToken="test-token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     await user.click(screen.getByRole("button", { name: "Submit" }));
 
     expect(mockSubmitMutateAsync).toHaveBeenCalledWith({
       code: "function solution() { return 1; }",
       problemSetupId: 1,
-      accessToken: "test-token",
     });
   });
 
   it("renders as ul element with list items", () => {
     setupMocks();
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("list")).toBeInTheDocument();
     expect(screen.getAllByRole("listitem")).toHaveLength(3);
@@ -206,7 +204,7 @@ describe("ProblemActions", () => {
   it("buttons are enabled when code and setup are present", () => {
     setupMocks();
 
-    render(<ProblemActions accessToken="token" slug="two-sum" />);
+    render(<ProblemActions slug="two-sum" />);
 
     expect(screen.getByRole("button", { name: "Run" })).not.toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).not.toBeDisabled();
