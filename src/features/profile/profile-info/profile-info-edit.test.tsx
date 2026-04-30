@@ -16,8 +16,9 @@ import { accountStore } from "@/features/account/account-store";
 const mockUseProfileContext = vi.mocked(useProfileContext);
 
 function mockAccount(account: unknown) {
-  (accountStore as unknown as Mock).mockImplementation((selector: (state: { account: unknown }) => unknown) =>
-    selector({ account })
+  (accountStore as unknown as Mock).mockImplementation(
+    (selector: (state: { account: unknown }) => unknown) =>
+      selector({ account })
   );
 }
 

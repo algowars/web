@@ -11,7 +11,9 @@ vi.mock("@/features/auth/api/get-account", () => ({
 }));
 vi.mock("@/features/auth/api/update-username", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("@/features/auth/api/update-username")>();
+    await importOriginal<
+      typeof import("@/features/auth/api/update-username")
+    >();
   return {
     ...actual,
     useUpdateUsername: vi.fn(),

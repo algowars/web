@@ -19,8 +19,9 @@ vi.mock("next/link", () => ({
 }));
 
 function mockAccount(account: unknown) {
-  (accountStore as unknown as Mock).mockImplementation((selector: (state: { account: unknown }) => unknown) =>
-    selector({ account })
+  (accountStore as unknown as Mock).mockImplementation(
+    (selector: (state: { account: unknown }) => unknown) =>
+      selector({ account })
   );
 }
 

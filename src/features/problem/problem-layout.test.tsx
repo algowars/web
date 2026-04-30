@@ -33,18 +33,8 @@ vi.mock("@/components/layouts/sidebar-layout/sidebar-layout", () => ({
 }));
 
 vi.mock("./problem-actions/problem-actions", () => ({
-  default: ({
-    slug,
-    className,
-  }: {
-    slug: string;
-    className?: string;
-  }) => (
-    <div
-      data-testid="problem-actions"
-      data-slug={slug}
-      className={className}
-    >
+  default: ({ slug, className }: { slug: string; className?: string }) => (
+    <div data-testid="problem-actions" data-slug={slug} className={className}>
       Problem Actions
     </div>
   ),

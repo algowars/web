@@ -33,7 +33,13 @@ describe("AccountAlreadyExistsGuard", () => {
 
   it("renders children when account has no username", () => {
     accountStore.setState({
-      account: { id: "1", username: "", createdAt: new Date(), updatedAt: null, usernameLastChangedAt: null },
+      account: {
+        id: "1",
+        username: "",
+        createdAt: new Date(),
+        updatedAt: null,
+        usernameLastChangedAt: null,
+      },
       isLoading: false,
     });
 
@@ -49,7 +55,13 @@ describe("AccountAlreadyExistsGuard", () => {
 
   it("redirects to dashboard when account has a username", () => {
     accountStore.setState({
-      account: { id: "1", username: "testuser", createdAt: new Date(), updatedAt: new Date(), usernameLastChangedAt: new Date() },
+      account: {
+        id: "1",
+        username: "testuser",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        usernameLastChangedAt: new Date(),
+      },
       isLoading: false,
     });
 
@@ -64,7 +76,13 @@ describe("AccountAlreadyExistsGuard", () => {
 
   it("redirects to custom route when specified", () => {
     accountStore.setState({
-      account: { id: "1", username: "testuser", createdAt: new Date(), updatedAt: new Date(), usernameLastChangedAt: new Date() },
+      account: {
+        id: "1",
+        username: "testuser",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        usernameLastChangedAt: new Date(),
+      },
       isLoading: false,
     });
 

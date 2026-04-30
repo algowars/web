@@ -33,7 +33,13 @@ describe("AccountGuard", () => {
 
   it("redirects to dashboard and returns null when account exists", () => {
     accountStore.setState({
-      account: { id: "123", username: "testuser", createdAt: new Date(), updatedAt: null, usernameLastChangedAt: null },
+      account: {
+        id: "123",
+        username: "testuser",
+        createdAt: new Date(),
+        updatedAt: null,
+        usernameLastChangedAt: null,
+      },
       isLoading: false,
     });
 

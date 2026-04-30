@@ -115,7 +115,10 @@ describe("AppSidebarAccount", () => {
   });
 
   it("renders account menu", () => {
-    mockAccount({ username: "testuser", imageUrl: "https://example.com/avatar.jpg" });
+    mockAccount({
+      username: "testuser",
+      imageUrl: "https://example.com/avatar.jpg",
+    });
 
     render(<AppSidebarAccount />);
 
