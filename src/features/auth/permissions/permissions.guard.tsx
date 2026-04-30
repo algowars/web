@@ -22,9 +22,10 @@ export default function PermissionsGuard({
   mode,
 }: PermissionGuardProps) {
   const account = accountStore((state) => state.account);
+  const isLoading = accountStore((state) => state.isLoading);
 
   const isOk = useHasPermissions(account?.permissions, permissions, mode);
-  if (!isOk) {
+  if (!isLoading && !isOk) {
     redirect(routerConfig.home.path);
   }
 

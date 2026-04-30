@@ -1,12 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import PermissionsGuard from "./permissions.guard";
-import { useAccount, AuthStatus } from "../account.context";
+import { accountStore } from "@/features/account/account-store";
 import { useHasPermissions } from "@/hooks/use-has-permissions";
 import { Permissions } from "./models/permissions";
 import { redirect } from "next/navigation";
-
-vi.mock("../account.context");
+import { Mock } from "vitest";
 
 vi.mock("@/hooks/use-has-permissions", () => ({
   useHasPermissions: vi.fn(),
@@ -29,13 +28,13 @@ vi.mock("@/router-config", () => ({
 describe("PermissionsGuard", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    accountStore.setState({ account: null, isLoading: false });
   });
 
   it("renders children when user has required permissions", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { permissions: [Permissions.CreateProblem] },
-      isPending: false,
-      authStatus: AuthStatus.FULLY_AUTHENTICATED,
+    accountStore.setState({
+      account: { id: "1", username: "user", createdAt: new Date(), updatedAt: null, usernameLastChangedAt: null, permissions: [Permissions.CreateProblem] },
+      isLoading: false,
     });
     (useHasPermissions as Mock).mockReturnValue(true);
 
@@ -49,12 +48,8 @@ describe("PermissionsGuard", () => {
     expect(redirect).not.toHaveBeenCalled();
   });
 
-  it("renders children when isPending is true even without permissions", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: null,
-      isPending: true,
-      authStatus: AuthStatus.UNAUTHENTICATED,
-    });
+  it("does not redirect while store is still loading", () => {
+    accountStore.setState({ account: null, isLoading: true });
     (useHasPermissions as Mock).mockReturnValue(false);
 
     render(
@@ -67,29 +62,10 @@ describe("PermissionsGuard", () => {
     expect(redirect).not.toHaveBeenCalled();
   });
 
-  it("renders children when PARTIALLY_AUTHENTICATED even without permissions", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: null,
-      isPending: false,
-      authStatus: AuthStatus.PARTIALLY_AUTHENTICATED,
-    });
-    (useHasPermissions as Mock).mockReturnValue(false);
-
-    render(
-      <PermissionsGuard permissions={[Permissions.CreateProblem]}>
-        <div>Protected Content</div>
-      </PermissionsGuard>
-    );
-
-    expect(screen.getByText("Protected Content")).toBeInTheDocument();
-    expect(redirect).not.toHaveBeenCalled();
-  });
-
-  it("redirects to home when user lacks permissions and not pending", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { permissions: [] },
-      isPending: false,
-      authStatus: AuthStatus.FULLY_AUTHENTICATED,
+  it("redirects to home when user lacks permissions and store is not loading", () => {
+    accountStore.setState({
+      account: { id: "1", username: "user", createdAt: new Date(), updatedAt: null, usernameLastChangedAt: null, permissions: [] },
+      isLoading: false,
     });
     (useHasPermissions as Mock).mockReturnValue(false);
 
@@ -102,12 +78,8 @@ describe("PermissionsGuard", () => {
     expect(redirect).toHaveBeenCalledWith("/");
   });
 
-  it("redirects when UNAUTHENTICATED and lacking permissions", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: null,
-      isPending: false,
-      authStatus: AuthStatus.UNAUTHENTICATED,
-    });
+  it("redirects when unauthenticated and store is not loading", () => {
+    accountStore.setState({ account: null, isLoading: false });
     (useHasPermissions as Mock).mockReturnValue(false);
 
     render(
@@ -120,12 +92,9 @@ describe("PermissionsGuard", () => {
   });
 
   it("passes permissions and mode to useHasPermissions hook", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {
-        permissions: [Permissions.CreateProblem, Permissions.ReadProblem],
-      },
-      isPending: false,
-      authStatus: AuthStatus.FULLY_AUTHENTICATED,
+    accountStore.setState({
+      account: { id: "1", username: "user", createdAt: new Date(), updatedAt: null, usernameLastChangedAt: null, permissions: [Permissions.CreateProblem, Permissions.ReadProblem] },
+      isLoading: false,
     });
     (useHasPermissions as Mock).mockReturnValue(true);
 
@@ -146,10 +115,9 @@ describe("PermissionsGuard", () => {
   });
 
   it("renders children with default empty permissions", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: { permissions: [] },
-      isPending: false,
-      authStatus: AuthStatus.FULLY_AUTHENTICATED,
+    accountStore.setState({
+      account: { id: "1", username: "user", createdAt: new Date(), updatedAt: null, usernameLastChangedAt: null, permissions: [] },
+      isLoading: false,
     });
     (useHasPermissions as Mock).mockReturnValue(true);
 

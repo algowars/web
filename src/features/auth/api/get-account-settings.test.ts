@@ -16,22 +16,14 @@ describe("getAccountSettings", () => {
     vi.clearAllMocks();
   });
 
-  it("returns null when accessToken is empty", async () => {
-    const result = await getAccountSettings({ accessToken: "" });
-
-    expect(result).toBeNull();
-    expect(api.get).not.toHaveBeenCalled();
-  });
-
-  it("calls api.get with correct parameters when accessToken provided", async () => {
+  it("calls api.get with correct url", async () => {
     const mockSettings = { theme: "dark", notifications: true };
     (api.get as Mock).mockResolvedValue(mockSettings);
 
-    const result = await getAccountSettings({ accessToken: "valid-token" });
+    const result = await getAccountSettings();
 
     expect(api.get).toHaveBeenCalledWith({
       url: "/api/v1/account/find/settings",
-      accessToken: "valid-token",
     });
     expect(result).toEqual(mockSettings);
   });
@@ -39,13 +31,13 @@ describe("getAccountSettings", () => {
 
 describe("getAccountSettingsQueryOptions", () => {
   it("returns query options with correct queryKey", () => {
-    const options = getAccountSettingsQueryOptions("test-token");
+    const options = getAccountSettingsQueryOptions();
 
-    expect(options.queryKey).toEqual(["account", "test-token"]);
+    expect(options.queryKey).toEqual(["account-settings"]);
   });
 
   it("returns query options with queryFn", () => {
-    const options = getAccountSettingsQueryOptions("test-token");
+    const options = getAccountSettingsQueryOptions();
 
     expect(options.queryFn).toBeDefined();
     expect(typeof options.queryFn).toBe("function");
