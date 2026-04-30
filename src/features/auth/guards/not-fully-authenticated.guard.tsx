@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAccount } from "../account.context";
+import { accountStore } from "@/features/account/account-store";
 import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";
 
 export const AccountGuard: React.FC<{ children?: React.ReactNode }> = ({
   children,
 }) => {
-  const account = useAccount();
+  const account = accountStore((state) => state.account);
 
   useEffect(() => {
     if (account) {

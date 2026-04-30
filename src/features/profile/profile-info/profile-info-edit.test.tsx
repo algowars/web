@@ -1,20 +1,26 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import ProfileInfoEdit from "./profile-info-edit";
 
 vi.mock("../profile-context", () => ({
   useProfileContext: vi.fn(),
 }));
 
-vi.mock("@/features/auth/account.context", () => ({
-  useAccount: vi.fn(),
+vi.mock("@/features/account/account-store", () => ({
+  accountStore: vi.fn(),
 }));
 
 import { useProfileContext } from "../profile-context";
-import { useAccount } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 
 const mockUseProfileContext = vi.mocked(useProfileContext);
-const mockUseAccount = vi.mocked(useAccount);
+
+function mockAccount(account: unknown) {
+  (accountStore as unknown as Mock).mockImplementation(
+    (selector: (state: { account: unknown }) => unknown) =>
+      selector({ account })
+  );
+}
 
 describe("ProfileInfoEdit", () => {
   beforeEach(() => {
@@ -25,9 +31,7 @@ describe("ProfileInfoEdit", () => {
     mockUseProfileContext.mockReturnValue({
       profileAggregate: null,
     } as ReturnType<typeof useProfileContext>);
-    mockUseAccount.mockReturnValue({
-      account: { username: "testuser" },
-    } as ReturnType<typeof useAccount>);
+    mockAccount({ username: "testuser" });
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
@@ -39,9 +43,7 @@ describe("ProfileInfoEdit", () => {
         profile: { username: "testuser" },
       },
     } as unknown as ReturnType<typeof useProfileContext>);
-    mockUseAccount.mockReturnValue({
-      account: null,
-    } as ReturnType<typeof useAccount>);
+    mockAccount(null);
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
@@ -53,9 +55,7 @@ describe("ProfileInfoEdit", () => {
         profile: { username: "testuser" },
       },
     } as unknown as ReturnType<typeof useProfileContext>);
-    mockUseAccount.mockReturnValue({
-      account: { username: undefined },
-    } as unknown as ReturnType<typeof useAccount>);
+    mockAccount({ username: undefined });
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
@@ -67,9 +67,7 @@ describe("ProfileInfoEdit", () => {
         profile: { username: "profileowner" },
       },
     } as unknown as ReturnType<typeof useProfileContext>);
-    mockUseAccount.mockReturnValue({
-      account: { username: "differentuser" },
-    } as ReturnType<typeof useAccount>);
+    mockAccount({ username: "differentuser" });
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
@@ -81,9 +79,7 @@ describe("ProfileInfoEdit", () => {
         profile: { username: "testuser" },
       },
     } as unknown as ReturnType<typeof useProfileContext>);
-    mockUseAccount.mockReturnValue({
-      account: { username: "testuser" },
-    } as ReturnType<typeof useAccount>);
+    mockAccount({ username: "testuser" });
 
     render(<ProfileInfoEdit />);
 

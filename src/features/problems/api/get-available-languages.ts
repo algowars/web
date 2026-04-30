@@ -3,31 +3,28 @@ import { Language } from "../models/language";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 
-export const getAvailableLanguages = (accessToken: string) => {
+export const getAvailableLanguages = () => {
   return api.get<Language[]>({
     url: "/api/v1/problem/languages",
-    accessToken,
   });
 };
 
-export const getAvailableLanguagesQueryOptions = (accessToken: string) => {
+export const getAvailableLanguagesQueryOptions = () => {
   return queryOptions({
-    queryKey: ["languages", accessToken],
-    queryFn: () => getAvailableLanguages(accessToken),
+    queryKey: ["languages"],
+    queryFn: () => getAvailableLanguages(),
   });
 };
 
 type useAvailableLanguagesOptions = {
-  accessToken: string;
   queryConfig?: QueryConfig<typeof getAvailableLanguagesQueryOptions>;
 };
 
 export const useAvailableLanguages = ({
-  accessToken,
   queryConfig = {},
-}: useAvailableLanguagesOptions) => {
+}: useAvailableLanguagesOptions = {}) => {
   return useQuery({
-    ...getAvailableLanguagesQueryOptions(accessToken),
+    ...getAvailableLanguagesQueryOptions(),
     ...queryConfig,
   });
 };

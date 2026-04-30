@@ -2,14 +2,14 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import { useProfileContext } from "../profile-context";
-import { useAccount } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 import Link from "next/link";
 import { routerConfig } from "@/router-config";
 import { cn } from "@/lib/utils";
 
 export default function ProfileInfoEdit() {
   const { profileAggregate } = useProfileContext();
-  const { account } = useAccount();
+  const account = accountStore((state) => state.account);
 
   const isOwner = profileAggregate?.profile.username === account?.username;
 

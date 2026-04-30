@@ -4,32 +4,25 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import z from "zod";
 import { Account } from "../models/account.model";
 
-export const createAccountSchema = z.object({
+export const updateUsernameSchema = z.object({
   username: z.string().min(1, {
     message: "Username must be at least 1 characters.",
   }),
-  imageUrl: z.string().optional(),
 });
 
-export type CreateAccountInput = z.infer<typeof createAccountSchema>;
+export type UpdateUsernameInput = z.infer<typeof updateUsernameSchema>;
 
-export const createAccount = ({
-  data,
-  accessToken,
-}: {
-  data: CreateAccountInput;
-  accessToken: string;
-}) => {
-  return api.post<Account>({ url: "/api/v1/account", body: data, accessToken });
+export const updateUsername = ({ data }: { data: UpdateUsernameInput }) => {
+  return api.put<Account>({ url: "/api/v1/account/username", body: data });
 };
 
-type UseCreateAccountOptions = {
-  mutationConfig?: MutationConfig<typeof createAccount>;
+type UseUpdateUsernameOptions = {
+  mutationConfig?: MutationConfig<typeof updateUsername>;
 };
 
-export const useCreateAccount = ({
+export const useUpdateUsername = ({
   mutationConfig,
-}: UseCreateAccountOptions = {}) => {
+}: UseUpdateUsernameOptions = {}) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
@@ -37,11 +30,11 @@ export const useCreateAccount = ({
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: ["create-account"],
+        queryKey: ["account"],
       });
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: createAccount,
+    mutationFn: updateUsername,
   });
 };

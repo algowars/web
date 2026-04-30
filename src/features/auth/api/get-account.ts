@@ -3,35 +3,32 @@ import { Account } from "../models/account.model";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 
-export const getAccount = ({ accessToken }: { accessToken: string }) => {
-  if (!accessToken) {
-    return null;
-  }
-
+export const getAccount = () => {
+  console.log("QUERYING");
   return api.get<Account | null>({
     url: "/api/v1/account/find/profile",
-    accessToken,
   });
 };
 
-export const getAccountQueryOptions = (accessToken: string) => {
+export const getAccountQueryOptions = () => {
   return queryOptions({
-    queryKey: ["account", accessToken],
-    queryFn: () => getAccount({ accessToken }),
+    queryKey: ["account"],
+    queryFn: () => getAccount(),
   });
 };
 
 type UseAccountOptions = {
-  accessToken: string;
+  enabled?: boolean;
   queryConfig?: QueryConfig<typeof getAccountQueryOptions>;
 };
 
 export const useAccount = ({
-  accessToken,
+  enabled = true,
   queryConfig = {},
-}: UseAccountOptions) => {
+}: UseAccountOptions = {}) => {
   return useQuery({
-    ...getAccountQueryOptions(accessToken),
+    ...getAccountQueryOptions(),
+    enabled,
     ...queryConfig,
   });
 };

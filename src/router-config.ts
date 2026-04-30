@@ -54,7 +54,7 @@ export const routerConfig = Object.freeze({
   authLogIn: { path: "/auth/login?returnTo=/account/callback" },
   authLogOut: { path: "/auth/logout" },
   authSignUp: {
-    path: "/auth/login?screen_hint=signup&returnTo=/account/callback",
+    path: "/auth/login?screen_hint=signup&returnTo=/account/setup",
   },
   leaderboard: { path: "/leaderboard" },
   contact: { path: "/contact" },
