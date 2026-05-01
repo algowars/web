@@ -12,23 +12,24 @@ import {
 import { routerConfig } from "@/router-config";
 import { BookOpenText, LayoutDashboard, Puzzle } from "lucide-react";
 import React from "react";
-import { useAccount } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 import { Command } from "@/components/ui/command";
 import Link from "next/link";
 import { SidebarMainNav } from "./sidebar-main-nav";
-import { AuthComponentGuard } from "@/features/auth/guards/auth-component.guard";
 import { UnauthenticatedAccount } from "./unauthenticated-account";
-import { PartiallyAuthenticatedAccount } from "./partially-authenticated-account";
 import { AppSidebarAccount } from "./app-sidebar-account";
 import { Permissions } from "@/features/auth/permissions/models/permissions";
+import { Skeleton } from "@/components/ui/skeleton";
+
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
-  const { isAuthenticated, account } = useAccount();
+  const account = accountStore((state) => state.account);
+  const isLoading = accountStore((state) => state.isLoading);
   const data = {
     navMain: [
       {
-        title: isAuthenticated ? "Dashboard" : "Home",
+        title: account !== null ? "Dashboard" : "Home",
         url: routerConfig.dashboard.path,
         icon: LayoutDashboard,
         isActive: true,
@@ -47,6 +48,30 @@ export default function AppSidebar(
       },
     ],
   };
+
+  function renderFooter() {
+    if (isLoading) {
+      return (
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" disabled>
+              <Skeleton className="h-8 w-8 rounded-lg" />
+              <div className="grid flex-1 gap-1">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      );
+    }
+
+    if (account === null) {
+      return <UnauthenticatedAccount />;
+    }
+
+    return <AppSidebarAccount />;
+  }
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -76,14 +101,7 @@ export default function AppSidebar(
           />
         ) : null}
       </SidebarContent>
-      <SidebarFooter>
-        <AuthComponentGuard
-          unauthenticated={<UnauthenticatedAccount />}
-          partiallyAuthenticated={<PartiallyAuthenticatedAccount />}
-        >
-          <AppSidebarAccount />
-        </AuthComponentGuard>
-      </SidebarFooter>
+      <SidebarFooter>{renderFooter()}</SidebarFooter>
     </Sidebar>
   );
 }

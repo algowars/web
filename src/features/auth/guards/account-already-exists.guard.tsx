@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { AuthStatus, useAccount } from "../account.context";
+import { accountStore } from "@/features/account/account-store";
 import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";
 
@@ -12,13 +12,13 @@ export function AccountAlreadyExistsGuard({
   children: React.ReactNode;
   redirectRoute?: string;
 }) {
-  const { authStatus } = useAccount();
+  const account = accountStore((state) => state.account);
 
   useEffect(() => {
-    if (authStatus === AuthStatus.FULLY_AUTHENTICATED) {
+    if (account?.username) {
       redirect(redirectRoute);
     }
-  }, [authStatus, redirectRoute]);
+  }, [account, redirectRoute]);
 
   return children;
 }

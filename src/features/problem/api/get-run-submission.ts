@@ -5,40 +5,32 @@ import { QueryConfig } from "@/lib/react-query";
 
 export const getRunSubmission = async ({
   submissionId,
-  accessToken,
 }: {
   submissionId: string;
-  accessToken: string;
 }): Promise<RunResult | null> => {
   return api.get<RunResult>({
     url: `/api/v1/submission/run/${encodeURIComponent(submissionId)}`,
-    accessToken,
   });
 };
 
-export const getRunSubmissionQueryOptions = (
-  submissionId: string,
-  accessToken: string
-) => {
+export const getRunSubmissionQueryOptions = (submissionId: string) => {
   return {
     queryKey: ["run-submission", submissionId],
-    queryFn: () => getRunSubmission({ submissionId, accessToken }),
+    queryFn: () => getRunSubmission({ submissionId }),
   };
 };
 
 type UseGetRunSubmissionOptions = {
   submissionId: string;
-  accessToken: string;
   queryConfig?: QueryConfig<typeof getRunSubmissionQueryOptions>;
 };
 
 export const useGetRunSubmission = ({
   submissionId,
-  accessToken,
   queryConfig,
 }: UseGetRunSubmissionOptions) => {
   return useQuery({
-    ...getRunSubmissionQueryOptions(submissionId, accessToken),
+    ...getRunSubmissionQueryOptions(submissionId),
     ...queryConfig,
   });
 };

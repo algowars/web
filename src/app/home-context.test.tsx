@@ -1,20 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, Mock } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import HomeContext from "./home-context";
-import { AuthStatus, useAccount } from "@/features/auth/account.context";
 
-vi.mock("@/features/auth/account.context", () => ({
-  AuthStatus: {
-    FULLY_AUTHENTICATED: "FULLY_AUTHENTICATED",
-    UNAUTHENTICATED: "UNAUTHENTICATED",
+vi.mock("@/lib/auth0", () => ({
+  auth0: {
+    getSession: vi.fn(),
   },
-  useAccount: vi.fn(),
-}));
-
-vi.mock("@/components/loader/page-loader/page-loader", () => ({
-  default: ({ message }: { message: string }) => (
-    <div data-testid="page-loader">{message}</div>
-  ),
 }));
 
 vi.mock("@/features/dashboard/dashboard", () => ({
@@ -25,37 +16,23 @@ vi.mock("@/features/landing/landing", () => ({
   default: () => <div data-testid="landing">Landing</div>,
 }));
 
+import { auth0 } from "@/lib/auth0";
+
 describe("HomeContext", () => {
-  it("shows PageLoader when pending", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      isPending: true,
-    });
+  it("shows Dashboard when session exists", async () => {
+    vi.mocked(auth0.getSession).mockResolvedValue({
+      user: { sub: "auth0|123" },
+    } as Awaited<ReturnType<typeof auth0.getSession>>);
 
-    render(<HomeContext />);
-
-    expect(screen.getByTestId("page-loader")).toBeInTheDocument();
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
-  });
-
-  it("shows Dashboard when fully authenticated", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.FULLY_AUTHENTICATED,
-      isPending: false,
-    });
-
-    render(<HomeContext />);
+    render(await HomeContext());
 
     expect(screen.getByTestId("dashboard")).toBeInTheDocument();
   });
 
-  it("shows Landing when not authenticated", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      isPending: false,
-    });
+  it("shows Landing when no session", async () => {
+    vi.mocked(auth0.getSession).mockResolvedValue(null);
 
-    render(<HomeContext />);
+    render(await HomeContext());
 
     expect(screen.getByTestId("landing")).toBeInTheDocument();
   });

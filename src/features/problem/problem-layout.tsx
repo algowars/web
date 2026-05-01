@@ -12,13 +12,9 @@ import ProblemCodeEditorLanguageSelect from "./problem-editor/problem-editor-lan
 
 type ProblemLayoutProps = {
   problem: Problem;
-  accessToken?: string;
 };
 
-export default function ProblemLayout({
-  problem,
-  accessToken,
-}: ProblemLayoutProps) {
+export default function ProblemLayout({ problem }: ProblemLayoutProps) {
   const languageVersion = useProblemEditorStore((s) => s.getLanguageVersion());
   const setProblem = useProblemEditorStore((s) => s.setProblem);
   const setSetup = useProblemEditorStore((s) => s.setSetup);
@@ -57,7 +53,6 @@ export default function ProblemLayout({
         <div className="px-1 py-1 flex flex-1 gap-3 w-fit">
           <ProblemActions
             className="flex items-center gap-2 ml-auto"
-            accessToken={accessToken ?? ""}
             slug={problem.slug}
           />
           <ProblemCodeEditorLanguageSelect className="ml-auto" />

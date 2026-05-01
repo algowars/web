@@ -8,12 +8,10 @@ import { routerConfig } from "@/router-config";
 import { cn } from "@/lib/utils";
 
 type ProblemActionsProps = React.HTMLAttributes<HTMLUListElement> & {
-  accessToken: string;
   slug: string;
 };
 
 export default function ProblemActions({
-  accessToken,
   slug,
   ...props
 }: ProblemActionsProps) {
@@ -32,7 +30,6 @@ export default function ProblemActions({
       const result = await runSubmissionMutation.mutateAsync({
         code,
         problemSetupId,
-        accessToken,
       });
       toast.success("Submission created");
       setLastRunResult(result);
@@ -47,7 +44,6 @@ export default function ProblemActions({
       const result = await submitSubmissionMutation.mutateAsync({
         code,
         problemSetupId,
-        accessToken,
       });
       setLastRunResult(result);
       toast.success("Submission created");

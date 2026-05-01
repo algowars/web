@@ -1,10 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import ProblemManagementHeader from "./problem-management-header";
-import { useAccount } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 import { Permissions } from "@/features/auth/permissions/models/permissions";
 
-vi.mock("@/features/auth/account.context");
+vi.mock("@/features/account/account-store", () => ({
+  accountStore: vi.fn(),
+}));
 
 vi.mock("next/link", () => ({
   default: ({
@@ -16,15 +18,20 @@ vi.mock("next/link", () => ({
   }) => <a href={href}>{children}</a>,
 }));
 
+function mockAccount(account: unknown) {
+  (accountStore as unknown as Mock).mockImplementation(
+    (selector: (state: { account: unknown }) => unknown) =>
+      selector({ account })
+  );
+}
+
 describe("ProblemManagementHeader", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("renders header title and description", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: null,
-    });
+    mockAccount(null);
 
     render(<ProblemManagementHeader />);
 
@@ -33,14 +40,12 @@ describe("ProblemManagementHeader", () => {
   });
 
   it("shows Create link when user has CreateProblem permission", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {
-        id: "1",
-        username: "testuser",
-        createdAt: new Date(),
-        updatedAt: null,
-        permissions: [Permissions.CreateProblem],
-      },
+    mockAccount({
+      id: "1",
+      username: "testuser",
+      createdAt: new Date(),
+      updatedAt: null,
+      permissions: [Permissions.CreateProblem],
     });
 
     render(<ProblemManagementHeader />);
@@ -51,14 +56,12 @@ describe("ProblemManagementHeader", () => {
   });
 
   it("hides Create link when user does not have CreateProblem permission", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {
-        id: "1",
-        username: "testuser",
-        createdAt: new Date(),
-        updatedAt: null,
-        permissions: [],
-      },
+    mockAccount({
+      id: "1",
+      username: "testuser",
+      createdAt: new Date(),
+      updatedAt: null,
+      permissions: [],
     });
 
     render(<ProblemManagementHeader />);
@@ -69,14 +72,12 @@ describe("ProblemManagementHeader", () => {
   });
 
   it("hides Create link when user has no permissions", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {
-        id: "1",
-        username: "testuser",
-        createdAt: new Date(),
-        updatedAt: null,
-        permissions: undefined,
-      },
+    mockAccount({
+      id: "1",
+      username: "testuser",
+      createdAt: new Date(),
+      updatedAt: null,
+      permissions: undefined,
     });
 
     render(<ProblemManagementHeader />);
@@ -87,9 +88,7 @@ describe("ProblemManagementHeader", () => {
   });
 
   it("hides Create link when account is null", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: null,
-    });
+    mockAccount(null);
 
     render(<ProblemManagementHeader />);
 
@@ -99,9 +98,7 @@ describe("ProblemManagementHeader", () => {
   });
 
   it("hides Create link when account is undefined", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: undefined,
-    });
+    mockAccount(undefined);
 
     render(<ProblemManagementHeader />);
 
@@ -111,14 +108,12 @@ describe("ProblemManagementHeader", () => {
   });
 
   it("shows Create link when user has multiple permissions including CreateProblem", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {
-        id: "1",
-        username: "testuser",
-        createdAt: new Date(),
-        updatedAt: null,
-        permissions: [Permissions.ReadProblem, Permissions.CreateProblem],
-      },
+    mockAccount({
+      id: "1",
+      username: "testuser",
+      createdAt: new Date(),
+      updatedAt: null,
+      permissions: [Permissions.ReadProblem, Permissions.CreateProblem],
     });
 
     render(<ProblemManagementHeader />);
@@ -127,14 +122,12 @@ describe("ProblemManagementHeader", () => {
   });
 
   it("hides Create link when user has only ReadProblem permission", () => {
-    (useAccount as Mock).mockReturnValue({
-      account: {
-        id: "1",
-        username: "testuser",
-        createdAt: new Date(),
-        updatedAt: null,
-        permissions: [Permissions.ReadProblem],
-      },
+    mockAccount({
+      id: "1",
+      username: "testuser",
+      createdAt: new Date(),
+      updatedAt: null,
+      permissions: [Permissions.ReadProblem],
     });
 
     render(<ProblemManagementHeader />);

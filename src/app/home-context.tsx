@@ -1,19 +1,10 @@
-"use client";
-
-import PageLoader from "@/components/loader/page-loader/page-loader";
-import { AuthStatus, useAccount } from "@/features/auth/account.context";
 import Dashboard from "@/features/dashboard/dashboard";
 import Landing from "@/features/landing/landing";
-import React from "react";
+import { auth0 } from "@/lib/auth0";
 
-export default function HomeContext() {
-  const { authStatus, isPending } = useAccount();
-
-  if (isPending) {
-    return <PageLoader message="Loading..." />;
-  }
-
-  if (authStatus === AuthStatus.FULLY_AUTHENTICATED) {
+export default async function HomeContext() {
+  const session = await auth0.getSession();
+  if (session?.user) {
     return <Dashboard />;
   }
 
