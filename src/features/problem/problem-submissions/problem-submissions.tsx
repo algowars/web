@@ -1,94 +1,76 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Spinner } from "@/components/ui/spinner";
-import { useProblemSubmissions } from "@/features/problem/api/get-problem-submissions";
-import { AlertTriangle } from "lucide-react";
-import { useEffect } from "react";
+import React, { useCallback } from "react";
 import { useProblemSubmissionsStore } from "./problem-submissions-store";
+import SubmissionCard from "./submission-card";
+import { Button } from "@/components/ui/button";
+import { useUser } from "@auth0/nextjs-auth0";
 
-export default function ProblemSubmissions() {
-  const problem = useProblemSubmissionsStore((s) => s.problem);
+type ProblemSubmissionsProps = React.ComponentProps<typeof Card> & {
+  isLoading?: boolean;
+};
+
+export default function ProblemSubmissions({
+  isLoading,
+  ...props
+}: ProblemSubmissionsProps) {
+  const { user } = useUser();
   const submissions = useProblemSubmissionsStore((s) => s.submissions);
-  const setSubmissions = useProblemSubmissionsStore((s) => s.setSubmissions);
+  const filterMode = useProblemSubmissionsStore((s) => s.filterMode);
+  const setFilterMode = useProblemSubmissionsStore((s) => s.setFilterMode);
 
-  const { data, isLoading, isError, error } = useProblemSubmissions({
-    problemId: problem?.id,
-    queryConfig: {
-      enabled: !!problem?.id,
+  const handleFilterChange = useCallback(
+    (mode: "all" | "mine") => {
+      setFilterMode(mode);
     },
-  });
-
-  useEffect(() => {
-    setSubmissions(data?.submissions ?? []);
-  }, [data?.submissions, setSubmissions]);
-
-  if (!problem) {
-    return null;
-  }
-
-  if (isError) {
-    return (
-      <Alert variant="destructive">
-        <AlertTriangle />
-        <AlertTitle>Error loading submissions</AlertTitle>
-        <AlertDescription>
-          {error instanceof Error
-            ? error.message
-            : "An unexpected error occurred while loading submissions."}
-        </AlertDescription>
-      </Alert>
-    );
-  }
+    [setFilterMode]
+  );
 
   return (
-    <Card>
+    <Card {...props}>
       <CardHeader>
-        <CardTitle>Submissions</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>Solutions</CardTitle>
+          <div className="flex gap-2">
+            <Button
+              variant={filterMode === "all" ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleFilterChange("all")}
+            >
+              All Solutions
+            </Button>
+            <Button
+              variant={filterMode === "mine" ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleFilterChange("mine")}
+              disabled={!user}
+            >
+              My Solutions
+            </Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
-        <Table aria-busy={isLoading} aria-live="polite">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Submission ID</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell className="h-24">
-                  <div className="flex items-center gap-3 text-muted-foreground">
-                    <Spinner className="size-4" />
-                    <span>Loading submissions...</span>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : submissions.length === 0 ? (
-              <TableRow>
-                <TableCell className="h-24 text-muted-foreground">
-                  No submissions yet.
-                </TableCell>
-              </TableRow>
-            ) : (
-              submissions.map((submission) => (
-                <TableRow key={submission.id}>
-                  <TableCell className="font-mono text-xs sm:text-sm">
-                    {submission.id}
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+        {isLoading ? (
+          <div className="flex items-center gap-3 text-muted-foreground py-8">
+            <Spinner className="size-4" />
+            <span>Loading solutions...</span>
+          </div>
+        ) : submissions.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            {filterMode === "mine"
+              ? "You haven't submitted any accepted solutions yet."
+              : "No accepted solutions yet."}
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {submissions.map((submission) => (
+              <SubmissionCard key={submission.id} submission={submission} />
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
