@@ -24,7 +24,7 @@ export const generateMetadata = async ({
   };
 };
 
-const preloadData = async (slug: string) => {
+export const preloadData = async (slug: string) => {
   const queryClient = new QueryClient();
 
   await Promise.all([
