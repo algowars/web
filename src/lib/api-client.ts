@@ -71,9 +71,18 @@ const createApiClient = (): AxiosInstance => {
     if (typeof window === "undefined") {
       const cookieHeader = await getServerCookies();
       if (cookieHeader) config.headers.Cookie = cookieHeader;
-    } else if (!config.headers.Authorization) {
-      const token = await getAccessToken();
-      if (token) config.headers.Authorization = `Bearer ${token}`;
+
+      const { auth0 } = await import("@/lib/auth0");
+      try {
+        const { token } = await auth0.getAccessToken();
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+      } catch {}
+    } else {
+      const { getAccessToken } = await import("@auth0/nextjs-auth0");
+      try {
+        const token = await getAccessToken();
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+      } catch {}
     }
 
     return config;

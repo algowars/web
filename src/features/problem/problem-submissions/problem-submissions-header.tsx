@@ -7,8 +7,13 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import MarkdownSafe from "@/components/markdown/markdown";
+import React from "react";
 
-export default function ProblemSubmissionsHeader() {
+type ProblemSubmissionsHeaderProps = React.ComponentProps<typeof Card>;
+
+export default function ProblemSubmissionsHeader(
+  props: ProblemSubmissionsHeaderProps
+) {
   const problem = useProblemSubmissionsStore((s) => s.problem);
 
   if (!problem) {
@@ -16,7 +21,7 @@ export default function ProblemSubmissionsHeader() {
   }
 
   return (
-    <Card>
+    <Card {...props}>
       <CardHeader>
         <CardTitle>{problem.title}</CardTitle>
       </CardHeader>
