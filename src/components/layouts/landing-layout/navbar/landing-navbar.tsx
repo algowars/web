@@ -4,7 +4,7 @@ import AppLogo from "@/components/logos/app-logo";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { routerConfig } from "@/router-config";
 import Link from "next/link";
-import { useAccount, AuthStatus } from "@/features/auth/account.context";
+import { accountStore } from "@/features/account/account-store";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { LogOut, Menu, User } from "lucide-react";
 import {
@@ -29,9 +29,9 @@ import {
 } from "@/components/ui/sheet";
 
 function AuthButtons() {
-  const { authStatus, account } = useAccount();
+  const account = accountStore((state) => state.account);
 
-  if (authStatus === AuthStatus.UNAUTHENTICATED) {
+  if (!account) {
     return (
       <div className="flex items-center gap-2">
         <AuthLoginButton
@@ -54,65 +54,58 @@ function AuthButtons() {
     );
   }
 
-  if (
-    authStatus === AuthStatus.FULLY_AUTHENTICATED ||
-    authStatus === AuthStatus.PARTIALLY_AUTHENTICATED
-  ) {
-    const displayName = account?.username ?? "User";
-    const userInitials = displayName.slice(0, 2).toUpperCase();
+  const displayName = account?.username ?? "User";
+  const userInitials = displayName.slice(0, 2).toUpperCase();
 
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button
-            variant="ghost"
-            className="relative h-8 w-8 rounded-full"
-            data-cy="account-dropdown-trigger"
-            asChild
-          >
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={account?.imageUrl} alt={displayName} />
-              <AvatarFallback>{userInitials}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{displayName}</p>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          {account?.username ? (
-            <DropdownMenuItem asChild>
-              <Link
-                href={routerConfig.profile.execute({
-                  username: account.username,
-                })}
-                className="flex items-center"
-              >
-                <User className="mr-2 h-4 w-4" />
-                Profile
-              </Link>
-            </DropdownMenuItem>
-          ) : null}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            asChild
-            className="text-destructive"
-            data-cy="logout-btn"
-          >
-            <AuthLogout>
-              <LogOut className="mr-2 h-4 w-4" />
-              Log out
-            </AuthLogout>
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button
+          variant="ghost"
+          className="relative h-8 w-8 rounded-full"
+          data-cy="account-dropdown-trigger"
+          asChild
+        >
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={account?.imageUrl} alt={displayName} />
+            <AvatarFallback>{userInitials}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{displayName}</p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {account?.username ? (
+          <DropdownMenuItem asChild>
+            <Link
+              href={routerConfig.profile.execute({
+                username: account.username,
+              })}
+              className="flex items-center"
+            >
+              <User className="mr-2 h-4 w-4" />
+              Profile
+            </Link>
           </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  }
-
-  return null;
+        ) : null}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          asChild
+          className="text-destructive"
+          data-cy="logout-btn"
+        >
+          <AuthLogout>
+            <LogOut className="mr-2 h-4 w-4" />
+            Log out
+          </AuthLogout>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 export default function LandingNavbar() {

@@ -13,22 +13,14 @@ describe("getAccount", () => {
     vi.clearAllMocks();
   });
 
-  it("returns null when accessToken is empty", async () => {
-    const result = await getAccount({ accessToken: "" });
-
-    expect(result).toBeNull();
-    expect(api.get).not.toHaveBeenCalled();
-  });
-
-  it("calls api.get with correct parameters when accessToken provided", async () => {
+  it("calls api.get with correct url", async () => {
     const mockAccount = { id: "123", username: "testuser" };
     (api.get as Mock).mockResolvedValue(mockAccount);
 
-    const result = await getAccount({ accessToken: "valid-token" });
+    const result = await getAccount();
 
     expect(api.get).toHaveBeenCalledWith({
       url: "/api/v1/account/find/profile",
-      accessToken: "valid-token",
     });
     expect(result).toEqual(mockAccount);
   });
@@ -36,13 +28,13 @@ describe("getAccount", () => {
 
 describe("getAccountQueryOptions", () => {
   it("returns query options with correct queryKey", () => {
-    const options = getAccountQueryOptions("test-token");
+    const options = getAccountQueryOptions();
 
-    expect(options.queryKey).toEqual(["account", "test-token"]);
+    expect(options.queryKey).toEqual(["account"]);
   });
 
   it("returns query options with queryFn", () => {
-    const options = getAccountQueryOptions("test-token");
+    const options = getAccountQueryOptions();
 
     expect(options.queryFn).toBeDefined();
     expect(typeof options.queryFn).toBe("function");

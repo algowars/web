@@ -3,39 +3,28 @@ import { AccountSettingsAggregateModel } from "../models/account-settings-aggreg
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 
-export const getAccountSettings = ({
-  accessToken,
-}: {
-  accessToken: string;
-}) => {
-  if (!accessToken) {
-    return null;
-  }
-
+export const getAccountSettings = () => {
   return api.get<AccountSettingsAggregateModel | null>({
     url: "/api/v1/account/find/settings",
-    accessToken,
   });
 };
 
-export const getAccountSettingsQueryOptions = (accessToken: string) => {
+export const getAccountSettingsQueryOptions = () => {
   return queryOptions({
-    queryKey: ["account", accessToken],
-    queryFn: () => getAccountSettings({ accessToken }),
+    queryKey: ["account-settings"],
+    queryFn: () => getAccountSettings(),
   });
 };
 
 type UseAccountSettingsOptions = {
-  accessToken: string;
   queryConfig?: QueryConfig<typeof getAccountSettingsQueryOptions>;
 };
 
 export const useAccountSettings = ({
-  accessToken,
   queryConfig = {},
-}: UseAccountSettingsOptions) => {
+}: UseAccountSettingsOptions = {}) => {
   return useQuery({
-    ...getAccountSettingsQueryOptions(accessToken),
+    ...getAccountSettingsQueryOptions(),
     ...queryConfig,
   });
 };

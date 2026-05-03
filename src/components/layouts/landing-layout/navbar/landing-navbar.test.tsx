@@ -1,9 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import LandingNavbar from "./landing-navbar";
-import { useAccount, AuthStatus } from "@/features/auth/account.context";
-
-vi.mock("@/features/auth/account.context");
+import { accountStore } from "@/features/account/account-store";
 
 vi.mock("next/link", () => ({
   default: ({
@@ -70,69 +68,40 @@ vi.mock("@/router-config", () => ({
 describe("LandingNavbar", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    accountStore.setState({ account: null, isLoading: false });
   });
 
   it("renders navigation", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      account: null,
-    });
-
     render(<LandingNavbar />);
 
     expect(screen.getByRole("navigation")).toBeInTheDocument();
   });
 
   it("renders AppLogo", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      account: null,
-    });
-
     render(<LandingNavbar />);
 
     expect(screen.getByTestId("app-logo")).toBeInTheDocument();
   });
 
   it("renders mode toggle", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      account: null,
-    });
-
     render(<LandingNavbar />);
 
     expect(screen.getByTestId("mode-toggle")).toBeInTheDocument();
   });
 
   it("renders Home link", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      account: null,
-    });
-
     render(<LandingNavbar />);
 
     expect(screen.getAllByText("Home").length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders Problems link", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      account: null,
-    });
-
     render(<LandingNavbar />);
 
     expect(screen.getAllByText("Problems").length).toBeGreaterThanOrEqual(1);
   });
 
   it("shows Sign In and Sign Up for unauthenticated users", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.UNAUTHENTICATED,
-      account: null,
-    });
-
     render(<LandingNavbar />);
 
     expect(screen.getAllByText("Sign In").length).toBeGreaterThanOrEqual(1);
@@ -140,12 +109,16 @@ describe("LandingNavbar", () => {
   });
 
   it("shows user avatar for fully authenticated users", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.FULLY_AUTHENTICATED,
+    accountStore.setState({
       account: {
+        id: "1",
         username: "testuser",
         imageUrl: "https://example.com/avatar.jpg",
+        createdAt: new Date(),
+        updatedAt: null,
+        usernameLastChangedAt: null,
       },
+      isLoading: false,
     });
 
     render(<LandingNavbar />);
@@ -154,9 +127,15 @@ describe("LandingNavbar", () => {
   });
 
   it("shows User fallback when account has no username", () => {
-    (useAccount as Mock).mockReturnValue({
-      authStatus: AuthStatus.PARTIALLY_AUTHENTICATED,
-      account: null,
+    accountStore.setState({
+      account: {
+        id: "1",
+        username: null,
+        createdAt: new Date(),
+        updatedAt: null,
+        usernameLastChangedAt: null,
+      },
+      isLoading: false,
     });
 
     render(<LandingNavbar />);

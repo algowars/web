@@ -33,21 +33,8 @@ vi.mock("@/components/layouts/sidebar-layout/sidebar-layout", () => ({
 }));
 
 vi.mock("./problem-actions/problem-actions", () => ({
-  default: ({
-    accessToken,
-    slug,
-    className,
-  }: {
-    accessToken: string;
-    slug: string;
-    className?: string;
-  }) => (
-    <div
-      data-testid="problem-actions"
-      data-access-token={accessToken}
-      data-slug={slug}
-      className={className}
-    >
+  default: ({ slug, className }: { slug: string; className?: string }) => (
+    <div data-testid="problem-actions" data-slug={slug} className={className}>
       Problem Actions
     </div>
   ),
@@ -164,24 +151,6 @@ describe("ProblemLayout", () => {
 
     const layout = screen.getByTestId("sidebar-layout");
     expect(layout.getAttribute("data-default-open")).toBe("false");
-  });
-
-  it("passes accessToken to ProblemActions", () => {
-    setupMocks();
-
-    render(<ProblemLayout problem={mockProblem} accessToken="test-token" />);
-
-    const actions = screen.getByTestId("problem-actions");
-    expect(actions.getAttribute("data-access-token")).toBe("test-token");
-  });
-
-  it("passes empty string for accessToken when not provided", () => {
-    setupMocks();
-
-    render(<ProblemLayout problem={mockProblem} />);
-
-    const actions = screen.getByTestId("problem-actions");
-    expect(actions.getAttribute("data-access-token")).toBe("");
   });
 
   it("passes slug to ProblemActions", () => {

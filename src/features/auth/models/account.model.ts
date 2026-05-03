@@ -6,5 +6,6 @@ export interface Account {
   imageUrl?: string;
   createdAt: Date;
   updatedAt: Date | null;
+  usernameLastChangedAt: Date | null;
   permissions?: Permissions[];
 }

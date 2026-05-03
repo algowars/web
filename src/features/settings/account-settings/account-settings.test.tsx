@@ -16,23 +16,6 @@ describe("AccountSettings", () => {
     vi.clearAllMocks();
   });
 
-  describe("when no access token is provided", () => {
-    it("renders sign in message", () => {
-      mockUseAccountSettings.mockReturnValue({
-        data: undefined,
-        isLoading: false,
-        isError: false,
-      } as ReturnType<typeof useAccountSettings>);
-
-      render(<AccountSettings />);
-
-      expect(screen.getByText("Account Settings")).toBeInTheDocument();
-      expect(
-        screen.getByText("Please sign in to view account settings.")
-      ).toBeInTheDocument();
-    });
-  });
-
   describe("when loading", () => {
     it("renders loading state", () => {
       mockUseAccountSettings.mockReturnValue({
@@ -41,7 +24,7 @@ describe("AccountSettings", () => {
         isError: false,
       } as ReturnType<typeof useAccountSettings>);
 
-      render(<AccountSettings accessToken="test-token" />);
+      render(<AccountSettings />);
 
       expect(screen.getByText("Account Settings")).toBeInTheDocument();
       expect(screen.getByText("Loading…")).toBeInTheDocument();
@@ -56,7 +39,7 @@ describe("AccountSettings", () => {
         isError: true,
       } as ReturnType<typeof useAccountSettings>);
 
-      render(<AccountSettings accessToken="test-token" />);
+      render(<AccountSettings />);
 
       expect(screen.getByText("Account Settings")).toBeInTheDocument();
       expect(
@@ -75,7 +58,7 @@ describe("AccountSettings", () => {
     });
 
     it("renders the username", () => {
-      render(<AccountSettings accessToken="test-token" />);
+      render(<AccountSettings />);
 
       expect(screen.getByText("Account Settings")).toBeInTheDocument();
       expect(screen.getByText("Username")).toBeInTheDocument();
@@ -84,7 +67,7 @@ describe("AccountSettings", () => {
 
     it("shows edit form when Edit is clicked", async () => {
       const user = userEvent.setup();
-      render(<AccountSettings accessToken="test-token" />);
+      render(<AccountSettings />);
 
       await user.click(screen.getByRole("button", { name: "Edit" }));
 
@@ -97,7 +80,7 @@ describe("AccountSettings", () => {
 
     it("hides edit form when Cancel is clicked", async () => {
       const user = userEvent.setup();
-      render(<AccountSettings accessToken="test-token" />);
+      render(<AccountSettings />);
 
       await user.click(screen.getByRole("button", { name: "Edit" }));
       await user.click(screen.getByRole("button", { name: "Cancel" }));
@@ -108,7 +91,7 @@ describe("AccountSettings", () => {
 
     it("shows warning message when editing", async () => {
       const user = userEvent.setup();
-      render(<AccountSettings accessToken="test-token" />);
+      render(<AccountSettings />);
 
       await user.click(screen.getByRole("button", { name: "Edit" }));
 

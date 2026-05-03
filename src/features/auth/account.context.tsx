@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useState,
-  useEffect,
-} from "react";
+import { createContext, useContext, ReactNode } from "react";
 import { QueryStatus } from "@tanstack/react-query";
 import { Account } from "./models/account.model";
 import { useAccount as useAccountQuery } from "./api/get-account";
 import { User } from "@auth0/nextjs-auth0/types";
-import { getAccessToken, useUser } from "@auth0/nextjs-auth0";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export enum AuthStatus {
   UNAUTHENTICATED = "unauthenticated",
@@ -44,19 +38,7 @@ interface AccountProviderProps {
 export function AccountProvider({ children }: AccountProviderProps) {
   const { user, isLoading: isAuthLoading, error: auth0Error } = useUser();
 
-  const [accessToken, setAccessToken] = useState<string>("");
-
-  useEffect(() => {
-    (async () => {
-      if (user) {
-        const token = await getAccessToken();
-
-        if (token) {
-          setAccessToken(token);
-        }
-      }
-    })();
-  }, [user]);
+  const isAuth0Authenticated = !!user;
 
   const {
     data: account,
@@ -65,10 +47,8 @@ export function AccountProvider({ children }: AccountProviderProps) {
     status: accountStatus,
     refetch: refetchAccount,
   } = useAccountQuery({
-    accessToken,
+    enabled: isAuth0Authenticated,
   });
-
-  const isAuth0Authenticated = !!user;
 
   const getAuthStatus = (): AuthStatus => {
     if (account && isAuth0Authenticated) {

@@ -20,11 +20,7 @@ const accountSettingsFormSchema = z.object({
   username: z.string(),
 });
 
-export default function AccountSettings({
-  accessToken,
-}: {
-  accessToken?: string;
-}) {
+export default function AccountSettings() {
   const form = useForm<z.infer<typeof accountSettingsFormSchema>>({
     resolver: zodResolver(accountSettingsFormSchema),
     defaultValues: {
@@ -35,10 +31,7 @@ export default function AccountSettings({
   const [isEditing, setIsEditing] = useState(false);
   const [originalUsername, setOriginalUsername] = useState("");
 
-  const { data, isLoading, isError } = useAccountSettings({
-    accessToken: accessToken ?? "",
-    queryConfig: { enabled: !!accessToken },
-  });
+  const { data, isLoading, isError } = useAccountSettings();
 
   useEffect(() => {
     if (data) {
@@ -60,17 +53,6 @@ export default function AccountSettings({
   function onCancel() {
     form.reset({ username: originalUsername });
     setIsEditing(false);
-  }
-
-  if (!accessToken) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Account Settings</CardTitle>
-        </CardHeader>
-        <CardContent>Please sign in to view account settings.</CardContent>
-      </Card>
-    );
   }
 
   if (isLoading) {

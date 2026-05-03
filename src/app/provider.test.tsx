@@ -26,10 +26,8 @@ vi.mock("sonner", () => ({
   Toaster: () => <div data-testid="toaster" />,
 }));
 
-vi.mock("@/features/auth/account.context", () => ({
-  AccountProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="account-provider">{children}</div>
-  ),
+vi.mock("@/features/account/account-initializer", () => ({
+  default: () => <div data-testid="account-initializer" />,
 }));
 
 vi.mock("@/lib/react-query", () => ({
@@ -71,14 +69,70 @@ describe("AppProvider", () => {
     expect(screen.getByTestId("query-client-provider")).toBeInTheDocument();
   });
 
-  it("provides AccountProvider", () => {
+  it("renders AccountInitializer", () => {
     render(
       <AppProvider>
         <div>Content</div>
       </AppProvider>
     );
 
-    expect(screen.getByTestId("account-provider")).toBeInTheDocument();
+    expect(screen.getByTestId("account-initializer")).toBeInTheDocument();
+  });
+
+  it("renders Toaster", () => {
+    render(
+      <AppProvider>
+        <div>Content</div>
+      </AppProvider>
+    );
+
+    expect(screen.getByTestId("toaster")).toBeInTheDocument();
+  });
+});
+
+describe("AppProvider", () => {
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("renders children", () => {
+    render(
+      <AppProvider>
+        <div data-testid="child">Child content</div>
+      </AppProvider>
+    );
+
+    expect(screen.getByTestId("child")).toBeInTheDocument();
+  });
+
+  it("wraps with ErrorBoundary", () => {
+    render(
+      <AppProvider>
+        <div>Content</div>
+      </AppProvider>
+    );
+
+    expect(screen.getByTestId("error-boundary")).toBeInTheDocument();
+  });
+
+  it("provides QueryClientProvider", () => {
+    render(
+      <AppProvider>
+        <div>Content</div>
+      </AppProvider>
+    );
+
+    expect(screen.getByTestId("query-client-provider")).toBeInTheDocument();
+  });
+
+  it("renders AccountInitializer", () => {
+    render(
+      <AppProvider>
+        <div>Content</div>
+      </AppProvider>
+    );
+
+    expect(screen.getByTestId("account-initializer")).toBeInTheDocument();
   });
 
   it("renders Toaster", () => {
