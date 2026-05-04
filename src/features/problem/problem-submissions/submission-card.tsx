@@ -5,6 +5,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { ProblemSubmission } from "../models/problem-submission";
 import SubmissionStatusBadge from "@/features/submission/submissions-status/submission-status-badge";
+import CodeBlock from "@/components/code-block/code-block";
 
 type SubmissionCardProps = {
   submission: ProblemSubmission;
@@ -35,13 +36,9 @@ export default function SubmissionCard({ submission }: SubmissionCardProps) {
         <SubmissionStatusBadge status={submission.status} className="ml-auto" />
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <SyntaxHighlighter
-          language="javascript"
-          style={oneDark}
-          customStyle={{ borderRadius: "0.375rem", fontSize: "0.875rem" }}
-        >
+        <CodeBlock language={submission.language.toLowerCase()}>
           {submission.code}
-        </SyntaxHighlighter>
+        </CodeBlock>
         <ul className="flex items-center gap-5 text-sm">
           <li>
             Language:{" "}
