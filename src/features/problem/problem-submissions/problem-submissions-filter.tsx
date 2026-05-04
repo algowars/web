@@ -1,11 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { RadioGroupItem } from "@/components/ui/radio-group";
-import { RadioGroup } from "@radix-ui/react-dropdown-menu";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export default function ProblemSubmissionsFilter() {
+export default function ProblemSubmissionsFilter(
+  props: React.ComponentProps<"div">
+) {
   return (
-    <Card>
+    <Card {...props}>
       <CardHeader>
         <CardTitle>Filter</CardTitle>
       </CardHeader>

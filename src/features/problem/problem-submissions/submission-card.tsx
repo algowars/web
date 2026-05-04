@@ -1,24 +1,18 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Submission } from "../models/submission";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import dayjs from "dayjs";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { ProblemSubmission } from "../models/problem-submission";
 
 type SubmissionCardProps = {
-  submission: Submission;
+  submission: ProblemSubmission;
 };
 
 export default function SubmissionCard({ submission }: SubmissionCardProps) {
   if (!submission.createdBy) {
     return null;
   }
-
-  const initials = submission.createdBy.username
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
 
   return (
     <Card>
@@ -30,7 +24,7 @@ export default function SubmissionCard({ submission }: SubmissionCardProps) {
               alt={submission.createdBy.username}
             />
           )}
-          <AvatarFallback>{initials}</AvatarFallback>
+          <AvatarFallback>{submission.createdBy.username}</AvatarFallback>
         </Avatar>
         <div>
           <h3 className="font-semibold">{submission.createdBy.username}</h3>
@@ -53,10 +47,10 @@ export default function SubmissionCard({ submission }: SubmissionCardProps) {
             Language: <span>{submission.language}</span>
           </li>
           <li>
-            Runtime: <span>{submission.runtime}</span>
+            Runtime Ms: <span>{submission.runTimeMs}</span>
           </li>
           <li>
-            Memory: <span>{submission.memory}</span>
+            Memory Kb: <span>{submission.memoryKb}</span>
           </li>
         </ul>
       </CardContent>

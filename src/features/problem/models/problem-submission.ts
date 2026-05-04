@@ -1,7 +1,14 @@
-import { Problem } from "@/features/problems/models/problem";
-import { Submission } from "./submission";
+import { Account } from "@/features/auth/models/account.model";
+import { SubmissionStatus } from "./submission-status";
 
 export interface ProblemSubmission {
-  problem: Problem;
-  submissions: Submission[];
+  id: string;
+  code: string;
+  status: SubmissionStatus;
+  language: string;
+  languageVersion: string;
+  runTimeMs: number;
+  memoryKb: number;
+  createdOn: Date;
+  createdBy: Account;
 }

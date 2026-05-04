@@ -1,6 +1,6 @@
 import { getProblemBySlugQueryOptions } from "@/features/problems/api/get-problem-by-slug";
 import { HydrationBoundary } from "@tanstack/react-query";
-import ProblemSubmissionsLayout from "@/features/problem/problem-submissions/problem-submissionsLayout";
+import ProblemSubmissionsLayout from "@/features/problem/problem-submissions/problem-submissions-layout";
 import { preloadData } from "../page";
 import { notFound } from "next/navigation";
 
