@@ -1,7 +1,11 @@
 import { PageResult } from "@/common/pagination/page-result";
 import { api } from "@/lib/api-client";
 import { ProblemSubmission } from "../models/problem-submission";
-import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 import { Pagination } from "@/common/pagination/pagination";
 
