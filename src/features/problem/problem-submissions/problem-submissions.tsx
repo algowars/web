@@ -2,11 +2,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import React, { useCallback } from "react";
+import React from "react";
 import { useProblemSubmissionsStore } from "./problem-submissions-store";
 import SubmissionCard from "./submission-card";
-import { Button } from "@/components/ui/button";
-import { useUser } from "@auth0/nextjs-auth0";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type ProblemSubmissionsProps = React.ComponentProps<typeof Card> & {
   isLoading?: boolean;
@@ -16,41 +15,17 @@ export default function ProblemSubmissions({
   isLoading,
   ...props
 }: ProblemSubmissionsProps) {
-  const { user } = useUser();
   const submissions = useProblemSubmissionsStore((s) => s.submissions);
-  const filterMode = useProblemSubmissionsStore((s) => s.filterMode);
-  const setFilterMode = useProblemSubmissionsStore((s) => s.setFilterMode);
-
-  const handleFilterChange = useCallback(
-    (mode: "all" | "mine") => {
-      setFilterMode(mode);
-    },
-    [setFilterMode]
-  );
 
   return (
     <Card {...props}>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Solutions</CardTitle>
-          <div className="flex gap-2">
-            <Button
-              variant={filterMode === "all" ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleFilterChange("all")}
-            >
-              All Solutions
-            </Button>
-            <Button
-              variant={filterMode === "mine" ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleFilterChange("mine")}
-              disabled={!user}
-            >
-              My Solutions
-            </Button>
-          </div>
-        </div>
+        <Tabs defaultValue="all" className="w-[400px]">
+          <TabsList>
+            <TabsTrigger value="all">All Submissions</TabsTrigger>
+            <TabsTrigger value="mine">My Submissions</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -60,9 +35,7 @@ export default function ProblemSubmissions({
           </div>
         ) : submissions.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            {filterMode === "mine"
-              ? "You haven't submitted any accepted solutions yet."
-              : "No accepted solutions yet."}
+            <span> No accepted solutions yet.</span>
           </div>
         ) : (
           <div className="grid gap-4">
