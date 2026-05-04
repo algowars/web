@@ -7,7 +7,7 @@ export interface ProblemSubmission {
   status: SubmissionStatus;
   language: string;
   languageVersion: string;
-  runTimeMs: number;
+  runtimeMs: number;
   memoryKb: number;
   createdOn: Date;
   createdBy: Account;

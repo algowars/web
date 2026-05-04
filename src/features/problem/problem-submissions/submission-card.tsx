@@ -44,13 +44,22 @@ export default function SubmissionCard({ submission }: SubmissionCardProps) {
         </SyntaxHighlighter>
         <ul className="flex items-center gap-5 text-sm">
           <li>
-            Language: <span>{submission.language}</span>
+            Language:{" "}
+            <span className="text-muted-foreground">
+              {submission.language} - {submission.languageVersion}
+            </span>
           </li>
           <li>
-            Runtime Ms: <span>{submission.runTimeMs}</span>
+            Runtime:{" "}
+            <span className="text-muted-foreground">
+              {submission.runtimeMs} Ms
+            </span>
           </li>
           <li>
-            Memory Kb: <span>{submission.memoryKb}</span>
+            Memory:{" "}
+            <span className="text-muted-foreground">
+              {submission.memoryKb} Kb
+            </span>
           </li>
         </ul>
       </CardContent>
