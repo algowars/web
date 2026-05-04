@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { env } from "@/env";
-import { getAccessToken } from "@auth0/nextjs-auth0";
 
 type ApiRequestConfig = {
   url: string;

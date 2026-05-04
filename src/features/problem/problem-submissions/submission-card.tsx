@@ -1,8 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import dayjs from "dayjs";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { ProblemSubmission } from "../models/problem-submission";
 import SubmissionStatusBadge from "@/features/submission/submissions-status/submission-status-badge";
 import CodeBlock from "@/components/code-block/code-block";
