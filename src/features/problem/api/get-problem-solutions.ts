@@ -5,44 +5,43 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 import { Pagination } from "@/common/pagination/pagination";
 
-export const getProblemSubmissions = ({
+export const getProblemSolutions = ({
   problemId,
   pagination,
 }: {
   problemId: string;
   pagination: Pagination;
-  timestamp?: Date;
 }) => {
   return api.get<PageResult<ProblemSubmission>>({
-    url: `/api/v1/problem/${encodeURIComponent(problemId)}/submissions`,
+    url: `/api/v1/problem/${encodeURIComponent(problemId)}/solutions`,
     config: {
       params: pagination,
     },
   });
 };
 
-export const getProblemSubmissionsQueryOptions = (
+export const getProblemSolutionsQueryOptions = (
   problemId: string,
   pagination: Pagination
 ) =>
   queryOptions({
-    queryKey: ["problems", "submissions", problemId, pagination],
-    queryFn: () => getProblemSubmissions({ problemId, pagination }),
+    queryKey: ["problems", "solutions", problemId, pagination],
+    queryFn: () => getProblemSolutions({ problemId, pagination }),
   });
 
-export type UseProblemSubmissionsOptions = {
+type UseProblemSolutionsOptions = {
   problemId: string;
   pagination: Pagination;
   timestamp?: Date;
-  queryConfig?: QueryConfig<typeof getProblemSubmissionsQueryOptions>;
+  queryConfig?: QueryConfig<typeof getProblemSolutionsQueryOptions>;
 };
 
-export const useProblemSubmissions = ({
+export const useProblemSolutions = ({
   problemId,
   pagination,
   queryConfig = {},
-}: UseProblemSubmissionsOptions) =>
+}: UseProblemSolutionsOptions) =>
   useQuery({
-    ...getProblemSubmissionsQueryOptions(problemId, pagination),
+    ...getProblemSolutionsQueryOptions(problemId, pagination),
     ...queryConfig,
   });

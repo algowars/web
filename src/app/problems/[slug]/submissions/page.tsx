@@ -2,6 +2,7 @@ import { getProblemBySlugQueryOptions } from "@/features/problems/api/get-proble
 import { HydrationBoundary } from "@tanstack/react-query";
 import ProblemSubmissionsLayout from "@/features/problem/problem-submissions/problem-submissionsLayout";
 import { preloadData } from "../page";
+import { notFound } from "next/navigation";
 
 export default async function ProblemSubmissionsPage({
   params,
@@ -17,7 +18,7 @@ export default async function ProblemSubmissionsPage({
   );
 
   if (!problem) {
-    return <div>Problem not found</div>;
+    notFound();
   }
 
   return (
