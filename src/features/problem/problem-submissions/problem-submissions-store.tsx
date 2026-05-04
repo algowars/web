@@ -20,12 +20,19 @@ type ProblemSubmissionsState = {
   size: number;
   timestamp: Date;
   currentUserId?: string;
-  filterOptions: ProblemSubmissionsOptions;
+  filterOption: ProblemSubmissionsOptions;
+  total: number;
+  hasMore: boolean;
 };
 
 type ProblemSubmissionsActions = {
   initProblem: (problem: Problem) => void;
   changeFilterOption: (option: ProblemSubmissionsOptions) => void;
+  setTotal: (total: number) => void;
+  setHasMore: (hasMore: boolean) => void;
+  setSubmissions: (submissions: ProblemSubmission[]) => void;
+  addSubmissions: (submissions: ProblemSubmission[]) => void;
+  incrementPage: () => void;
 };
 
 type ProblemSubmissionsStore = ProblemSubmissionsState &
@@ -37,11 +44,24 @@ export const useProblemSubmissionsStore = create<ProblemSubmissionsStore>()(
       problem: null,
       submissions: [],
       currentUserId: undefined,
-      filterOptions: ProblemSubmissionsOptions,
+      filterOption: ProblemSubmissionsOptions.ALL_SOLUTIONS,
       page: 1,
       size: 25,
-      timtestamp: new Date(),
+      timestamp: new Date(),
+      total: 0,
+      hasMore: true,
       initProblem: (problem: Problem) => set({ problem }),
+      changeFilterOption: (option: ProblemSubmissionsOptions) =>
+        set({ filterOption: option, submissions: [], page: 1, hasMore: true }),
+      setTotal: (total: number) => set({ total }),
+      setHasMore: (hasMore: boolean) => set({ hasMore }),
+      setSubmissions: (submissions: ProblemSubmission[]) =>
+        set({ submissions }),
+      addSubmissions: (newSubmissions: ProblemSubmission[]) =>
+        set((state) => ({
+          submissions: [...state.submissions, ...newSubmissions],
+        })),
+      incrementPage: () => set((state) => ({ page: state.page + 1 })),
     }))
   )
 );

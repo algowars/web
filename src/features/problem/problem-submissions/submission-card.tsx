@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { ProblemSubmission } from "../models/problem-submission";
+import SubmissionStatusBadge from "@/features/submission/submissions-status/submission-status-badge";
 
 type SubmissionCardProps = {
   submission: ProblemSubmission;
@@ -18,12 +19,11 @@ export default function SubmissionCard({ submission }: SubmissionCardProps) {
     <Card>
       <CardHeader className="flex items-start gap-3">
         <Avatar className="h-12 w-12">
-          {submission.createdBy.imageUrl && (
-            <AvatarImage
-              src={submission.createdBy.imageUrl}
-              alt={submission.createdBy.username}
-            />
-          )}
+          <AvatarImage
+            src={submission.createdBy.imageUrl}
+            fallbackSrc="/default-pfp.png"
+            alt={submission.createdBy.username}
+          />
           <AvatarFallback>{submission.createdBy.username}</AvatarFallback>
         </Avatar>
         <div>
@@ -32,7 +32,7 @@ export default function SubmissionCard({ submission }: SubmissionCardProps) {
             {dayjs(submission.createdOn).format("MMM DD, YYYY")}
           </p>
         </div>
-        <p className="ml-auto">{submission.status}</p>
+        <SubmissionStatusBadge status={submission.status} className="ml-auto" />
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <SyntaxHighlighter

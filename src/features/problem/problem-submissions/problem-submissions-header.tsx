@@ -32,7 +32,9 @@ export default function ProblemSubmissionsHeader({
   return (
     <Card {...props} className={cn("pb-1", className)}>
       <CardHeader className="gap-4">
-        <CardTitle>{problem.title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>{problem.title}</CardTitle>
+        </div>
         <CardDescription className="flex gap-2">
           {problem.tags.map((tag) => (
             <Badge key={tag} variant="secondary">

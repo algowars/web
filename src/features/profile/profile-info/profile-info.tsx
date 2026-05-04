@@ -33,6 +33,7 @@ export default function ProfileInfo() {
         <Avatar className="h-8 w-8">
           <AvatarImage
             src={profileAggregate.profile.imageUrl}
+            fallbackSrc="/default-pfp.png"
             alt={`${profileAggregate.profile.username}'s avatar`}
           />
           <AvatarFallback className="text-xs">

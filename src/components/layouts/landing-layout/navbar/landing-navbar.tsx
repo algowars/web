@@ -67,7 +67,11 @@ function AuthButtons() {
           asChild
         >
           <Avatar className="h-8 w-8">
-            <AvatarImage src={account?.imageUrl} alt={displayName} />
+            <AvatarImage
+              src={account?.imageUrl}
+              fallbackSrc="/default-pfp.png"
+              alt={displayName}
+            />
             <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
         </Button>

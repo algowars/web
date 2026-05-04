@@ -23,12 +23,34 @@ function Avatar({
 
 function AvatarImage({
   className,
+  src,
+  fallbackSrc,
+  onLoadingStatusChange,
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+}: React.ComponentProps<typeof AvatarPrimitive.Image> & {
+  fallbackSrc?: string;
+}) {
+  const [resolvedSrc, setResolvedSrc] = React.useState(src ?? fallbackSrc);
+
+  React.useEffect(() => {
+    setResolvedSrc(src ?? fallbackSrc);
+  }, [src, fallbackSrc]);
+
+  if (!resolvedSrc) {
+    return null;
+  }
+
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
       className={cn("aspect-square size-full", className)}
+      src={resolvedSrc}
+      onLoadingStatusChange={(status) => {
+        onLoadingStatusChange?.(status);
+        if (status === "error" && fallbackSrc && resolvedSrc !== fallbackSrc) {
+          setResolvedSrc(fallbackSrc);
+        }
+      }}
       {...props}
     />
   );
