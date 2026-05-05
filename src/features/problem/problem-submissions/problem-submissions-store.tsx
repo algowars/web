@@ -140,7 +140,7 @@ export const useSuspenseProblemSolutionsWithStore = (
   const problem = useProblemSubmissionsStore((s) => s.problem);
 
   if (!problem) {
-    throw Error("Problem required");
+    throw new Error("Problem required");
   }
 
   return useSuspenseProblemSolutions({

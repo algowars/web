@@ -1,7 +1,7 @@
 import { Badge, BadgeVariant } from "@/components/ui/badge";
 import { SubmissionStatus } from "@/features/problem/models/submission-status";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, LucideIcon, XCircle } from "lucide-react";
+import { CheckCircle2, LucideIcon, X } from "lucide-react";
 
 type SubmissionsStatusBadgeProps = {
   status: SubmissionStatus;
@@ -20,7 +20,7 @@ const statusMap: Partial<
   },
   [SubmissionStatus.WRONG_ANSWER]: {
     variant: "destructive",
-    icon: XCircle,
+    icon: X,
     label: "Wrong Answer",
   },
 };
