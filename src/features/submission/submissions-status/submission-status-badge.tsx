@@ -13,7 +13,7 @@ const statusMap: Partial<
     { label: string; variant: BadgeVariant; icon: LucideIcon }
   >
 > = {
-  [SubmissionStatus.Accepted]: {
+  [SubmissionStatus.ACCEPTED]: {
     variant: "success",
     icon: CheckCircle2,
     label: "Accepted",

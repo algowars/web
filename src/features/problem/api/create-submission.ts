@@ -21,7 +21,7 @@ export const createSubmission = async ({
 
   return {
     submissionId,
-    status: SubmissionStatus.Pending,
+    status: SubmissionStatus.PENDING,
     testCases: [],
   };
 };
