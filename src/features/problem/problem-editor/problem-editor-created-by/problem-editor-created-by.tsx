@@ -35,6 +35,7 @@ export default function ProblemEditorCreatedBy({
         <Avatar className="h-8 w-8">
           <AvatarImage
             src={createdBy.imageUrl}
+            fallbackSrc="/default-pfp.png"
             alt={`${createdBy.username}'s avatar`}
           />
           <AvatarFallback className="text-xs">
