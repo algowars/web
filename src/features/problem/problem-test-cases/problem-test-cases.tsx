@@ -9,7 +9,11 @@ export default function ProblemTestCases() {
   const testCases = getTestSuites().flatMap((suite) => suite.testCases);
 
   if (testCases.length === 0) {
-    return <div>No test cases available</div>;
+    return (
+      <div className="flex justify-center items-center h-full text-muted-foreground">
+        No test cases available
+      </div>
+    );
   }
 
   return (

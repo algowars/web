@@ -4,7 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
 import { Problem } from "@/features/problems/models/problem";
+import { ProblemDifficultyBadge } from "@/features/problem/problem-difficulty-badge/problem-difficulty-badge";
 import { Tag } from "lucide-react";
 import React from "react";
 import ProblemEditorTags from "./problem-editor-tags";
@@ -25,26 +27,24 @@ export default function ProblemQuestion({ problem }: Props) {
 
   return (
     <div className="flex h-full flex-col overflow-auto bg-sidebar">
-      <div className="p-5">
-        <div className="mb-3">
-          <h2 className="mb-1 text-2xl font-semibold">{problem.title}</h2>
-          <ul className="flex items-center gap-4">
-            {/* <li>
-              <DifficultyBadge difficulty={problem.difficulty} />
-            </li>
-            <li>
-              <ProblemEditorCreatedBy createdBy={problem.createdBy} />
-            </li> */}
-          </ul>
+      <div className="px-5 pt-5 pb-4">
+        <h2 className="text-xl font-bold tracking-tight mb-2">
+          {problem.title}
+        </h2>
+        <div className="flex items-center gap-2">
+          <ProblemDifficultyBadge difficulty={problem.difficulty} />
         </div>
-
-        {questionMemo}
       </div>
-      <Accordion type="single" collapsible className="mt-auto border-t">
+
+      <Separator />
+
+      <div className="px-5 py-4 flex-1">{questionMemo}</div>
+
+      <Accordion type="single" collapsible className="border-t">
         <AccordionItem value="tags">
-          <AccordionTrigger className="p-5">
-            <span className="flex items-center gap-1">
-              <Tag size={16} /> Tags
+          <AccordionTrigger className="px-5 py-3 text-sm">
+            <span className="flex items-center gap-1.5">
+              <Tag size={14} /> Tags
             </span>
           </AccordionTrigger>
           <AccordionContent>
@@ -52,7 +52,9 @@ export default function ProblemQuestion({ problem }: Props) {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      <p className="p-5 text-sm text-muted-foreground">&copy; 2025 Algowars</p>
+      <p className="px-5 py-3 text-xs text-muted-foreground border-t">
+        &copy; 2026 Algowars
+      </p>
     </div>
   );
 }
