@@ -39,6 +39,7 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
       problem: null,
       code: "",
       currentVersionId: null,
+      lastRunResult: null,
       activeSubmissionId: null,
 
       setSetup: (setup) => set({ setup, code: setup?.initialCode }),
