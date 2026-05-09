@@ -1,0 +1,21 @@
+{
+  "id": "1",
+  "title": "Two Sum",
+  "slug": "test-problem",
+  "question": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+  "difficulty": 1,
+  "tags": ["Array", "Hash Table"],
+  "availableLanguages": [
+    {
+      "id": 1,
+      "name": "C#",
+      "versions": [
+        {
+          "id": 100,
+          "version": "10.0",
+          "initialCode": "// Write your solution here\npublic class Solution {\n    public int[] TwoSum(int[] nums, int target) {\n        return new int[0];\n    }\n}"
+        }
+      ]
+    }
+  ]
+}

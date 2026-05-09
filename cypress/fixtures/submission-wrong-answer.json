@@ -1,0 +1,18 @@
+{
+  "submissionId": "12345678-1234-1234-1234-123456789012",
+  "status": "WrongAnswer",
+  "testCases": [
+    {
+      "input": "5",
+      "expectedOutput": "Hello",
+      "actualOutput": "Wrong",
+      "status": 2
+    },
+    {
+      "input": "0",
+      "expectedOutput": "Goodbye",
+      "actualOutput": "Goodbye",
+      "status": 1
+    }
+  ]
+}

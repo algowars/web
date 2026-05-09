@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, buttonVariants } from "@/components/ui/button";
 import React from "react";
 import { useProblemEditorStore } from "../problem-editor-store";
@@ -18,10 +20,12 @@ export default function ProblemActions({
   const code = useProblemEditorStore((s) => s.code);
   const setup = useProblemEditorStore((s) => s.setup);
   const setLastRunResult = useProblemEditorStore((s) => s.setLastRunResult);
+  const setActiveSubmissionId = useProblemEditorStore(
+    (s) => s.setActiveSubmissionId
+  );
   const problemSetupId = setup?.id ?? 1;
 
   const runSubmissionMutation = useRunSubmission();
-
   const submitSubmissionMutation = useCreateSubmission();
 
   const handleRun = async () => {
@@ -40,16 +44,14 @@ export default function ProblemActions({
 
   const handleSubmit = async () => {
     try {
-      setLastRunResult(null);
-      const result = await submitSubmissionMutation.mutateAsync({
+      const id = await submitSubmissionMutation.mutateAsync({
         code,
         problemSetupId,
       });
-      setLastRunResult(result);
+      setActiveSubmissionId(id);
       toast.success("Submission created");
-      setLastRunResult(result);
     } catch {
-      toast.error("Failed to run submission.");
+      toast.error("Failed to submit.");
     }
   };
 
@@ -73,6 +75,7 @@ export default function ProblemActions({
       <li>
         <Button
           className="w-24"
+          data-cy="submit-btn"
           onClick={handleSubmit}
           disabled={
             runSubmissionMutation.isPending ||
@@ -95,3 +98,4 @@ export default function ProblemActions({
     </ul>
   );
 }
+

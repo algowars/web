@@ -1,4 +1,3 @@
-import ProblemLayout from "@/features/problem/problem-layout";
 import {
   getProblemBySlug,
   getProblemBySlugQueryOptions,
@@ -8,20 +7,22 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
+import ProblemLoading from "./loading";
+import ProblemLayout from "@/features/problem/problem-layout";
 
 export const generateMetadata = async ({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) => {
-  const slug = (await params).slug;
-
-  const problem = await getProblemBySlug({ slug });
-
-  return {
-    title: problem.title,
-    description: problem.question,
-  };
+  try {
+    const slug = (await params).slug;
+    const problem = await getProblemBySlug({ slug });
+    return { title: problem.title, description: problem.question };
+  } catch {
+    return { title: "Problem" };
+  }
 };
 
 export const preloadData = async (slug: string) => {
@@ -53,7 +54,7 @@ export default async function ProblemPage({
   );
 
   if (!problem) {
-    return <div>Problem not found</div>;
+    return notFound();
   }
 
   return (
