@@ -5,7 +5,7 @@ const mockProblem: Problem = {
   id: "1",
   title: "Sample Problem",
   slug: "sample-problem",
-  difficulty: { rating: 1, name: "Easy" },
+  difficulty: 1,
   tags: [],
   availableLanguages: [
     {

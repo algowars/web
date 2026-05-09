@@ -20,7 +20,7 @@ const mockProblem: Problem = {
   title: "Two Sum",
   slug: "two-sum",
   question: "Given an array of integers, return indices of two numbers.",
-  difficulty: { rating: 1, name: "Easy" },
+  difficulty: 1,
   tags: ["array", "hash-table"],
   availableLanguages: [],
 };

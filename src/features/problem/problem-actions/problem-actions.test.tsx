@@ -34,7 +34,7 @@ const mockSetup: ProblemSetup = {
     id: "1",
     title: "Two Sum",
     slug: "two-sum",
-    difficulty: { rating: 1, name: "Easy" },
+    difficulty: 1,
     tags: [],
     availableLanguages: [],
   },
