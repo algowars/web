@@ -91,6 +91,7 @@ export default function ProblemActions({
         <a
           href={routerConfig.problemSubmissions.execute({ slug })}
           className={cn(buttonVariants({ variant: "ghost" }))}
+          data-cy="view-submissions-btn"
         >
           View Submissions
         </a>

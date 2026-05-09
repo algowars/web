@@ -104,7 +104,7 @@ export default function SubmissionResultView({
   const showStatusBadge = FINAL_STATUSES.includes(result.status);
 
   return (
-    <div className="space-y-4 p-4">
+    <div data-cy="submission-result-view" className="space-y-4 p-4">
       {showStatusBadge && (
         <div
           data-cy="submission-overall-status"

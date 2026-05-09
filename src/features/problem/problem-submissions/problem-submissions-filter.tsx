@@ -35,7 +35,9 @@ export default function ProblemSubmissionsFilter(
               value={ProblemSubmissionsOptions.MY_SUBMISSIONS}
               id="my-submissions"
             />
-            <Label htmlFor="my-submissions">My Submissions</Label>
+            <Label htmlFor="my-submissions" data-cy="my-submissions-filter">
+              My Submissions
+            </Label>
           </div>
         </RadioGroup>
       </CardContent>
