@@ -57,7 +57,9 @@ describe("ProblemQuestion", () => {
   it("renders copyright text", () => {
     render(<ProblemQuestion problem={mockProblem} />);
 
-    expect(screen.getByText("© 2025 Algowars")).toBeInTheDocument();
+    expect(
+      screen.getByText(`© ${new Date().getFullYear()} Algowars`)
+    ).toBeInTheDocument();
   });
 
   it("renders problem with empty tags array", () => {
