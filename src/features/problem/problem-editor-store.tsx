@@ -80,7 +80,11 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
       setLastRunResult: (result) => set({ lastRunResult: result }),
 
       setActiveSubmissionId: (id) =>
-        set(id !== null ? { activeSubmissionId: id, lastRunResult: null } : { activeSubmissionId: null }),
+        set(
+          id !== null
+            ? { activeSubmissionId: id, lastRunResult: null }
+            : { activeSubmissionId: null }
+        ),
     }))
   )
 );

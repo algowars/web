@@ -29,15 +29,15 @@ This is a **Next.js 16 App Router** app with **React 19**, inspired by [Bulletpr
 
 ### Source layout
 
-| Directory | Purpose |
-|---|---|
-| `src/app/` | Next.js App Router pages and layouts |
-| `src/features/` | Feature-scoped modules — each feature is self-contained |
-| `src/components/` | Shared reusable components; Shadcn components live in `src/components/ui/` |
-| `src/common/` | Small set of cross-cutting utilities (pagination, etc.) |
-| `src/lib/` | External library wrappers (`api-client`, `auth0`, `react-query`, `utils`) |
-| `src/hooks/` | Custom React hooks |
-| `tests/` | Integration tests (`tests/integration/`) and shared mocks/utils (`tests/mocks/`, `tests/utils/`) |
+| Directory         | Purpose                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| `src/app/`        | Next.js App Router pages and layouts                                                             |
+| `src/features/`   | Feature-scoped modules — each feature is self-contained                                          |
+| `src/components/` | Shared reusable components; Shadcn components live in `src/components/ui/`                       |
+| `src/common/`     | Small set of cross-cutting utilities (pagination, etc.)                                          |
+| `src/lib/`        | External library wrappers (`api-client`, `auth0`, `react-query`, `utils`)                        |
+| `src/hooks/`      | Custom React hooks                                                                               |
+| `tests/`          | Integration tests (`tests/integration/`) and shared mocks/utils (`tests/mocks/`, `tests/utils/`) |
 
 **Features must not import from other features.** Cross-feature data flows through `src/app/` or shared `src/lib/`.
 

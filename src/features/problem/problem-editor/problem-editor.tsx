@@ -65,16 +65,16 @@ export default function ProblemEditor() {
         testCasesTab,
       ]
     : lastRunResult
-    ? [
-        {
-          component: <SubmissionResultView result={lastRunResult} />,
-          key: "submission-result",
-          name: "Results",
-          icon: resultsIcon,
-        },
-        testCasesTab,
-      ]
-    : [testCasesTab];
+      ? [
+          {
+            component: <SubmissionResultView result={lastRunResult} />,
+            key: "submission-result",
+            name: "Results",
+            icon: resultsIcon,
+          },
+          testCasesTab,
+        ]
+      : [testCasesTab];
 
   const tabs: Tab = {
     direction: "horizontal",
@@ -120,4 +120,3 @@ export default function ProblemEditor() {
 
   return <Editor tabs={tabs} />;
 }
-
