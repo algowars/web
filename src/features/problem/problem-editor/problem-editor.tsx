@@ -7,11 +7,19 @@ import { CodeEditor } from "@/components/code-editor/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProblemEditorStore } from "../problem-editor-store";
 import ProblemTestCases from "../problem-test-cases/problem-test-cases";
+import SubmissionResultView from "../submission-result-view/submission-result-view";
+import SubmissionResultTab from "../submission-result-tab/submission-result-tab";
+import { RunResult } from "../models/run-result";
 
 export default function ProblemEditor() {
   const setup = useProblemEditorStore((s) => s.setup);
   const problem = useProblemEditorStore((s) => s.problem);
   const lastRunResult = useProblemEditorStore((s) => s.lastRunResult);
+  const activeSubmissionId = useProblemEditorStore((s) => s.activeSubmissionId);
+  const setLastRunResult = useProblemEditorStore((s) => s.setLastRunResult);
+  const setActiveSubmissionId = useProblemEditorStore(
+    (s) => s.setActiveSubmissionId
+  );
 
   if (!setup || !problem) {
     return (
@@ -22,6 +30,51 @@ export default function ProblemEditor() {
       </div>
     );
   }
+
+  const handleSubmissionComplete = (result: RunResult) => {
+    setLastRunResult(result);
+    setActiveSubmissionId(null);
+  };
+
+  const resultsIcon = (
+    <FileText size={16} className="text-yellow-600 dark:text-yellow-400" />
+  );
+
+  const testCasesTab = {
+    component: <ProblemTestCases />,
+    key: "test-cases",
+    name: "Test Cases",
+    icon: (
+      <FlaskConical size={16} className="text-blue-600 dark:text-blue-400" />
+    ),
+  };
+
+  const bottomRightChildren = activeSubmissionId
+    ? [
+        {
+          component: (
+            <SubmissionResultTab
+              submissionId={activeSubmissionId}
+              onComplete={handleSubmissionComplete}
+            />
+          ),
+          key: "submission-result",
+          name: "Results",
+          icon: resultsIcon,
+        },
+        testCasesTab,
+      ]
+    : lastRunResult
+      ? [
+          {
+            component: <SubmissionResultView result={lastRunResult} />,
+            key: "submission-result",
+            name: "Results",
+            icon: resultsIcon,
+          },
+          testCasesTab,
+        ]
+      : [testCasesTab];
 
   const tabs: Tab = {
     direction: "horizontal",
@@ -58,45 +111,7 @@ export default function ProblemEditor() {
           {
             key: "test-cases-results",
             defaultSize: 30,
-            children: !!lastRunResult
-              ? [
-                  {
-                    component: null,
-                    key: "submission-result",
-                    name: "Results",
-                    icon: (
-                      <FileText
-                        size={16}
-                        className="text-yellow-600 dark:text-yellow-400"
-                      />
-                    ),
-                  },
-                  {
-                    component: <ProblemTestCases />,
-                    key: "test-cases",
-                    name: "Test Cases",
-                    icon: (
-                      <FlaskConical
-                        size={16}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                    ),
-                  },
-                ]
-              : [
-                  {
-                    component: <ProblemTestCases />,
-                    key: "test-cases",
-                    name: "Test Cases",
-                    defaultSize: 30,
-                    icon: (
-                      <FlaskConical
-                        size={16}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                    ),
-                  },
-                ],
+            children: bottomRightChildren,
           },
         ],
       },

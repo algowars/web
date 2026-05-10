@@ -14,7 +14,7 @@ export const EditorPanelHeader = ({
 }: EditorPanelHeaderProps) => {
   if (tab.children) {
     return (
-      <nav className="flex items-center gap-1 overflow-x-auto border-b px-2 py-1">
+      <nav className="flex shrink-0 items-center gap-1 overflow-x-auto overflow-y-visible border-b px-2 py-1">
         {tab.children.map((t, index) => (
           <Button
             variant={index === currentTabIndex ? "secondary" : "ghost"}
@@ -34,7 +34,7 @@ export const EditorPanelHeader = ({
     );
   }
   return (
-    <nav className="flex items-center gap-5 border-b px-2 py-1">
+    <nav className="flex shrink-0 items-center gap-5 border-b px-2 py-1">
       <Button variant="ghost" className="h-7 px-3 py-1">
         {tab && <span className="mr-1">{tab.icon}</span>}
         {tab.name}

@@ -32,7 +32,7 @@ const mockProblems: Problem[] = [
     id: "1",
     title: "Two Sum",
     slug: "two-sum",
-    difficulty: { rating: 1, name: "Easy" },
+    difficulty: 1,
     tags: ["array", "hash-table"],
     availableLanguages: [],
   },
@@ -40,7 +40,7 @@ const mockProblems: Problem[] = [
     id: "2",
     title: "Add Two Numbers",
     slug: "add-two-numbers",
-    difficulty: { rating: 2, name: "Medium" },
+    difficulty: 1500,
     tags: ["linked-list", "math"],
     availableLanguages: [],
   },
@@ -48,7 +48,7 @@ const mockProblems: Problem[] = [
     id: "3",
     title: "Longest Substring",
     slug: "longest-substring",
-    difficulty: { rating: 3, name: "Hard" },
+    difficulty: 2500,
     tags: ["string", "sliding-window"],
     availableLanguages: [],
   },
@@ -160,7 +160,7 @@ describe("ProblemsTableV2", () => {
 
     render(<ProblemsTableV2 />);
 
-    // Difficulty column is present (object renders as [object Object] without custom cell)
+    // Difficulty column is present
     expect(screen.getByText("Difficulty")).toBeInTheDocument();
   });
 });

@@ -1,8 +1,6 @@
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SubmissionStatus } from "../models/submission-status";
-import { RunResult } from "../models/run-result";
 
 export const createSubmission = async ({
   code,
@@ -10,20 +8,14 @@ export const createSubmission = async ({
 }: {
   code: string;
   problemSetupId: number;
-}): Promise<RunResult> => {
-  const submissionId = await api.post<string>({
+}): Promise<string> => {
+  return api.post<string>({
     url: "/api/v1/submission/execute",
     body: {
       code,
       problemSetupId,
     },
   });
-
-  return {
-    submissionId,
-    status: SubmissionStatus.PENDING,
-    testCases: [],
-  };
 };
 
 type UseCreateSubmissionOptions = {

@@ -122,9 +122,7 @@ code block
   it("uses default className", () => {
     const { container } = render(<MarkdownSafe markdown="Test" />);
 
-    expect(container.querySelector("article")).toHaveClass(
-      "text-card-foreground"
-    );
+    expect(container.querySelector("article")).toHaveClass("text-foreground");
   });
 
   it("handles null markdown", () => {

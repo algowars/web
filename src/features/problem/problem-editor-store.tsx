@@ -12,6 +12,7 @@ type ProblemEditorState = {
   code: string;
   currentVersionId: number | null;
   lastRunResult: RunResult | null;
+  activeSubmissionId: string | null;
 };
 
 type ProblemEditorActions = {
@@ -26,6 +27,7 @@ type ProblemEditorActions = {
   findVersionById: (id: number) => LanguageVersion | null;
   getTestSuites: () => TestSuite[];
   setLastRunResult: (result: RunResult | null) => void;
+  setActiveSubmissionId: (id: string | null) => void;
 };
 
 type ProblemEditorStore = ProblemEditorState & ProblemEditorActions;
@@ -37,6 +39,8 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
       problem: null,
       code: "",
       currentVersionId: null,
+      lastRunResult: null,
+      activeSubmissionId: null,
 
       setSetup: (setup) => set({ setup, code: setup?.initialCode }),
 
@@ -74,6 +78,13 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
       getTestSuites: () => get().setup?.testSuites ?? [],
 
       setLastRunResult: (result) => set({ lastRunResult: result }),
+
+      setActiveSubmissionId: (id) =>
+        set(
+          id !== null
+            ? { activeSubmissionId: id, lastRunResult: null }
+            : { activeSubmissionId: null }
+        ),
     }))
   )
 );

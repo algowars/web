@@ -20,7 +20,7 @@ const mockProblem: Problem = {
   title: "Two Sum",
   slug: "two-sum",
   question: "Given an array of integers, return indices of two numbers.",
-  difficulty: { rating: 1, name: "Easy" },
+  difficulty: 1,
   tags: ["array", "hash-table"],
   availableLanguages: [],
 };
@@ -57,7 +57,9 @@ describe("ProblemQuestion", () => {
   it("renders copyright text", () => {
     render(<ProblemQuestion problem={mockProblem} />);
 
-    expect(screen.getByText("© 2025 Algowars")).toBeInTheDocument();
+    expect(
+      screen.getByText(`© ${new Date().getFullYear()} Algowars`)
+    ).toBeInTheDocument();
   });
 
   it("renders problem with empty tags array", () => {

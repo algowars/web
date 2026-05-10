@@ -12,10 +12,7 @@ const mockProblem: Problem = {
   slug: "two-sum",
   question: "Given an array...",
   tags: ["array", "hash-table"],
-  difficulty: {
-    rating: 1000,
-    name: "Easy",
-  },
+  difficulty: 1000,
   availableLanguages: [],
 };
 

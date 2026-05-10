@@ -3,34 +3,34 @@ import { describe, it, expect } from "vitest";
 import { ProblemDifficultyBadge } from "./problem-difficulty-badge";
 
 describe("ProblemDifficultyBadge", () => {
-  it("renders difficulty value", () => {
+  it("renders Easy for low difficulty", () => {
     render(<ProblemDifficultyBadge difficulty={5} />);
 
-    expect(screen.getByText("Difficulty: 5")).toBeInTheDocument();
+    expect(screen.getByText("Easy")).toBeInTheDocument();
   });
 
-  it("renders with difficulty 0", () => {
-    render(<ProblemDifficultyBadge difficulty={0} />);
+  it("renders Medium for mid difficulty", () => {
+    render(<ProblemDifficultyBadge difficulty={1500} />);
 
-    expect(screen.getByText("Difficulty: 0")).toBeInTheDocument();
+    expect(screen.getByText("Medium")).toBeInTheDocument();
   });
 
-  it("renders with high difficulty value", () => {
-    render(<ProblemDifficultyBadge difficulty={100} />);
+  it("renders Hard for high difficulty", () => {
+    render(<ProblemDifficultyBadge difficulty={2500} />);
 
-    expect(screen.getByText("Difficulty: 100")).toBeInTheDocument();
+    expect(screen.getByText("Hard")).toBeInTheDocument();
   });
 
   it("renders Badge component with data-slot attribute", () => {
     render(<ProblemDifficultyBadge difficulty={3} />);
 
-    const badge = screen.getByText("Difficulty: 3");
+    const badge = screen.getByText("Easy");
     expect(badge).toHaveAttribute("data-slot", "badge");
   });
 
-  it("renders with negative difficulty value", () => {
+  it("renders Easy for negative difficulty values", () => {
     render(<ProblemDifficultyBadge difficulty={-1} />);
 
-    expect(screen.getByText("Difficulty: -1")).toBeInTheDocument();
+    expect(screen.getByText("Easy")).toBeInTheDocument();
   });
 });

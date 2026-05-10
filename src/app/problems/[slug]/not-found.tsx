@@ -7,7 +7,6 @@ export default function NotFound() {
       breadcrumbs={[
         { url: routerConfig.home.path, name: "Home" },
         { url: routerConfig.problems.path, name: "Problems" },
-        { url: routerConfig.problems.path, name: "Submissions" },
       ]}
     />
   );
