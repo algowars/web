@@ -8,7 +8,6 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
-import ProblemLoading from "./loading";
 import ProblemLayout from "@/features/problem/problem-layout";
 
 export const generateMetadata = async ({
