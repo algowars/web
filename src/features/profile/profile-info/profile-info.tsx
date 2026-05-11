@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useProfileContext } from "../profile-context";
+
 import {
   Card,
   CardDescription,
@@ -12,19 +11,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import dayjs from "dayjs";
 import ProfileInfoEdit from "./profile-info-edit";
+import { useProfileStore } from "../profile-store";
 
 export default function ProfileInfo() {
-  const { profileAggregate } = useProfileContext();
+  const profile = useProfileStore((s) => s.profile);
   const getInitials = (username: string) => {
     return username[0];
   };
 
-  if (!profileAggregate) {
+  if (!profile) {
     return null;
   }
 
-  const createdOn = profileAggregate.profile.createdOn
-    ? dayjs(profileAggregate.profile.createdOn).format("MMMM D, YYYY")
+  const createdOn = profile.createdOn
+    ? dayjs(profile.createdOn).format("MMMM D, YYYY")
     : null;
 
   return (
@@ -32,20 +32,20 @@ export default function ProfileInfo() {
       <CardHeader className="flex flex-row gap-3">
         <Avatar className="h-8 w-8">
           <AvatarImage
-            src={profileAggregate.profile.imageUrl}
+            src={profile.imageUrl}
             fallbackSrc="/default-pfp.png"
-            alt={`${profileAggregate.profile.username}'s avatar`}
+            alt={`${profile.username}'s avatar`}
           />
           <AvatarFallback className="text-xs">
-            {profileAggregate.profile.imageUrl ? (
-              getInitials(profileAggregate.profile.username)
+            {profile.imageUrl ? (
+              getInitials(profile.username)
             ) : (
               <User className="h-4 w-4" />
             )}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-0.5">
-          <CardTitle>{profileAggregate.profile.username}</CardTitle>
+          <CardTitle>{profile.username}</CardTitle>
           <CardDescription>{createdOn}</CardDescription>
         </div>
       </CardHeader>
