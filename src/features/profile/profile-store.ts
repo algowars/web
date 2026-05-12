@@ -1,3 +1,4 @@
+
 import { create } from "zustand";
 import { Profile } from "./models/profile"
 import { devtools, subscribeWithSelector } from "zustand/middleware";
@@ -8,7 +9,7 @@ type ProfileState = {
 }
 
 type ProfileActions = {
-    setProfile: (profile: Profile) => void;
+    initProfile: (profile: Profile) => void;
 }
 
 type ProfileStore = ProfileState & ProfileActions;
@@ -18,7 +19,7 @@ export const useProfileStore = create<ProfileStore>()(
         devtools((set) => ({
             profile: null,
 
-            setProfile: (profile: Profile) => set({ profile})
+            initProfile: (profile: Profile) => set({ profile})
         }))
     )
 );
