@@ -40,6 +40,29 @@ function testCaseStatusInfo(status: SubmissionResultStatus): {
         className:
           "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
       };
+    case SubmissionResultStatus.RuntimeErrorSigSegv:
+    case SubmissionResultStatus.RuntimeErrorSigXfsz:
+    case SubmissionResultStatus.RuntimeErrorSigFpe:
+    case SubmissionResultStatus.RuntimeErrorSigAbrt:
+    case SubmissionResultStatus.RuntimeErrorNzec:
+    case SubmissionResultStatus.RuntimeErrorOther:
+      return {
+        label: "Runtime Error",
+        className:
+          "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+      };
+    case SubmissionResultStatus.InternalError:
+      return {
+        label: "Internal Error",
+        className:
+          "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+      };
+    case SubmissionResultStatus.ExecFormatError:
+      return {
+        label: "Exec Format Error",
+        className:
+          "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+      };
     default:
       return { label: "Processing", className: "" };
   }
@@ -73,7 +96,7 @@ function TestCaseTab({ testCase }: { testCase: RunResultTestCase }) {
           {testCase.expectedOutput}
         </pre>
       </div>
-      {testCase.actualOutput !== undefined && (
+      {testCase.actualOutput !== undefined && testCase.actualOutput !== "" && (
         <div>
           <label className="block text-sm font-medium mb-1">
             Actual Output
@@ -86,6 +109,14 @@ function TestCaseTab({ testCase }: { testCase: RunResultTestCase }) {
             }`}
           >
             {testCase.actualOutput}
+          </pre>
+        </div>
+      )}
+      {testCase.errorOutput && (
+        <div>
+          <label className="block text-sm font-medium mb-1">Error Output</label>
+          <pre className="rounded-md bg-red-50 dark:bg-red-950/30 px-3 py-2 text-sm font-mono whitespace-pre-wrap text-red-700 dark:text-red-400">
+            {testCase.errorOutput}
           </pre>
         </div>
       )}

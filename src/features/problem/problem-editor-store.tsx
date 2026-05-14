@@ -49,6 +49,8 @@ export const useProblemEditorStore = create<ProblemEditorStore>()(
           problem,
           currentVersionId:
             problem?.availableLanguages[0]?.versions[0]?.id ?? null,
+          lastRunResult: null,
+          activeSubmissionId: null,
         }),
 
       changeCode: (code) => set({ code }),
