@@ -6,16 +6,26 @@ import { useProblemEditorStore } from "../problem-editor-store";
 import { useRunSubmission } from "../api/run-submission";
 import { useCreateSubmission } from "../api/create-submission";
 import { ProblemSetup } from "@/features/problems/models/problem-setup";
+import { accountStore } from "@/features/account/account-store";
+import { Account } from "@/features/auth/models/account.model";
 
 vi.mock("../problem-editor-store");
 vi.mock("../api/run-submission");
 vi.mock("../api/create-submission");
+vi.mock("@/features/account/account-store");
 vi.mock("sonner", () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
   },
 }));
+
+const mockAccount: Account = {
+  id: "user-1",
+  username: "testuser",
+  createdAt: new Date(),
+  updatedAt: null,
+};
 
 const mockSetup: ProblemSetup = {
   id: 1,
@@ -60,7 +70,8 @@ describe("ProblemActions", () => {
   const setupMocks = (
     storeOverrides: Partial<StoreState> = {},
     runPending = false,
-    submitPending = false
+    submitPending = false,
+    account: Account | null = mockAccount
   ) => {
     const defaultState: StoreState = {
       code: "function solution() { return 1; }",
@@ -71,6 +82,11 @@ describe("ProblemActions", () => {
 
     (useProblemEditorStore as unknown as Mock).mockImplementation(
       (selector: (state: StoreState) => unknown) => selector(defaultState)
+    );
+
+    (accountStore as unknown as Mock).mockImplementation(
+      (selector: (state: { account: Account | null }) => unknown) =>
+        selector({ account })
     );
 
     (useRunSubmission as Mock).mockReturnValue({
@@ -208,5 +224,15 @@ describe("ProblemActions", () => {
 
     expect(screen.getByRole("button", { name: "Run" })).not.toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).not.toBeDisabled();
+  });
+
+  it("disables buttons and shows lock icon when not authenticated", () => {
+    setupMocks({}, false, false, null);
+
+    render(<ProblemActions slug="two-sum" />);
+
+    expect(screen.getByRole("button", { name: /Run/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Submit/ })).toBeDisabled();
+    expect(screen.getAllByTestId("lock-icon")).toHaveLength(2);
   });
 });

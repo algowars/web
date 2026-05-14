@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { useCreateSubmission } from "../api/create-submission";
 import { routerConfig } from "@/router-config";
 import { cn } from "@/lib/utils";
+import { accountStore } from "@/features/account/account-store";
+import { Lock } from "lucide-react";
 
 type ProblemActionsProps = React.HTMLAttributes<HTMLUListElement> & {
   slug: string;
@@ -24,6 +26,9 @@ export default function ProblemActions({
     (s) => s.setActiveSubmissionId
   );
   const problemSetupId = setup?.id ?? 1;
+
+  const account = accountStore((s) => s.account);
+  const isAuthenticated = !!account;
 
   const runSubmissionMutation = useRunSubmission();
   const submitSubmissionMutation = useCreateSubmission();
@@ -55,6 +60,13 @@ export default function ProblemActions({
     }
   };
 
+  const isActionDisabled =
+    !isAuthenticated ||
+    runSubmissionMutation.isPending ||
+    submitSubmissionMutation.isPending ||
+    !code ||
+    !problemSetupId;
+
   return (
     <ul {...props}>
       <li>
@@ -62,13 +74,9 @@ export default function ProblemActions({
           className="w-24"
           variant="secondary"
           onClick={handleRun}
-          disabled={
-            runSubmissionMutation.isPending ||
-            submitSubmissionMutation.isPending ||
-            !code ||
-            !problemSetupId
-          }
+          disabled={isActionDisabled}
         >
+          {!isAuthenticated && <Lock size={14} data-testid="lock-icon" />}
           {runSubmissionMutation.isPending ? "Running..." : "Run"}
         </Button>
       </li>
@@ -77,13 +85,9 @@ export default function ProblemActions({
           className="w-24"
           data-cy="submit-btn"
           onClick={handleSubmit}
-          disabled={
-            runSubmissionMutation.isPending ||
-            submitSubmissionMutation.isPending ||
-            !code ||
-            !problemSetupId
-          }
+          disabled={isActionDisabled}
         >
+          {!isAuthenticated && <Lock size={14} data-testid="lock-icon" />}
           {submitSubmissionMutation.isPending ? "Running..." : "Submit"}
         </Button>
       </li>
