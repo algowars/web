@@ -69,26 +69,14 @@ function TestCaseTab({ testCase }: { testCase: RunResultTestCase }) {
     testCase.actualOutput !== undefined &&
     testCase.actualOutput === testCase.expectedOutput;
 
-  console.log("TestCaseTab", { testCase, matches });
-
   return (
-    <div className="space-y-4 p-4 overflow-y-auto">
+    <div className="space-y-4 p-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">Status:</span>
         <Badge variant="secondary" className={className}>
           {label}
         </Badge>
       </div>
-      {testCase.errorOutput && (
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Error Output
-          </label>
-          <pre className="rounded-md bg-red-50 dark:bg-red-950/30 px-3 py-2 text-sm font-mono whitespace-pre-wrap text-red-700 dark:text-red-400">
-            {testCase.errorOutput}
-          </pre>
-        </div>
-      )}
       <div>
         <label className="block text-sm font-medium mb-1">Input</label>
         <pre className="rounded-md bg-muted px-3 py-2 text-sm font-mono whitespace-pre-wrap">
@@ -116,6 +104,14 @@ function TestCaseTab({ testCase }: { testCase: RunResultTestCase }) {
             }`}
           >
             {testCase.actualOutput}
+          </pre>
+        </div>
+      )}
+      {testCase.errorOutput && (
+        <div>
+          <label className="block text-sm font-medium mb-1">Error Output</label>
+          <pre className="rounded-md bg-red-50 dark:bg-red-950/30 px-3 py-2 text-sm font-mono whitespace-pre-wrap text-red-700 dark:text-red-400">
+            {testCase.errorOutput}
           </pre>
         </div>
       )}
