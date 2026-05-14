@@ -52,9 +52,14 @@ function testCaseStatusInfo(status: SubmissionResultStatus): {
           "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
       };
     case SubmissionResultStatus.InternalError:
-    case SubmissionResultStatus.ExecFormatError:
       return {
         label: "Internal Error",
+        className:
+          "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+      };
+    case SubmissionResultStatus.ExecFormatError:
+      return {
+        label: "Exec Format Error",
         className:
           "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
       };
