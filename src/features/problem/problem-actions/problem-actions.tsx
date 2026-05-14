@@ -8,15 +8,16 @@ import { toast } from "sonner";
 import { useCreateSubmission } from "../api/create-submission";
 import { routerConfig } from "@/router-config";
 import { cn } from "@/lib/utils";
-import { accountStore } from "@/features/account/account-store";
 import { Lock } from "lucide-react";
 
 type ProblemActionsProps = React.HTMLAttributes<HTMLUListElement> & {
   slug: string;
+  isAuthenticated: boolean;
 };
 
 export default function ProblemActions({
   slug,
+  isAuthenticated,
   ...props
 }: ProblemActionsProps) {
   const code = useProblemEditorStore((s) => s.code);
@@ -26,9 +27,6 @@ export default function ProblemActions({
     (s) => s.setActiveSubmissionId
   );
   const problemSetupId = setup?.id ?? 1;
-
-  const account = accountStore((s) => s.account);
-  const isAuthenticated = !!account;
 
   const runSubmissionMutation = useRunSubmission();
   const submitSubmissionMutation = useCreateSubmission();
