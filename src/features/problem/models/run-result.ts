@@ -11,5 +11,6 @@ export interface RunResultTestCase {
   input: string;
   expectedOutput: string;
   actualOutput?: string;
+  errorOutput?: string;
   status: SubmissionResultStatus;
 }
