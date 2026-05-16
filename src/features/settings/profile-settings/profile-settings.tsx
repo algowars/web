@@ -1,20 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSuspenseProfileSettings } from "@/features/profile/api/get-profile-settings";
-import { useProfileSettingsStore } from "../profile-settings-store";
+import { useSuspenseUserSettings } from "@/features/settings/api/get-user-settings";
 import ProfileSettingsForm from "./profile-settings-form";
+import { useSettingsStore } from "../settings-store";
 
 export default function ProfileSettings() {
-  const { data: profileSettings } = useSuspenseProfileSettings({});
-  const initProfile = useProfileSettingsStore((s) => s.initProfile);
+  const { data: settings } = useSuspenseUserSettings({});
+  const initSettings = useSettingsStore((s) => s.initSettings);
 
-  useEffect(() => {
-    if (profileSettings) {
-      initProfile(profileSettings);
-    }
-  }, [profileSettings, initProfile]);
+  if (settings) {
+    initSettings(settings);
+  }
 
   return (
     <Card>

@@ -2,8 +2,8 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import ProfileSettings from "./profile-settings";
 
-vi.mock("@/features/profile/api/get-profile-settings", () => ({
-  useSuspenseProfileSettings: () => ({
+vi.mock("@/features/settings/api/get-user-settings", () => ({
+  useSuspenseUserSettings: () => ({
     data: {
       username: "testuser",
       bio: "My test bio",
@@ -12,14 +12,14 @@ vi.mock("@/features/profile/api/get-profile-settings", () => ({
   }),
 }));
 
-vi.mock("../profile-settings-store", () => ({
-  useProfileSettingsStore: (selector: (s: unknown) => unknown) =>
+vi.mock("../settings-store", () => ({
+  useSettingsStore: (selector: (s: unknown) => unknown) =>
     selector({
-      profile: { username: "testuser", bio: "My test bio" },
-      isEditing: false,
-      initProfile: vi.fn(),
-      beginEditing: vi.fn(),
-      stopEditing: vi.fn(),
+      settings: { username: "testuser", bio: "My test bio" },
+      profileIsEditing: false,
+      initSettings: vi.fn(),
+      beginProfileEditing: vi.fn(),
+      stopProfileEditing: vi.fn(),
     }),
 }));
 

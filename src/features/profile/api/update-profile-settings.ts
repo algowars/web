@@ -38,6 +38,9 @@ export const useUpdateProfileSettings = ({
       queryClient.invalidateQueries({
         queryKey: ["profile"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["settings"],
+      });
       onSuccess?.(...args);
     },
     ...restConfig,

@@ -1,10 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 import SettingsAccountPage from "./page";
-import AccountSettings from "@/features/settings/account-settings/account-settings";
 
 vi.mock("@/features/settings/account-settings/account-settings", () => ({
   default: () => <div data-testid="account-settings">AccountSettings</div>,
 }));
+
+vi.mock(
+  "@/features/settings/account-settings/account-settings-loading",
+  () => ({
+    default: () => <div>Loading</div>,
+  })
+);
 
 describe("SettingsAccountPage", () => {
   it("can be initialized", () => {
@@ -12,7 +19,7 @@ describe("SettingsAccountPage", () => {
   });
 
   it("renders AccountSettings component", () => {
-    const result = SettingsAccountPage();
-    expect(result).toEqual(<AccountSettings />);
+    render(<SettingsAccountPage />);
+    expect(screen.getByTestId("account-settings")).toBeInTheDocument();
   });
 });

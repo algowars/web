@@ -12,13 +12,11 @@ import {
 } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useProfileSettingsStore } from "../profile-settings-store";
 import { useUpdateProfileSettings } from "@/features/profile/api/update-profile-settings";
+import { useSettingsStore } from "../settings-store";
 
 const profileSettingsFormSchema = z.object({
-  bio: z
-    .string()
-    .max(255, { message: "Bio must be 255 characters or fewer." }),
+  bio: z.string().max(255, { message: "Bio must be 255 characters or fewer." }),
 });
 
 export type ProfileSettingsFormValues = z.infer<
@@ -26,10 +24,10 @@ export type ProfileSettingsFormValues = z.infer<
 >;
 
 export default function ProfileSettingsForm() {
-  const profile = useProfileSettingsStore((s) => s.profile);
-  const isEditing = useProfileSettingsStore((s) => s.isEditing);
-  const beginEditing = useProfileSettingsStore((s) => s.beginEditing);
-  const stopEditing = useProfileSettingsStore((s) => s.stopEditing);
+  const profile = useSettingsStore((s) => s.settings);
+  const isEditing = useSettingsStore((s) => s.profileIsEditing);
+  const beginEditing = useSettingsStore((s) => s.beginProfileEditing);
+  const stopEditing = useSettingsStore((s) => s.stopProfileEditing);
 
   const updateProfileSettings = useUpdateProfileSettings({
     mutationConfig: {
@@ -59,9 +57,8 @@ export default function ProfileSettingsForm() {
     stopEditing();
   }
 
-  const bioValue = form.watch("bio");
-
   if (!isEditing) {
+    const bioValue = profile?.bio;
     return (
       <div className="flex items-start gap-4">
         <div className="flex-1">
