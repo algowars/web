@@ -1,10 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
+import React from "react";
 import ProfileInfoEdit from "./profile-info-edit";
 
 const mockProfileStoreState = { profile: null as { username: string } | null };
-const mockAccountStoreState = { account: null as { username: string } | null };
+const mockAccountStoreState = {
+  account: null as { username?: string } | null,
+};
 
 vi.mock("../profile-store", () => ({
   useProfileStore: (selector: (s: typeof mockProfileStoreState) => unknown) =>
@@ -38,80 +41,52 @@ vi.mock("@/router-config", () => ({
   },
 }));
 
-import React from "react";
-
 describe("ProfileInfoEdit", () => {
   beforeEach(() => {
     mockProfileStoreState.profile = null;
     mockAccountStoreState.account = null;
   });
 
-  it("returns null when profileAggregate is null", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: null,
-    } as ReturnType<typeof useProfileContext>);
-    mockAccount({ username: "testuser" });
+  it("returns null when profile is null", () => {
+    mockProfileStoreState.profile = null;
+    mockAccountStoreState.account = { username: "testuser" };
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
   });
 
   it("returns null when account is null", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: { username: "testuser" },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
-    mockAccount(null);
+    mockProfileStoreState.profile = { username: "testuser" };
+    mockAccountStoreState.account = null;
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
   });
 
   it("returns null when account has no username", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: { username: "testuser" },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
-    mockAccount({ username: undefined });
+    mockProfileStoreState.profile = { username: "testuser" };
+    mockAccountStoreState.account = { username: undefined };
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
   });
 
   it("returns null when user is not the profile owner", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: { username: "profileowner" },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
-    mockAccount({ username: "differentuser" });
+    mockProfileStoreState.profile = { username: "profileowner" };
+    mockAccountStoreState.account = { username: "differentuser" };
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
   });
 
   it("renders Edit Profile link when user is the owner", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: { username: "testuser" },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
-    mockAccount({ username: "testuser" });
+    const username = faker.internet.username();
+    mockProfileStoreState.profile = { username };
+    mockAccountStoreState.account = { username };
 
     render(<ProfileInfoEdit />);
     const link = screen.getByRole("link", { name: "Edit Profile" });
     expect(link).toBeDefined();
     expect(link.getAttribute("href")).toBe("/settings/profile");
-  });
-
-  it("renders null when account is null", () => {
-    const username = faker.internet.username();
-    mockProfileStoreState.profile = { username };
-    mockAccountStoreState.account = null;
-
-    const { container } = render(<ProfileInfoEdit />);
-    expect(container.firstChild).toBeNull();
   });
 });
