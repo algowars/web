@@ -2,9 +2,14 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import AuthLoginButton from "./auth-login-button";
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/problems/two-sum/submissions",
+  useSearchParams: () => new URLSearchParams("tab=all"),
+}));
+
 vi.mock("@/router-config", () => ({
   routerConfig: {
-    authLogIn: { path: "/auth/login?returnTo=/account/callback" },
+    authLogIn: { path: "/auth/login" },
   },
 }));
 
@@ -20,7 +25,7 @@ describe("AuthLoginButton", () => {
 
     expect(screen.getByRole("link")).toHaveAttribute(
       "href",
-      "/auth/login?returnTo=/account/callback"
+      "/auth/login?returnTo=%2Fproblems%2Ftwo-sum%2Fsubmissions%3Ftab%3Dall"
     );
   });
 

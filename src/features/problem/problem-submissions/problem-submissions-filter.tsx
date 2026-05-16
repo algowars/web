@@ -4,9 +4,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useProblemSubmissionsStore } from "./problem-submissions-store";
 import { ProblemSubmissionsOptions } from "./problem-submissions-options";
 
-export default function ProblemSubmissionsFilter(
-  props: React.ComponentProps<"div">
-) {
+type ProblemSubmissionsFilterProps = React.ComponentProps<"div"> & {
+  isDisabled?: boolean;
+};
+
+export default function ProblemSubmissionsFilter({
+  isDisabled,
+  ...props
+}: ProblemSubmissionsFilterProps) {
   const filterOption = useProblemSubmissionsStore((s) => s.filterOption);
   const changeFilterOption = useProblemSubmissionsStore(
     (s) => s.changeFilterOption
@@ -19,6 +24,7 @@ export default function ProblemSubmissionsFilter(
       <CardContent>
         <RadioGroup
           value={filterOption}
+          disabled={isDisabled}
           onValueChange={(value) =>
             changeFilterOption(value as ProblemSubmissionsOptions)
           }

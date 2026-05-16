@@ -15,6 +15,9 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ProblemSubmissionsFilter from "./problem-submissions-filter";
 import { ProblemSubmissionsOptions } from "./problem-submissions-options";
+import AuthenticationGuard from "@/features/auth/guards/authentication-guard";
+import ProblemSubmissionsUnauthenticatedCard from "./problem-submissions-unauthenticated-card";
+import { useUser } from "@auth0/nextjs-auth0";
 
 type ProblemSubmissionsLayoutProps = {
   problem: Problem;
@@ -25,7 +28,7 @@ export default function ProblemSubmissionsLayout({
 }: ProblemSubmissionsLayoutProps) {
   const initProblem = useProblemSubmissionsStore((s) => s.initProblem);
   initProblem(problem);
-
+  const { user } = useUser();
   const filterOption = useProblemSubmissionsStore((s) => s.filterOption);
   return (
     <SidebarLayout
@@ -62,14 +65,26 @@ export default function ProblemSubmissionsLayout({
           <Suspense
             fallback={<ProblemSubmissionsSkeleton className="col-span-9" />}
           >
-            {filterOption === ProblemSubmissionsOptions.ALL_SOLUTIONS ? (
-              <ProblemSolutions className="col-span-9" />
-            ) : (
-              <ProblemSubmissions className="col-span-9" />
-            )}
+            <AuthenticationGuard
+              fallbackComponent={
+                <ProblemSubmissionsUnauthenticatedCard className="col-span-9" />
+              }
+              loadingComponent={
+                <ProblemSubmissionsSkeleton className="col-span-9" />
+              }
+            >
+              {filterOption === ProblemSubmissionsOptions.ALL_SOLUTIONS ? (
+                <ProblemSolutions className="col-span-9" />
+              ) : (
+                <ProblemSubmissions className="col-span-9" />
+              )}
+            </AuthenticationGuard>
           </Suspense>
         </ErrorBoundary>
-        <ProblemSubmissionsFilter className="col-span-3 self-start" />
+        <ProblemSubmissionsFilter
+          className="col-span-3 self-start"
+          isDisabled={!user}
+        />
       </div>
     </SidebarLayout>
   );
