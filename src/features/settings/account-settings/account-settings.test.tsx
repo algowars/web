@@ -15,7 +15,11 @@ vi.mock("@/features/settings/api/get-user-settings", () => ({
 vi.mock("../settings-store", () => ({
   useSettingsStore: (selector: (s: unknown) => unknown) =>
     selector({
-      settings: { username: "testuser", bio: "My bio", usernameLastChangedAt: null },
+      settings: {
+        username: "testuser",
+        bio: "My bio",
+        usernameLastChangedAt: null,
+      },
       accountIsEditing: false,
       initSettings: vi.fn(),
       beginAccountEditing: vi.fn(),

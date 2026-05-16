@@ -53,9 +53,7 @@ export default function SettingsField({
   return (
     <form onSubmit={onSave}>
       {editContent}
-      {error && (
-        <p className="mt-2 text-sm text-destructive">{error}</p>
-      )}
+      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
       <div className="flex gap-3 mt-4">
         <Button
           type="button"

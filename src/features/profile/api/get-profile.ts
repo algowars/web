@@ -1,5 +1,9 @@
 import { api } from "@/lib/api-client";
-import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 import { ProfileAggregate } from "../models/profile-aggregate";
 
@@ -33,8 +37,9 @@ export const useProfile = ({
 
 export const useSuspenseProfile = ({
   username,
-  queryConfig = {}
-}: UseProfileOptions) => useSuspenseQuery({
-  ...getProfileQueryOptions(username),
-  ...queryConfig
-})
+  queryConfig = {},
+}: UseProfileOptions) =>
+  useSuspenseQuery({
+    ...getProfileQueryOptions(username),
+    ...queryConfig,
+  });

@@ -9,9 +9,7 @@ vi.mock("@/features/settings/profile-settings/profile-settings", () => ({
 vi.mock(
   "@/features/settings/profile-settings/profile-settings-loading",
   () => ({
-    default: () => (
-      <div data-testid="profile-settings-loading">Loading...</div>
-    ),
+    default: () => <div data-testid="profile-settings-loading">Loading...</div>,
   })
 );
 
