@@ -4,7 +4,7 @@ import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { UseProfileOptions, useSuspenseProfile } from "./api/get-profile";
 
 type ProfileState = {
-  profile: Profile;
+  profile: Profile | null;
 };
 
 type ProfileActions = {
