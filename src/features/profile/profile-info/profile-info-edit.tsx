@@ -11,13 +11,11 @@ export default function ProfileInfoEdit() {
   const profile = useProfileStore((s) => s.profile);
   const account = accountStore((state) => state.account);
 
-  if (!profile || !account?.username) {
-    return null;
-  }
-
-  const isOwner = profile.username === account.username;
-
-  if (!isOwner) {
+  if (
+    !profile ||
+    !account?.username ||
+    profile.username !== account.username
+  ) {
     return null;
   }
 
