@@ -46,27 +46,59 @@ describe("ProfileInfoEdit", () => {
     mockAccountStoreState.account = null;
   });
 
-  it("renders null when account has no username", () => {
-    const username = faker.internet.username();
-    mockProfileStoreState.profile = { username };
-    mockAccountStoreState.account = { username: "" };
+  it("returns null when profileAggregate is null", () => {
+    mockUseProfileContext.mockReturnValue({
+      profileAggregate: null,
+    } as ReturnType<typeof useProfileContext>);
+    mockAccount({ username: "testuser" });
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
   });
 
-  it("renders null when user is not the owner", () => {
-    mockProfileStoreState.profile = { username: "owner" };
-    mockAccountStoreState.account = { username: "other" };
+  it("returns null when account is null", () => {
+    mockUseProfileContext.mockReturnValue({
+      profileAggregate: {
+        profile: { username: "testuser" },
+      },
+    } as unknown as ReturnType<typeof useProfileContext>);
+    mockAccount(null);
+
+    const { container } = render(<ProfileInfoEdit />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("returns null when account has no username", () => {
+    mockUseProfileContext.mockReturnValue({
+      profileAggregate: {
+        profile: { username: "testuser" },
+      },
+    } as unknown as ReturnType<typeof useProfileContext>);
+    mockAccount({ username: undefined });
+
+    const { container } = render(<ProfileInfoEdit />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("returns null when user is not the profile owner", () => {
+    mockUseProfileContext.mockReturnValue({
+      profileAggregate: {
+        profile: { username: "profileowner" },
+      },
+    } as unknown as ReturnType<typeof useProfileContext>);
+    mockAccount({ username: "differentuser" });
 
     const { container } = render(<ProfileInfoEdit />);
     expect(container.firstChild).toBeNull();
   });
 
   it("renders Edit Profile link when user is the owner", () => {
-    const username = faker.internet.username();
-    mockProfileStoreState.profile = { username };
-    mockAccountStoreState.account = { username };
+    mockUseProfileContext.mockReturnValue({
+      profileAggregate: {
+        profile: { username: "testuser" },
+      },
+    } as unknown as ReturnType<typeof useProfileContext>);
+    mockAccount({ username: "testuser" });
 
     render(<ProfileInfoEdit />);
     const link = screen.getByRole("link", { name: "Edit Profile" });

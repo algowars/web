@@ -1,5 +1,5 @@
 import { api } from "@/lib/api-client";
-import { ProfileSettings } from "@/features/profile/models/profile-settings";
+import { ProfileSettings } from "@/lib/models/profile-settings";
 import {
   queryOptions,
   useQuery,
