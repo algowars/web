@@ -1,18 +1,27 @@
-import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 import SettingsProfilePage from "./page";
-import ProfileSettings from "@/features/settings/profile-settings/profile-settings";
 
 vi.mock("@/features/settings/profile-settings/profile-settings", () => ({
   default: () => <div data-testid="profile-settings">ProfileSettings</div>,
 }));
+
+vi.mock(
+  "@/features/settings/profile-settings/profile-settings-loading",
+  () => ({
+    default: () => (
+      <div data-testid="profile-settings-loading">Loading...</div>
+    ),
+  })
+);
 
 describe("SettingsProfilePage", () => {
   it("can be initialized", () => {
     expect(SettingsProfilePage).toBeDefined();
   });
 
-  it("renders ProfileSettings component", () => {
-    const result = SettingsProfilePage();
-    expect(result).toEqual(<ProfileSettings />);
+  it("renders ProfileSettings inside Suspense", () => {
+    render(<SettingsProfilePage />);
+    expect(screen.getByTestId("profile-settings")).toBeInTheDocument();
   });
 });
