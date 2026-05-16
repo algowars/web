@@ -22,7 +22,7 @@ export default function ProblemActions({
 }: ProblemActionsProps) {
   const code = useProblemEditorStore((s) => s.code);
   const setup = useProblemEditorStore((s) => s.setup);
-  const setLastRunResult = useProblemEditorStore((s) => s.setLastRunResult);
+  // const setLastRunResult = useProblemEditorStore((s) => s.setLastRunResult);
   const setActiveSubmissionId = useProblemEditorStore(
     (s) => s.setActiveSubmissionId
   );
@@ -31,19 +31,19 @@ export default function ProblemActions({
   const runSubmissionMutation = useRunSubmission();
   const submitSubmissionMutation = useCreateSubmission();
 
-  const handleRun = async () => {
-    try {
-      setLastRunResult(null);
-      const result = await runSubmissionMutation.mutateAsync({
-        code,
-        problemSetupId,
-      });
-      toast.success("Submission created");
-      setLastRunResult(result);
-    } catch {
-      toast.error("Failed to run submission.");
-    }
-  };
+  // const handleRun = async () => {
+  //   try {
+  //     setLastRunResult(null);
+  //     const result = await runSubmissionMutation.mutateAsync({
+  //       code,
+  //       problemSetupId,
+  //     });
+  //     toast.success("Submission created");
+  //     setLastRunResult(result);
+  //   } catch {
+  //     toast.error("Failed to run submission.");
+  //   }
+  // };
 
   const handleSubmit = async () => {
     try {
@@ -67,7 +67,7 @@ export default function ProblemActions({
 
   return (
     <ul {...props}>
-      <li>
+      {/* <li>
         <Button
           className="w-24"
           variant="secondary"
@@ -77,7 +77,7 @@ export default function ProblemActions({
           {!isAuthenticated && <Lock size={14} data-testid="lock-icon" />}
           {runSubmissionMutation.isPending ? "Running..." : "Run"}
         </Button>
-      </li>
+      </li> */}
       <li>
         <Button
           className="w-24"
