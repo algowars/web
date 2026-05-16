@@ -5,7 +5,7 @@ import z from "zod";
 
 export const updateUsernameSettingsSchema = z.object({
   username: z.string().min(1, {
-    message: "Username must be at least 1 characters.",
+    message: "Username cannot be empty.",
   }),
 });
 
