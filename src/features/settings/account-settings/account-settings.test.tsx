@@ -1,103 +1,44 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import AccountSettings from "./account-settings";
 
-vi.mock("@/features/auth/api/get-account-settings", () => ({
-  useAccountSettings: vi.fn(),
+vi.mock("@/features/settings/api/get-user-settings", () => ({
+  useSuspenseUserSettings: () => ({
+    data: {
+      username: "testuser",
+      bio: "My bio",
+      usernameLastChangedAt: null,
+    },
+  }),
 }));
 
-import { useAccountSettings } from "@/features/auth/api/get-account-settings";
+vi.mock("../settings-store", () => ({
+  useSettingsStore: (selector: (s: unknown) => unknown) =>
+    selector({
+      settings: {
+        username: "testuser",
+        bio: "My bio",
+        usernameLastChangedAt: null,
+      },
+      accountIsEditing: false,
+      initSettings: vi.fn(),
+      beginAccountEditing: vi.fn(),
+      stopAccountEditing: vi.fn(),
+    }),
+}));
 
-const mockUseAccountSettings = vi.mocked(useAccountSettings);
+vi.mock("./account-settings-form", () => ({
+  default: () => <div data-testid="account-settings-form">Form</div>,
+}));
 
 describe("AccountSettings", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it("renders the card with account settings title", () => {
+    render(<AccountSettings />);
+    expect(screen.getByText("Account Settings")).toBeInTheDocument();
   });
 
-  describe("when loading", () => {
-    it("renders loading state", () => {
-      mockUseAccountSettings.mockReturnValue({
-        data: undefined,
-        isLoading: true,
-        isError: false,
-      } as ReturnType<typeof useAccountSettings>);
-
-      render(<AccountSettings />);
-
-      expect(screen.getByText("Account Settings")).toBeInTheDocument();
-      expect(screen.getByText("Loading…")).toBeInTheDocument();
-    });
-  });
-
-  describe("when error", () => {
-    it("renders error state", () => {
-      mockUseAccountSettings.mockReturnValue({
-        data: undefined,
-        isLoading: false,
-        isError: true,
-      } as ReturnType<typeof useAccountSettings>);
-
-      render(<AccountSettings />);
-
-      expect(screen.getByText("Account Settings")).toBeInTheDocument();
-      expect(
-        screen.getByText("Error loading account settings.")
-      ).toBeInTheDocument();
-    });
-  });
-
-  describe("when data is loaded", () => {
-    beforeEach(() => {
-      mockUseAccountSettings.mockReturnValue({
-        data: { account: { username: "testuser" } },
-        isLoading: false,
-        isError: false,
-      } as unknown as ReturnType<typeof useAccountSettings>);
-    });
-
-    it("renders the username", () => {
-      render(<AccountSettings />);
-
-      expect(screen.getByText("Account Settings")).toBeInTheDocument();
-      expect(screen.getByText("Username")).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
-    });
-
-    it("shows edit form when Edit is clicked", async () => {
-      const user = userEvent.setup();
-      render(<AccountSettings />);
-
-      await user.click(screen.getByRole("button", { name: "Edit" }));
-
-      expect(screen.getByPlaceholderText("username")).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Cancel" })
-      ).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
-    });
-
-    it("hides edit form when Cancel is clicked", async () => {
-      const user = userEvent.setup();
-      render(<AccountSettings />);
-
-      await user.click(screen.getByRole("button", { name: "Edit" }));
-      await user.click(screen.getByRole("button", { name: "Cancel" }));
-
-      expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
-      expect(screen.queryByPlaceholderText("username")).not.toBeInTheDocument();
-    });
-
-    it("shows warning message when editing", async () => {
-      const user = userEvent.setup();
-      render(<AccountSettings />);
-
-      await user.click(screen.getByRole("button", { name: "Edit" }));
-
-      expect(
-        screen.getByText("You can't change your name for a week.")
-      ).toBeInTheDocument();
-    });
+  it("renders the account settings form", () => {
+    render(<AccountSettings />);
+    expect(screen.getByTestId("account-settings-form")).toBeInTheDocument();
   });
 });

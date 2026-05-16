@@ -32,6 +32,9 @@ export const useUpdateUsername = ({
       queryClient.invalidateQueries({
         queryKey: ["account"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["settings"],
+      });
       onSuccess?.(...args);
     },
     ...restConfig,

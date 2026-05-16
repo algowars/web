@@ -1,19 +1,17 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
-import { useProfileContext } from "../profile-context";
 import { accountStore } from "@/features/account/account-store";
 import Link from "next/link";
 import { routerConfig } from "@/router-config";
 import { cn } from "@/lib/utils";
+import { useProfileStore } from "../profile-store";
 
 export default function ProfileInfoEdit() {
-  const { profileAggregate } = useProfileContext();
+  const profile = useProfileStore((s) => s.profile);
   const account = accountStore((state) => state.account);
 
-  const isOwner = profileAggregate?.profile.username === account?.username;
-
-  if (!profileAggregate?.profile || !account?.username || !isOwner) {
+  if (!profile || !account?.username || profile.username !== account.username) {
     return null;
   }
 
