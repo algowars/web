@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useSettingsStore } from "../settings-store";
-import { useUpdateUsername } from "@/features/auth/api/update-username";
+import { useUpdateUsernameSettings } from "../api/update-username-settings";
 import SettingsField from "../settings-field";
 
 const accountSettingsFormSchema = z.object({
@@ -32,7 +32,7 @@ export default function AccountSettingsForm() {
   const beginEditing = useSettingsStore((s) => s.beginAccountEditing);
   const stopEditing = useSettingsStore((s) => s.stopAccountEditing);
 
-  const updateUsername = useUpdateUsername({
+  const updateUsername = useUpdateUsernameSettings({
     mutationConfig: {
       onSuccess: () => stopEditing(),
     },
