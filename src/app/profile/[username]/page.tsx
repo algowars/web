@@ -5,7 +5,11 @@ import { getProfileQueryOptions } from "@/features/profile/api/get-profile";
 import Profile from "@/features/profile/profile";
 import ProfileLayout from "@/features/profile/profile-layout";
 import { routerConfig } from "@/router-config";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
 const prefloadData = async (username: string) => {
@@ -19,9 +23,9 @@ const prefloadData = async (username: string) => {
 
   return {
     dehydratedState,
-    queryClient
-  }
-}
+    queryClient,
+  };
+};
 
 export default async function ProblemPage({
   params,
@@ -42,7 +46,7 @@ export default async function ProblemPage({
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProfileLayout profile={profile}/>
+      <ProfileLayout profile={profile} />
     </HydrationBoundary>
   );
 }

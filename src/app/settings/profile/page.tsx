@@ -1,5 +1,10 @@
 import ProfileSettings from "@/features/settings/profile-settings/profile-settings";
+import { Suspense } from "react";
 
 export default function SettingsProfilePage() {
-  return <ProfileSettings />;
+  return (
+    <Suspense>
+      <ProfileSettings />
+    </Suspense>
+  );
 }
