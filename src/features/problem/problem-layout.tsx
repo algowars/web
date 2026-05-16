@@ -12,9 +12,13 @@ import ProblemCodeEditorLanguageSelect from "./problem-editor/problem-editor-lan
 
 type ProblemLayoutProps = {
   problem: Problem;
+  isAuthenticated: boolean;
 };
 
-export default function ProblemLayout({ problem }: ProblemLayoutProps) {
+export default function ProblemLayout({
+  problem,
+  isAuthenticated,
+}: ProblemLayoutProps) {
   const languageVersion = useProblemEditorStore((s) => s.getLanguageVersion());
   const setProblem = useProblemEditorStore((s) => s.setProblem);
   const setSetup = useProblemEditorStore((s) => s.setSetup);
@@ -54,6 +58,7 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
           <ProblemActions
             className="flex items-center gap-2 ml-auto"
             slug={problem.slug}
+            isAuthenticated={isAuthenticated}
           />
           <ProblemCodeEditorLanguageSelect className="ml-auto" />
         </div>

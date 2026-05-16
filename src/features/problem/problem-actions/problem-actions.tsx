@@ -8,13 +8,16 @@ import { toast } from "sonner";
 import { useCreateSubmission } from "../api/create-submission";
 import { routerConfig } from "@/router-config";
 import { cn } from "@/lib/utils";
+import { Lock } from "lucide-react";
 
 type ProblemActionsProps = React.HTMLAttributes<HTMLUListElement> & {
   slug: string;
+  isAuthenticated: boolean;
 };
 
 export default function ProblemActions({
   slug,
+  isAuthenticated,
   ...props
 }: ProblemActionsProps) {
   const code = useProblemEditorStore((s) => s.code);
@@ -55,6 +58,13 @@ export default function ProblemActions({
     }
   };
 
+  const isActionDisabled =
+    !isAuthenticated ||
+    runSubmissionMutation.isPending ||
+    submitSubmissionMutation.isPending ||
+    !code ||
+    !problemSetupId;
+
   return (
     <ul {...props}>
       <li>
@@ -62,13 +72,9 @@ export default function ProblemActions({
           className="w-24"
           variant="secondary"
           onClick={handleRun}
-          disabled={
-            runSubmissionMutation.isPending ||
-            submitSubmissionMutation.isPending ||
-            !code ||
-            !problemSetupId
-          }
+          disabled={isActionDisabled}
         >
+          {!isAuthenticated && <Lock size={14} data-testid="lock-icon" />}
           {runSubmissionMutation.isPending ? "Running..." : "Run"}
         </Button>
       </li>
@@ -77,13 +83,9 @@ export default function ProblemActions({
           className="w-24"
           data-cy="submit-btn"
           onClick={handleSubmit}
-          disabled={
-            runSubmissionMutation.isPending ||
-            submitSubmissionMutation.isPending ||
-            !code ||
-            !problemSetupId
-          }
+          disabled={isActionDisabled}
         >
+          {!isAuthenticated && <Lock size={14} data-testid="lock-icon" />}
           {submitSubmissionMutation.isPending ? "Running..." : "Submit"}
         </Button>
       </li>

@@ -33,8 +33,21 @@ vi.mock("@/components/layouts/sidebar-layout/sidebar-layout", () => ({
 }));
 
 vi.mock("./problem-actions/problem-actions", () => ({
-  default: ({ slug, className }: { slug: string; className?: string }) => (
-    <div data-testid="problem-actions" data-slug={slug} className={className}>
+  default: ({
+    slug,
+    className,
+    isAuthenticated,
+  }: {
+    slug: string;
+    className?: string;
+    isAuthenticated: boolean;
+  }) => (
+    <div
+      data-testid="problem-actions"
+      data-slug={slug}
+      data-is-authenticated={String(isAuthenticated)}
+      className={className}
+    >
       Problem Actions
     </div>
   ),
@@ -98,7 +111,7 @@ describe("ProblemLayout", () => {
   it("renders SidebarLayout", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(screen.getByTestId("sidebar-layout")).toBeInTheDocument();
   });
@@ -106,7 +119,7 @@ describe("ProblemLayout", () => {
   it("renders ProblemEditor", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(screen.getByTestId("problem-editor")).toBeInTheDocument();
   });
@@ -114,7 +127,7 @@ describe("ProblemLayout", () => {
   it("renders ProblemActions in header", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(screen.getByTestId("problem-actions")).toBeInTheDocument();
   });
@@ -122,7 +135,7 @@ describe("ProblemLayout", () => {
   it("renders ProblemCodeEditorLanguageSelect in header", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(screen.getByTestId("language-select")).toBeInTheDocument();
   });
@@ -130,7 +143,7 @@ describe("ProblemLayout", () => {
   it("passes correct breadcrumbs to SidebarLayout", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     const layout = screen.getByTestId("sidebar-layout");
     const breadcrumbs = JSON.parse(
@@ -147,7 +160,7 @@ describe("ProblemLayout", () => {
   it("passes defaultOpen=false to SidebarLayout", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     const layout = screen.getByTestId("sidebar-layout");
     expect(layout.getAttribute("data-default-open")).toBe("false");
@@ -156,16 +169,25 @@ describe("ProblemLayout", () => {
   it("passes slug to ProblemActions", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     const actions = screen.getByTestId("problem-actions");
     expect(actions.getAttribute("data-slug")).toBe("two-sum");
   });
 
+  it("passes isAuthenticated to ProblemActions", () => {
+    setupMocks();
+
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={false} />);
+
+    const actions = screen.getByTestId("problem-actions");
+    expect(actions.getAttribute("data-is-authenticated")).toBe("false");
+  });
+
   it("calls useProblemSetup with problemId", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(useProblemSetup).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -178,7 +200,7 @@ describe("ProblemLayout", () => {
     const mockVersion: LanguageVersion = { id: 101, version: "ES2022" };
     setupMocks(mockVersion);
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(useProblemSetup).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -190,7 +212,7 @@ describe("ProblemLayout", () => {
   it("calls setProblem with problem on mount", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(mockSetProblem).toHaveBeenCalledWith(mockProblem);
   });
@@ -198,7 +220,7 @@ describe("ProblemLayout", () => {
   it("calls setSetup with null when setup data is undefined", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(mockSetSetup).toHaveBeenCalledWith(null);
   });
@@ -206,7 +228,7 @@ describe("ProblemLayout", () => {
   it("renders header items container", () => {
     setupMocks();
 
-    render(<ProblemLayout problem={mockProblem} />);
+    render(<ProblemLayout problem={mockProblem} isAuthenticated={true} />);
 
     expect(screen.getByTestId("header-items")).toBeInTheDocument();
   });

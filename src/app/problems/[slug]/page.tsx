@@ -8,7 +8,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
-import ProblemLayout from "@/features/problem/problem-layout";
+import ProblemLayoutClient from "./problem-layout-client";
 
 export const generateMetadata = async ({
   params,
@@ -58,7 +58,7 @@ export default async function ProblemPage({
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProblemLayout problem={problem} />
+      <ProblemLayoutClient problem={problem} />
     </HydrationBoundary>
   );
 }
