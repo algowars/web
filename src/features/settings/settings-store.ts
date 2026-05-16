@@ -1,4 +1,4 @@
-import { ProfileSettings } from "@/features/profile/models/profile-settings";
+import { ProfileSettings } from "@/lib/models/profile-settings";
 import { create } from "zustand";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 

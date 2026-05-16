@@ -11,7 +11,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
-import { useUpdateProfileSettings } from "@/features/profile/api/update-profile-settings";
+import { useUpdateBioSettings } from "../api/update-bio-settings";
 import { useSettingsStore } from "../settings-store";
 import SettingsField from "../settings-field";
 
@@ -29,7 +29,7 @@ export default function ProfileSettingsForm() {
   const beginEditing = useSettingsStore((s) => s.beginProfileEditing);
   const stopEditing = useSettingsStore((s) => s.stopProfileEditing);
 
-  const updateProfileSettings = useUpdateProfileSettings({
+  const updateProfileSettings = useUpdateBioSettings({
     mutationConfig: {
       onSuccess: () => stopEditing(),
     },

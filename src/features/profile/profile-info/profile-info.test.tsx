@@ -2,57 +2,47 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import ProfileInfo from "./profile-info";
 
-vi.mock("../profile-context", () => ({
-  useProfileContext: vi.fn(),
+vi.mock("../profile-store", () => ({
+  useProfileStore: vi.fn(),
 }));
 
 vi.mock("./profile-info-edit", () => ({
   default: () => <div data-testid="profile-info-edit">Edit</div>,
 }));
 
-import { useProfileContext } from "../profile-context";
+import { useProfileStore } from "../profile-store";
 
-const mockUseProfileContext = vi.mocked(useProfileContext);
+const mockUseProfileStore = vi.mocked(useProfileStore);
 
 describe("ProfileInfo", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("returns null when profileAggregate is null", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: null,
-    } as ReturnType<typeof useProfileContext>);
+  it("returns null when profile is null", () => {
+    mockUseProfileStore.mockReturnValue(null);
 
     const { container } = render(<ProfileInfo />);
     expect(container.firstChild).toBeNull();
   });
 
   it("renders the username", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T00:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+    mockUseProfileStore.mockReturnValue({
+      username: "testuser",
+      imageUrl: "https://example.com/avatar.png",
+      createdOn: "2025-06-15T00:00:00Z",
+    } as ReturnType<typeof useProfileStore>);
 
     render(<ProfileInfo />);
     expect(screen.getByText("testuser")).toBeInTheDocument();
   });
 
   it("renders formatted creation date", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T12:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+    mockUseProfileStore.mockReturnValue({
+      username: "testuser",
+      imageUrl: "https://example.com/avatar.png",
+      createdOn: "2025-06-15T12:00:00Z",
+    } as ReturnType<typeof useProfileStore>);
 
     render(<ProfileInfo />);
 
@@ -60,15 +50,11 @@ describe("ProfileInfo", () => {
   });
 
   it("renders avatar component", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T12:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+    mockUseProfileStore.mockReturnValue({
+      username: "testuser",
+      imageUrl: "https://example.com/avatar.png",
+      createdOn: "2025-06-15T12:00:00Z",
+    } as ReturnType<typeof useProfileStore>);
 
     const { container } = render(<ProfileInfo />);
     // Radix Avatar shows fallback in jsdom since image doesn't load
@@ -76,15 +62,11 @@ describe("ProfileInfo", () => {
   });
 
   it("renders initial in fallback when imageUrl exists", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T00:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+    mockUseProfileStore.mockReturnValue({
+      username: "testuser",
+      imageUrl: "https://example.com/avatar.png",
+      createdOn: "2025-06-15T00:00:00Z",
+    } as ReturnType<typeof useProfileStore>);
 
     render(<ProfileInfo />);
 
@@ -92,30 +74,22 @@ describe("ProfileInfo", () => {
   });
 
   it("renders ProfileInfoEdit component", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T00:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+    mockUseProfileStore.mockReturnValue({
+      username: "testuser",
+      imageUrl: "https://example.com/avatar.png",
+      createdOn: "2025-06-15T00:00:00Z",
+    } as ReturnType<typeof useProfileStore>);
 
     render(<ProfileInfo />);
     expect(screen.getByTestId("profile-info-edit")).toBeInTheDocument();
   });
 
   it("handles missing createdOn date", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: null,
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+    mockUseProfileStore.mockReturnValue({
+      username: "testuser",
+      imageUrl: "https://example.com/avatar.png",
+      createdOn: null,
+    } as ReturnType<typeof useProfileStore>);
 
     render(<ProfileInfo />);
     expect(screen.getByText("testuser")).toBeInTheDocument();
