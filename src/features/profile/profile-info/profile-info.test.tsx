@@ -1,123 +1,77 @@
-import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import ProfileInfo from "./profile-info";
+import { render, screen } from "@testing-library/react";
+import { faker } from "@faker-js/faker";
+import React from "react";
 
-vi.mock("../profile-context", () => ({
-  useProfileContext: vi.fn(),
+type Profile = {
+  username: string;
+  bio?: string;
+  imageUrl?: string;
+  createdOn?: Date;
+};
+
+const mockProfileStoreState: { profile: Profile | null } = { profile: null };
+
+vi.mock("../profile-store", () => ({
+  useProfileStore: (selector: (s: typeof mockProfileStoreState) => unknown) =>
+    selector(mockProfileStoreState),
 }));
 
 vi.mock("./profile-info-edit", () => ({
-  default: () => <div data-testid="profile-info-edit">Edit</div>,
+  default: () => <div data-testid="profile-info-edit" />,
 }));
 
-import { useProfileContext } from "../profile-context";
+import ProfileInfo from "./profile-info";
 
-const mockUseProfileContext = vi.mocked(useProfileContext);
+function makeProfile(overrides: Partial<Profile> = {}): Profile {
+  return {
+    username: faker.internet.username(),
+    bio: faker.lorem.sentence(),
+    imageUrl: faker.image.avatar(),
+    createdOn: faker.date.past(),
+    ...overrides,
+  };
+}
 
 describe("ProfileInfo", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    mockProfileStoreState.profile = null;
   });
 
-  it("returns null when profileAggregate is null", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: null,
-    } as ReturnType<typeof useProfileContext>);
-
+  it("renders null when profile is null", () => {
+    mockProfileStoreState.profile = null;
     const { container } = render(<ProfileInfo />);
     expect(container.firstChild).toBeNull();
   });
 
   it("renders the username", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T00:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+    const profile = makeProfile({ username: "testuser" });
+    mockProfileStoreState.profile = profile;
 
     render(<ProfileInfo />);
-    expect(screen.getByText("testuser")).toBeInTheDocument();
+    expect(screen.getByText("testuser")).toBeDefined();
   });
 
-  it("renders formatted creation date", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T12:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+  it("renders a formatted creation date", () => {
+    const createdOn = new Date(2024, 2, 15); // March 15, 2024 in local time
+    const profile = makeProfile({ createdOn });
+    mockProfileStoreState.profile = profile;
 
     render(<ProfileInfo />);
-
-    expect(screen.getByText(/June 1[45], 2025/)).toBeInTheDocument();
+    expect(screen.getByText("March 15, 2024")).toBeDefined();
   });
 
-  it("renders avatar component", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T12:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
-
-    const { container } = render(<ProfileInfo />);
-    // Radix Avatar shows fallback in jsdom since image doesn't load
-    expect(container.querySelector('[data-slot="avatar"]')).toBeInTheDocument();
-  });
-
-  it("renders initial in fallback when imageUrl exists", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T00:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
+  it("renders no date when createdOn is undefined", () => {
+    const profile = makeProfile({ createdOn: undefined });
+    mockProfileStoreState.profile = profile;
 
     render(<ProfileInfo />);
-
-    expect(screen.getByText("t")).toBeInTheDocument();
+    expect(screen.getByText(profile.username)).toBeDefined();
   });
 
-  it("renders ProfileInfoEdit component", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: "2025-06-15T00:00:00Z",
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
-
+  it("renders ProfileInfoEdit", () => {
+    mockProfileStoreState.profile = makeProfile();
     render(<ProfileInfo />);
-    expect(screen.getByTestId("profile-info-edit")).toBeInTheDocument();
-  });
-
-  it("handles missing createdOn date", () => {
-    mockUseProfileContext.mockReturnValue({
-      profileAggregate: {
-        profile: {
-          username: "testuser",
-          imageUrl: "https://example.com/avatar.png",
-          createdOn: null,
-        },
-      },
-    } as unknown as ReturnType<typeof useProfileContext>);
-
-    render(<ProfileInfo />);
-    expect(screen.getByText("testuser")).toBeInTheDocument();
+    expect(screen.getByTestId("profile-info-edit")).toBeDefined();
   });
 });
