@@ -4,9 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ProblemDifficultyBadge } from "@/components/problem-difficulty-badge";
 import { Separator } from "@/components/ui/separator";
 import { Problem } from "@/features/problems/models/problem";
-import { ProblemDifficultyBadge } from "@/features/problem/problem-difficulty-badge/problem-difficulty-badge";
 import { Tag } from "lucide-react";
 import React from "react";
 import ProblemEditorTags from "./problem-editor-tags";
