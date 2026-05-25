@@ -84,14 +84,6 @@ describe("ProblemActions", () => {
     });
   };
 
-  it("renders Run button", () => {
-    setupMocks();
-
-    render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
-
-    expect(screen.getByRole("button", { name: "Run" })).toBeInTheDocument();
-  });
-
   it("renders Submit button", () => {
     setupMocks();
 
@@ -115,7 +107,6 @@ describe("ProblemActions", () => {
 
     render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
 
-    expect(screen.getByRole("button", { name: "Run" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled();
   });
 
@@ -124,17 +115,7 @@ describe("ProblemActions", () => {
 
     render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
 
-    expect(screen.getByRole("button", { name: "Run" })).not.toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).not.toBeDisabled();
-  });
-
-  it("disables buttons when run mutation is pending", () => {
-    setupMocks({}, true, false);
-
-    render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
-
-    expect(screen.getByRole("button", { name: "Running..." })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled();
   });
 
   it("disables buttons when submit mutation is pending", () => {
@@ -142,16 +123,7 @@ describe("ProblemActions", () => {
 
     render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
 
-    expect(screen.getByRole("button", { name: "Run" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Running..." })).toBeDisabled();
-  });
-
-  it("shows 'Running...' text when run is pending", () => {
-    setupMocks({}, true, false);
-
-    render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
-
-    expect(screen.getByText("Running...")).toBeInTheDocument();
   });
 
   it("shows 'Running...' text when submit is pending", () => {
@@ -160,21 +132,6 @@ describe("ProblemActions", () => {
     render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
 
     expect(screen.getByText("Running...")).toBeInTheDocument();
-  });
-
-  it("calls runSubmissionMutation when Run button is clicked", async () => {
-    setupMocks();
-    mockRunMutateAsync.mockResolvedValue({ submissionId: "123" });
-    const user = userEvent.setup();
-
-    render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
-
-    await user.click(screen.getByRole("button", { name: "Run" }));
-
-    expect(mockRunMutateAsync).toHaveBeenCalledWith({
-      code: "function solution() { return 1; }",
-      problemSetupId: 1,
-    });
   });
 
   it("calls submitSubmissionMutation when Submit button is clicked", async () => {
@@ -198,7 +155,7 @@ describe("ProblemActions", () => {
     render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
 
     expect(screen.getByRole("list")).toBeInTheDocument();
-    expect(screen.getAllByRole("listitem")).toHaveLength(3);
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
   });
 
   it("buttons are enabled when code and setup are present", () => {
@@ -206,7 +163,6 @@ describe("ProblemActions", () => {
 
     render(<ProblemActions slug="two-sum" isAuthenticated={true} />);
 
-    expect(screen.getByRole("button", { name: "Run" })).not.toBeDisabled();
     expect(screen.getByRole("button", { name: "Submit" })).not.toBeDisabled();
   });
 
@@ -215,8 +171,7 @@ describe("ProblemActions", () => {
 
     render(<ProblemActions slug="two-sum" isAuthenticated={false} />);
 
-    expect(screen.getByRole("button", { name: /Run/ })).toBeDisabled();
     expect(screen.getByRole("button", { name: /Submit/ })).toBeDisabled();
-    expect(screen.getAllByTestId("lock-icon")).toHaveLength(2);
+    expect(screen.getAllByTestId("lock-icon")).toHaveLength(1);
   });
 });
