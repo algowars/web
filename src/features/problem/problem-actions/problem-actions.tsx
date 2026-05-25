@@ -3,7 +3,6 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import React from "react";
 import { useProblemEditorStore } from "../problem-editor-store";
-import { useRunSubmission } from "../api/run-submission";
 import { toast } from "sonner";
 import { useCreateSubmission } from "../api/create-submission";
 import { routerConfig } from "@/router-config";
@@ -27,7 +26,6 @@ export default function ProblemActions({
   );
   const problemSetupId = setup?.id ?? 1;
 
-  const runSubmissionMutation = useRunSubmission();
   const submitSubmissionMutation = useCreateSubmission();
 
   const handleSubmit = async () => {
@@ -45,7 +43,6 @@ export default function ProblemActions({
 
   const isActionDisabled =
     !isAuthenticated ||
-    runSubmissionMutation.isPending ||
     submitSubmissionMutation.isPending ||
     !code ||
     !problemSetupId;
