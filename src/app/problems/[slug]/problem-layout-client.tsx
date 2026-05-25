@@ -8,7 +8,9 @@ type ProblemLayoutClientProps = {
   problem: Problem;
 };
 
-export default function ProblemLayoutClient({ problem }: ProblemLayoutClientProps) {
+export default function ProblemLayoutClient({
+  problem,
+}: ProblemLayoutClientProps) {
   const account = accountStore((state) => state.account);
 
   return <ProblemLayout problem={problem} isAuthenticated={!!account} />;

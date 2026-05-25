@@ -1,23 +1,24 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 
 type ProblemDifficultyBadgeProps = {
   difficulty: number;
 };
 
+const EASY_THRESHOLD = 1000;
+const MEDIUM_THRESHOLD = 2000;
+
 function getDifficultyLabel(difficulty: number): {
   label: string;
   className: string;
 } {
-  if (difficulty < 1000) {
+  if (difficulty < EASY_THRESHOLD) {
     return {
       label: "Easy",
       className:
         "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     };
   }
-  if (difficulty < 2000) {
+  if (difficulty < MEDIUM_THRESHOLD) {
     return {
       label: "Medium",
       className:
