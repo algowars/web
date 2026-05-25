@@ -15,7 +15,7 @@ export default function SubmissionCard({ submission }: SubmissionCardProps) {
   }
 
   return (
-    <Card>
+    <Card data-cy="submission-card">
       <CardHeader className="flex items-start gap-3">
         <Avatar className="h-12 w-12">
           <AvatarImage

@@ -23,7 +23,7 @@ type ProblemSubmissionItem = React.ComponentProps<
 
 export function ProblemSubmissionsEmpty(props: ProblemSubmissionsProps) {
   return (
-    <Card {...props}>
+    <Card data-cy="submissions-card" {...props}>
       <CardHeader>
         <CardTitle>Submissions</CardTitle>
         <CardDescription>0 submissions</CardDescription>
@@ -58,7 +58,7 @@ function ProblemSubmissionsList({
   }
 
   return (
-    <Card {...props}>
+    <Card data-cy="submissions-card" {...props}>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>
           {label === "submissions" ? "Submissions" : "Solutions"}

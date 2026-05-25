@@ -121,6 +121,7 @@ export function DataTable<TData, TValue>({
                 return (
                   <TableRow
                     key={row.id}
+                    data-cy={getRowUrl ? "data-table-row" : undefined}
                     className={getRowUrl ? "hover:cursor-pointer" : undefined}
                     role={getRowUrl ? "button" : undefined}
                     tabIndex={getRowUrl ? 0 : undefined}

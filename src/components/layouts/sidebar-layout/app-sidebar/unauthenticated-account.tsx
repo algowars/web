@@ -30,12 +30,12 @@ export function UnauthenticatedAccount({
           <AuthLoginButton
             className={cn(buttonVariants({ variant: "default" }), "w-full")}
           >
-            Login
+            Log In
           </AuthLoginButton>
           <AuthSignupButton
             className={cn(buttonVariants({ variant: "secondary" }), "w-full")}
           >
-            Get Started
+            Join Today
           </AuthSignupButton>
         </div>
       </CardContent>

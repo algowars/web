@@ -54,10 +54,10 @@ describe("Hero", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders Get Started button", () => {
+  it("renders Join Today button", () => {
     render(<Hero />);
 
-    expect(screen.getByText("Get Started")).toBeInTheDocument();
+    expect(screen.getByText("Join Today")).toBeInTheDocument();
   });
 
   it("renders Join Today button", () => {
@@ -66,12 +66,12 @@ describe("Hero", () => {
     expect(screen.getByText("Join Today")).toBeInTheDocument();
   });
 
-  it("renders AuthLoginButton with Get Started text", () => {
+  it("renders AuthLoginButton with Join Today text", () => {
     render(<Hero />);
 
     const loginButton = screen.getByTestId("auth-login-button");
     expect(loginButton).toBeInTheDocument();
-    expect(loginButton).toHaveTextContent("Get Started");
+    expect(loginButton).toHaveTextContent("Join Today");
   });
 
   it("renders AuthSignupButton with Join Today text", () => {

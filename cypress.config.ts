@@ -16,5 +16,7 @@ export default defineConfig({
     auth0_audience: process.env.AUTH0_AUDIENCE,
     auth0_scope: "",
     auth0_client_id: process.env.AUTH0_CLIENT_ID,
+    test_user_email: process.env.TEST_USER_EMAIL,
+    test_user_password: process.env.TEST_USER_PASSWORD,
   },
 });

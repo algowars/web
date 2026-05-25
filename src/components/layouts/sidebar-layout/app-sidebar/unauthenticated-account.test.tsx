@@ -87,13 +87,13 @@ describe("UnauthenticatedAccount", () => {
     render(<UnauthenticatedAccount />);
 
     expect(screen.getByTestId("login-button")).toBeInTheDocument();
-    expect(screen.getByText("Login")).toBeInTheDocument();
+    expect(screen.getByText("Log In")).toBeInTheDocument();
   });
 
   it("renders signup button", () => {
     render(<UnauthenticatedAccount />);
 
     expect(screen.getByTestId("signup-button")).toBeInTheDocument();
-    expect(screen.getByText("Get Started")).toBeInTheDocument();
+    expect(screen.getByText("Join Today")).toBeInTheDocument();
   });
 });
