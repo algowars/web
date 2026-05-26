@@ -32,6 +32,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { useStore } from "zustand";
 
 export default function AccountSetupForm({
   className,
@@ -39,6 +40,7 @@ export default function AccountSetupForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
   const { data: account } = useAccount();
+  const isAccountLoading = useStore(accountStore, (s) => s.isLoading);
 
   useEffect(() => {
     if (!!account?.usernameLastChangedAt) {
@@ -116,7 +118,8 @@ export default function AccountSetupForm({
                 data-cy="complete-setup-btn"
                 disabled={
                   updateUsernameMutation.isPending ||
-                  !signupForm.formState.isValid
+                  !signupForm.formState.isValid ||
+                  isAccountLoading
                 }
               >
                 {updateUsernameMutation.isPending
