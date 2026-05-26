@@ -5,6 +5,7 @@ import AccountSetupForm from "./account-setup-form";
 import { useAccount } from "@/features/auth/api/get-account";
 import { useUpdateUsername } from "@/features/auth/api/update-username";
 import { useRouter } from "next/navigation";
+import { accountStore } from "@/features/account/account-store";
 
 vi.mock("@/features/auth/api/get-account", () => ({
   useAccount: vi.fn(),
@@ -36,7 +37,8 @@ vi.mock("@/router-config", () => ({
 }));
 vi.mock("@/features/account/account-store", () => ({
   accountStore: {
-    getState: vi.fn(() => ({ init: vi.fn() })),
+    getState: vi.fn(() => ({ init: vi.fn(), isLoading: false })),
+    subscribe: vi.fn(() => vi.fn()),
   },
 }));
 
@@ -170,6 +172,22 @@ describe("AccountSetupForm", () => {
         data: { username: "testuser" },
       });
     });
+  });
+
+  it("button is disabled while account is loading (upsert in progress)", async () => {
+    (accountStore.getState as Mock).mockReturnValue({
+      init: vi.fn(),
+      isLoading: true,
+    });
+
+    const user = userEvent.setup();
+    render(<AccountSetupForm />);
+
+    const input = screen.getByPlaceholderText("Enter your username");
+    await user.type(input, "testuser");
+
+    const button = screen.getByRole("button", { name: "Setup Account" });
+    expect(button).toBeDisabled();
   });
 
   it("applies custom className", () => {
