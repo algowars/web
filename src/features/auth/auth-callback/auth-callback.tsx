@@ -14,11 +14,7 @@ export default function AuthCallback() {
     if (isLoading) return;
 
     if (account !== null) {
-      if (!account.usernameLastChangedAt) {
-        redirect(routerConfig.accountSetup.path);
-      } else {
-        redirect(routerConfig.dashboard.path);
-      }
+      redirect(routerConfig.dashboard.path);
     } else {
       redirect(routerConfig.home.path);
     }

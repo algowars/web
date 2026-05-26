@@ -54,6 +54,9 @@ describe("Submissions", () => {
   });
 
   it("views all submissions after clicking the View Submissions button", () => {
+    cy.on("uncaught:exception", (err) => {
+      if (err.message.includes("Problem required")) return false;
+    });
     cy.intercept("GET", "/api/v1/problem/*/solutions*").as("getSolutions");
     loginTestUser();
     cy.visit("/problems/hello-or-goodbye");

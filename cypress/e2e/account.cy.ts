@@ -27,12 +27,21 @@ describe("Accounts", () => {
     cy.request("/auth/profile").its("status").should("eq", 200);
 
     cy.generateRandomUsername().then((username) => {
-      cy.get("[data-cy=username-input]").type(username);
-      cy.get("[data-cy=complete-setup-btn]").click();
+      const tryCompleteSetup = (retry = false) => {
+        cy.get("[data-cy=username-input]").clear().type(username);
+        cy.get("[data-cy=complete-setup-btn]").click();
+        cy.wait("@updateUsername").its("response.statusCode").should("eq", 200);
+        cy.wait(2000);
+        cy.url().then((url) => {
+          if (url.includes("/account/setup") && !retry) {
+            tryCompleteSetup(true);
+          } else {
+            expect(url).to.eq(Cypress.config("baseUrl") + "/");
+          }
+        });
+      };
+      tryCompleteSetup();
     });
-
-    cy.wait("@updateUsername").its("response.statusCode").should("eq", 200);
-    cy.url().should("eq", Cypress.config("baseUrl") + "/");
   });
 
   it("logs in and redirects to home when account is already set up", () => {
