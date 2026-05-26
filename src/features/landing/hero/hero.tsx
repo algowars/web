@@ -24,7 +24,7 @@ export default function Hero() {
                 "max-[375px]:w-full w-52 sm:w-64 md:w-48"
               )}
             >
-              Join Today
+              Log In
             </AuthLoginButton>
           </li>
           <li className="w-full sm:w-fit">

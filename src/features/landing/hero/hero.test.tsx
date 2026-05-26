@@ -35,43 +35,18 @@ vi.mock("@/features/auth/auth-signup/auth-signup-button", () => ({
 }));
 
 describe("Hero", () => {
-  it("renders main heading", () => {
+  it("renders Log In and Join Today buttons", () => {
     render(<Hero />);
-
-    expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: /Battle against other Developers/i,
-      })
-    ).toBeInTheDocument();
-  });
-
-  it("renders description text", () => {
-    render(<Hero />);
-
-    expect(
-      screen.getByText(/Solve as many challenges as you can/i)
-    ).toBeInTheDocument();
-  });
-
-  it("renders Join Today button", () => {
-    render(<Hero />);
-
+    expect(screen.getByText("Log In")).toBeInTheDocument();
     expect(screen.getByText("Join Today")).toBeInTheDocument();
   });
 
-  it("renders Join Today button", () => {
-    render(<Hero />);
-
-    expect(screen.getByText("Join Today")).toBeInTheDocument();
-  });
-
-  it("renders AuthLoginButton with Join Today text", () => {
+  it("renders AuthLoginButton with Log In text", () => {
     render(<Hero />);
 
     const loginButton = screen.getByTestId("auth-login-button");
     expect(loginButton).toBeInTheDocument();
-    expect(loginButton).toHaveTextContent("Join Today");
+    expect(loginButton).toHaveTextContent("Log In");
   });
 
   it("renders AuthSignupButton with Join Today text", () => {

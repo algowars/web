@@ -53,23 +53,22 @@ export const CodeEditor = ({ className }: Props) => {
   }, [languageKey]);
 
   return (
-    <div data-cy="code-editor" className={className}>
-      <CodeMirror
-        value={code}
-        height="100%"
-        onChange={changeCode}
-        className="h-full"
-        basicSetup={{
-          foldGutter: false,
-          dropCursor: false,
-          allowMultipleSelections: false,
-          indentOnInput: false,
-          tabSize: 4,
-        }}
-        extensions={[...defaultCodeEditorExtensions, ...langExtensions]}
-        theme={theme.resolvedTheme === "light" ? tokyoNightDay : tokyoNightStorm}
-        // theme={theme.resolvedTheme === "light" ? vscodeLight : vscodeDark}
-      />
-    </div>
+    <CodeMirror
+      value={code}
+      height="100%"
+      onChange={changeCode}
+      className={className ? `h-full ${className}` : "h-full"}
+      data-testid="codemirror"
+      basicSetup={{
+        foldGutter: false,
+        dropCursor: false,
+        allowMultipleSelections: false,
+        indentOnInput: false,
+        tabSize: 4,
+      }}
+      extensions={[...defaultCodeEditorExtensions, ...langExtensions]}
+      theme={theme.resolvedTheme === "light" ? tokyoNightDay : tokyoNightStorm}
+      // theme={theme.resolvedTheme === "light" ? vscodeLight : vscodeDark}
+    />
   );
 };
