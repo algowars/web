@@ -1,1 +1,3 @@
-sideEffectsCache: false
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver
