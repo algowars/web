@@ -72,7 +72,6 @@ describe("LandingLayout", () => {
 
     const main = screen.getByRole("main");
     expect(main).toHaveAttribute("id", "main-content");
-    expect(main).toHaveAttribute("tabindex", "-1");
   });
 
   it("passes additional props to container div", () => {

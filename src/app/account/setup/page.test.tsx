@@ -2,7 +2,7 @@ import "@/domains/auth/__mocks__/auth0.mock";
 import { setSessionMock } from "@/domains/auth/__mocks__/auth0.mock";
 import { sessionStates } from "@/domains/auth/__mocks__/auth0.mocks";
 import AccountSetupPage from "./page";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";
 import { expect } from "vitest";
@@ -40,5 +40,7 @@ describe("AccountSetupPage", () => {
 
   it("should not redirect the user if they are authenticated", async () => {
     render(await AccountSetupPage());
+
+    expect(screen.getByTestId("landing-layout")).toBeInTheDocument();
   });
 });

@@ -1,14 +1,9 @@
-import { api } from "@/lib/api-client";
-import { MutationConfig } from "@/lib/react-query";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import z from "zod";
-import { Account } from "../models/account.model";
-
-export const updateUsernameSchema = z.object({
-  username: z.string().min(1, {
-    message: "Username must be at least 1 characters.",
-  }),
-});
+import { updateUsernameSchema } from "../schemas/update-username-schema";
+import { api } from "@/shared/lib/api-client";
+import { Account } from "@/features/auth/models/account.model";
+import { MutationConfig } from "@/shared/lib/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export type UpdateUsernameInput = z.infer<typeof updateUsernameSchema>;
 

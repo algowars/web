@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 import LandingNavbar from "./navbar/landing-navbar";
 import LandingFooter from "./footer/landing-footer";
 import { cn } from "@/shared/lib/utils";
