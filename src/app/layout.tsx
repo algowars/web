@@ -1,13 +1,47 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Inter,
+  Source_Serif_4,
+  Source_Code_Pro,
+} from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const sourceCodeProSourceCodePro = Source_Code_Pro({
+  subsets: [
+    "latin",
+    "latin-ext",
+    "cyrillic",
+    "cyrillic-ext",
+    "greek",
+    "greek-ext",
+    "vietnamese",
+  ],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-source-code-pro",
+});
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const sourceSerif4SourceSerif4 = Source_Serif_4({
+  subsets: [
+    "latin",
+    "latin-ext",
+    "cyrillic",
+    "cyrillic-ext",
+    "greek",
+    "vietnamese",
+  ],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-source-serif-4",
+});
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+
+const geistGeist = Geist({
+  subsets: ["cyrillic", "latin", "latin-ext"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-geist",
 });
 
 const geistMono = Geist_Mono({
@@ -28,7 +62,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistMono.variable,
+        inter.variable,
+        geistGeist.variable,
+        sourceSerif4SourceSerif4.variable,
+        sourceCodeProSourceCodePro.variable
+      )}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
