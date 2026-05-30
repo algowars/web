@@ -7,7 +7,7 @@ import {
   Source_Code_Pro,
 } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 const sourceCodeProSourceCodePro = Source_Code_Pro({
   subsets: [
