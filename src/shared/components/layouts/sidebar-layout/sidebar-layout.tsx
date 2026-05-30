@@ -4,7 +4,7 @@ import AppSidebar from "./app-sidebar/app-sidebar";
 import AppSidebarHeader, {
   BreadcrumbItem,
 } from "./app-sidebar/app-sidebar-header";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 type SidebarProps = {
   breadcrumbs: BreadcrumbItem[];

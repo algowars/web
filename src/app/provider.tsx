@@ -6,8 +6,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Toaster } from "sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { MainErrorFallback } from "@/shared/components/errors/main-error-fallback";
-import { queryConfig } from "@/lib/react-query";
 import AccountInitializer from "@/features/account/account-initializer";
+import { queryConfig } from "@/shared/lib/react-query";
 
 type AppProviderProps = {
   children: React.ReactNode;
