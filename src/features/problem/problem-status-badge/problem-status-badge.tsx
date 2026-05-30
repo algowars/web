@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { ProblemStatus } from "@/features/problems/models/problem-status";
 
 type ProblemStatusBadgeProps = {

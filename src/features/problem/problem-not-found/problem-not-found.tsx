@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/shared/components/ui/button";
 import { LucideAlertCircle } from "lucide-react";
 import { routerConfig } from "@/router-config";
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import { BreadcrumbItem } from "@/components/layouts/sidebar-layout/app-sidebar/app-sidebar-header";
+import SidebarLayout from "@/shared/components/layouts/sidebar-layout/sidebar-layout";
+import { BreadcrumbItem } from "@/shared/components/layouts/sidebar-layout/app-sidebar/app-sidebar-header";
 
 type ProblemNotFoundProps = {
   breadcrumbs?: BreadcrumbItem[];

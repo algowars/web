@@ -1,8 +1,8 @@
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
+import SidebarLayout from "@/shared/components/layouts/sidebar-layout/sidebar-layout";
 import { routerConfig } from "@/router-config";
 import React from "react";
 import ProblemsTableV2 from "../problems/problems-table-v2/problems-table-v2";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 
 export default function Dashboard() {
   return (

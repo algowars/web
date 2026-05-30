@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/shared/components/ui/button";
 import AuthLoginButton from "@/features/auth/auth-login/auth-login-button";
 import AuthSignupButton from "@/features/auth/auth-signup/auth-signup-button";
 import { cn } from "@/lib/utils";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/shared/components/ui/button";
 import React from "react";
 import { useProblemEditorStore } from "../problem-editor-store";
 import { toast } from "sonner";

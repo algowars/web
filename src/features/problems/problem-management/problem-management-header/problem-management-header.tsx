@@ -1,9 +1,9 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
-import { CardDescription, CardTitle } from "@/components/ui/card";
+import { buttonVariants } from "@/shared/components/ui/button";
+import { CardDescription, CardTitle } from "@/shared/components/ui/card";
 import { accountStore } from "@/features/account/account-store";
-import { useHasPermissions } from "@/hooks/use-has-permissions";
+import { useHasPermissions } from "@/shared/hooks/use-has-permissions";
 import { Permissions } from "@/features/auth/permissions/models/permissions";
 import { cn } from "@/lib/utils";
 import { routerConfig } from "@/router-config";

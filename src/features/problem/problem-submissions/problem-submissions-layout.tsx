@@ -1,6 +1,6 @@
 "use client";
 
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
+import SidebarLayout from "@/shared/components/layouts/sidebar-layout/sidebar-layout";
 import { Problem } from "@/features/problems/models/problem";
 import { routerConfig } from "@/router-config";
 import ProblemSubmissionsHeader from "./problem-submissions-header";

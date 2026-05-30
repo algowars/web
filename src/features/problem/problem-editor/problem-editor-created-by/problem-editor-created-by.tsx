@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { User } from "lucide-react";
 import { routerConfig } from "@/router-config";
 

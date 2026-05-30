@@ -5,7 +5,7 @@ import { accountStore } from "@/features/account/account-store";
 import {
   HasPermissionMode,
   useHasPermissions,
-} from "@/hooks/use-has-permissions";
+} from "@/shared/hooks/use-has-permissions";
 import { Permissions } from "./models/permissions";
 import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";

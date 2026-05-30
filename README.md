@@ -38,7 +38,7 @@ This project is built with:
 Testing with this project was built with:
 
 - Vitest (Unit Testing)
-- Playwright (End to End)
+- Cypress (End to End)
 
 ### Architecture
 

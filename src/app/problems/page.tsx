@@ -1,5 +1,5 @@
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import SidebarLayout from "@/shared/components/layouts/sidebar-layout/sidebar-layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import ProblemsTableV2 from "@/features/problems/problems-table-v2/problems-table-v2";
 import { routerConfig } from "@/router-config";
 

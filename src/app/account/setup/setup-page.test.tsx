@@ -2,7 +2,7 @@ import { auth0 } from "@/lib/auth0";
 import { routerConfig } from "@/router-config";
 import { redirect } from "next/navigation";
 import AccountSetupPage from "./page";
-import LandingLayout from "@/components/layouts/landing-layout/landing-layout";
+import LandingLayout from "@/shared/components/layouts/landing-layout/landing-layout";
 import AccountSetupForm from "@/features/account/setup/account-setup-form/account-setup-form";
 
 vi.mock("next/navigation", () => ({

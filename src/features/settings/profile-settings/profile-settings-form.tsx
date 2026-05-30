@@ -9,8 +9,8 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/components/ui/field";
+import { Textarea } from "@/shared/components/ui/textarea";
 import { useUpdateBioSettings } from "../api/update-bio-settings";
 import { useSettingsStore } from "../settings-store";
 import SettingsField from "../settings-field";

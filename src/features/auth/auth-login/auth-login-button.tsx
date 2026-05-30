@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/shared/components/ui/button";
 import { VariantProps } from "class-variance-authority";
 import { routerConfig } from "@/router-config";
 

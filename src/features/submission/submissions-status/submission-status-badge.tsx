@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { SubmissionStatus } from "@/features/problem/models/submission-status";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, LucideIcon, X } from "lucide-react";

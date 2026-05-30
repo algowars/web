@@ -1,10 +1,10 @@
 "use client";
 
-import { Editor, Tab } from "@/components/editor/editor";
+import { Editor, Tab } from "@/shared/components/editor/editor";
 import { CodeXml, FileText, FlaskConical } from "lucide-react";
 import ProblemQuestion from "../problem-question/problem-question";
-import { CodeEditor } from "@/components/code-editor/code-editor";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CodeEditor } from "@/shared/components/code-editor/code-editor";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useProblemEditorStore } from "../problem-editor-store";
 import ProblemTestCases from "../problem-test-cases/problem-test-cases";
 import SubmissionResultView from "../submission-result-view/submission-result-view";

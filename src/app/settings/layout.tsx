@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import SidebarLayout from "@/shared/components/layouts/sidebar-layout/sidebar-layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { routerConfig } from "@/router-config";
 import { User, Key, Sliders } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/shared/components/ui/button";
 
 export default function SettingsLayout({
   children,

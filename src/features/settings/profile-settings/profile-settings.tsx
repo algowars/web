@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { useSuspenseUserSettings } from "@/features/settings/api/get-user-settings";
 import ProfileSettingsForm from "./profile-settings-form";
 import { useSettingsStore } from "../settings-store";

@@ -3,14 +3,14 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { ProblemDifficultyBadge } from "@/components/problem-difficulty-badge";
-import { Separator } from "@/components/ui/separator";
+} from "@/shared/components/ui/accordion";
+import { ProblemDifficultyBadge } from "@/shared/components/problem-difficulty-badge";
+import { Separator } from "@/shared/components/ui/separator";
 import { Problem } from "@/features/problems/models/problem";
 import { Tag } from "lucide-react";
 import React from "react";
 import ProblemEditorTags from "./problem-editor-tags";
-import MarkdownSafe from "@/components/markdown/markdown";
+import MarkdownSafe from "@/shared/components/markdown/markdown";
 
 type Props = {
   problem: Problem | null;

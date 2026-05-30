@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { routerConfig } from "@/router-config";
 

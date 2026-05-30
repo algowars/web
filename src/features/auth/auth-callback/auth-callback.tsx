@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { accountStore } from "@/features/account/account-store";
-import PageLoader from "@/components/loader/page-loader/page-loader";
+import PageLoader from "@/shared/components/loader/page-loader/page-loader";
 import { redirect } from "next/navigation";
 import { routerConfig } from "@/router-config";
 

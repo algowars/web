@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/shared/components/ui/button";
 import { accountStore } from "@/features/account/account-store";
 import Link from "next/link";
 import { routerConfig } from "@/router-config";

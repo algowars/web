@@ -4,17 +4,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 import { useProblemSubmissionsStore } from "./problem-submissions-store";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/components/ui/accordion";
-import MarkdownSafe from "@/components/markdown/markdown";
+} from "@/shared/components/ui/accordion";
+import MarkdownSafe from "@/shared/components/markdown/markdown";
 import React from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 type ProblemSubmissionsHeaderProps = React.ComponentProps<typeof Card>;

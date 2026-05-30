@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import ProblemsTableV2 from "./problems-table-v2";
 import { useProblems } from "../api/get-problems-pageable";
 import { Problem } from "../models/problem";
-import { PageResult } from "@/common/pagination/page-result";
+import { PageResult } from "@/shared/pagination/page-result";
 
 vi.mock("../api/get-problems-pageable");
 

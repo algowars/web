@@ -1,8 +1,8 @@
 "use client";
 
 import { useProblemEditorStore } from "../problem-editor-store";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Input } from "@/shared/components/ui/input";
 
 export default function ProblemTestCases() {
   const getTestSuites = useProblemEditorStore((s) => s.getTestSuites);

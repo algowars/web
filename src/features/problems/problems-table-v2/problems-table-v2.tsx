@@ -3,7 +3,7 @@
 import { ColumnFiltersState, PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import { useProblems } from "../api/get-problems-pageable";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable } from "@/shared/components/ui/data-table";
 import { problemColumnsV2 } from "./problems-columns-v2";
 import { routerConfig } from "@/router-config";
 

@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ProblemDifficultyBadge } from "@/components/problem-difficulty-badge";
+import { ProblemDifficultyBadge } from "@/shared/components/problem-difficulty-badge";
 import { Problem } from "../models/problem";
 
 export const problemColumnsV2: ColumnDef<Problem>[] = [

@@ -1,7 +1,7 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Badge } from "@/shared/components/ui/badge";
 import { RunResult, RunResultTestCase } from "../models/run-result";
 import { SubmissionResultStatus } from "../models/submission-result-status";
 import SubmissionStatusBadge from "@/features/submission/submissions-status/submission-status-badge";

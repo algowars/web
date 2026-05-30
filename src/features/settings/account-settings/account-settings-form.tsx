@@ -10,8 +10,8 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from "@/shared/components/ui/field";
+import { Input } from "@/shared/components/ui/input";
 import { useSettingsStore } from "../settings-store";
 import { useUpdateUsernameSettings } from "../api/update-username-settings";
 import SettingsField from "../settings-field";

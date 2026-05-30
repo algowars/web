@@ -1,4 +1,4 @@
-import { PageResult } from "@/common/pagination/page-result";
+import { PageResult } from "@/shared/pagination/page-result";
 import { AdminProblem } from "../models/admin-problem";
 import { api } from "@/lib/api-client";
 import {

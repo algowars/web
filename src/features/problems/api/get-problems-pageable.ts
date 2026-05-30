@@ -1,6 +1,6 @@
 import { api } from "@/lib/api-client";
 import { Problem } from "../models/problem";
-import { PageResult } from "@/common/pagination/page-result";
+import { PageResult } from "@/shared/pagination/page-result";
 import {
   keepPreviousData,
   queryOptions,

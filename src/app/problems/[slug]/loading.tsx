@@ -1,6 +1,6 @@
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import SidebarLayout from "@/shared/components/layouts/sidebar-layout/sidebar-layout";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
 import { routerConfig } from "@/router-config";
 
 export default function ProblemLoading() {

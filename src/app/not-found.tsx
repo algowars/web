@@ -5,8 +5,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
+} from "@/shared/components/ui/card";
+import { buttonVariants } from "@/shared/components/ui/button";
 import { LucideAlertCircle } from "lucide-react";
 import { routerConfig } from "@/router-config";
 
