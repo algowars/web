@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import Home from "./page";
-import HomeContext from "./home-context";
+import HomeContext from "@/pages/home/home-context";
 
 vi.mock("./home-context", () => ({
   default: () => <div data-testid="home-context">HomeContext</div>,

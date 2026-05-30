@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Input } from "@/shared/components/ui/input";
-import { cn } from "@/lib/utils";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +31,7 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { toast } from "sonner";
+import { cn } from "@/shared/lib/utils";
 
 export default function AccountSetupForm({
   className,
