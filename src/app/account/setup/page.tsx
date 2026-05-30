@@ -1,8 +1,8 @@
 import LandingLayout from "@/shared/components/layouts/landing-layout/landing-layout";
 import AccountSetupForm from "@/features/account/setup/account-setup-form/account-setup-form";
-import { auth0 } from "@/lib/auth0";
 import { routerConfig } from "@/router-config";
 import { redirect } from "next/navigation";
+import { auth0 } from "@/shared/lib/auth0";
 
 export default async function AccountSetupPage() {
   const session = await auth0.getSession();

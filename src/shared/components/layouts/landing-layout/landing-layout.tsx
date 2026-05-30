@@ -1,7 +1,7 @@
 import React, { ComponentProps, ReactNode } from "react";
 import LandingNavbar from "./navbar/landing-navbar";
 import LandingFooter from "./footer/landing-footer";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 export interface LandingLayoutProps extends ComponentProps<"div"> {
   children: ReactNode;
@@ -18,11 +18,7 @@ export default function LandingLayout({
       <header>
         <LandingNavbar />
       </header>
-      <main
-        id="main-content"
-        className={cn("grow", mainClassName)}
-        tabIndex={-1}
-      >
+      <main id="main-content" className={cn("grow", mainClassName)}>
         {children}
       </main>
       <LandingFooter />
