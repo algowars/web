@@ -10,9 +10,10 @@ import {
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
 import { routerConfig } from "@/shared/router-config";
-import { Command, HomeIcon, Link, Puzzle } from "lucide-react";
+import { Command, HomeIcon, Puzzle } from "lucide-react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import SidebarAccount from "./sidebar-account";
+import Link from "next/link";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>

@@ -7,6 +7,13 @@ import {
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/card";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -44,6 +51,27 @@ export default function SidebarAccount() {
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Card className="rounded">
+        <CardHeader>
+          <CardTitle>Join the algowars community</CardTitle>
+          <CardDescription>
+            Sign up to track progress and solve problems.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex gap-3">
+          <Button asChild variant="outline" className="grow">
+            <Link href={routerConfig.authLogIn.path}>Log In</Link>
+          </Button>
+          <Button asChild variant="default" className="grow">
+            <Link href={routerConfig.authSignUp.path}>Sign Up</Link>
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
