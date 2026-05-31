@@ -7,10 +7,16 @@ export const routerConfig = {
   home: {
     path: "/",
   },
+  dashboard: {
+    path: "/dashboard",
+  },
   problems: {
     path: "/problems",
   },
   profile: {
-    path: "/profile",
+    path: "/profile/:username",
+    execute: ({ username }: { username: string }) =>
+      `/profile/${encodeURIComponent(username)}`,
   },
+  profileSettings: { path: "/settings" },
 } as const;
