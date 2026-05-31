@@ -1,5 +1,5 @@
 export const routerConfig = {
-  authLogIn: { path: "/auth/login?returnTo=/account/callback" },
+  authLogIn: { path: "/auth/login" },
   authSignUp: {
     path: "/auth/login?screen_hint=signup&returnTo=/account/setup",
   },
@@ -9,5 +9,8 @@ export const routerConfig = {
   },
   problems: {
     path: "/problems",
+  },
+  profile: {
+    path: "/profile",
   },
 } as const;

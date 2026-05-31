@@ -19,33 +19,52 @@ import {
 import Logo from "@/shared/logo/logo";
 import { routerConfig } from "@/shared/router-config";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
+import { useUser } from "@auth0/nextjs-auth0";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Navbar() {
+  const { user } = useUser();
+  const defaultRoutes = [
+    { name: "Home", href: routerConfig.home.path },
+    { name: "Problems", href: routerConfig.problems.path },
+  ];
+
+  const unauthenticatedLinks = [
+    <Button asChild variant="outline" key="login">
+      <Link href={routerConfig.authLogIn.path}>Log In</Link>
+    </Button>,
+    <Button asChild variant="default" key="signup">
+      <Link href={routerConfig.authSignUp.path}>Sign Up</Link>
+    </Button>,
+  ];
+
+  const authenticatedLinks = [
+    <Button asChild variant="outline" key="profile">
+      <Link href={routerConfig.profile.path}>Profile</Link>
+    </Button>,
+    <Button asChild variant="default" key="logout">
+      <Link href={routerConfig.authLogOut.path}>Log Out</Link>
+    </Button>,
+  ];
+
+  const links = user ? authenticatedLinks : unauthenticatedLinks;
+
   return (
     <nav className="border-b border-dashed">
-      <div className="max-w-7xl py-3 mx-auto flex items-center gap-3 justify-between px-4">
+      <div className="max-w-7xl py-3 mx-auto grid grid-cols-3 gap-3 px-4">
         <Logo />
-        <ul className="lg:flex items-center gap-3 hidden">
-          <li>
-            <Link href={routerConfig.home.path}>Home</Link>
-          </li>
-          <li>
-            <Link href={routerConfig.problems.path}>Problems</Link>
-          </li>
+        <ul className="justify-self-center lg:flex items-center gap-3 hidden text-muted-foreground">
+          {defaultRoutes.map((route) => (
+            <li key={route.href} className="hidden lg:block">
+              <Link href={route.href}>{route.name}</Link>
+            </li>
+          ))}
         </ul>
-        <ul className="flex row-reverse lg:row items-center gap-2 lg:gap-3">
-          <li className="hidden lg:block">
-            <Button asChild variant="outline">
-              <Link href={routerConfig.authLogIn.path}>Log In</Link>
-            </Button>
-          </li>
-          <li className="hidden lg:block">
-            <Button asChild variant="default">
-              <Link href={routerConfig.authSignUp.path}>Sign Up</Link>
-            </Button>
-          </li>
+        <ul className="justify-self-end flex row-reverse lg:row items-center gap-2 lg:gap-3">
+          {links.map((link) => (
+            <li key={link.key}>{link}</li>
+          ))}
           <li>
             <ModeToggle />
           </li>
@@ -64,24 +83,17 @@ export default function Navbar() {
                 </SheetHeader>
                 <div className="px-2">
                   <ul className="flex flex-col gap-2">
-                    <li>
-                      <Button
-                        variant="ghost"
-                        asChild
-                        className="w-full py-5 text-start justify-start"
-                      >
-                        <Link href={routerConfig.home.path}>Home</Link>
-                      </Button>
-                    </li>
-                    <li>
-                      <Button
-                        variant="ghost"
-                        asChild
-                        className="w-full py-5 text-start justify-start"
-                      >
-                        <Link href={routerConfig.problems.path}>Problems</Link>
-                      </Button>
-                    </li>
+                    {defaultRoutes.map((route) => (
+                      <li key={route.href}>
+                        <Button
+                          variant="ghost"
+                          asChild
+                          className="w-full py-5 text-start justify-start"
+                        >
+                          <Link href={route.href}>{route.name}</Link>
+                        </Button>
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <SheetFooter>
