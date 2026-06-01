@@ -14,15 +14,18 @@ import { Command, HomeIcon, Puzzle } from "lucide-react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import SidebarAccount from "./sidebar-account";
 import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
+  const { user } = useUser();
+
   const data = {
     navMain: [
       {
-        title: "Home",
-        url: routerConfig.dashboard.path,
+        title: user ? "Dashboard" : "Home",
+        url: user ? routerConfig.dashboard.path : routerConfig.home.path,
         icon: HomeIcon,
         isActive: true,
       },

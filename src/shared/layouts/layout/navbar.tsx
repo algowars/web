@@ -32,9 +32,11 @@ export default function Navbar() {
 
   const unauthenticatedLinks = [
     <Button asChild variant="outline" key="login">
-      <Link href={routerConfig.authLogIn.path}>Log In</Link>
+      <Link href={routerConfig.authLogIn.path} data-testid="sign-in-button">
+        Log In
+      </Link>
     </Button>,
-    <Button asChild variant="default" key="signup">
+    <Button asChild variant="default" key="signup" data-testid="sign-up-button">
       <Link href={routerConfig.authSignUp.path}>Sign Up</Link>
     </Button>,
   ];
@@ -106,10 +108,20 @@ export default function Navbar() {
                     </CardHeader>
                     <CardContent className="flex gap-3">
                       <Button asChild variant="outline" className="grow">
-                        <Link href={routerConfig.authLogIn.path}>Log In</Link>
+                        <Link
+                          href={routerConfig.authLogIn.path}
+                          data-testid="sign-in-button"
+                        >
+                          Log In
+                        </Link>
                       </Button>
                       <Button asChild variant="default" className="grow">
-                        <Link href={routerConfig.authSignUp.path}>Sign Up</Link>
+                        <Link
+                          href={routerConfig.authSignUp.path}
+                          data-testid="sign-up-button"
+                        >
+                          Sign Up
+                        </Link>
                       </Button>
                     </CardContent>
                   </Card>
