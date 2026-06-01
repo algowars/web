@@ -3,11 +3,15 @@ import Footer from "./footer";
 import Navbar from "./navbar";
 import { cn } from "@/shared/lib/utils";
 
+type LayoutProps = {
+  mainClassName: string;
+} & React.ComponentProps<"div">;
 export default function Layout({
   className,
   children,
+  mainClassName,
   ...props
-}: React.ComponentProps<"div">) {
+}: LayoutProps) {
   return (
     <div
       className={cn("min-block-svh grid grid-rows-[auto_1fr_auto]", className)}
@@ -16,7 +20,7 @@ export default function Layout({
       <header>
         <Navbar />
       </header>
-      <main>{children}</main>
+      <main className={mainClassName}>{children}</main>
       <Footer />
     </div>
   );
