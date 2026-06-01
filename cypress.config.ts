@@ -19,4 +19,11 @@ export default defineConfig({
     test_user_email: process.env.TEST_USER_EMAIL,
     test_user_password: process.env.TEST_USER_PASSWORD,
   },
+
+  component: {
+    devServer: {
+      framework: "next",
+      bundler: "webpack",
+    },
+  },
 });
