@@ -1,12 +1,10 @@
-import z from "zod";
+import { z } from "zod";
 
-export const updateUsernameSchema = z.object({
+export const accountSetupSchema = z.object({
   username: z
     .string()
-    .min(1, {
-      message: "Username must be at least 1 character",
-    })
-    .regex(/^[A-Za-z0-9_-]/, {
+    .min(1, "Username must be at least one character")
+    .regex(/^[A-Za-z0-9_-]+$/, {
       message:
         "Username only allows letters, numbers, hyphens, and underscores",
     })
