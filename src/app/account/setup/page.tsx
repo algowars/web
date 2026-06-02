@@ -1,3 +1,5 @@
+import AccountSetupForm from "@/domains/account/forms/account-setup-form";
+import { Card, CardContent } from "@/shared/components/ui/card";
 import Layout from "@/shared/layouts/layout/layout";
 import { auth0 } from "@/shared/lib/auth0";
 import { routerConfig } from "@/shared/router-config";
@@ -11,8 +13,12 @@ export default async function AccountSetupPage() {
   }
 
   return (
-    <Layout mainClassName="flex justify-center items-center py-9">
-      <p>Account setup page</p>
+    <Layout mainClassName="flex justify-center items-center py-9 px-2">
+      <Card className="max-w-lg w-full">
+        <CardContent>
+          <AccountSetupForm />
+        </CardContent>
+      </Card>
     </Layout>
   );
 }

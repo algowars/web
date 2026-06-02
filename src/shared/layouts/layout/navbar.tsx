@@ -54,27 +54,30 @@ export default function Navbar() {
 
   return (
     <nav className="border-b border-dashed">
-      <div className="max-w-7xl py-3 mx-auto grid grid-cols-3 gap-3 px-4">
+      <div className="max-w-7xl py-3 mx-auto grid grid-cols-2 md:grid-cols-3 gap-3 px-4">
         <Logo />
-        <ul className="justify-self-center lg:flex items-center gap-3 hidden text-muted-foreground">
+        <ul className="hidden justify-self-center md:flex items-center gap-3 text-muted-foreground">
           {defaultRoutes.map((route) => (
-            <li key={route.href} className="hidden lg:block">
+            <li key={route.href} className="hidden md:block">
               <Link href={route.href}>{route.name}</Link>
             </li>
           ))}
         </ul>
-        <ul className="justify-self-end flex row-reverse lg:row items-center gap-2 lg:gap-3">
+        <ul className="justify-self-end flex row-reverse md:row items-center gap-2 md:gap-3">
           {links.map((link) => (
-            <li key={link.key}>{link}</li>
+            <li key={link.key} className="hidden md:block">
+              {link}
+            </li>
           ))}
           <li>
             <ModeToggle />
           </li>
-          <li className="block lg:hidden">
+          <li className="block md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost">
-                  <MenuIcon />
+                <Button variant="ghost" aria-label="Open navigation menu">
+                  <MenuIcon aria-hidden="true" />
+                  <span className="sr-only">Open navigation menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent>
