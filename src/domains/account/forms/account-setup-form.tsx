@@ -13,8 +13,10 @@ import {
 } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
+import { useUpdateUsername } from "../api/update-username";
 
 export default function AccountSetupForm() {
+  const updateUsernameMutation = useUpdateUsername();
   const form = useForm({
     defaultValues: {
       username: "",
@@ -23,7 +25,7 @@ export default function AccountSetupForm() {
       onSubmit: accountSetupSchema,
     },
     onSubmit: async ({ value }) => {
-      void value;
+      updateUsernameMutation.mutate({ data: value });
     },
   });
   return (

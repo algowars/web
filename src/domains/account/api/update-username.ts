@@ -1,14 +1,14 @@
-import z from "zod";
-import { updateUsernameSchema } from "../schemas/update-username-schema";
 import { api } from "@/shared/lib/api-client";
-import { Account } from "@/features/auth/models/account.model";
+import { accountSetupSchema } from "../schemas/account-setup-schema";
+import { Account } from "../models/account";
+import z from "zod";
 import { MutationConfig } from "@/shared/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export type UpdateUsernameInput = z.infer<typeof updateUsernameSchema>;
+export type UpdateUsernameInput = z.infer<typeof accountSetupSchema>;
 
 export const updateUsername = ({ data }: { data: UpdateUsernameInput }) => {
-  return api.put<Account>({ url: "/api/v1/account/username", body: data });
+  return api.put<Account>("/api/v1/account/username", data);
 };
 
 type UseUpdateUsernameOptions = {
