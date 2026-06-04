@@ -5,7 +5,7 @@ import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Toaster } from "sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { MainErrorFallback } from "@/components/errors/main-error-fallback";
+import { MainErrorFallback } from "@/shared/errors/main-error-fallback";
 import { queryConfig } from "@/shared/lib/react-query";
 
 type AppProviders = {
@@ -23,7 +23,7 @@ export default function AppProviders({ children }: AppProviders) {
   return (
     <ErrorBoundary FallbackComponent={MainErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <AccountInitializer />
+        {/* <AccountInitializer /> */}
         <Toaster position="top-right" />
         {children}
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
