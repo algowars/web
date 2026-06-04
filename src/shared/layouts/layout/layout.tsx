@@ -4,7 +4,7 @@ import Navbar from "./navbar";
 import { cn } from "@/shared/lib/utils";
 
 type LayoutProps = {
-  mainClassName: string;
+  mainClassName?: string;
 } & React.ComponentProps<"div">;
 export default function Layout({
   className,

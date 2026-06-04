@@ -1,8 +1,8 @@
 "use client";
 
+import { getAccessToken } from "@auth0/nextjs-auth0";
 import axios from "axios";
 import { env } from "@/env";
-import { auth0 } from "@/shared/lib/auth0";
 
 export const api = axios.create({
   baseURL: env.NEXT_PUBLIC_API_SERVER_URL,
@@ -34,7 +34,7 @@ api.interceptors.request.use(async function (config) {
   }
 
   try {
-    const { token } = await auth0.getAccessToken();
+    const token = await getAccessToken();
 
     if (token && !config.headers?.Authorization) {
       config.headers = config.headers ?? {};
