@@ -3,6 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Problem } from "../models/problem";
 import DifficultyBadge from "../components/difficulty-badge";
+import { useProblemsStore } from "../state/problems-store";
+
+import { DataTable } from "@/shared/components/ui/data-table";
 
 const columns: ColumnDef<Problem>[] = [
   {
@@ -21,5 +24,15 @@ const columns: ColumnDef<Problem>[] = [
 ];
 
 export default function ProblemTable() {
-    const table = 
+  const problems = useProblemsStore((s) => s.problems);
+  const isLoading = useProblemsStore((s) => s.isLoading);
+
+  return (
+    <DataTable
+      isLoading={isLoading}
+      skeletonRows={5}
+      data={problems}
+      columns={columns}
+    />
+  );
 }

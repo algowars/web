@@ -4,13 +4,13 @@ import { PageResult } from "@/shared/pagination/page-result";
 import { QueryConfig } from "@/shared/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getProblems = (data: {
+export const getProblems = (params: {
   page: number;
   size: number;
   timestamp: Date;
 }) => {
   return api.get<PageResult<Problem>>("/api/v1/problem", {
-    data,
+    params,
   });
 };
 
