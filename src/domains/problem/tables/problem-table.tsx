@@ -33,6 +33,7 @@ export default function ProblemTable() {
       skeletonRows={5}
       data={problems}
       columns={columns}
+      paginationProps={{}}
     />
   );
 }

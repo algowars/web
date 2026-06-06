@@ -14,9 +14,9 @@ import {
 } from "./select";
 import { Button } from "./button";
 
-interface DataTablePaginationProps<TData> {
+export interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  sizes: number[];
+  sizes?: number[];
 }
 
 export function DataTablePagination<TData>({
