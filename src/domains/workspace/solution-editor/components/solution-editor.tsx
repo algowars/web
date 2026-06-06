@@ -1,3 +1,5 @@
+"use client";
+
 import CodeMirror, { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 
 interface SolutionEditorProps extends ReactCodeMirrorProps {

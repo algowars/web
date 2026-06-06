@@ -1,5 +1,5 @@
 import Workspace from "@/domains/workspace/components/workspace";
-import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
+import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { CodeXml, FileText } from "lucide-react";
