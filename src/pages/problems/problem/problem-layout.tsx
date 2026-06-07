@@ -6,7 +6,7 @@ import { CodeXml, FileText } from "lucide-react";
 
 export default function ProblemLayout() {
   const tabs: EditorWindowTabNode = {
-    direction: "horizontal",
+    orientation: "horizontal",
     children: [
       {
         key: "code",
@@ -15,12 +15,12 @@ export default function ProblemLayout() {
         icon: (
           <CodeXml size={16} className="text-green-600 dark:text-green-400" />
         ),
-        component: <SolutionEditor placeholder="Main solution code" />,
+        component: <div>TESTING 123</div>,
       },
       {
         key: "right-column",
         defaultSize: 50,
-        direction: "vertical",
+        orientation: "vertical",
         children: [
           {
             key: "problem",
@@ -87,7 +87,9 @@ export default function ProblemLayout() {
 
   return (
     <SidebarLayout breadcrumbs={[]}>
-      <Workspace tab={tabs} />
+      <div className="h-full">
+        <Workspace tab={tabs} />
+      </div>
     </SidebarLayout>
   );
 }

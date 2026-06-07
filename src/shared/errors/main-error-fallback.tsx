@@ -13,17 +13,32 @@ import {
 } from "@/shared/components/ui/card";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import { Separator } from "@/shared/components/ui/separator";
+import { FallbackProps } from "react-error-boundary";
 
-interface MainErrorFallbackProps {
-  error: Error;
-  resetErrorBoundary: () => void;
-}
+type NormalizedError = {
+  message: string;
+  stack?: string;
+};
+
+const normalizeError = (error: unknown): NormalizedError => {
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+      stack: error.stack,
+    };
+  }
+
+  return {
+    message: typeof error === "string" ? error : "Unknown error",
+  };
+};
 
 export function MainErrorFallback({
   error,
   resetErrorBoundary,
-}: MainErrorFallbackProps) {
+}: FallbackProps) {
   const isDev = process.env.NODE_ENV === "development";
+  const normalizedError = normalizeError(error);
 
   const handleReload = () => {
     window.location.reload();
@@ -54,7 +69,7 @@ export function MainErrorFallback({
             <Alert>
               <Bug className="h-4 w-4" />
               <AlertDescription className="font-mono text-sm break-all">
-                <strong>Error:</strong> {error.message}
+                <strong>Error:</strong> {normalizedError.message}
               </AlertDescription>
             </Alert>
           )}
@@ -88,7 +103,7 @@ export function MainErrorFallback({
           </div>
         </CardContent>
 
-        {isDev && error.stack && (
+        {isDev && normalizedError.stack && (
           <>
             <Separator />
             <CardFooter className="pt-6">
@@ -99,7 +114,7 @@ export function MainErrorFallback({
                   </summary>
                   <div className="mt-3 p-4 bg-muted rounded-md">
                     <pre className="text-xs whitespace-pre-wrap overflow-auto max-h-40 text-muted-foreground">
-                      {error.stack}
+                      {normalizedError.stack}
                     </pre>
                   </div>
                 </details>
@@ -114,7 +129,7 @@ export function MainErrorFallback({
 
 export function MinimalErrorFallback({
   resetErrorBoundary,
-}: MainErrorFallbackProps) {
+}: Pick<FallbackProps, "resetErrorBoundary">) {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center space-y-4">

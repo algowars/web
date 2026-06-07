@@ -34,9 +34,9 @@ export const EditorWindowTab = ({
     return null;
   }
 
-  if (resolvedTab.direction) {
+  if (resolvedTab.orientation) {
     return (
-      <ResizablePanelGroup direction={resolvedTab.direction}>
+      <ResizablePanelGroup orientation={resolvedTab.orientation}>
         {resolvedTab.children?.map((t, index) => (
           <Fragment key={t.key ?? `${nodeId}-${index}`}>
             <ResizablePanel defaultSize={t.defaultSize} minSize={10}>
@@ -67,7 +67,7 @@ export const EditorWindowTab = ({
         currentTabIndex={activeTab}
         setCurrentTab={handleTabClick}
       />
-      <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         {currentTab?.component}
       </div>
     </Card>

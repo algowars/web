@@ -20,7 +20,7 @@ export const EditorWindowPanelHeader = ({
             variant={index === currentTabIndex ? "secondary" : "ghost"}
             className={`h-7 px-3 py-1 ${
               index === currentTabIndex
-                ? "text-primary"
+                ? "text-foreground"
                 : "text-muted-foreground"
             }`}
             key={t.key}

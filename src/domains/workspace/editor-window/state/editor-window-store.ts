@@ -10,7 +10,7 @@ export type EditorWindowTabNode = {
   key?: string;
   children?: EditorWindowTabNode[];
   name?: string;
-  direction?: "horizontal" | "vertical";
+  orientation?: "horizontal" | "vertical";
   defaultSize?: number;
 };
 
@@ -31,9 +31,15 @@ export const useEditorWindowStore = create<EditorWindowStore>()(
     rootTab: null,
     activeTabByNode: {},
     createTabs: (tabs) =>
-      set({
-        rootTab: tabs,
-        activeTabByNode: {},
+      set((state) => {
+        if (state.rootTab) {
+          return state;
+        }
+
+        return {
+          rootTab: tabs,
+          activeTabByNode: {},
+        };
       }),
     setActiveTab: (nodeId, tabIndex) =>
       set((state) => ({
