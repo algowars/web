@@ -31,7 +31,7 @@ export default function SidebarLayout({
           />
           <div
             className={cn(
-              "px-4 pb-4 flex-1 min-h-0 overflow-hidden",
+              "px-2 md:px-4 pb-2 md:pb-4 flex-1 min-h-0 overflow-hidden",
               className
             )}
           >

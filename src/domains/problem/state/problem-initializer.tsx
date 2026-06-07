@@ -22,11 +22,15 @@ export default function ProblemInitializer() {
     timestamp,
   });
 
-  if (problems?.data?.results) {
-    setProblems(problems?.data.results);
-  }
+  useEffect(() => {
+    if (problems?.data?.results) {
+      setProblems(problems.data.results);
+    }
+  }, [problems, setProblems]);
 
-  setIsLoading(isPending);
+  useEffect(() => {
+    setIsLoading(isPending);
+  }, [isPending, setIsLoading]);
 
   useEffect(() => {
     if (isError) {
