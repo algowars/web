@@ -29,7 +29,14 @@ export default function SidebarLayout({
             breadcrumbs={breadcrumbs}
             headerItems={headerItems}
           />
-          <div className={cn("px-4 pb-4 h-full", className)}>{children}</div>
+          <div
+            className={cn(
+              "px-4 pb-4 flex-1 min-h-0 overflow-hidden",
+              className
+            )}
+          >
+            {children}
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </TooltipProvider>

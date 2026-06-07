@@ -15,7 +15,7 @@ export default function ProblemLayout() {
         icon: (
           <CodeXml size={16} className="text-green-600 dark:text-green-400" />
         ),
-        component: <div>TESTING 123</div>,
+        component: <SolutionEditor />,
       },
       {
         key: "right-column",
@@ -87,9 +87,7 @@ export default function ProblemLayout() {
 
   return (
     <SidebarLayout breadcrumbs={[]}>
-      <div className="h-full">
-        <Workspace tab={tabs} />
-      </div>
+      <Workspace tab={tabs} />
     </SidebarLayout>
   );
 }
