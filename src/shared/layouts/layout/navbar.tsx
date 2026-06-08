@@ -102,7 +102,9 @@ export default function Navbar() {
                   </ul>
                 </div>
                 <SheetFooter>
-                  <Card className="rounded">
+                  {user ? <Button asChild variant="default">
+                    <Link href={routerConfig.authLogOut.path}>Log Out</Link>
+                  </Button> : <Card className="rounded">
                     <CardHeader>
                       <CardTitle>Join the algowars community</CardTitle>
                       <CardDescription>
@@ -127,7 +129,7 @@ export default function Navbar() {
                         </Link>
                       </Button>
                     </CardContent>
-                  </Card>
+                  </Card>}
                 </SheetFooter>
               </SheetContent>
             </Sheet>
