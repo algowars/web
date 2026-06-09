@@ -3,6 +3,7 @@
 import Workspace from "@/domains/workspace/components/workspace";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
+import { Markdown } from "@/shared/components/markdown/markdown";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { CodeXml, FileText, Terminal } from "lucide-react";
@@ -18,23 +19,27 @@ export default function ProblemLayout() {
         key: "description",
         name: "Description",
         icon: (
-          <FileText
-            size={16}
-            className="text-blue-600 dark:text-blue-400"
+          <FileText size={16} className="text-blue-600 dark:text-blue-400" />
+        ),
+        component: (
+          <Markdown
+            content={
+              "## Problem Description\n\nThis is where the problem description will go."
+            }
           />
         ),
-        component: <p>Hello world</p>,
       },
       {
         key: "examples",
         name: "Examples",
-        icon: (
-          <FileText
-            size={16}
-            className="text-sky-600 dark:text-sky-400"
+        icon: <FileText size={16} className="text-sky-600 dark:text-sky-400" />,
+        component: (
+          <Markdown
+            content={
+              "# Examples\n\nThis is where the example inputs and outputs will go."
+            }
           />
         ),
-        component: <p>Example inputs and outputs go here.</p>,
       },
     ],
   };
@@ -52,7 +57,13 @@ export default function ProblemLayout() {
             className="text-purple-600 dark:text-purple-400"
           />
         ),
-        component: <p>Run output will appear here.</p>,
+        component: (
+          <Markdown
+            content={
+              "# Console\n\nThis is where the console output will appear."
+            }
+          />
+        ),
       },
       {
         key: "tests",
@@ -117,7 +128,10 @@ export default function ProblemLayout() {
       {
         ...executionTabs,
         icon: (
-          <Terminal size={16} className="text-indigo-600 dark:text-indigo-400" />
+          <Terminal
+            size={16}
+            className="text-indigo-600 dark:text-indigo-400"
+          />
         ),
       },
     ],
