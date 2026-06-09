@@ -4,4 +4,5 @@ export interface Problem {
   title: string;
   difficulty: number;
   tags: string[];
+  question?: string;
 }

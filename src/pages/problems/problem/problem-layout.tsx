@@ -1,5 +1,7 @@
 "use client";
 
+import { useGetProblemBySlug } from "@/domains/problem/api/get-problem-by-slug";
+import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import Workspace from "@/domains/workspace/components/workspace";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
@@ -8,8 +10,17 @@ import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { CodeXml, FileText, Terminal } from "lucide-react";
 
-export default function ProblemLayout() {
+type ProblemLayoutProps = {
+  slug: string;
+};
+
+export default function ProblemLayout({ slug }: ProblemLayoutProps) {
+  const { data: problemResult } = useGetProblemBySlug({ slug });
   const isMobile = useIsMobile();
+
+  if (!problemResult) {
+    return null;
+  }
 
   const problemTabs: EditorWindowTabNode = {
     key: "problem",
@@ -21,13 +32,7 @@ export default function ProblemLayout() {
         icon: (
           <FileText size={16} className="text-blue-600 dark:text-blue-400" />
         ),
-        component: (
-          <Markdown
-            content={
-              "## Problem Description\n\nThis is where the problem description will go."
-            }
-          />
-        ),
+        component: <ProblemQuestion problem={problemResult.data} />,
       },
       {
         key: "examples",
