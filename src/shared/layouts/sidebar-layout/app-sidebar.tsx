@@ -12,7 +12,7 @@ import {
 import { routerConfig } from "@/shared/router-config";
 import { Command, HomeIcon, Puzzle } from "lucide-react";
 import { SidebarMainNav } from "./sidebar-main-nav";
-import SidebarAccount from "./sidebar-account";
+import SidebarUser from "./sidebar-user";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
 
@@ -60,7 +60,7 @@ export default function AppSidebar(
         <SidebarMainNav items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarAccount />
+        <SidebarUser />
       </SidebarFooter>
     </Sidebar>
   );

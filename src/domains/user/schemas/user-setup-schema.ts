@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const accountSetupSchema = z.object({
+export const userSetupSchema = z.object({
   username: z
     .string()
     .min(1, "Username must be at least one character")

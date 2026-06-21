@@ -1,19 +1,19 @@
 import { useUser } from "@auth0/nextjs-auth0";
-import { useUpsertAccount } from "./api/upsert-account";
+import { useUpsertUser } from "./api/upsert-user";
 import { useEffect } from "react";
-import { accountStore } from "./account-store";
+import { userStore } from "./user-store";
 import { toast } from "sonner";
 
-export default function AccountInitializer() {
+export default function UserInitializer() {
   const { user } = useUser();
-  const initUser = accountStore((state) => state.init);
-  const { mutate } = useUpsertAccount({
+  const initUser = userStore((state) => state.init);
+  const { mutate } = useUpsertUser({
     mutationConfig: {
       onSuccess: (response) => {
         initUser(response.data);
       },
       onError: () => {
-        toast.error("Failed to sync account");
+        toast.error("Failed to sync user");
       },
     },
   });

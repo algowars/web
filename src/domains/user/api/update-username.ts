@@ -1,14 +1,14 @@
 import { api } from "@/shared/lib/api-client";
-import { accountSetupSchema } from "../schemas/account-setup-schema";
-import { Account } from "../models/account";
+import { userSetupSchema } from "../schemas/user-setup-schema";
+import { User } from "../models/user";
 import z from "zod";
 import { MutationConfig } from "@/shared/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export type UpdateUsernameInput = z.infer<typeof accountSetupSchema>;
+export type UpdateUsernameInput = z.infer<typeof userSetupSchema>;
 
 export const updateUsername = ({ data }: { data: UpdateUsernameInput }) => {
-  return api.put<Account>("/api/v1/account/username", data);
+  return api.put<User>("/api/v1/user/username", data);
 };
 
 type UseUpdateUsernameOptions = {
@@ -25,7 +25,7 @@ export const useUpdateUsername = ({
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: ["account"],
+        queryKey: ["user"],
       });
       queryClient.invalidateQueries({
         queryKey: ["settings"],

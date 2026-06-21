@@ -34,7 +34,7 @@ import { useUser } from "@auth0/nextjs-auth0";
 import { ChevronsUpDown, LogOut, Settings2, User } from "lucide-react";
 import Link from "next/link";
 
-export default function SidebarAccount() {
+export default function SidebarUser() {
   const { user, isLoading } = useUser();
   const { isMobile } = useSidebar();
 
@@ -79,7 +79,7 @@ export default function SidebarAccount() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild data-cy="account-dropdown-trigger">
+          <DropdownMenuTrigger asChild data-cy="user-dropdown-trigger">
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"

@@ -1,4 +1,4 @@
-describe("Accounts", () => {
+describe("Users", () => {
   const signUpThroughAuth0 = (email: string, password: string) => {
     cy.get("[data-testid=sign-up-button]").click();
     cy.signupViaAuth0Ui(email, password);
@@ -10,7 +10,7 @@ describe("Accounts", () => {
   };
 
   beforeEach(() => {
-    cy.intercept("PUT", "/api/v1/account/username").as("updateUsername");
+    cy.intercept("PUT", "/api/v1/user/username").as("updateUsername");
 
     cy.visit("/");
   });

@@ -1,21 +1,21 @@
 import z from "zod";
-import { upsertAccountSchema } from "../schemas/upsert-account-schema";
+import { upsertUserSchema } from "../schemas/upsert-user-schema";
 import { api } from "@/shared/lib/api-client";
-import { Account } from "../models/account";
+import { User } from "../models/user";
 import { MutationConfig } from "@/shared/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export type UpsertAccountInput = z.infer<typeof upsertAccountSchema>;
+export type UpsertUserInput = z.infer<typeof upsertUserSchema>;
 
-export const upsertAccount = ({ data }: { data: UpsertAccountInput }) => {
-  return api.put<Account>("/api/v1/account", data);
+export const upsertUser = ({ data }: { data: UpsertUserInput }) => {
+  return api.put<User>("/api/v1/user", data);
 };
 
-type UpsertAccountOptions = {
-  mutationConfig?: MutationConfig<typeof upsertAccount>;
+type UpsertUserOptions = {
+  mutationConfig?: MutationConfig<typeof upsertUser>;
 };
 
-export const useUpsertAccount = ({ mutationConfig }: UpsertAccountOptions) => {
+export const useUpsertUser = ({ mutationConfig }: UpsertUserOptions) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
@@ -23,7 +23,7 @@ export const useUpsertAccount = ({ mutationConfig }: UpsertAccountOptions) => {
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: ["account"],
+        queryKey: ["user"],
       });
       queryClient.invalidateQueries({
         queryKey: ["settings"],
@@ -31,6 +31,6 @@ export const useUpsertAccount = ({ mutationConfig }: UpsertAccountOptions) => {
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: upsertAccount,
+    mutationFn: upsertUser,
   });
 };

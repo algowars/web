@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { accountSetupSchema } from "../schemas/account-setup-schema";
+import { userSetupSchema } from "../schemas/user-setup-schema";
 import {
   Field,
   FieldDescription,
@@ -15,14 +15,14 @@ import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { useUpdateUsername } from "../api/update-username";
 
-export default function AccountSetupForm() {
+export default function UserSetupForm() {
   const updateUsernameMutation = useUpdateUsername();
   const form = useForm({
     defaultValues: {
       username: "",
     },
     validators: {
-      onSubmit: accountSetupSchema,
+      onSubmit: userSetupSchema,
     },
     onSubmit: async ({ value }) => {
       updateUsernameMutation.mutate({ data: value });
@@ -37,9 +37,9 @@ export default function AccountSetupForm() {
     >
       <FieldGroup>
         <FieldSet>
-          <FieldLegend>Finish Setting Up Your Account</FieldLegend>
+          <FieldLegend>Finish Setting Up Your User</FieldLegend>
           <FieldDescription>
-            Set you username to finish setting up your account.
+            Set you username to finish setting up your user.
           </FieldDescription>
           <FieldGroup>
             <form.Field name="username">
@@ -59,7 +59,7 @@ export default function AccountSetupForm() {
                       placeholder="Username"
                       autoComplete="off"
                       aria-invalid={isInvalid}
-                      data-testid="account-setup-username"
+                      data-testid="user-setup-username"
                     />
                     <FieldDescription>
                       A username must be at least 1 character, at most 36

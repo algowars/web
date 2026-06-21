@@ -1,7 +1,7 @@
 export const routerConfig = {
   authLogIn: { path: "/auth/login" },
   authSignUp: {
-    path: "/auth/login?screen_hint=signup&returnTo=/account/setup",
+    path: "/auth/login?screen_hint=signup&returnTo=/user/setup",
   },
   authLogOut: { path: "/auth/logout" },
   home: {
