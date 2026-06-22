@@ -1,5 +1,6 @@
 "use client";
 
+import { userStore } from "@/domains/user/user-store";
 import {
   Avatar,
   AvatarFallback,
@@ -35,10 +36,12 @@ import { ChevronsUpDown, LogOut, Settings2, User } from "lucide-react";
 import Link from "next/link";
 
 export default function SidebarUser() {
-  const { user, isLoading } = useUser();
+  const { user: authUser, isLoading } = useUser();
+  const user = userStore((state) => state.user);
+  const isUserLoading = userStore((state) => state.isUserLoading);
   const { isMobile } = useSidebar();
 
-  if (isLoading) {
+  if (isLoading || isUserLoading) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -54,7 +57,7 @@ export default function SidebarUser() {
     );
   }
 
-  if (!user) {
+  if (!authUser) {
     return (
       <Card className="rounded">
         <CardHeader>
@@ -85,13 +88,13 @@ export default function SidebarUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user?.picture} alt={user?.name} />
+                <AvatarImage src={authUser?.picture} alt={user?.username} />
                 <AvatarFallback className="rounded-lg">
-                  {user?.name?.[0] ?? "U"}
+                  {user?.username?.[0] ?? "U"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user?.name}</span>
+                <span className="truncate font-medium">{user?.username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -105,23 +108,23 @@ export default function SidebarUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user?.picture} alt={user?.name} />
+                  <AvatarImage src={authUser?.picture} alt={user?.username} />
                   <AvatarFallback className="rounded-lg">
-                    {user?.name?.[0] ?? "U"}
+                    {user?.username?.[0] ?? "U"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user?.name}</span>
+                  <span className="truncate font-medium">{user?.username}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {user?.name ? (
+            {user?.username ? (
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
                   <Link
                     href={routerConfig.profile.execute({
-                      username: user?.name,
+                      username: user?.username,
                     })}
                   >
                     <User />

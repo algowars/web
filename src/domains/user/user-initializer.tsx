@@ -8,23 +8,24 @@ import { toast } from "sonner";
 import { useGetAccount } from "./api/get-account";
 
 export default function UserInitializer() {
-  const [isUpsertSuccessful, setIsUpsertSuccessful] = useState(false);
+  const [isUpsertDone, setIsUpsertDone] = useState(false);
   const { user } = useUser();
   const initUser = userStore((state) => state.init);
+  const setIsUserLoading = userStore((state) => state.setUserLoading);
 
-  const { data: accountResponse } = useGetAccount({
+  const { data: accountResponse, isPending } = useGetAccount({
     queryConfig: {
-      enabled: isUpsertSuccessful,
+      enabled: isUpsertDone,
     },
   });
 
   const { mutate } = useUpsertUser({
     mutationConfig: {
       onSuccess: () => {
-        setIsUpsertSuccessful(true);
+        setIsUpsertDone(true);
       },
       onError: () => {
-        setIsUpsertSuccessful(false);
+        setIsUpsertDone(true);
         toast.error("Failed to sync user");
       },
     },
@@ -43,6 +44,10 @@ export default function UserInitializer() {
       initUser(accountResponse.data);
     }
   }, [accountResponse, initUser]);
+
+  useEffect(() => {
+    setIsUserLoading(isPending);
+  }, [isPending, setIsUserLoading]);
 
   return null;
 }
