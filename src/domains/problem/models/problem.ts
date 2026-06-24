@@ -5,4 +5,5 @@ export interface Problem {
   difficulty: number;
   tags: string[];
   question?: string;
+  availableSetups?: string[];
 }
