@@ -15,12 +15,12 @@ export default function Hero() {
       <ul className="flex items-center gap-3">
         <li>
           <Button asChild size="lg" className="w-40">
-            <Link href={routerConfig.authLogIn.path}>Get Started</Link>
+            <Link href={routerConfig.authSignUp.path}>Get Started Free</Link>
           </Button>
         </li>
         <li>
-          <Button asChild size="lg" variant="secondary" className="w-40">
-            <Link href={routerConfig.authLogIn.path}>Join Today</Link>
+          <Button asChild size="lg" variant="outline" className="w-40">
+            <Link href={routerConfig.problems.path}>Browse Problems</Link>
           </Button>
         </li>
       </ul>

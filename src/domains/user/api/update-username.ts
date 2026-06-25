@@ -9,7 +9,7 @@ export type UpdateUsernameInput = z.infer<typeof userSetupSchema>;
 
 export const updateUsername = ({ data }: { data: UpdateUsernameInput }) => {
   return api.put<User>({
-    url: "/api/v1/user/username",
+    url: "/api/v1/user",
     body: data,
   });
 };

@@ -114,7 +114,20 @@ const handleRequest = async <T>(request: Promise<any>): Promise<T> => {
     return payload as unknown as T;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const resp = err.response?.data as ApiResponse<unknown>;
+      const resp = err.response?.data;
+
+      console.log("RESP: ", resp);
+
+      // Handle ValidationProblem shape: { errors: { "field": ["msg"] } }
+      if (resp?.errors && !Array.isArray(resp.errors)) {
+        const errors: ApiError[] = Object.entries(resp.errors).flatMap(
+          ([field, messages]) =>
+            (messages as string[]).map((message) => ({ field, message }))
+        );
+        throw new ApiException(resp?.title ?? "Validation error", errors);
+      }
+
+      // Handle array shape: { errors: [{ field, message }] }
       const errors: ApiError[] = resp?.errors?.map((e: any) => ({
         field: e.field,
         message: e.message ?? e,

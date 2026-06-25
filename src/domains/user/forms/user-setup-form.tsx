@@ -14,9 +14,23 @@ import {
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { useUpdateUsername } from "../api/update-username";
+import { useRouter } from "next/navigation";
+import { routerConfig } from "@/shared/router-config";
 
 export default function UserSetupForm() {
-  const updateUsernameMutation = useUpdateUsername();
+  const router = useRouter();
+  const {
+    mutate: updateUsernameMutate,
+    isPending,
+    error,
+  } = useUpdateUsername({
+    mutationConfig: {
+      onSuccess: () => {
+        router.push(routerConfig.home.path);
+      },
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       username: "",
@@ -25,9 +39,11 @@ export default function UserSetupForm() {
       onSubmit: userSetupSchema,
     },
     onSubmit: async ({ value }) => {
-      updateUsernameMutation.mutate({ data: value });
+      updateUsernameMutate({ data: value });
     },
   });
+
+  console.log("ERROR: ", Object.keys(error || {}));
   return (
     <form
       onSubmit={(e) => {
@@ -69,6 +85,9 @@ export default function UserSetupForm() {
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
+                    {error && (
+                      <FieldError errors={[{ message: error.message }]} />
+                    )}
                   </Field>
                 );
               }}
@@ -76,7 +95,9 @@ export default function UserSetupForm() {
           </FieldGroup>
         </FieldSet>
         <Field orientation="horizontal">
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Saving..." : "Save Changes"}
+          </Button>
         </Field>
       </FieldGroup>
     </form>

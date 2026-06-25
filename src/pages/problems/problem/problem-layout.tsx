@@ -4,6 +4,7 @@ import ProblemLoading from "@/app/problems/[slug]/loading";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import { Problem } from "@/domains/problem/models/problem";
 import Workspace from "@/domains/workspace/components/workspace";
+import { WorkspaceHeader } from "@/domains/workspace/components/workspace-header";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import { LanguageSelect } from "@/domains/workspace/language-select/components/language-select";
 import { WorkspaceActions } from "@/domains/workspace/language-select/components/workspace-actions";
@@ -159,15 +160,7 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
   return (
     <SidebarLayout
       breadcrumbs={[]}
-      headerItems={
-        <div className="p-1 flex flex-1">
-          <WorkspaceActions slug={problem.slug} className="ml-auto" />
-          <LanguageSelect
-            languages={problem.availableLanguages ?? []}
-            className="ml-auto hidden"
-          />
-        </div>
-      }
+      headerItems={<WorkspaceHeader problem={problem} />}
     >
       <Workspace tab={tabs} />
     </SidebarLayout>
