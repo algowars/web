@@ -3,14 +3,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 
-import { Problem } from "../models/problem";
 import DifficultyBadge from "../components/difficulty-badge";
 import { useProblemsStore } from "../state/problems-store";
 
 import { DataTable } from "@/shared/components/ui/data-table";
 import { routerConfig } from "@/shared/router-config";
+import { ProblemSummary } from "../models/problem-summary";
 
-const columns: ColumnDef<Problem>[] = [
+const columns: ColumnDef<ProblemSummary>[] = [
   {
     accessorKey: "title",
     header: "Title",
@@ -31,7 +31,7 @@ export default function ProblemTable() {
   const problems = useProblemsStore((s) => s.problems);
   const isLoading = useProblemsStore((s) => s.isLoading);
 
-  const handleRowClick = (problem: Problem) => {
+  const handleRowClick = (problem: ProblemSummary) => {
     if (!problem.slug) {
       return;
     }

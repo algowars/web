@@ -8,7 +8,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export type UpsertUserInput = z.infer<typeof upsertUserSchema>;
 
 export const upsertUser = ({ data }: { data: UpsertUserInput }) => {
-  return api.put<User>("/api/v1/user", data);
+  return api.put<User>({
+    url: "/api/v1/user",
+    body: data,
+  });
 };
 
 type UpsertUserOptions = {

@@ -13,7 +13,7 @@ export default function UserInitializer() {
   const initUser = userStore((state) => state.init);
   const setIsUserLoading = userStore((state) => state.setUserLoading);
 
-  const { data: accountResponse, isPending } = useGetAccount({
+  const { data: accountResponse, isLoading } = useGetAccount({
     queryConfig: {
       enabled: isUpsertDone,
     },
@@ -40,14 +40,14 @@ export default function UserInitializer() {
   }, [user, mutate]);
 
   useEffect(() => {
-    if (accountResponse?.data) {
-      initUser(accountResponse.data);
+    if (accountResponse) {
+      initUser(accountResponse);
     }
   }, [accountResponse, initUser]);
 
   useEffect(() => {
-    setIsUserLoading(isPending);
-  }, [isPending, setIsUserLoading]);
+    setIsUserLoading(isLoading);
+  }, [isLoading, setIsUserLoading]);
 
   return null;
 }

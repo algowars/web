@@ -3,10 +3,14 @@ import { Problem } from "../models/problem";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/shared/lib/react-query";
 
-export const getProblemBySlug = ({ slug }: { slug: string }) => {
-  console.log("SLUG: ", slug);
-  return api.get<Problem>(`/api/v1/problem/${slug}`);
-};
+export const getProblemBySlug = ({
+  slug,
+}: {
+  slug: string;
+}): Promise<Problem> =>
+  api.get({
+    url: `/api/v1/problem/${slug}`,
+  });
 
 export const getProblemBySlugQueryOptions = ({ slug }: { slug: string }) => {
   return queryOptions({

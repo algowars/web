@@ -1,3 +1,5 @@
+import { ProgrammingLanguage } from "@/domains/language/models/programming-language";
+
 export interface Problem {
   id: string;
   slug: string;
@@ -5,5 +7,5 @@ export interface Problem {
   difficulty: number;
   tags: string[];
   question?: string;
-  availableSetups?: string[];
+  availableLanguages?: ProgrammingLanguage[];
 }

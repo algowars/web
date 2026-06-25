@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { EditorWindowTab } from "../editor-window/editor-tab";
 import {
@@ -14,9 +14,17 @@ type WorkspaceProps = {
 
 export default function Workspace({ tab }: WorkspaceProps) {
   const createTabs = useEditorWindowStore((state) => state.createTabs);
+  const initialized = useRef(false);
+
+  if (!initialized.current) {
+    createTabs(tab);
+    initialized.current = true;
+  }
 
   useEffect(() => {
-    createTabs(tab);
+    if (initialized.current) {
+      createTabs(tab);
+    }
   }, [tab, createTabs]);
 
   return <EditorWindowTab tab={tab} />;

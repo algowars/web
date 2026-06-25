@@ -18,6 +18,11 @@ export const routerConfig = {
     execute: ({ slug }: { slug: string }) =>
       `/problems/${encodeURIComponent(slug)}`,
   },
+  problemSubmissions: {
+    path: "/problems/:slug/submissions",
+    execute: ({ slug }: { slug: string }) =>
+      `/problems/${encodeURIComponent(slug)}/submissions`,
+  },
   profile: {
     path: "/profile/:username",
     execute: ({ username }: { username: string }) =>

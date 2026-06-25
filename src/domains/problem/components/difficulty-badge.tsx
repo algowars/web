@@ -1,7 +1,7 @@
 import { Badge } from "@/shared/components/ui/badge";
 
-const EASY_THRESHOLD = 1_000;
-const MEDIUM_THRESHOLD = 2_000;
+const EASY_THRESHOLD = 1;
+const MEDIUM_THRESHOLD = 2;
 
 function getDifficultyLabel(difficulty: number): {
   label: string;

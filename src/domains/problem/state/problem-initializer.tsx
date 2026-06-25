@@ -23,8 +23,8 @@ export default function ProblemInitializer() {
   });
 
   useEffect(() => {
-    if (problems?.data?.results) {
-      setProblems(problems.data.results);
+    if (problems?.results) {
+      setProblems(problems.results);
     }
   }, [problems, setProblems]);
 

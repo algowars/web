@@ -1,16 +1,17 @@
 import { api } from "@/shared/lib/api-client";
-import { Problem } from "../models/problem";
 import { PageResult } from "@/shared/pagination/page-result";
 import { QueryConfig } from "@/shared/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
+import { ProblemSummary } from "../models/problem-summary";
 
 export const getProblems = (params: {
   page: number;
   size: number;
   timestamp: Date;
 }) => {
-  return api.get<PageResult<Problem>>("/api/v1/problem", {
-    params,
+  return api.get<PageResult<ProblemSummary>>({
+    url: "/api/v1/problem",
+    config: { params },
   });
 };
 

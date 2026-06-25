@@ -17,10 +17,10 @@ export const generateMetadata = async ({
 }) => {
   try {
     const slug = (await params).slug;
-    const problemResult = await getProblemBySlug({ slug });
+    const problem = await getProblemBySlug({ slug });
     return {
-      title: problemResult.data.title,
-      description: problemResult.data.question,
+      title: problem.title,
+      description: problem.question,
     };
   } catch {
     return { title: "Problem" };
@@ -30,7 +30,10 @@ export const generateMetadata = async ({
 export const preloadData = async (slug: string) => {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(getProblemBySlugQueryOptions({ slug }));
+  await queryClient.prefetchQuery({
+    queryKey: ["problem", slug],
+    queryFn: () => getProblemBySlug({ slug }),
+  });
 
   const dehydratedState = dehydrate(queryClient);
 
@@ -50,15 +53,13 @@ export default async function ProblemPage({
     getProblemBySlugQueryOptions({ slug }).queryKey
   );
 
-  console.log("PROBLEM: ", problem);
-
   if (!problem) {
     return notFound();
   }
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProblemLayout slug={slug} />
+      <ProblemLayout problem={problem} />
     </HydrationBoundary>
   );
 }

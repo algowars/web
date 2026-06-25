@@ -4,7 +4,9 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/shared/lib/react-query";
 
 export const getProfile = () => {
-  return api.get<User>("/api/v1/user/profile");
+  return api.get<User>({
+    url: "/api/v1/user/profile",
+  });
 };
 
 const getProfileQueryOptions = () => {
