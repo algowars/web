@@ -73,8 +73,11 @@ const createApiClient = (): AxiosInstance => {
 
       const { auth0 } = await import("@/shared/lib/auth0");
       try {
-        const { token } = await auth0.getAccessToken();
-        if (token) config.headers.Authorization = `Bearer ${token}`;
+        const session = await auth0.getSession();
+        if (session) {
+          const { token } = await auth0.getAccessToken();
+          if (token) config.headers.Authorization = `Bearer ${token}`;
+        }
       } catch {}
     } else {
       const { getAccessToken } = await import("@auth0/nextjs-auth0");

@@ -155,6 +155,7 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
 
   if (isMobile === undefined) return <ProblemLoading />;
 
+  console.log("PROBLEM: ", problem);
   return (
     <SidebarLayout
       breadcrumbs={[]}
@@ -163,7 +164,7 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
           <WorkspaceActions slug={problem.slug} className="ml-auto" />
           <LanguageSelect
             languages={problem.availableLanguages ?? []}
-            className="ml-auto"
+            className="ml-auto hidden"
           />
         </div>
       }

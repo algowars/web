@@ -22,14 +22,31 @@ export const LanguageSelect = ({
   selectedVersion,
   ...props
 }: LanguageSelectProps) => {
+  console.log("LANGUAGES: ", languages);
   return (
     <ul {...props} className={cn("flex items-center gap-2", props.className)}>
       <li>
         <Select>
-          <SelectTrigger className="w-full max-w-48">
+          <SelectTrigger className="w-32">
             <SelectValue placeholder="Select a language" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper">
+            <SelectGroup>
+              {languages.map((language) => (
+                <SelectItem key={language.id} value={language.id}>
+                  {language.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </li>
+      <li>
+        <Select>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="Select a version" />
+          </SelectTrigger>
+          <SelectContent position="popper">
             <SelectGroup>
               {languages.map((language) => (
                 <SelectItem key={language.id} value={language.id}>
