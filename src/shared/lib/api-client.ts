@@ -116,15 +116,15 @@ const handleRequest = async <T>(request: Promise<any>): Promise<T> => {
     if (axios.isAxiosError(err)) {
       const resp = err.response?.data;
 
-      console.log("RESP: ", resp);
-
       // Handle ValidationProblem shape: { errors: { "field": ["msg"] } }
       if (resp?.errors && !Array.isArray(resp.errors)) {
         const errors: ApiError[] = Object.entries(resp.errors).flatMap(
           ([field, messages]) =>
             (messages as string[]).map((message) => ({ field, message }))
         );
-        throw new ApiException(resp?.title ?? "Validation error", errors);
+        const firstMessage =
+          errors[0]?.message ?? resp?.title ?? "Validation error";
+        throw new ApiException(firstMessage, errors);
       }
 
       // Handle array shape: { errors: [{ field, message }] }

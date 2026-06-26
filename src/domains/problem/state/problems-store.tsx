@@ -10,7 +10,7 @@ type ProblemsState = {
   isLoading: boolean;
 };
 
-type ProblemsAsctions = {
+type ProblemsActions = {
   changePage: (page: number) => void;
   changeSize: (size: number) => void;
   changeTimestamp: (timestamp: Date) => void;
@@ -18,7 +18,7 @@ type ProblemsAsctions = {
   setIsLoading: (isLoading: boolean) => void;
 };
 
-export type ProblemsStore = ProblemsState & ProblemsAsctions;
+export type ProblemsStore = ProblemsState & ProblemsActions;
 
 export const useProblemsStore = create<ProblemsStore>()(
   subscribeWithSelector(

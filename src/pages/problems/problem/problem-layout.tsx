@@ -6,8 +6,6 @@ import { Problem } from "@/domains/problem/models/problem";
 import Workspace from "@/domains/workspace/components/workspace";
 import { WorkspaceHeader } from "@/domains/workspace/components/workspace-header";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
-import { LanguageSelect } from "@/domains/workspace/language-select/components/language-select";
-import { WorkspaceActions } from "@/domains/workspace/language-select/components/workspace-actions";
 import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
 import { Markdown } from "@/shared/components/markdown/markdown";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
@@ -156,7 +154,6 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
 
   if (isMobile === undefined) return <ProblemLoading />;
 
-  console.log("PROBLEM: ", problem);
   return (
     <SidebarLayout
       breadcrumbs={[]}

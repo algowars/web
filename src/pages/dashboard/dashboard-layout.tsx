@@ -1,4 +1,4 @@
-import ProblemInitializer from "@/domains/problem/state/problem-initializer";
+import ProblemInitializers from "@/domains/problem/state/problems-initializer";
 import ProblemTable from "@/domains/problem/tables/problem-table";
 import {
   Card,
@@ -11,7 +11,7 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 export default function DashboardLayout() {
   return (
     <SidebarLayout breadcrumbs={[]}>
-      <ProblemInitializer />
+      <ProblemInitializers />
       <Card>
         <CardHeader>
           <CardTitle>Problems</CardTitle>

@@ -52,10 +52,10 @@ export default function UserSetupLayout() {
     );
   }
 
-  // if (userResult?.usernameLastChangedAt) {
-  //   router.push(routerConfig.home.path);
-  //   return null;
-  // }
+  if (userResult?.usernameLastChangedAt) {
+    router.push(routerConfig.home.path);
+    return null;
+  }
 
   return (
     <Layout mainClassName="flex justify-center items-center py-9 px-2">

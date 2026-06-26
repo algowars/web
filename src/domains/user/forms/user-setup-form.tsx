@@ -43,7 +43,6 @@ export default function UserSetupForm() {
     },
   });
 
-  console.log("ERROR: ", Object.keys(error || {}));
   return (
     <form
       onSubmit={(e) => {
