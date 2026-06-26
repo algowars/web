@@ -12,29 +12,29 @@ import {
 } from "@/shared/components/ui/select";
 import { cn } from "@/shared/lib/utils";
 import { useWorkspaceStore } from "../../state/workspace-store";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 type LanguageSelectProps = {
   languages: ProgrammingLanguage[];
-  selectedVersion?: ProgrammingLanguageVersion;
 } & React.HTMLAttributes<HTMLUListElement>;
 
 export const LanguageSelect = ({
   languages,
-  selectedVersion,
   ...props
 }: LanguageSelectProps) => {
   const setSelectedVersionId = useWorkspaceStore(
     (state) => state.setSelectedVersionId
   );
+
   const selectedVersionId = useWorkspaceStore(
     (state) => state.selectedVersionId
   );
+
   const selectedLanguage = useMemo(
     () =>
       languages.find((l) =>
         l.versions.some((v) => v.id === selectedVersionId)
-      ) ?? null,
+      ) ?? languages[0],
     [languages, selectedVersionId]
   );
 
@@ -43,12 +43,21 @@ export const LanguageSelect = ({
     setSelectedVersionId(language?.versions[0]?.id ?? null);
   };
 
+  const defaultVersionId = languages[0]?.versions[0]?.id;
+
+  useEffect(() => {
+    if (!selectedVersionId && defaultVersionId) {
+      setSelectedVersionId(defaultVersionId);
+    }
+  }, [defaultVersionId, selectedVersionId, setSelectedVersionId]);
+
   return (
     <ul {...props} className={cn("flex items-center gap-2", props.className)}>
       <li>
         <Select
           value={selectedLanguage?.id ?? ""}
           onValueChange={selectLanguage}
+          disabled={languages.length === 0}
         >
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Select a language" />
@@ -67,7 +76,8 @@ export const LanguageSelect = ({
       <li>
         <Select
           value={selectedVersionId ?? ""}
-          onValueChange={setSelectedVersionId}
+          onValueChange={(val) => setSelectedVersionId(val)}
+          disabled={!selectedLanguage || selectedLanguage.versions.length === 0}
         >
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Select a version" />

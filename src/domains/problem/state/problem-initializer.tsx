@@ -17,7 +17,7 @@ export default function ProblemInitializer({
     if (problem) {
       initProblem(problem);
     }
-  }, [problem, initProblem]);
+  }, [problem?.id, initProblem]);
 
   return null;
 }
