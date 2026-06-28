@@ -1,6 +1,6 @@
 import { fetchProblemBySlug } from "@/domains/problem/api/problem-server-api";
 import { notFound } from "next/navigation";
-import ProblemLayout from "./problem-layout";
+import ProblemLayout from "@/pages/problems/problem/problem-layout";
 
 type ProblemPageClientProps = {
   slug: string;
