@@ -7,6 +7,7 @@ import { userApi } from "@/domains/user/api/user-api";
 import { UserEvents } from "@/domains/user/state/user-events";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
+import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 
 export const listenerMiddleware = createListenerMiddleware();
@@ -147,13 +148,18 @@ startAppListening({
     listenerApi.cancelActiveListeners();
 
     try {
-      const user = await listenerApi
+      await listenerApi
         .dispatch(
           userApi.endpoints.updateUsername.initiate(action.payload.data)
         )
         .unwrap();
 
-      listenerApi.dispatch(UserEvents.updateUsernameSuccess(user));
+      const account = await listenerApi
+        .dispatch(userApi.endpoints.getAccount.initiate())
+        .unwrap();
+
+      listenerApi.dispatch(UserEvents.updateUsernameSuccess(account));
+      toast.success("Username updated");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to update username";
