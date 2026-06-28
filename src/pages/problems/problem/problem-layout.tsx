@@ -14,6 +14,7 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { useAppDispatch } from "@/shared/state/hooks";
 import { CodeXml, FileText, Terminal } from "lucide-react";
 import { useEffect, useMemo } from "react";
+import ProblemSolutionEditor from "./problem-solution-editor";
 
 type ProblemLayoutProps = {
   problem: Problem;
@@ -104,7 +105,7 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
                 className="text-green-600 dark:text-green-400"
               />
             ),
-            component: <SolutionEditor />,
+            component: <ProblemSolutionEditor />,
           },
           {
             ...problemTabs,
@@ -138,7 +139,7 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
           icon: (
             <CodeXml size={16} className="text-green-600 dark:text-green-400" />
           ),
-          component: <SolutionEditor />,
+          component: <ProblemSolutionEditor />,
         },
         {
           key: "right-column",

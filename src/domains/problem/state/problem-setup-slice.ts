@@ -1,5 +1,6 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import type { Problem } from "../models/problem";
+import type { ProblemSetup } from "../models/problem-setup";
 import { ProblemEvents } from "./problem-events";
 import type { RootState } from "@/shared/state/store";
 
@@ -9,7 +10,7 @@ export const ProblemSetupEvents = {
     languageVersionId: string;
   }>("problemSetup/loadRequested"),
   loadProblemSetupSuccess: createAction<{
-    setup: unknown;
+    setup: ProblemSetup;
     languageVersionId: string;
   }>("problemSetup/loadSuccess"),
   loadProblemSetupFailure: createAction<{ message: string }>(
@@ -19,7 +20,7 @@ export const ProblemSetupEvents = {
 
 interface ProblemSetupState {
   currentProblem: Problem | null;
-  setup: unknown | null;
+  setup: ProblemSetup | null;
   isLoading: boolean;
   error: string | null;
 }

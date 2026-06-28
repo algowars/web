@@ -1,6 +1,7 @@
 import { baseApi } from "@/shared/lib/base-api";
 import type { PageResult } from "@/shared/pagination/page-result";
 import type { Problem } from "../models/problem";
+import type { ProblemSetup } from "../models/problem-setup";
 import type { ProblemSummary } from "../models/problem-summary";
 
 export const problemApi = baseApi.injectEndpoints({
@@ -24,7 +25,7 @@ export const problemApi = baseApi.injectEndpoints({
       providesTags: ["Problem"],
     }),
     getProblemSetup: builder.query<
-      unknown,
+      ProblemSetup,
       { slug: string; languageVersionId: string }
     >({
       query: ({ slug, languageVersionId }) => ({
