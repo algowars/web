@@ -1,4 +1,4 @@
-import ProblemPageClient from "@/pages/problems/problem/problem-page-client";
+import ProblemPageContent from "@/pages/problems/problem/problem-page-client";
 
 export const generateMetadata = async ({
   params,
@@ -19,5 +19,5 @@ export default async function ProblemPage({
 }) {
   const slug = (await params).slug;
 
-  return <ProblemPageClient slug={slug} />;
+  return <ProblemPageContent slug={slug} />;
 }

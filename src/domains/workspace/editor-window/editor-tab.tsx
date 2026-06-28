@@ -10,9 +10,9 @@ import {
 } from "@/shared/components/ui/resizable";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { EditorWindowPanelHeader } from "./editor-panel-header";
-import { WorkspaceEvents } from "../../state/workspace-events";
-import { selectActiveTabIndex } from "../../state/slice";
 import { EditorWindowTabNode } from "./state/editor-window-store";
+import { selectActiveTabIndex } from "../state/workspace-slice";
+import { WorkspaceEvents } from "../state/workspace-events";
 
 type EditorWindowTabProps = {
   tab?: EditorWindowTabNode;

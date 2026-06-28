@@ -14,7 +14,7 @@ import { cn } from "@/shared/lib/utils";
 import { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { WorkspaceEvents } from "../../state/workspace-events";
-import { selectSelectedVersionId } from "../../state/slice";
+import { selectSelectedVersionId } from "../../state/workspace-slice";
 
 type LanguageSelectProps = {
   languages: ProgrammingLanguage[];

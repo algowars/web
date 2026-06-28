@@ -1,38 +1,38 @@
-"use client";
-
-import { useEffect } from "react";
-import ProblemLoading from "@/app/problems/[slug]/loading";
-import ProblemNotFound from "@/app/problems/[slug]/not-found";
-import { useGetProblemBySlugQuery } from "@/domains/problem/api/problem-api";
-import { ProblemEvents } from "@/domains/problem/state/problem-events";
-import { useAppDispatch } from "@/shared/state/hooks";
+import { fetchProblemBySlug } from "@/domains/problem/api/problem-server-api";
+import type { Problem } from "@/domains/problem/models/problem";
+import { auth0 } from "@/shared/lib/auth0";
+import { notFound } from "next/navigation";
 import ProblemLayout from "./problem-layout";
 
 type ProblemPageClientProps = {
   slug: string;
 };
 
-export default function ProblemPageClient({ slug }: ProblemPageClientProps) {
-  const dispatch = useAppDispatch();
-  const { data, isLoading, isFetching, isError } = useGetProblemBySlugQuery({
-    slug,
-  });
+export default async function ProblemPage({ slug }: ProblemPageClientProps) {
+  let accessToken: string | undefined;
 
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
-    dispatch(ProblemEvents.initializeProblem(data));
-  }, [dispatch, data]);
-
-  if (isLoading || isFetching) {
-    return <ProblemLoading />;
+  try {
+    const tokenSet = await auth0.getAccessToken();
+    accessToken = tokenSet.token;
+  } catch {
+    accessToken = undefined;
   }
 
-  if (isError || !data) {
-    return <ProblemNotFound />;
+  const response = await fetchProblemBySlug({ slug, accessToken });
+
+  if (response.status === 404) {
+    notFound();
   }
 
-  return <ProblemLayout problem={data} />;
+  if (!response.ok) {
+    notFound();
+  }
+
+  const problem = (await response.json()) as Problem;
+
+  if (!problem) {
+    notFound();
+  }
+
+  return <ProblemLayout problem={problem} />;
 }
