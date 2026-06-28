@@ -1,7 +1,10 @@
 "use client";
 
 import UserSetupForm from "@/domains/user/forms/user-setup-form";
-import { selectIsUserLoading, selectUser } from "@/domains/user/state/slice";
+import {
+  selectIsUserLoading,
+  selectUser,
+} from "@/domains/user/state/user-slice";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import Layout from "@/shared/layouts/layout/layout";

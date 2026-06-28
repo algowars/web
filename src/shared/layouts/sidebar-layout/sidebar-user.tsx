@@ -1,6 +1,9 @@
 "use client";
 
-import { selectIsUserLoading, selectUser } from "@/domains/user/state/slice";
+import {
+  selectIsUserLoading,
+  selectUser,
+} from "@/domains/user/state/user-slice";
 import {
   Avatar,
   AvatarFallback,

@@ -21,7 +21,7 @@ import {
   selectIsUserLoading,
   selectUser,
   selectUserError,
-} from "../state/slice";
+} from "../state/user-slice";
 import { useEffect } from "react";
 
 export default function UserSetupForm() {

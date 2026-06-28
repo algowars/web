@@ -1,4 +1,4 @@
-import { userReducer } from "@/domains/user/state/slice";
+import { userReducer } from "@/domains/user/state/user-slice";
 import { problemReducer } from "@/domains/problem/state/problem-slice";
 import { problemSetupReducer } from "@/domains/problem/state/problem-setup-slice";
 import { workspaceReducer } from "@/domains/workspace/state/workspace-slice";
