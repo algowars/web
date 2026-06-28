@@ -3,5 +3,5 @@ export interface PageResult<T> {
   total: number;
   page: number;
   size: number;
-  timestamp: Date;
+  timestamp: string;
 }

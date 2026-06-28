@@ -1,43 +1,15 @@
-import {
-  getProblemBySlug,
-  getProblemBySlugQueryOptions,
-} from "@/domains/problem/api/get-problem-by-slug";
-import ProblemLayout from "@/pages/problems/problem/problem-layout";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import { notFound } from "next/navigation";
+import ProblemPageClient from "@/pages/problems/problem/problem-page-client";
 
 export const generateMetadata = async ({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) => {
-  try {
-    const slug = (await params).slug;
-    const problem = await getProblemBySlug({ slug });
-    return {
-      title: problem.title,
-      description: problem.question,
-    };
-  } catch {
-    return { title: "Problem" };
-  }
-};
-
-export const preloadData = async (slug: string) => {
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["problem", slug],
-    queryFn: () => getProblemBySlug({ slug }),
-  });
-
-  const dehydratedState = dehydrate(queryClient);
-
-  return { dehydratedState, queryClient };
+  const slug = (await params).slug;
+  return {
+    title: `Problem ${slug}`,
+    description: "Solve coding problems on Algowars",
+  };
 };
 
 export default async function ProblemPage({
@@ -47,19 +19,5 @@ export default async function ProblemPage({
 }) {
   const slug = (await params).slug;
 
-  const { dehydratedState, queryClient } = await preloadData(slug);
-
-  const problem = queryClient.getQueryData(
-    getProblemBySlugQueryOptions({ slug }).queryKey
-  );
-
-  if (!problem) {
-    return notFound();
-  }
-
-  return (
-    <HydrationBoundary state={dehydratedState}>
-      <ProblemLayout problem={problem} />
-    </HydrationBoundary>
-  );
+  return <ProblemPageClient slug={slug} />;
 }

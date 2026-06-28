@@ -13,23 +13,29 @@ import {
 } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
-import { useUpdateUsername } from "../api/update-username";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/shared/router-config";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import { UserEvents } from "../state/user-events";
+import {
+  selectIsUserLoading,
+  selectUser,
+  selectUserError,
+} from "../state/slice";
+import { useEffect } from "react";
 
 export default function UserSetupForm() {
   const router = useRouter();
-  const {
-    mutate: updateUsernameMutate,
-    isPending,
-    error,
-  } = useUpdateUsername({
-    mutationConfig: {
-      onSuccess: () => {
-        router.push(routerConfig.home.path);
-      },
-    },
-  });
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const isPending = useAppSelector(selectIsUserLoading);
+  const error = useAppSelector(selectUserError);
+
+  useEffect(() => {
+    if (user?.usernameLastChangedAt) {
+      router.push(routerConfig.home.path);
+    }
+  }, [router, user?.usernameLastChangedAt]);
 
   const form = useForm({
     defaultValues: {
@@ -39,7 +45,7 @@ export default function UserSetupForm() {
       onSubmit: userSetupSchema,
     },
     onSubmit: async ({ value }) => {
-      updateUsernameMutate({ data: value });
+      dispatch(UserEvents.updateUsernameRequested({ data: value }));
     },
   });
 
@@ -84,9 +90,7 @@ export default function UserSetupForm() {
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
-                    {error && (
-                      <FieldError errors={[{ message: error.message }]} />
-                    )}
+                    {error && <FieldError errors={[{ message: error }]} />}
                   </Field>
                 );
               }}

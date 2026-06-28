@@ -4,11 +4,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 
 import DifficultyBadge from "../components/difficulty-badge";
-import { useProblemsStore } from "../state/problems-store";
+import { selectProblems, selectProblemsLoading } from "../state/problem-slice";
 
 import { DataTable } from "@/shared/components/ui/data-table";
 import { routerConfig } from "@/shared/router-config";
 import { ProblemSummary } from "../models/problem-summary";
+import { useAppSelector } from "@/shared/state/hooks";
 
 const columns: ColumnDef<ProblemSummary>[] = [
   {
@@ -28,8 +29,8 @@ const columns: ColumnDef<ProblemSummary>[] = [
 
 export default function ProblemTable() {
   const router = useRouter();
-  const problems = useProblemsStore((s) => s.problems);
-  const isLoading = useProblemsStore((s) => s.isLoading);
+  const problems = useAppSelector(selectProblems);
+  const isLoading = useAppSelector(selectProblemsLoading);
 
   const handleRowClick = (problem: ProblemSummary) => {
     if (!problem.slug) {

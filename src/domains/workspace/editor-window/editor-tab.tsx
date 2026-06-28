@@ -8,11 +8,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/shared/components/ui/resizable";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { EditorWindowPanelHeader } from "./editor-panel-header";
-import {
-  EditorWindowTabNode,
-  useEditorWindowStore,
-} from "./state/editor-window-store";
+import { WorkspaceEvents } from "../../state/workspace-events";
+import { selectActiveTabIndex } from "../../state/slice";
+import { EditorWindowTabNode } from "./state/editor-window-store";
 
 type EditorWindowTabProps = {
   tab?: EditorWindowTabNode;
@@ -23,12 +23,9 @@ export const EditorWindowTab = ({
   tab,
   nodeId = "root",
 }: EditorWindowTabProps) => {
-  const rootTab = useEditorWindowStore((state) => state.rootTab);
-  const activeTab = useEditorWindowStore(
-    (state) => state.activeTabByNode[nodeId] ?? 0
-  );
-  const setActiveTab = useEditorWindowStore((state) => state.setActiveTab);
-  const resolvedTab = tab ?? rootTab;
+  const dispatch = useAppDispatch();
+  const activeTab = useAppSelector(selectActiveTabIndex(nodeId));
+  const resolvedTab = tab;
 
   if (!resolvedTab) {
     return null;
@@ -53,7 +50,7 @@ export const EditorWindowTab = ({
   }
 
   const handleTabClick = (index: number) => {
-    setActiveTab(nodeId, index);
+    dispatch(WorkspaceEvents.editorTabActivated({ nodeId, tabIndex: index }));
   };
 
   const currentTab = resolvedTab.children

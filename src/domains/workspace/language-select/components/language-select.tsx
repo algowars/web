@@ -11,8 +11,10 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { cn } from "@/shared/lib/utils";
-import { useWorkspaceStore } from "../../state/workspace-store";
 import { useEffect, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import { WorkspaceEvents } from "../../state/workspace-events";
+import { selectSelectedVersionId } from "../../state/slice";
 
 type LanguageSelectProps = {
   languages: ProgrammingLanguage[];
@@ -22,13 +24,8 @@ export const LanguageSelect = ({
   languages,
   ...props
 }: LanguageSelectProps) => {
-  const setSelectedVersionId = useWorkspaceStore(
-    (state) => state.setSelectedVersionId
-  );
-
-  const selectedVersionId = useWorkspaceStore(
-    (state) => state.selectedVersionId
-  );
+  const dispatch = useAppDispatch();
+  const selectedVersionId = useAppSelector(selectSelectedVersionId);
 
   const selectedLanguage = useMemo(
     () =>
@@ -40,16 +37,18 @@ export const LanguageSelect = ({
 
   const selectLanguage = (languageId: string) => {
     const language = languages.find((l) => l.id === languageId);
-    setSelectedVersionId(language?.versions[0]?.id ?? null);
+    dispatch(
+      WorkspaceEvents.selectedVersionChanged(language?.versions[0]?.id ?? null)
+    );
   };
 
   const defaultVersionId = languages[0]?.versions[0]?.id;
 
   useEffect(() => {
     if (!selectedVersionId && defaultVersionId) {
-      setSelectedVersionId(defaultVersionId);
+      dispatch(WorkspaceEvents.selectedVersionChanged(defaultVersionId));
     }
-  }, [defaultVersionId, selectedVersionId, setSelectedVersionId]);
+  }, [defaultVersionId, dispatch, selectedVersionId]);
 
   return (
     <ul {...props} className={cn("flex items-center gap-2", props.className)}>
@@ -76,7 +75,9 @@ export const LanguageSelect = ({
       <li>
         <Select
           value={selectedVersionId ?? ""}
-          onValueChange={(val) => setSelectedVersionId(val)}
+          onValueChange={(val) =>
+            dispatch(WorkspaceEvents.selectedVersionChanged(val))
+          }
           disabled={!selectedLanguage || selectedLanguage.versions.length === 0}
         >
           <SelectTrigger className="w-32">

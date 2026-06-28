@@ -1,6 +1,6 @@
 "use client";
 
-import { userStore } from "@/domains/user/user-store";
+import { selectIsUserLoading, selectUser } from "@/domains/user/state/slice";
 import {
   Avatar,
   AvatarFallback,
@@ -31,14 +31,15 @@ import {
 } from "@/shared/components/ui/sidebar";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { routerConfig } from "@/shared/router-config";
+import { useAppSelector } from "@/shared/state/hooks";
 import { useUser } from "@auth0/nextjs-auth0";
 import { ChevronsUpDown, LogOut, Settings2, User } from "lucide-react";
 import Link from "next/link";
 
 export default function SidebarUser() {
   const { user: authUser, isLoading } = useUser();
-  const user = userStore((state) => state.user);
-  const isUserLoading = userStore((state) => state.isUserLoading);
+  const user = useAppSelector(selectUser);
+  const isUserLoading = useAppSelector(selectIsUserLoading);
   const { isMobile } = useSidebar();
 
   if (isLoading || isUserLoading) {
