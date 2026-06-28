@@ -1,5 +1,6 @@
 import { userReducer } from "@/domains/user/state/slice";
 import { problemReducer } from "@/domains/problem/state/problem-slice";
+import { problemSetupReducer } from "@/domains/problem/state/problem-setup-slice";
 import { workspaceReducer } from "@/domains/workspace/state/workspace-slice";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "../lib/base-api";
@@ -9,7 +10,8 @@ export const makeStore = () =>
   configureStore({
     reducer: {
       user: userReducer,
-      problem: problemReducer,
+      problems: problemReducer,
+      problemSetup: problemSetupReducer,
       workspace: workspaceReducer,
       [baseApi.reducerPath]: baseApi.reducer,
     },

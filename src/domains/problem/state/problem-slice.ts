@@ -1,11 +1,9 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
-import type { Problem } from "../models/problem";
 import type { ProblemSummary } from "../models/problem-summary";
 import { ProblemEvents } from "./problem-events";
 import type { RootState } from "@/shared/state/store";
 
 interface ProblemState {
-  currentProblem: Problem | null;
   problems: ProblemSummary[];
   page: number;
   size: number;
@@ -16,7 +14,6 @@ interface ProblemState {
 }
 
 const initialState: ProblemState = {
-  currentProblem: null,
   problems: [],
   page: 1,
   size: 20,
@@ -27,14 +24,11 @@ const initialState: ProblemState = {
 };
 
 const problemSlice = createSlice({
-  name: "problem",
+  name: "problems",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(ProblemEvents.initializeProblem, (state, action) => {
-        state.currentProblem = action.payload;
-      })
       .addCase(ProblemEvents.setProblemsPage, (state, action) => {
         state.page = action.payload;
       })
@@ -69,15 +63,14 @@ const problemSlice = createSlice({
 
 export const problemReducer = problemSlice.reducer;
 
-export const selectProblemState = (s: RootState) => s.problem;
-export const selectCurrentProblem = (s: RootState) => s.problem.currentProblem;
-export const selectProblems = (s: RootState) => s.problem.problems;
-export const selectProblemsPage = (s: RootState) => s.problem.page;
-export const selectProblemsSize = (s: RootState) => s.problem.size;
-export const selectProblemsTimestamp = (s: RootState) => s.problem.timestamp;
-export const selectProblemsTotal = (s: RootState) => s.problem.total;
-export const selectProblemsLoading = (s: RootState) => s.problem.isLoading;
-export const selectProblemsError = (s: RootState) => s.problem.error;
+export const selectProblemsState = (s: RootState) => s.problems;
+export const selectProblems = (s: RootState) => s.problems.problems;
+export const selectProblemsPage = (s: RootState) => s.problems.page;
+export const selectProblemsSize = (s: RootState) => s.problems.size;
+export const selectProblemsTimestamp = (s: RootState) => s.problems.timestamp;
+export const selectProblemsTotal = (s: RootState) => s.problems.total;
+export const selectProblemsLoading = (s: RootState) => s.problems.isLoading;
+export const selectProblemsError = (s: RootState) => s.problems.error;
 
 export const selectProblemsStatus = createSelector(
   [selectProblemsLoading, selectProblemsError],

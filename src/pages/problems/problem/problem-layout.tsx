@@ -3,6 +3,7 @@
 import ProblemLoading from "@/app/problems/[slug]/loading";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import { Problem } from "@/domains/problem/models/problem";
+import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import Workspace from "@/domains/workspace/components/workspace";
 import { WorkspaceHeader } from "@/domains/workspace/components/workspace-header";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
@@ -10,15 +11,21 @@ import SolutionEditor from "@/domains/workspace/solution-editor/components/solut
 import { Markdown } from "@/shared/components/markdown/markdown";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
+import { useAppDispatch } from "@/shared/state/hooks";
 import { CodeXml, FileText, Terminal } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 type ProblemLayoutProps = {
   problem: Problem;
 };
 
 export default function ProblemLayout({ problem }: ProblemLayoutProps) {
+  const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    dispatch(ProblemEvents.initializeProblem(problem));
+  }, [dispatch, problem]);
 
   const tabs = useMemo((): EditorWindowTabNode => {
     const problemTabs: EditorWindowTabNode = {

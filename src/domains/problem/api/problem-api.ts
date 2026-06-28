@@ -23,6 +23,17 @@ export const problemApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Problem"],
     }),
+    getProblemSetup: builder.query<
+      unknown,
+      { slug: string; languageVersionId: string }
+    >({
+      query: ({ slug, languageVersionId }) => ({
+        url: `/api/v1/problem/${slug}/setup`,
+        method: "GET",
+        params: { languageVersionId },
+      }),
+      providesTags: ["Problem"],
+    }),
   }),
 });
 
