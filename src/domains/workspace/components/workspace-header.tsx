@@ -21,28 +21,31 @@ type WorkspaceHeaderProps = {
 export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
   return (
     <div className="p-1 flex flex-1 items-center">
-      <ul className="ml-auto hidden md:flex">
-        <li>
-          <Button className="w-24" data-cy="submit-btn">
-            Submit
-          </Button>
-        </li>
-        <li>
-          <Button variant="ghost" asChild>
-            <Link
-              href={routerConfig.problemSubmissions.execute({
-                slug: problem.slug,
-              })}
-            >
-              View Submissions
-            </Link>
-          </Button>
-        </li>
-      </ul>
-      <LanguageSelect
-        languages={problem.availableLanguages ?? []}
-        className="ml-auto hidden md:flex"
-      />
+      <div className="hidden md:grid md:flex-1 md:grid-cols-[1fr_auto_1fr] md:items-center">
+        <div />
+        <ul className="flex justify-center">
+          <li>
+            <Button className="w-24" data-cy="submit-btn">
+              Submit
+            </Button>
+          </li>
+          <li>
+            <Button variant="ghost" asChild>
+              <Link
+                href={routerConfig.problemSubmissions.execute({
+                  slug: problem.slug,
+                })}
+              >
+                View Submissions
+              </Link>
+            </Button>
+          </li>
+        </ul>
+        <LanguageSelect
+          languages={problem.availableLanguages ?? []}
+          className="justify-self-end"
+        />
+      </div>
 
       <Button className="ml-auto w-24 md:hidden">Submit</Button>
       <Sheet>
