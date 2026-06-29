@@ -41,20 +41,20 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
           ),
           component: <ProblemQuestion problem={problem} />,
         },
-        {
-          key: "examples",
-          name: "Examples",
-          icon: (
-            <FileText size={16} className="text-sky-600 dark:text-sky-400" />
-          ),
-          component: (
-            <Markdown
-              content={
-                "# Examples\n\nThis is where the example inputs and outputs will go."
-              }
-            />
-          ),
-        },
+        // {
+        //   key: "examples",
+        //   name: "Examples",
+        //   icon: (
+        //     <FileText size={16} className="text-sky-600 dark:text-sky-400" />
+        //   ),
+        //   component: (
+        //     <Markdown
+        //       content={
+        //         "# Examples\n\nThis is where the example inputs and outputs will go."
+        //       }
+        //     />
+        //   ),
+        // },
       ],
     };
 
@@ -62,23 +62,6 @@ export default function ProblemLayout({ problem }: ProblemLayoutProps) {
       key: "execution",
       name: "Execution",
       children: [
-        {
-          key: "console",
-          name: "Console",
-          icon: (
-            <FileText
-              size={16}
-              className="text-purple-600 dark:text-purple-400"
-            />
-          ),
-          component: (
-            <Markdown
-              content={
-                "# Console\n\nThis is where the console output will appear."
-              }
-            />
-          ),
-        },
         {
           key: "tests",
           name: "Tests",

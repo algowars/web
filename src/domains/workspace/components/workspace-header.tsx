@@ -1,3 +1,5 @@
+"use client";
+
 import { Problem } from "@/domains/problem/models/problem";
 import { LanguageSelect } from "../language-select/components/language-select";
 import {
@@ -10,23 +12,30 @@ import {
 } from "@/shared/components/ui/sheet";
 import { Button } from "@/shared/components/ui/button";
 import { Separator } from "@/shared/components/ui/separator";
-import { ClipboardList, Menu } from "lucide-react";
+import { ClipboardList, Lock, Menu } from "lucide-react";
 import Link from "next/link";
 import { routerConfig } from "@/shared/router-config";
+import { selectIsAuthenticated } from "@/domains/user/state/user-slice";
+import { useAppSelector } from "@/shared/state/hooks";
 
 type WorkspaceHeaderProps = {
   problem: Problem;
 };
 
 export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   return (
     <div className="p-1 flex flex-1 items-center">
       <div className="hidden md:grid md:flex-1 md:grid-cols-[1fr_auto_1fr] md:items-center">
         <div />
-        <ul className="flex justify-center">
+        <ul className="flex justify-center gap-1">
           <li>
-            <Button className="w-24" data-cy="submit-btn">
-              Submit
+            <Button
+              className="w-24"
+              data-cy="submit-btn"
+              disabled={!isAuthenticated}
+            >
+              {!isAuthenticated ? <Lock /> : null} Submit
             </Button>
           </li>
           <li>
@@ -47,7 +56,9 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
         />
       </div>
 
-      <Button className="ml-auto w-24 md:hidden">Submit</Button>
+      <Button className="ml-auto w-24 md:hidden" disabled={!isAuthenticated}>
+        {!isAuthenticated ? <Lock /> : null} Submit
+      </Button>
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" className="ml-1 -mr-1 md:hidden">
@@ -87,8 +98,12 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
           </div>
 
           <SheetFooter className="px-4 pb-4">
-            <Button className="w-full" data-cy="submit-btn">
-              Submit
+            <Button
+              className="w-full"
+              data-cy="submit-btn"
+              disabled={!isAuthenticated}
+            >
+              {!isAuthenticated ? <Lock /> : null} Submit
             </Button>
           </SheetFooter>
         </SheetContent>
