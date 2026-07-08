@@ -102,34 +102,39 @@ export default function Navbar() {
                   </ul>
                 </div>
                 <SheetFooter>
-                  {user ? <Button asChild variant="default">
-                    <Link href={routerConfig.authLogOut.path}>Log Out</Link>
-                  </Button> : <Card className="rounded">
-                    <CardHeader>
-                      <CardTitle>Join the algowars community</CardTitle>
-                      <CardDescription>
-                        Sign up to track progress, solve problems, and compete.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex gap-3">
-                      <Button asChild variant="outline" className="grow">
-                        <Link
-                          href={routerConfig.authLogIn.path}
-                          data-testid="sign-in-button"
-                        >
-                          Log In
-                        </Link>
-                      </Button>
-                      <Button asChild variant="default" className="grow">
-                        <Link
-                          href={routerConfig.authSignUp.path}
-                          data-testid="sign-up-button"
-                        >
-                          Sign Up
-                        </Link>
-                      </Button>
-                    </CardContent>
-                  </Card>}
+                  {user ? (
+                    <Button asChild variant="default">
+                      <Link href={routerConfig.authLogOut.path}>Log Out</Link>
+                    </Button>
+                  ) : (
+                    <Card className="rounded">
+                      <CardHeader>
+                        <CardTitle>Join the algowars community</CardTitle>
+                        <CardDescription>
+                          Sign up to track progress, solve problems, and
+                          compete.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="flex gap-3">
+                        <Button asChild variant="outline" className="grow">
+                          <Link
+                            href={routerConfig.authLogIn.path}
+                            data-testid="sign-in-button"
+                          >
+                            Log In
+                          </Link>
+                        </Button>
+                        <Button asChild variant="default" className="grow">
+                          <Link
+                            href={routerConfig.authSignUp.path}
+                            data-testid="sign-up-button"
+                          >
+                            Sign Up
+                          </Link>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
                 </SheetFooter>
               </SheetContent>
             </Sheet>

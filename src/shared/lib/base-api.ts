@@ -5,7 +5,7 @@ import { env } from "@/env";
 const baseQuery = fetchBaseQuery({
   baseUrl: env.NEXT_PUBLIC_API_SERVER_URL,
 
-  prepareHeaders: async (headers, { getState }) => {
+  prepareHeaders: async (headers) => {
     try {
       const accessToken = await getAccessToken();
       if (accessToken) {

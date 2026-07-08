@@ -7,8 +7,6 @@ import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import Workspace from "@/domains/workspace/components/workspace";
 import { WorkspaceHeader } from "@/domains/workspace/components/workspace-header";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
-import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
-import { Markdown } from "@/shared/components/markdown/markdown";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { useAppDispatch } from "@/shared/state/hooks";

@@ -1,5 +1,3 @@
-import { Braces } from "lucide-react";
-
 export default function Logo() {
   return (
     <span className="flex items-center gap-1">

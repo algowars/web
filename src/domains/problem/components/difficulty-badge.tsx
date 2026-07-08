@@ -28,7 +28,7 @@ function getDifficultyLabel(difficulty: number): {
 }
 
 type DifficultyBadgeProps = {
-  difficulty: number;
+  readonly difficulty: number;
 };
 
 export default function DifficultyBadge({ difficulty }: DifficultyBadgeProps) {

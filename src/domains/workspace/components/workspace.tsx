@@ -4,7 +4,7 @@ import { EditorWindowTab } from "../editor-window/editor-tab";
 import { EditorWindowTabNode } from "../editor-window/state/editor-window-store";
 
 type WorkspaceProps = {
-  tab: EditorWindowTabNode;
+  readonly tab: EditorWindowTabNode;
 };
 
 export default function Workspace({ tab }: WorkspaceProps) {

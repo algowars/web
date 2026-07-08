@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import ProblemLayout from "@/pages/problems/problem/problem-layout";
 
 type ProblemPageClientProps = {
-  slug: string;
+  readonly slug: string;
 };
 
 export default async function ProblemPage({ slug }: ProblemPageClientProps) {

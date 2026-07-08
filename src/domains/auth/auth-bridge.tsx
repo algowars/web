@@ -44,7 +44,7 @@ export function AuthBridge() {
       dispatch(AuthEvents.userUnauthenticated());
     }
     prevUserId.current = undefined;
-  }, [user, isLoading, error]);
+  }, [user, isLoading, error, dispatch]);
 
   return null;
 }

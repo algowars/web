@@ -17,16 +17,16 @@ const startAppListening = listenerMiddleware.startListening.withTypes<
   AppDispatch
 >();
 
+type StartAppListening = typeof startAppListening;
+type AppListenerEffect = NonNullable<
+  Parameters<StartAppListening>[0]["effect"]
+>;
+type AppListenerApi = Parameters<AppListenerEffect>[1];
+
 registerProblemListeners(startAppListening);
 
 const requestProblemSetup = async (
-  listenerApi: Parameters<typeof startAppListening>[0]["effect"] extends (
-    action: any,
-    listenerApi: infer L,
-    ...args: any[]
-  ) => any
-    ? L
-    : never,
+  listenerApi: AppListenerApi,
   slug: string,
   languageVersionId: string
 ) => {

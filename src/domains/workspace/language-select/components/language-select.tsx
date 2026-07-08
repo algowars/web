@@ -1,7 +1,4 @@
-import {
-  ProgrammingLanguage,
-  ProgrammingLanguageVersion,
-} from "@/domains/language/models/programming-language";
+import { ProgrammingLanguage } from "@/domains/language/models/programming-language";
 import {
   Select,
   SelectContent,
