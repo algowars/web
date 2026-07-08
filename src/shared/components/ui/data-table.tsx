@@ -38,7 +38,7 @@ export function DataTable<TData, TValue>({
   skeletonRows = 5,
   paginationProps,
   onRowClick,
-}: DataTableProps<TData, TValue>) {
+}: Readonly<DataTableProps<TData, TValue>>) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
@@ -46,6 +46,38 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const rows = table.getRowModel().rows;
+  let tableBodyContent: React.ReactNode;
+
+  if (isLoading) {
+    tableBodyContent = (
+      <DataTableSkeleton rowCount={skeletonRows} columnCount={columns.length} />
+    );
+  } else if (rows.length > 0) {
+    tableBodyContent = rows.map((row) => (
+      <TableRow
+        key={row.id}
+        data-state={row.getIsSelected() && "selected"}
+        className={onRowClick ? "cursor-pointer" : undefined}
+        onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+      >
+        {row.getVisibleCells().map((cell) => (
+          <TableCell key={cell.id}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
+  } else {
+    tableBodyContent = (
+      <TableRow>
+        <TableCell colSpan={columns.length} className="h-24 text-center">
+          No results.
+        </TableCell>
+      </TableRow>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -69,43 +101,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <DataTableSkeleton
-                rowCount={skeletonRows}
-                columnCount={columns.length}
-              />
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={onRowClick ? "cursor-pointer" : undefined}
-                  onClick={
-                    onRowClick ? () => onRowClick(row.original) : undefined
-                  }
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+          <TableBody>{tableBodyContent}</TableBody>
         </Table>
       </div>
       {paginationProps ? (

@@ -18,7 +18,9 @@ type ProblemLayoutProps = {
   problem: Problem;
 };
 
-export default function ProblemLayout({ problem }: ProblemLayoutProps) {
+export default function ProblemLayout({
+  problem,
+}: Readonly<ProblemLayoutProps>) {
   const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
 
