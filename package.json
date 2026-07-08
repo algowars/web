@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "e2e": "cypress open",
-    "e2e:chrome": "cypress run --browser chrome",
-    "e2e:run": "cypress run"
+    "lint": "eslint"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.21.0",
@@ -47,7 +44,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "cypress": "^15.16.0",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
