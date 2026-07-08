@@ -1,5 +1,5 @@
-import { auth0 } from "@/lib/auth0";
 import { NextResponse, type NextRequest } from "next/server";
+import { auth0 } from "./shared/lib/auth0";
 
 export async function proxy(request: NextRequest) {
   if (process.env.NEXT_PUBLIC_TEST_MODE === "true") {

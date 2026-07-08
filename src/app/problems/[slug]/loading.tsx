@@ -1,18 +1,10 @@
-import SidebarLayout from "@/components/layouts/sidebar-layout/sidebar-layout";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { routerConfig } from "@/router-config";
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 
 export default function ProblemLoading() {
   return (
-    <SidebarLayout
-      breadcrumbs={[
-        { url: routerConfig.home.path, name: "Home" },
-        { url: routerConfig.problems.path, name: "Problems" },
-        { url: "#", name: "..." },
-      ]}
-      defaultOpen={true}
-    >
+    <SidebarLayout breadcrumbs={[]}>
       <div className="grid grid-cols-12 gap-3 h-full">
         {/* Left panel — problem description */}
         <Card className="col-span-5 flex flex-col">

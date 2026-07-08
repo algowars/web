@@ -1,1 +1,4 @@
-sideEffectsCache: false
+allowBuilds:
+  cypress: true
+  sharp: true
+  unrs-resolver: true
