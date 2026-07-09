@@ -1,40 +1,63 @@
 name: Build
 
 on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
   workflow_call:
-    inputs:
-      node-version:
-        description: Node.js version to use.
-        required: false
-        type: string
-        default: "24"
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version:
+          - "24"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ inputs.node-version }}
+          node-version: ${{ matrix.node-version }}
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Prefetch dependencies
+        run: pnpm fetch --frozen-lockfile
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run lint
-        run: pnpm lint
+        run: pnpm install --frozen-lockfile --offline
 
       - name: Check code format
         run: pnpm format:check
+
+      - name: Run lint
+        run: pnpm lint
 
       - name: Run build
         run: pnpm build
