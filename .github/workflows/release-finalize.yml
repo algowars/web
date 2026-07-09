@@ -41,10 +41,12 @@ jobs:
       - name: Validate version
         id: validate
         shell: bash
+        env:
+          VERSION_INPUT: ${{ inputs.version }}
         run: |
           set -euo pipefail
 
-          VERSION="${{ inputs.version }}"
+          VERSION="${VERSION_INPUT}"
           if ! [[ "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Version must be SemVer without v prefix, for example 1.8.0"
             exit 1
@@ -55,10 +57,11 @@ jobs:
 
       - name: Fail if tag already exists
         shell: bash
+        env:
+          TAG: ${{ steps.validate.outputs.tag }}
         run: |
           set -euo pipefail
 
-          TAG="${{ steps.validate.outputs.tag }}"
           git fetch --tags
           if git rev-parse "${TAG}" >/dev/null 2>&1; then
             echo "Tag already exists: ${TAG}"
@@ -72,10 +75,11 @@ jobs:
 
       - name: Create and push tag
         shell: bash
+        env:
+          TAG: ${{ steps.validate.outputs.tag }}
         run: |
           set -euo pipefail
 
-          TAG="${{ steps.validate.outputs.tag }}"
           git tag -a "${TAG}" -m "Release ${TAG}"
           git push origin "${TAG}"
 
