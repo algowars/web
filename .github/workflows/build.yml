@@ -53,6 +53,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --offline
 
+      - name: Restore Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ matrix.node-version }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**/*.[jt]s', 'src/**/*.[jt]sx', 'next.config.ts', 'tsconfig.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ matrix.node-version }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-${{ matrix.node-version }}-
+
       - name: Check code format
         run: pnpm format:check
 
@@ -60,4 +69,13 @@ jobs:
         run: pnpm lint
 
       - name: Run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          AUTH0_DOMAIN: "ci.example.auth0.com"
+          AUTH0_CLIENT_ID: "ci-client-id"
+          AUTH0_SECRET: "ci-auth0-secret"
+          AUTH0_CLIENT_SECRET: "ci-auth0-client-secret"
+          AUTH0_CALLBACK_URL: "http://localhost:3000/api/auth/callback"
+          AUTH0_AUDIENCE: "https://api.example.com"
+          NEXT_PUBLIC_API_SERVER_URL: "https://api.example.com"
         run: pnpm build
