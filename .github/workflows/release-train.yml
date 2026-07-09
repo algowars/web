@@ -1,0 +1,81 @@
+name: Release Train
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: Base branch to cut from.
+        required: false
+        default: main
+        type: string
+      release_branch:
+        description: Optional release branch name override.
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-train
+  cancel-in-progress: false
+
+jobs:
+  cut-release-branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DEFAULT_BASE_BRANCH: main
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve branch names
+        id: names
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BASE_BRANCH="${{ github.event.inputs.base_branch }}"
+          if [ -z "${BASE_BRANCH}" ]; then
+            BASE_BRANCH="${DEFAULT_BASE_BRANCH}"
+          fi
+
+          RELEASE_BRANCH_INPUT="${{ github.event.inputs.release_branch }}"
+          if [ -n "${RELEASE_BRANCH_INPUT}" ]; then
+            RELEASE_BRANCH="${RELEASE_BRANCH_INPUT}"
+          else
+            RELEASE_BRANCH="release/$(date -u +'%Y.%m.%d')"
+          fi
+
+          echo "base_branch=${BASE_BRANCH}" >> "$GITHUB_OUTPUT"
+          echo "release_branch=${RELEASE_BRANCH}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push release branch
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BASE_BRANCH="${{ steps.names.outputs.base_branch }}"
+          RELEASE_BRANCH="${{ steps.names.outputs.release_branch }}"
+
+          git fetch origin "${BASE_BRANCH}" --prune
+
+          if git ls-remote --exit-code --heads origin "${RELEASE_BRANCH}" >/dev/null 2>&1; then
+            echo "Release branch already exists: ${RELEASE_BRANCH}"
+            exit 0
+          fi
+
+          git switch --create "${RELEASE_BRANCH}" "origin/${BASE_BRANCH}"
+          git push --set-upstream origin "${RELEASE_BRANCH}"
+
+          echo "Created release branch: ${RELEASE_BRANCH}"
