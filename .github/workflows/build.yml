@@ -1,0 +1,81 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version:
+          - "24.5"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Prefetch dependencies
+        run: pnpm fetch --frozen-lockfile
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --offline
+
+      - name: Restore Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ matrix.node-version }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**/*.[jt]s', 'src/**/*.[jt]sx', 'next.config.ts', 'tsconfig.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ matrix.node-version }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-${{ matrix.node-version }}-
+
+      - name: Check code format
+        run: pnpm format:check
+
+      - name: Run lint
+        run: pnpm lint
+
+      - name: Run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          AUTH0_DOMAIN: "ci.example.auth0.com"
+          AUTH0_CLIENT_ID: "ci-client-id"
+          AUTH0_SECRET: "ci-auth0-secret"
+          AUTH0_CLIENT_SECRET: "ci-auth0-client-secret"
+          AUTH0_CALLBACK_URL: "http://localhost:3000/api/auth/callback"
+          AUTH0_AUDIENCE: "https://api.example.com"
+          NEXT_PUBLIC_API_SERVER_URL: "https://api.example.com"
+        run: pnpm build
