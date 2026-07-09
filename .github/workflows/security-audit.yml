@@ -1,0 +1,51 @@
+name: Security Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pnpm-audit:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version:
+          - "24.5"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Prefetch dependencies
+        run: pnpm fetch --frozen-lockfile
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --offline
+
+      - name: Audit dependencies
+        run: pnpm audit --audit-level high
