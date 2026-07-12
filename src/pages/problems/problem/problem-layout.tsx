@@ -2,6 +2,7 @@
 
 import ProblemLoading from "@/app/problems/[slug]/loading";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
+import ProblemTestCases from "@/domains/problem/components/problem-test-cases";
 import { Problem } from "@/domains/problem/models/problem";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import Workspace from "@/domains/workspace/components/workspace";
@@ -64,7 +65,7 @@ export default function ProblemLayout({
               className="text-indigo-600 dark:text-indigo-400"
             />
           ),
-          component: <p>Test results will appear here.</p>,
+          component: <ProblemTestCases testCases={problem.publicTestCases} />,
         },
       ],
     };
