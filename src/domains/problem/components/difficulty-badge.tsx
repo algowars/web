@@ -7,14 +7,14 @@ function getDifficultyLabel(difficulty: number): {
   label: string;
   className: string;
 } {
-  if (difficulty < EASY_THRESHOLD) {
+  if (difficulty <= EASY_THRESHOLD) {
     return {
       label: "Easy",
       className:
         "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     };
   }
-  if (difficulty < MEDIUM_THRESHOLD) {
+  if (difficulty <= MEDIUM_THRESHOLD) {
     return {
       label: "Medium",
       className:

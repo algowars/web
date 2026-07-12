@@ -17,9 +17,11 @@ const columns: ColumnDef<ProblemSummary>[] = [
     header: "Title",
   },
   {
-    accessorKey: "difficulty",
+    accessorKey: "difficultyTier",
     header: "Difficulty",
-    cell: ({ row }) => <DifficultyBadge difficulty={row.original.difficulty} />,
+    cell: ({ row }) => (
+      <DifficultyBadge difficulty={row.original.difficultyTier} />
+    ),
   },
   {
     accessorKey: "tags",
