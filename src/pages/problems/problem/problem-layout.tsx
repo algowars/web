@@ -11,7 +11,7 @@ import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/stat
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { useAppDispatch } from "@/shared/state/hooks";
-import { CodeXml, FileText, Terminal } from "lucide-react";
+import { CodeXml, FileText, FlaskConical } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import ProblemSolutionEditor from "./problem-solution-editor";
 
@@ -60,7 +60,7 @@ export default function ProblemLayout({
           key: "tests",
           name: "Tests",
           icon: (
-            <FileText
+            <FlaskConical
               size={16}
               className="text-indigo-600 dark:text-indigo-400"
             />
@@ -68,6 +68,18 @@ export default function ProblemLayout({
           component: <ProblemTestCases testCases={problem.publicTestCases} />,
         },
       ],
+    };
+
+    const mobileTestsTab: EditorWindowTabNode = {
+      key: "tests",
+      name: "Tests",
+      icon: (
+        <FlaskConical
+          size={16}
+          className="text-indigo-600 dark:text-indigo-400"
+        />
+      ),
+      component: <ProblemTestCases testCases={problem.publicTestCases} />,
     };
 
     if (isMobile) {
@@ -85,15 +97,7 @@ export default function ProblemLayout({
             component: <ProblemSolutionEditor />,
           },
           mobileProblemTab,
-          {
-            ...executionTabs,
-            icon: (
-              <Terminal
-                size={16}
-                className="text-indigo-600 dark:text-indigo-400"
-              />
-            ),
-          },
+          mobileTestsTab,
         ],
       };
     }
