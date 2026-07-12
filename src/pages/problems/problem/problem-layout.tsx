@@ -41,21 +41,14 @@ export default function ProblemLayout({
           ),
           component: <ProblemQuestion problem={problem} />,
         },
-        // {
-        //   key: "examples",
-        //   name: "Examples",
-        //   icon: (
-        //     <FileText size={16} className="text-sky-600 dark:text-sky-400" />
-        //   ),
-        //   component: (
-        //     <Markdown
-        //       content={
-        //         "# Examples\n\nThis is where the example inputs and outputs will go."
-        //       }
-        //     />
-        //   ),
-        // },
       ],
+    };
+
+    const mobileProblemTab: EditorWindowTabNode = {
+      key: "problem",
+      name: "Problem",
+      icon: <FileText size={16} className="text-blue-600 dark:text-blue-400" />,
+      component: <ProblemQuestion problem={problem} />,
     };
 
     const executionTabs: EditorWindowTabNode = {
@@ -90,15 +83,7 @@ export default function ProblemLayout({
             ),
             component: <ProblemSolutionEditor />,
           },
-          {
-            ...problemTabs,
-            icon: (
-              <FileText
-                size={16}
-                className="text-blue-600 dark:text-blue-400"
-              />
-            ),
-          },
+          mobileProblemTab,
           {
             ...executionTabs,
             icon: (
