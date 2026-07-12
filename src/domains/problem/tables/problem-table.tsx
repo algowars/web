@@ -26,6 +26,11 @@ const columns: ColumnDef<ProblemSummary>[] = [
   {
     accessorKey: "tags",
     header: "Tags",
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">
+        {row.original.tags.join(", ")}
+      </span>
+    ),
   },
 ];
 
