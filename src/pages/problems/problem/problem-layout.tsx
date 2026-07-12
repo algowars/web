@@ -65,7 +65,7 @@ export default function ProblemLayout({
               className="text-indigo-600 dark:text-indigo-400"
             />
           ),
-          component: <ProblemTestCases testCases={problem.publicTestCases} />,
+          component: <ProblemTestCases testCases={problem?.publicTestCases} />,
         },
       ],
     };
@@ -79,7 +79,7 @@ export default function ProblemLayout({
           className="text-indigo-600 dark:text-indigo-400"
         />
       ),
-      component: <ProblemTestCases testCases={problem.publicTestCases} />,
+      component: <ProblemTestCases testCases={problem?.publicTestCases} />,
     };
 
     if (isMobile) {
