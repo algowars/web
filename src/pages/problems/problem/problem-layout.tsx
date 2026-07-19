@@ -5,6 +5,7 @@ import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import ProblemTestCases from "@/domains/problem/components/problem-test-cases";
 import { Problem } from "@/domains/problem/models/problem";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
+import SubmissionStatusPanel from "@/domains/submission/components/submission-status-panel";
 import Workspace from "@/domains/workspace/components/workspace";
 import { WorkspaceHeader } from "@/domains/workspace/components/workspace-header";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
@@ -67,6 +68,17 @@ export default function ProblemLayout({
           ),
           component: <ProblemTestCases testCases={problem?.publicTestCases} />,
         },
+        {
+          key: "submission",
+          name: "Submission",
+          icon: (
+            <FlaskConical
+              size={16}
+              className="text-indigo-600 dark:text-indigo-400"
+            />
+          ),
+          component: <SubmissionStatusPanel />,
+        },
       ],
     };
 
@@ -80,6 +92,18 @@ export default function ProblemLayout({
         />
       ),
       component: <ProblemTestCases testCases={problem?.publicTestCases} />,
+    };
+
+    const mobileSubmissionTab: EditorWindowTabNode = {
+      key: "submission",
+      name: "Submission",
+      icon: (
+        <FlaskConical
+          size={16}
+          className="text-indigo-600 dark:text-indigo-400"
+        />
+      ),
+      component: <SubmissionStatusPanel />,
     };
 
     if (isMobile) {
@@ -98,6 +122,7 @@ export default function ProblemLayout({
           },
           mobileProblemTab,
           mobileTestsTab,
+          mobileSubmissionTab,
         ],
       };
     }

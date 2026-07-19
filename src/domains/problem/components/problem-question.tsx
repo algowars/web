@@ -34,6 +34,7 @@ export const ProblemQuestion = ({ problem }: ProblemQuestionProps) => {
         </h2>
 
         <div className="flex flex-wrap items-center gap-3">
+          {problem.difficultyTier}
           <DifficultyBadge difficulty={problem.difficultyTier} />
           {hasAuthor ? (
             <div className="flex items-center gap-1.5 text-sm">

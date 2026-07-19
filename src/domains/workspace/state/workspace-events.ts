@@ -5,6 +5,13 @@ export const WorkspaceEvents = {
     "workspace/selectedVersionChanged"
   ),
   codeChanged: createAction<string>("workspace/codeChanged"),
+  submitCodeRequested: createAction("workspace/submitCodeRequested"),
+  submissionRequestStateChanged: createAction<boolean>(
+    "workspace/submissionRequestStateChanged"
+  ),
+  activeSubmissionChanged: createAction<string | null>(
+    "workspace/activeSubmissionChanged"
+  ),
   editorTabActivated: createAction<{ nodeId: string; tabIndex: number }>(
     "workspace/editorTabActivated"
   ),

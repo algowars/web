@@ -6,12 +6,16 @@ import { WorkspaceEvents } from "./workspace-events";
 interface WorkspaceState {
   selectedVersionId: string | null;
   code: string;
+  isSubmittingSubmission: boolean;
+  activeSubmissionId: string | null;
   activeTabByNode: Record<string, number>;
 }
 
 const initialState: WorkspaceState = {
   selectedVersionId: null,
   code: "",
+  isSubmittingSubmission: false,
+  activeSubmissionId: null,
   activeTabByNode: {},
 };
 
@@ -27,8 +31,19 @@ const workspaceSlice = createSlice({
       .addCase(WorkspaceEvents.codeChanged, (state, action) => {
         state.code = action.payload;
       })
+      .addCase(
+        WorkspaceEvents.submissionRequestStateChanged,
+        (state, action) => {
+          state.isSubmittingSubmission = action.payload;
+        }
+      )
+      .addCase(WorkspaceEvents.activeSubmissionChanged, (state, action) => {
+        state.activeSubmissionId = action.payload;
+      })
       .addCase(ProblemSetupEvents.loadProblemSetupSuccess, (state, action) => {
         state.code = action.payload.setup.initialCode ?? "";
+        state.isSubmittingSubmission = false;
+        state.activeSubmissionId = null;
       })
       .addCase(WorkspaceEvents.editorTabActivated, (state, action) => {
         state.activeTabByNode[action.payload.nodeId] = action.payload.tabIndex;
@@ -43,6 +58,12 @@ export const selectSelectedVersionId = (s: RootState) =>
   s.workspace.selectedVersionId;
 
 export const selectWorkspaceCode = (s: RootState) => s.workspace.code;
+
+export const selectIsSubmittingSubmission = (s: RootState) =>
+  s.workspace.isSubmittingSubmission;
+
+export const selectActiveSubmissionId = (s: RootState) =>
+  s.workspace.activeSubmissionId;
 
 export const selectActiveTabByNode = (s: RootState) =>
   s.workspace.activeTabByNode;

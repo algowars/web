@@ -16,14 +16,20 @@ import { ClipboardList, Lock, Menu } from "lucide-react";
 import Link from "next/link";
 import { routerConfig } from "@/shared/router-config";
 import { selectIsAuthenticated } from "@/domains/user/state/user-slice";
-import { useAppSelector } from "@/shared/state/hooks";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import { WorkspaceEvents } from "../state/workspace-events";
+import { selectIsSubmittingSubmission } from "../state/workspace-slice";
 
 type WorkspaceHeaderProps = {
   problem: Problem;
 };
 
 export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
+  const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
+
+  const submitLabel = isSubmittingSubmission ? "Submitting..." : "Submit";
   return (
     <div className="p-1 flex flex-1 items-center">
       <div className="hidden md:grid md:flex-1 md:grid-cols-[1fr_auto_1fr] md:items-center">
@@ -33,9 +39,10 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
             <Button
               className="w-24"
               data-cy="submit-btn"
-              disabled={!isAuthenticated}
+              disabled={!isAuthenticated || isSubmittingSubmission}
+              onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
             >
-              {!isAuthenticated ? <Lock /> : null} Submit
+              {!isAuthenticated ? <Lock /> : null} {submitLabel}
             </Button>
           </li>
           <li>
@@ -56,8 +63,12 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
         />
       </div>
 
-      <Button className="ml-auto w-24 md:hidden" disabled={!isAuthenticated}>
-        {!isAuthenticated ? <Lock /> : null} Submit
+      <Button
+        className="ml-auto w-24 md:hidden"
+        disabled={!isAuthenticated || isSubmittingSubmission}
+        onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
+      >
+        {!isAuthenticated ? <Lock /> : null} {submitLabel}
       </Button>
       <Sheet>
         <SheetTrigger asChild>
@@ -101,9 +112,10 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
             <Button
               className="w-full"
               data-cy="submit-btn"
-              disabled={!isAuthenticated}
+              disabled={!isAuthenticated || isSubmittingSubmission}
+              onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
             >
-              {!isAuthenticated ? <Lock /> : null} Submit
+              {!isAuthenticated ? <Lock /> : null} {submitLabel}
             </Button>
           </SheetFooter>
         </SheetContent>

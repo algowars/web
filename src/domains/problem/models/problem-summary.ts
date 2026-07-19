@@ -2,7 +2,7 @@ export interface ProblemSummary {
   id: string;
   slug: string;
   title: string;
-  difficultyTier: number;
+  difficultyTier: string;
   tags: string[];
   question?: string;
 }

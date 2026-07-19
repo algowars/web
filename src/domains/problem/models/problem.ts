@@ -26,7 +26,7 @@ export interface Problem {
   id: string;
   slug: string;
   title: string;
-  difficultyTier: number;
+  difficultyTier: string;
   question: string;
   availableLanguages: ProgrammingLanguage[];
   publicTestCases: PublicTestCase[];
