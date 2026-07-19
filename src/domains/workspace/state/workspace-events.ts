@@ -5,6 +5,7 @@ export const WorkspaceEvents = {
     "workspace/selectedVersionChanged"
   ),
   codeChanged: createAction<string>("workspace/codeChanged"),
+  runCodeRequested: createAction("workspace/runCodeRequested"),
   submitCodeRequested: createAction("workspace/submitCodeRequested"),
   submissionRequestStateChanged: createAction<boolean>(
     "workspace/submissionRequestStateChanged"

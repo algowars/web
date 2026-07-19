@@ -1,8 +1,17 @@
 import { baseApi } from "@/shared/lib/base-api";
 
-export type CreateSubmissionRequest = {
+export type RunTestCaseInputRequest = {
+  inputs: string[];
+};
+
+export type CreateRunSubmissionRequest = {
   problemSetupId: string;
-  type: string;
+  code: string;
+  customTestCases?: RunTestCaseInputRequest[];
+};
+
+export type CreateGradeSubmissionRequest = {
+  problemSetupId: string;
   code: string;
 };
 
@@ -42,9 +51,20 @@ export type SubmissionStatusDto = {
 
 export const submissionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createSubmission: builder.mutation<string, CreateSubmissionRequest>({
+    createRunSubmission: builder.mutation<string, CreateRunSubmissionRequest>({
       query: (body) => ({
-        url: "/api/v1/submission",
+        url: "/api/v1/submission/run",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Submission"],
+    }),
+    createGradeSubmission: builder.mutation<
+      string,
+      CreateGradeSubmissionRequest
+    >({
+      query: (body) => ({
+        url: "/api/v1/submission/grade",
         method: "POST",
         body,
       }),
@@ -62,5 +82,8 @@ export const submissionApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateSubmissionMutation, useGetSubmissionStatusQuery } =
-  submissionApi;
+export const {
+  useCreateRunSubmissionMutation,
+  useCreateGradeSubmissionMutation,
+  useGetSubmissionStatusQuery,
+} = submissionApi;

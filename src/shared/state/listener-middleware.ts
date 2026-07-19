@@ -128,6 +128,65 @@ startAppListening({
 });
 
 startAppListening({
+  actionCreator: WorkspaceEvents.runCodeRequested,
+  effect: async (_, listenerApi) => {
+    const state = listenerApi.getState();
+    const problemSetupId = getProblemSetupId(state.problemSetup.setup);
+
+    if (state.workspace.isSubmittingSubmission) {
+      return;
+    }
+
+    if (!problemSetupId) {
+      toast.error("Problem setup is not ready yet");
+      return;
+    }
+
+    try {
+      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(true));
+      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(null));
+      listenerApi.dispatch(
+        WorkspaceEvents.editorTabActivated({ nodeId: "root", tabIndex: 3 })
+      );
+      listenerApi.dispatch(
+        WorkspaceEvents.editorTabActivated({ nodeId: "root.1.1", tabIndex: 1 })
+      );
+
+      const submissionId = await listenerApi
+        .dispatch(
+          submissionApi.endpoints.createRunSubmission.initiate({
+            problemSetupId,
+            code: state.workspace.code,
+            customTestCases: undefined,
+          })
+        )
+        .unwrap();
+
+      listenerApi.dispatch(
+        WorkspaceEvents.activeSubmissionChanged(submissionId)
+      );
+
+      listenerApi.dispatch(
+        submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
+          subscribe: false,
+          forceRefetch: true,
+        })
+      );
+
+      toast.success("Run started");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to run solution";
+      toast.error(message);
+    } finally {
+      listenerApi.dispatch(
+        WorkspaceEvents.submissionRequestStateChanged(false)
+      );
+    }
+  },
+});
+
+startAppListening({
   actionCreator: WorkspaceEvents.submitCodeRequested,
   effect: async (_, listenerApi) => {
     const state = listenerApi.getState();
@@ -154,9 +213,8 @@ startAppListening({
 
       const submissionId = await listenerApi
         .dispatch(
-          submissionApi.endpoints.createSubmission.initiate({
+          submissionApi.endpoints.createGradeSubmission.initiate({
             problemSetupId,
-            type: "Submit",
             code: state.workspace.code,
           })
         )

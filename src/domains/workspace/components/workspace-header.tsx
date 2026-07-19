@@ -29,12 +29,24 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
 
+  const runLabel = isSubmittingSubmission ? "Running..." : "Run";
   const submitLabel = isSubmittingSubmission ? "Submitting..." : "Submit";
   return (
     <div className="p-1 flex flex-1 items-center">
       <div className="hidden md:grid md:flex-1 md:grid-cols-[1fr_auto_1fr] md:items-center">
         <div />
         <ul className="flex justify-center gap-1">
+          <li>
+            <Button
+              className="w-24"
+              data-cy="run-btn"
+              variant="secondary"
+              disabled={!isAuthenticated || isSubmittingSubmission}
+              onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
+            >
+              {!isAuthenticated ? <Lock /> : null} {runLabel}
+            </Button>
+          </li>
           <li>
             <Button
               className="w-24"
@@ -63,13 +75,24 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
         />
       </div>
 
-      <Button
-        className="ml-auto w-24 md:hidden"
-        disabled={!isAuthenticated || isSubmittingSubmission}
-        onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
-      >
-        {!isAuthenticated ? <Lock /> : null} {submitLabel}
-      </Button>
+      <div className="ml-auto flex items-center gap-1 md:hidden">
+        <Button
+          className="w-20"
+          data-cy="run-btn"
+          disabled={!isAuthenticated || isSubmittingSubmission}
+          onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
+        >
+          {!isAuthenticated ? <Lock /> : null} {runLabel}
+        </Button>
+        <Button
+          className="w-24"
+          data-cy="submit-btn"
+          disabled={!isAuthenticated || isSubmittingSubmission}
+          onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
+        >
+          {!isAuthenticated ? <Lock /> : null} {submitLabel}
+        </Button>
+      </div>
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" className="ml-1 -mr-1 md:hidden">
@@ -109,14 +132,23 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
           </div>
 
           <SheetFooter className="px-4 pb-4">
-            <Button
-              className="w-full"
-              data-cy="submit-btn"
-              disabled={!isAuthenticated || isSubmittingSubmission}
-              onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
-            >
-              {!isAuthenticated ? <Lock /> : null} {submitLabel}
-            </Button>
+            <div className="grid w-full grid-cols-2 gap-2">
+              <Button
+                variant="outline"
+                data-cy="run-btn"
+                disabled={!isAuthenticated || isSubmittingSubmission}
+                onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
+              >
+                {!isAuthenticated ? <Lock /> : null} {runLabel}
+              </Button>
+              <Button
+                data-cy="submit-btn"
+                disabled={!isAuthenticated || isSubmittingSubmission}
+                onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
+              >
+                {!isAuthenticated ? <Lock /> : null} {submitLabel}
+              </Button>
+            </div>
           </SheetFooter>
         </SheetContent>
       </Sheet>

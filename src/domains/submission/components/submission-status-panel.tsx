@@ -20,9 +20,13 @@ import {
 import { useAppSelector } from "@/shared/state/hooks";
 import { Check, X } from "lucide-react";
 
-const pendingSubmissionStatuses = new Set<SubmissionStatus>([
-  "Queued",
-  "Running",
+const terminalSubmissionStatuses = new Set<string>([
+  "Accepted",
+  "WrongAnswer",
+  "TimeLimitExceeded",
+  "MemoryLimitExceeded",
+  "RuntimeError",
+  "CompileError",
 ]);
 const pendingResultStatuses = new Set<SubmissionResultStatus>([
   "Pending",
@@ -30,7 +34,7 @@ const pendingResultStatuses = new Set<SubmissionResultStatus>([
 ]);
 
 const isPendingSubmissionStatus = (status: SubmissionStatus) =>
-  pendingSubmissionStatuses.has(status);
+  !terminalSubmissionStatuses.has(status);
 
 const isPendingResultStatus = (status: SubmissionResultStatus) =>
   pendingResultStatuses.has(status);
@@ -129,8 +133,8 @@ export default function SubmissionStatusPanel() {
     return (
       <div className="flex h-full min-h-0 items-center justify-center p-4 text-sm text-muted-foreground">
         {isSubmittingSubmission
-          ? "Submitting your solution..."
-          : "Submit your solution to see live execution status here."}
+          ? "Starting execution..."
+          : "Run or submit your solution to see live execution status here."}
       </div>
     );
   }
