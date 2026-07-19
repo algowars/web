@@ -31,6 +31,12 @@ const workspaceSlice = createSlice({
       .addCase(WorkspaceEvents.codeChanged, (state, action) => {
         state.code = action.payload;
       })
+      .addCase(WorkspaceEvents.runCodeRequested, (state) => {
+        state.activeSubmissionId = null;
+      })
+      .addCase(WorkspaceEvents.submitCodeRequested, (state) => {
+        state.activeSubmissionId = null;
+      })
       .addCase(
         WorkspaceEvents.submissionRequestStateChanged,
         (state, action) => {
