@@ -10,6 +10,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
+import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -25,6 +26,8 @@ type AppListenerEffect = NonNullable<
 type AppListenerApi = Parameters<AppListenerEffect>[1];
 
 registerProblemListeners(startAppListening);
+
+registerProblemSubmissionsListeners(startAppListening);
 
 const getProblemSetupId = (setup: RootState["problemSetup"]["setup"]) => {
   if (!setup || typeof setup !== "object") {

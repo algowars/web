@@ -6,7 +6,12 @@ import ProblemSubmissionsCard from "@/domains/problem/problem-submissions/compon
 import ProblemSubmissionsFilter from "@/domains/problem/problem-submissions/components/problem-submissions-filter";
 import ProblemSubmissionsHeader from "@/domains/problem/problem-submissions/components/problem-submissions-header";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { useAppDispatch } from "@/shared/state/hooks";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import {
+  selectProblemSubmissionsPage,
+  selectProblemSubmissionsSize,
+  selectProblemSubmissionsTimestamp,
+} from "@/domains/problem/problem-submissions/state/problem-submissions-slice";
 
 type ProblemSubmissionsLayoutProps = {
   problem: Problem;
@@ -18,16 +23,23 @@ export default function ProblemSubmissionsLayout({
   isAuthenticated,
 }: Readonly<ProblemSubmissionsLayoutProps>) {
   const dispatch = useAppDispatch();
+  const page = useAppSelector(selectProblemSubmissionsPage);
+  const size = useAppSelector(selectProblemSubmissionsSize);
+  const timestamp = useAppSelector(selectProblemSubmissionsTimestamp);
 
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(
         ProblemSubmissionsEvents.loadSubmissionsRequested({
           problemId: problem.id,
+          page,
+          size,
+          timestamp,
         })
       );
     }
-  }, [dispatch, isAuthenticated, problem.id]);
+  }, [dispatch, isAuthenticated, problem.id, page, size, timestamp]);
+
   return (
     <SidebarLayout breadcrumbs={[]} className="grid grid-cols-12 gap-4">
       <ProblemSubmissionsHeader problem={problem} className="col-span-12" />
