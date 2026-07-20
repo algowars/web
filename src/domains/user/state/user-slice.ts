@@ -111,6 +111,9 @@ export const userReducer = userSlice.reducer;
 
 export const selectAuthProfile = (s: RootState) => s.user.authProfile;
 export const selectUser = (s: RootState) => s.user.user;
+export const selectUserRoles = (s: RootState) => s.user.user?.roles ?? [];
+export const selectUserPermissions = (s: RootState) =>
+  s.user.user?.permissions ?? [];
 export const selectIsAuthLoading = (s: RootState) => s.user.isAuthLoading;
 export const selectIsUserLoading = (s: RootState) => s.user.isUserLoading;
 export const selectAuthError = (s: RootState) => s.user.authError;

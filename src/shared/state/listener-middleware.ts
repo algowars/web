@@ -310,3 +310,19 @@ startAppListening({
     listenerApi.dispatch(UserEvents.loggedOut());
   },
 });
+
+startAppListening({
+  actionCreator: UserEvents.upsertUserFailure,
+  effect: async (action, listenerApi) => {
+    const message = action.payload.message;
+    toast.error(message);
+  },
+});
+
+startAppListening({
+  actionCreator: ProblemSetupEvents.loadProblemSetupFailure,
+  effect: async (action, listenerApi) => {
+    const message = action.payload.message;
+    toast.error(message);
+  },
+});

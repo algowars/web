@@ -1,5 +1,8 @@
 "use client";
-
+import {
+  selectIsAuthenticated,
+  selectUserPermissions,
+} from "@/domains/user/state/user-slice";
 import { Problem } from "@/domains/problem/models/problem";
 import { LanguageSelect } from "../language-select/components/language-select";
 import {
@@ -15,10 +18,10 @@ import { Separator } from "@/shared/components/ui/separator";
 import { ClipboardList, Lock, Menu } from "lucide-react";
 import Link from "next/link";
 import { routerConfig } from "@/shared/router-config";
-import { selectIsAuthenticated } from "@/domains/user/state/user-slice";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { WorkspaceEvents } from "../state/workspace-events";
 import { selectIsSubmittingSubmission } from "../state/workspace-slice";
+import { ModeToggle } from "@/shared/theme/mode-toggle";
 
 type WorkspaceHeaderProps = {
   problem: Problem;
@@ -28,6 +31,9 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
+  const userPermissions = useAppSelector(selectUserPermissions);
+
+  const canRunCode = userPermissions.includes("submission:create");
 
   const runLabel = isSubmittingSubmission ? "Running..." : "Run";
   const submitLabel = isSubmittingSubmission ? "Submitting..." : "Submit";
@@ -41,7 +47,9 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
               className="w-24"
               data-cy="run-btn"
               variant="secondary"
-              disabled={!isAuthenticated || isSubmittingSubmission}
+              disabled={
+                !isAuthenticated || isSubmittingSubmission || !canRunCode
+              }
               onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
             >
               {!isAuthenticated ? <Lock /> : null} {runLabel}
@@ -51,7 +59,9 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
             <Button
               className="w-24"
               data-cy="submit-btn"
-              disabled={!isAuthenticated || isSubmittingSubmission}
+              disabled={
+                !isAuthenticated || isSubmittingSubmission || !canRunCode
+              }
               onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
             >
               {!isAuthenticated ? <Lock /> : null} {submitLabel}
@@ -69,17 +79,18 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
             </Button>
           </li>
         </ul>
-        <LanguageSelect
-          languages={problem.availableLanguages ?? []}
-          className="justify-self-end"
-        />
+        <div className="justify-self-end flex items-center gap-2">
+          <LanguageSelect languages={problem.availableLanguages ?? []} />
+          <ModeToggle />
+        </div>
       </div>
 
       <div className="ml-auto flex items-center gap-1 md:hidden">
         <Button
           className="w-20"
           data-cy="run-btn"
-          disabled={!isAuthenticated || isSubmittingSubmission}
+          variant="secondary"
+          disabled={!isAuthenticated || isSubmittingSubmission || !canRunCode}
           onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
         >
           {!isAuthenticated ? <Lock /> : null} {runLabel}
@@ -87,7 +98,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
         <Button
           className="w-24"
           data-cy="submit-btn"
-          disabled={!isAuthenticated || isSubmittingSubmission}
+          disabled={!isAuthenticated || isSubmittingSubmission || !canRunCode}
           onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
         >
           {!isAuthenticated ? <Lock /> : null} {submitLabel}
@@ -136,14 +147,18 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
               <Button
                 variant="outline"
                 data-cy="run-btn"
-                disabled={!isAuthenticated || isSubmittingSubmission}
+                disabled={
+                  !isAuthenticated || isSubmittingSubmission || !canRunCode
+                }
                 onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
               >
                 {!isAuthenticated ? <Lock /> : null} {runLabel}
               </Button>
               <Button
                 data-cy="submit-btn"
-                disabled={!isAuthenticated || isSubmittingSubmission}
+                disabled={
+                  !isAuthenticated || isSubmittingSubmission || !canRunCode
+                }
                 onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
               >
                 {!isAuthenticated ? <Lock /> : null} {submitLabel}

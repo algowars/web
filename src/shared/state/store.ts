@@ -5,6 +5,7 @@ import { workspaceReducer } from "@/domains/workspace/state/workspace-slice";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "../lib/base-api";
 import { listenerMiddleware } from "./listener-middleware";
+import { problemSubmissionsReducer } from "@/domains/problem/problem-submissions/state/problem-submissions-slice";
 
 export const makeStore = () =>
   configureStore({
@@ -13,6 +14,7 @@ export const makeStore = () =>
       problems: problemReducer,
       problemSetup: problemSetupReducer,
       workspace: workspaceReducer,
+      problemSubmissions: problemSubmissionsReducer,
       [baseApi.reducerPath]: baseApi.reducer,
     },
     middleware: (getDefault) =>

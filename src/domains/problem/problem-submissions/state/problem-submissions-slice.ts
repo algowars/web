@@ -1,0 +1,74 @@
+import { RootState } from "@/shared/state/store";
+import { createSlice } from "@reduxjs/toolkit";
+import { ProblemSubmission } from "../models/problem-submission";
+import { ProblemSubmissionsEvents } from "./problem-submissions-events";
+
+interface ProblemSubmissionsState {
+  submissions: ProblemSubmission[];
+  page: number;
+  size: number;
+  totalPages: number;
+
+  isProblemSubmissionsLoading: boolean;
+
+  problemSubmissionsError: string | null;
+}
+
+const intiailState: ProblemSubmissionsState = {
+  submissions: [],
+  page: 1,
+  size: 10,
+  totalPages: 0,
+  isProblemSubmissionsLoading: false,
+  problemSubmissionsError: null,
+};
+
+const problemSubmissionsSlice = createSlice({
+  name: "problemSubmissions",
+  initialState: intiailState,
+  reducers: {},
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(ProblemSubmissionsEvents.loadSubmissionsRequested, (state) => {
+        state.isProblemSubmissionsLoading = true;
+      })
+
+      .addCase(
+        ProblemSubmissionsEvents.loadSubmissionsSuccess,
+        (state, action) => {
+          state.isProblemSubmissionsLoading = false;
+          state.submissions = action.payload.results;
+          state.page = action.payload.page;
+          state.size = action.payload.size;
+          state.totalPages = action.payload.total;
+        }
+      )
+      .addCase(
+        ProblemSubmissionsEvents.loadSubmissionsFailure,
+        (state, action) => {
+          state.isProblemSubmissionsLoading = false;
+          state.problemSubmissionsError = action.payload.message;
+        }
+      );
+  },
+});
+
+export const problemSubmissionsReducer = problemSubmissionsSlice.reducer;
+
+export const selectProblemSubmissions = (s: RootState) =>
+  s.problemSubmissions.submissions;
+export const selectProblemSubmissionsPage = (s: RootState) =>
+  s.problemSubmissions.page;
+
+export const selectProblemSubmissionsSize = (s: RootState) =>
+  s.problemSubmissions.size;
+
+export const selectProblemSubmissionsTotalPages = (s: RootState) =>
+  s.problemSubmissions.totalPages;
+
+export const selectProblemSubmissionsHasError = (s: RootState) =>
+  !!s.problemSubmissions.problemSubmissionsError;
+
+export const selectProblemSubmissionsError = (s: RootState) =>
+  s.problemSubmissions.problemSubmissionsError;

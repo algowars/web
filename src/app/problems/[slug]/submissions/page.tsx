@@ -1,4 +1,4 @@
-import ProblemPageContent from "../../../pages/problems/problem/problem-page-client";
+import ProblemSubmissionsPageContext from "@/pages/problems/problem/submissions/problem-submissions-page-context";
 
 export const generateMetadata = async ({
   params,
@@ -12,12 +12,12 @@ export const generateMetadata = async ({
   };
 };
 
-export default async function ProblemPage({
+export default async function ProblemSubmissionsPage({
   params,
 }: Readonly<{
   params: Promise<{ slug: string }>;
 }>) {
   const slug = (await params).slug;
 
-  return <ProblemPageContent slug={slug} />;
+  return <ProblemSubmissionsPageContext slug={slug} />;
 }

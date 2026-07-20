@@ -115,6 +115,9 @@ export default function SidebarUser() {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user?.username}</span>
+                  {user?.roles.includes("admin") ? (
+                    <span className="text-xs text-muted-foreground">Admin</span>
+                  ) : null}
                 </div>
               </div>
             </DropdownMenuLabel>
