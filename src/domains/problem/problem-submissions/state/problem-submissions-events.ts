@@ -3,9 +3,12 @@ import { createAction } from "@reduxjs/toolkit";
 import { ProblemSubmission } from "../models/problem-submission";
 
 export const ProblemSubmissionsEvents = {
-  loadSubmissionsRequested: createAction<{ problemId: string }>(
-    "problem-submissions/loadSubmissionsRequested"
-  ),
+  loadSubmissionsRequested: createAction<{
+    problemId: string;
+    page: number;
+    size: number;
+    timestamp: string;
+  }>("problem-submissions/loadSubmissionsRequested"),
   loadSubmissionsSuccess: createAction<PageResult<ProblemSubmission>>(
     "problem-submissions/loadSubmissionsSuccess"
   ),
