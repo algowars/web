@@ -4,7 +4,7 @@ import { ProblemSubmission } from "../models/problem-submission";
 
 export const ProblemSubmissionsEvents = {
   loadSubmissionsRequested: createAction<{
-    problemId: string;
+    slug: string;
     page: number;
     size: number;
     timestamp: string;
@@ -14,5 +14,14 @@ export const ProblemSubmissionsEvents = {
   ),
   loadSubmissionsFailure: createAction<{ message: string }>(
     "problem-submissions/loadSubmissionsFailure"
+  ),
+  loadMoreSubmissionsRequested: createAction<{ slug: string }>(
+    "problem-submissions/loadMoreSubmissionsRequested"
+  ),
+  loadMoreSubmissionsSuccess: createAction<PageResult<ProblemSubmission>>(
+    "problem-submissions/loadMoreSubmissionsSuccess"
+  ),
+  loadMoreSubmissionsFailure: createAction<{ message: string }>(
+    "problem-submissions/loadMoreSubmissionsFailure"
   ),
 };

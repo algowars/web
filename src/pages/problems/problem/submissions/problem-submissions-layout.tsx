@@ -2,7 +2,6 @@
 import { ProblemSubmissionsEvents } from "@/domains/problem/problem-submissions/state/problem-submissions-events";
 import { useEffect } from "react";
 import { Problem } from "@/domains/problem/models/problem";
-import ProblemSubmissionsCard from "@/domains/problem/problem-submissions/components/problem-submissions-card";
 import ProblemSubmissionsFilter from "@/domains/problem/problem-submissions/components/problem-submissions-filter";
 import ProblemSubmissionsHeader from "@/domains/problem/problem-submissions/components/problem-submissions-header";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
@@ -12,6 +11,7 @@ import {
   selectProblemSubmissionsSize,
   selectProblemSubmissionsTimestamp,
 } from "@/domains/problem/problem-submissions/state/problem-submissions-slice";
+import ProblemSubmissions from "@/domains/problem/problem-submissions/components/problem-submissions";
 
 type ProblemSubmissionsLayoutProps = {
   problem: Problem;
@@ -43,7 +43,7 @@ export default function ProblemSubmissionsLayout({
   return (
     <SidebarLayout breadcrumbs={[]} className="grid grid-cols-12 gap-4">
       <ProblemSubmissionsHeader problem={problem} className="col-span-12" />
-      <ProblemSubmissionsCard className="col-span-8" />
+      <ProblemSubmissions className="col-span-8" problem={problem} />
       <ProblemSubmissionsFilter className="col-span-4" />
     </SidebarLayout>
   );

@@ -11,23 +11,25 @@ interface ProblemSubmissionsState {
   timestamp: string;
 
   isProblemSubmissionsLoading: boolean;
+  isLoadingMoreSubmissions: boolean;
 
   problemSubmissionsError: string | null;
 }
 
-const intiailState: ProblemSubmissionsState = {
+const initialState: ProblemSubmissionsState = {
   submissions: [],
   page: 1,
   size: 10,
   totalPages: 0,
   isProblemSubmissionsLoading: false,
+  isLoadingMoreSubmissions: false,
   problemSubmissionsError: null,
   timestamp: new Date().toISOString(),
 };
 
 const problemSubmissionsSlice = createSlice({
   name: "problemSubmissions",
-  initialState: intiailState,
+  initialState: initialState,
   reducers: {},
 
   extraReducers: (builder) => {
@@ -46,10 +48,38 @@ const problemSubmissionsSlice = createSlice({
           state.totalPages = action.payload.total;
         }
       )
+
       .addCase(
         ProblemSubmissionsEvents.loadSubmissionsFailure,
         (state, action) => {
           state.isProblemSubmissionsLoading = false;
+          state.problemSubmissionsError = action.payload.message;
+        }
+      )
+
+      .addCase(
+        ProblemSubmissionsEvents.loadMoreSubmissionsRequested,
+        (state) => {
+          state.isLoadingMoreSubmissions = true;
+          state.problemSubmissionsError = null;
+        }
+      )
+
+      .addCase(
+        ProblemSubmissionsEvents.loadMoreSubmissionsSuccess,
+        (state, action) => {
+          state.isLoadingMoreSubmissions = false;
+          state.submissions.push(...action.payload.results);
+          state.page = action.payload.page;
+          state.size = action.payload.size;
+          state.totalPages = action.payload.total;
+        }
+      )
+
+      .addCase(
+        ProblemSubmissionsEvents.loadMoreSubmissionsFailure,
+        (state, action) => {
+          state.isLoadingMoreSubmissions = false;
           state.problemSubmissionsError = action.payload.message;
         }
       );
@@ -58,8 +88,15 @@ const problemSubmissionsSlice = createSlice({
 
 export const problemSubmissionsReducer = problemSubmissionsSlice.reducer;
 
+export const selectHasMoreSubmissions = (s: RootState) =>
+  s.problemSubmissions.page < s.problemSubmissions.totalPages;
+
 export const selectProblemSubmissions = (s: RootState) =>
   s.problemSubmissions.submissions;
+
+export const selectProblemSubmissionsError = (s: RootState) =>
+  s.problemSubmissions.problemSubmissionsError;
+
 export const selectProblemSubmissionsPage = (s: RootState) =>
   s.problemSubmissions.page;
 
@@ -75,5 +112,8 @@ export const selectProblemSubmissionsTotalPages = (s: RootState) =>
 export const selectProblemSubmissionsHasError = (s: RootState) =>
   !!s.problemSubmissions.problemSubmissionsError;
 
-export const selectProblemSubmissionsError = (s: RootState) =>
-  s.problemSubmissions.problemSubmissionsError;
+export const selectIsProblemSubmissionsLoading = (s: RootState) =>
+  s.problemSubmissions.isProblemSubmissionsLoading;
+
+export const selectIsLoadingMoreSubmissions = (s: RootState) =>
+  s.problemSubmissions.isLoadingMoreSubmissions;

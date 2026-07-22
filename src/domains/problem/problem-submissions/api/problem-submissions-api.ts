@@ -6,12 +6,11 @@ export const problemSubmissionsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProblemSubmissions: builder.query<
       PageResult<ProblemSubmission>,
-      { problemId: string; page: number; size: number; timestamp: string }
+      { slug: string; page: number; size: number; timestamp: string }
     >({
-      query: ({ problemId, page, size, timestamp }) => ({
-        url: `/api/v1/problems/submissions`,
+      query: ({ slug, page, size, timestamp }) => ({
+        url: `/api/v1/problems/${encodeURIComponent(slug)}/submissions`,
         params: {
-          problemId,
           page,
           size,
           timestamp,

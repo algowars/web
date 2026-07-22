@@ -1,6 +1,7 @@
 import type { User } from "@/domains/user/models/user";
 
 export interface ProblemSubmission {
+  id: string;
   sourceCode: string;
   user: User;
   status: string;

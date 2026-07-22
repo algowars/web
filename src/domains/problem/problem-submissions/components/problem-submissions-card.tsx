@@ -5,8 +5,11 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { ComponentProps } from "react";
+import { ProblemSubmission } from "../models/problem-submission";
 
-type ProblemSubmissionsCardProps = ComponentProps<"div">;
+type ProblemSubmissionsCardProps = {
+  submission: ProblemSubmission;
+} & ComponentProps<"div">;
 
 export default function ProblemSubmissionsCard(
   props: Readonly<ProblemSubmissionsCardProps>
