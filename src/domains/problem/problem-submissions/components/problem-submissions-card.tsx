@@ -4,7 +4,7 @@ import {
   AvatarImage,
 } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import { Card, CardContent } from "@/shared/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -62,43 +62,30 @@ export default function ProblemSubmissionsCard({
 
   return (
     <Card className={cn("py-3", className)} {...props}>
-      <CardContent className="flex flex-col gap-3 px-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <Avatar size="sm">
-              <AvatarImage
-                src={user.imageUrl ?? undefined}
-                alt={user.username}
-              />
-              <AvatarFallback>
-                {user.username.slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-
-            <span className="truncate text-sm font-medium">
-              {user.username}
-            </span>
-
-            <Badge
-              variant={getStatusVariant(status)}
-              className={getStatusClassName(status)}
-            >
-              {getStatusLabel(status)}
-            </Badge>
-          </div>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="shrink-0 text-xs text-muted-foreground">
-                {formatRelativeTime(createdAt)}
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              {new Date(createdAt).toLocaleString()}
-            </TooltipContent>
-          </Tooltip>
+      <CardHeader>
+        <div className="flex items-center justify-between gap-2">
+          <span className="truncate text-sm font-medium text-muted-foreground">
+            {user.username}
+          </span>
+          <Badge
+            variant={getStatusVariant(status)}
+            className={getStatusClassName(status)}
+          >
+            {getStatusLabel(status)}
+          </Badge>
         </div>
-
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="shrink-0 text-xs text-muted-foreground ml-auto">
+              {formatRelativeTime(createdAt)}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            {new Date(createdAt).toLocaleString()}
+          </TooltipContent>
+        </Tooltip>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3 px-4">
         <CodeBlock code={code} language={language.name} />
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
@@ -107,7 +94,7 @@ export default function ProblemSubmissionsCard({
             <span className="text-xs">({language.version})</span>
           </span>
 
-          <div className="flex flex-col leading-tight">
+          <div className="flex flex leading-tight">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Runtime
             </span>
@@ -116,7 +103,7 @@ export default function ProblemSubmissionsCard({
             </span>
           </div>
 
-          <div className="flex flex-col leading-tight">
+          <div className="flex leading-tight">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Memory
             </span>
