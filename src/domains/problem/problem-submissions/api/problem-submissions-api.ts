@@ -9,7 +9,7 @@ export const problemSubmissionsApi = baseApi.injectEndpoints({
       { slug: string; page: number; size: number; timestamp: string }
     >({
       query: ({ slug, page, size, timestamp }) => ({
-        url: `/api/v1/problems/${encodeURIComponent(slug)}/submissions`,
+        url: `/api/v1/problem/${encodeURIComponent(slug)}/submissions`,
         params: {
           page,
           size,

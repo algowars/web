@@ -1,13 +1,12 @@
-import type { User } from "@/domains/user/models/user";
-
 export interface ProblemSubmission {
   id: string;
-  sourceCode: string;
-  user: User;
+  code: string;
+  user: ProblemSubmissionUser;
   status: string;
   memoryUsage?: number;
   executionTime?: number;
   language: ProblemSubmissionLanguage;
+  createdAt: Date;
 }
 
 export interface ProblemSubmissionLanguage {
@@ -18,5 +17,5 @@ export interface ProblemSubmissionLanguage {
 
 export interface ProblemSubmissionUser {
   username: string;
-  profilePictureUrl: string;
+  imageUrl: string;
 }
