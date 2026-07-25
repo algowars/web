@@ -28,23 +28,25 @@ export default function ProblemSubmissionsLayout({
   const timestamp = useAppSelector(selectProblemSubmissionsTimestamp);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && problem.slug) {
       dispatch(
         ProblemSubmissionsEvents.loadSubmissionsRequested({
-          problemId: problem.id,
+          slug: problem.slug,
           page,
           size,
           timestamp,
         })
       );
     }
-  }, [dispatch, isAuthenticated, problem.id, page, size, timestamp]);
+  }, [dispatch, isAuthenticated, problem.slug, page, size, timestamp]);
 
   return (
-    <SidebarLayout breadcrumbs={[]} className="grid grid-cols-12 gap-4">
-      <ProblemSubmissionsHeader problem={problem} className="col-span-12" />
-      <ProblemSubmissions className="col-span-8" problem={problem} />
-      <ProblemSubmissionsFilter className="col-span-4" />
+    <SidebarLayout breadcrumbs={[]}>
+      <div className="px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
+        <ProblemSubmissionsHeader problem={problem} className="col-span-12" />
+        <ProblemSubmissions className="col-span-8" problem={problem} />
+        <ProblemSubmissionsFilter className="col-span-4" />
+      </div>
     </SidebarLayout>
   );
 }

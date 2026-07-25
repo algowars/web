@@ -48,14 +48,16 @@ export default function DashboardLayout() {
 
   return (
     <SidebarLayout breadcrumbs={[]}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Problems</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProblemTable />
-        </CardContent>
-      </Card>
+      <div className="px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Problems</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProblemTable />
+          </CardContent>
+        </Card>
+      </div>
     </SidebarLayout>
   );
 }

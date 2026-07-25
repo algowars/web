@@ -19,7 +19,7 @@ export default function SidebarLayout({
   defaultOpen,
   headerItems,
   className,
-}: SidebarProps) {
+}: Readonly<SidebarProps>) {
   return (
     <TooltipProvider delayDuration={0}>
       <SidebarProvider defaultOpen={defaultOpen}>
@@ -29,12 +29,7 @@ export default function SidebarLayout({
             breadcrumbs={breadcrumbs}
             headerItems={headerItems}
           />
-          <div
-            className={cn(
-              "px-2 md:px-4 pb-2 md:pb-4 flex-1 min-h-0 overflow-hidden",
-              className
-            )}
-          >
+          <div className={cn("flex-1 min-h-0 overflow-y-auto", className)}>
             {children}
           </div>
         </SidebarInset>

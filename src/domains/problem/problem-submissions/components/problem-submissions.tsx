@@ -6,6 +6,7 @@ import {
 } from "@/shared/components/ui/card";
 import { InfinitePaginatedList } from "@/shared/pagination/pagination-list";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import { cn } from "@/shared/lib/utils";
 import { ComponentProps, useEffect } from "react";
 import {
   selectProblemSubmissions,
@@ -23,6 +24,7 @@ type ProblemSubmissionsProps = {
 
 export default function ProblemSubmissions({
   problem,
+  className,
   ...props
 }: Readonly<ProblemSubmissionsProps>) {
   const submissions = useAppSelector(selectProblemSubmissions);
@@ -42,7 +44,7 @@ export default function ProblemSubmissions({
   }, [dispatch, problem.slug]);
 
   return (
-    <Card {...props}>
+    <Card className={cn("h-fit", className)} {...props}>
       <CardHeader>
         <CardTitle>Submissions</CardTitle>
       </CardHeader>

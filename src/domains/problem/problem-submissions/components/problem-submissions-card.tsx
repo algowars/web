@@ -1,8 +1,3 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
 import {
@@ -37,12 +32,11 @@ const getStatusClassName = (status: ProblemSubmission["status"]) => {
 };
 
 const getStatusLabel = (status: ProblemSubmission["status"]) => {
-  switch (status) {
-    case "WrongAnswer":
-      return "Wrong Answer";
-    default:
-      return status;
+  if (status === "WrongAnswer") {
+    return "Wrong Answer";
   }
+
+  return status;
 };
 
 export default function ProblemSubmissionsCard({
@@ -63,7 +57,7 @@ export default function ProblemSubmissionsCard({
   return (
     <Card className={cn("py-3", className)} {...props}>
       <CardHeader>
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium text-muted-foreground">
             {user.username}
           </span>
@@ -73,17 +67,17 @@ export default function ProblemSubmissionsCard({
           >
             {getStatusLabel(status)}
           </Badge>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="shrink-0 text-xs text-muted-foreground ml-auto">
+                {formatRelativeTime(createdAt)}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              {new Date(createdAt).toLocaleString()}
+            </TooltipContent>
+          </Tooltip>
         </div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="shrink-0 text-xs text-muted-foreground ml-auto">
-              {formatRelativeTime(createdAt)}
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>
-            {new Date(createdAt).toLocaleString()}
-          </TooltipContent>
-        </Tooltip>
       </CardHeader>
       <CardContent className="flex flex-col gap-3 px-4">
         <CodeBlock code={code} language={language.name} />
@@ -94,7 +88,7 @@ export default function ProblemSubmissionsCard({
             <span className="text-xs">({language.version})</span>
           </span>
 
-          <div className="flex flex leading-tight">
+          <div className="flex items-center gap-1.5 leading-tight">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Runtime
             </span>
@@ -103,7 +97,7 @@ export default function ProblemSubmissionsCard({
             </span>
           </div>
 
-          <div className="flex leading-tight">
+          <div className="flex items-center gap-1.5 leading-tight">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Memory
             </span>
