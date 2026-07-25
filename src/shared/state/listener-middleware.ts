@@ -6,7 +6,7 @@ import { submissionApi } from "@/domains/submission/api/submission-api";
 import { registerProblemListeners } from "@/domains/problem/state/problem-listeners";
 import { userApi } from "@/domains/user/api/user-api";
 import { UserEvents } from "@/domains/user/state/user-events";
-import { createListenerMiddleware } from "@reduxjs/toolkit";
+import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
@@ -133,83 +133,39 @@ startAppListening({
   },
 });
 
+const isRunOrSubmitRequested = isAnyOf(
+  WorkspaceEvents.runCodeRequested,
+  WorkspaceEvents.submitCodeRequested
+);
+
+// Run and submit share one listener registration (rather than two separate
+// ones) specifically so cancelActiveListeners() below can cancel a
+// still-in-flight Run when Submit is clicked (or vice versa), not just two
+// clicks of the same button. With separate registrations, cancelActiveListeners
+// only ever cancels other instances of *its own* listener, leaving a
+// cross-button race unguarded.
 startAppListening({
-  actionCreator: WorkspaceEvents.runCodeRequested,
-  effect: async (_, listenerApi) => {
+  matcher: isRunOrSubmitRequested,
+  effect: async (action, listenerApi) => {
+    listenerApi.cancelActiveListeners();
+
     const state = listenerApi.getState();
     const problemSetupId = getProblemSetupId(state.problemSetup.setup);
-
-    if (state.workspace.isSubmittingSubmission) {
-      return;
-    }
+    const isRun = WorkspaceEvents.runCodeRequested.match(action);
 
     if (!problemSetupId) {
       toast.error("Problem setup is not ready yet");
-      return;
-    }
-
-    try {
-      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(true));
-      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(null));
-      listenerApi.dispatch(
-        WorkspaceEvents.editorTabActivated({ nodeId: "root", tabIndex: 3 })
-      );
-      listenerApi.dispatch(
-        WorkspaceEvents.editorTabActivated({ nodeId: "root.1.1", tabIndex: 1 })
-      );
-
-      const submissionId = await listenerApi
-        .dispatch(
-          submissionApi.endpoints.createRunSubmission.initiate({
-            problemSetupId,
-            code: state.workspace.code,
-            customTestCases: undefined,
-          })
-        )
-        .unwrap();
-
-      listenerApi.dispatch(
-        WorkspaceEvents.activeSubmissionChanged(submissionId)
-      );
-
-      listenerApi.dispatch(
-        submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
-          subscribe: false,
-          forceRefetch: true,
-        })
-      );
-
-      toast.success("Run started");
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to run solution";
-      toast.error(message);
-    } finally {
+      // The reducer already flipped isSubmittingSubmission to true and
+      // cleared activeSubmissionId synchronously when the action was
+      // dispatched; undo that here since we're bailing out without ever
+      // actually starting a run/submission.
       listenerApi.dispatch(
         WorkspaceEvents.submissionRequestStateChanged(false)
       );
-    }
-  },
-});
-
-startAppListening({
-  actionCreator: WorkspaceEvents.submitCodeRequested,
-  effect: async (_, listenerApi) => {
-    const state = listenerApi.getState();
-    const problemSetupId = getProblemSetupId(state.problemSetup.setup);
-
-    if (state.workspace.isSubmittingSubmission) {
-      return;
-    }
-
-    if (!problemSetupId) {
-      toast.error("Problem setup is not ready yet");
       return;
     }
 
     try {
-      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(true));
-      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(null));
       listenerApi.dispatch(
         WorkspaceEvents.editorTabActivated({ nodeId: "root", tabIndex: 3 })
       );
@@ -219,10 +175,16 @@ startAppListening({
 
       const submissionId = await listenerApi
         .dispatch(
-          submissionApi.endpoints.createGradeSubmission.initiate({
-            problemSetupId,
-            code: state.workspace.code,
-          })
+          isRun
+            ? submissionApi.endpoints.createRunSubmission.initiate({
+                problemSetupId,
+                code: state.workspace.code,
+                customTestCases: undefined,
+              })
+            : submissionApi.endpoints.createGradeSubmission.initiate({
+                problemSetupId,
+                code: state.workspace.code,
+              })
         )
         .unwrap();
 
@@ -237,10 +199,14 @@ startAppListening({
         })
       );
 
-      toast.success("Submission created");
+      toast.success(isRun ? "Run started" : "Submission created");
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Failed to submit solution";
+        error instanceof Error
+          ? error.message
+          : isRun
+            ? "Failed to run solution"
+            : "Failed to submit solution";
       toast.error(message);
     } finally {
       listenerApi.dispatch(
