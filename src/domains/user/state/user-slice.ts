@@ -128,6 +128,9 @@ export const selectIsFullyLoaded = (s: RootState): boolean =>
 export const selectHasError = (s: RootState): boolean =>
   s.user.authError !== null || s.user.userError !== null;
 
+export const selectUserSyncFailed = (s: RootState): boolean =>
+  s.user.userError !== null && s.user.user === null;
+
 export const selectDisplayName = createSelector(
   [selectUser, selectAuthProfile],
   (user, authProfile): string =>

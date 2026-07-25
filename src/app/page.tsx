@@ -1,5 +1,5 @@
-import DashboardLayout from "@/pages/dashboard/dashboard-layout";
-import Hero from "@/pages/landing/hero";
+import DashboardLayout from "@/views/dashboard/dashboard-layout";
+import Hero from "@/views/landing/hero";
 import Layout from "@/shared/layouts/layout/layout";
 import { auth0 } from "@/shared/lib/auth0";
 

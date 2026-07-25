@@ -1,4 +1,4 @@
-import ProblemSubmissionsPageContext from "@/pages/problems/problem/submissions/problem-submissions-page-context";
+import ProblemSubmissionsPageContext from "@/views/problems/problem/submissions/problem-submissions-page-context";
 
 export const generateMetadata = async ({
   params,

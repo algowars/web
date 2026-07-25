@@ -36,6 +36,11 @@ const problemSubmissionsSlice = createSlice({
     builder
       .addCase(ProblemSubmissionsEvents.loadSubmissionsRequested, (state) => {
         state.isProblemSubmissionsLoading = true;
+        state.problemSubmissionsError = null;
+
+        state.submissions = [];
+        state.page = 1;
+        state.totalPages = 0;
       })
 
       .addCase(
@@ -45,7 +50,7 @@ const problemSubmissionsSlice = createSlice({
           state.submissions = action.payload.results;
           state.page = action.payload.page;
           state.size = action.payload.size;
-          state.totalPages = action.payload.total;
+          state.totalPages = action.payload.totalPages ?? 0;
         }
       )
 
@@ -72,7 +77,7 @@ const problemSubmissionsSlice = createSlice({
           state.submissions.push(...action.payload.results);
           state.page = action.payload.page;
           state.size = action.payload.size;
-          state.totalPages = action.payload.total;
+          state.totalPages = action.payload.totalPages ?? 0;
         }
       )
 

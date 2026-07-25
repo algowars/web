@@ -4,4 +4,5 @@ export interface PageResult<T> {
   page: number;
   size: number;
   timestamp: string;
+  totalPages?: number;
 }

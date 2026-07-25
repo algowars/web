@@ -11,6 +11,7 @@ import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
+import { registerHealthListeners } from "@/domains/health/state/health-listeners";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -28,6 +29,8 @@ type AppListenerApi = Parameters<AppListenerEffect>[1];
 registerProblemListeners(startAppListening);
 
 registerProblemSubmissionsListeners(startAppListening);
+
+registerHealthListeners(startAppListening);
 
 const getProblemSetupId = (setup: RootState["problemSetup"]["setup"]) => {
   if (!setup || typeof setup !== "object") {
@@ -247,36 +250,63 @@ startAppListening({
   },
 });
 
+const syncUser = async (
+  sub: string | undefined,
+  listenerApi: AppListenerApi
+) => {
+  if (!sub) {
+    const message = "Missing user subject in auth payload";
+    listenerApi.dispatch(UserEvents.upsertUserFailure({ message }));
+    listenerApi.dispatch(UserEvents.initializeUserFailure({ message }));
+    return;
+  }
+
+  listenerApi.dispatch(UserEvents.upsertUserRequested({ sub }));
+
+  // The PUT can fail transiently (e.g. the API is still cold-starting) without the
+  // account itself being missing — it may already exist from a previous successful
+  // upsert. So a failed PUT still falls through to GET rather than giving up outright;
+  // only if both fail does the sidebar end up with no user to show.
+  try {
+    await listenerApi
+      .dispatch(userApi.endpoints.upsertUser.initiate({ sub }))
+      .unwrap();
+    listenerApi.dispatch(UserEvents.upsertUserSuccess());
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to sync user";
+    listenerApi.dispatch(UserEvents.upsertUserFailure({ message }));
+  }
+
+  listenerApi.dispatch(UserEvents.initializeUser());
+  try {
+    const account = await listenerApi
+      .dispatch(
+        userApi.endpoints.getAccount.initiate(undefined, { forceRefetch: true })
+      )
+      .unwrap();
+    listenerApi.dispatch(UserEvents.initializeUserSuccess(account));
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to load your profile";
+    listenerApi.dispatch(UserEvents.initializeUserFailure({ message }));
+  }
+};
+
 startAppListening({
   actionCreator: AuthEvents.userAuthenticated,
   effect: async (action, listenerApi) => {
     listenerApi.cancelActiveListeners();
+    await syncUser(action.payload.user.sub, listenerApi);
+  },
+});
 
-    try {
-      const sub = action.payload.user.sub;
-
-      if (!sub) {
-        throw new Error("Missing user subject in auth payload");
-      }
-
-      listenerApi.dispatch(UserEvents.upsertUserRequested({ sub }));
-      await listenerApi
-        .dispatch(userApi.endpoints.upsertUser.initiate({ sub }))
-        .unwrap();
-      listenerApi.dispatch(UserEvents.upsertUserSuccess());
-
-      listenerApi.dispatch(UserEvents.initializeUser());
-      const account = await listenerApi
-        .dispatch(userApi.endpoints.getAccount.initiate())
-        .unwrap();
-
-      listenerApi.dispatch(UserEvents.initializeUserSuccess(account));
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to sync user";
-      listenerApi.dispatch(UserEvents.upsertUserFailure({ message }));
-      listenerApi.dispatch(UserEvents.initializeUserFailure({ message }));
-    }
+startAppListening({
+  actionCreator: UserEvents.retrySyncRequested,
+  effect: async (_action, listenerApi) => {
+    listenerApi.cancelActiveListeners();
+    const sub = listenerApi.getState().user.authProfile?.sub;
+    await syncUser(sub, listenerApi);
   },
 });
 

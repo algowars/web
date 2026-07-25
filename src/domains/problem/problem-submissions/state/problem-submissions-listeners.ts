@@ -44,7 +44,7 @@ export const registerProblemSubmissionsListeners = (
   startAppListening({
     actionCreator: ProblemSubmissionsEvents.loadMoreSubmissionsRequested,
     effect: async (action, listenerApi) => {
-      const state = listenerApi.getState();
+      const state = listenerApi.getOriginalState();
       const slug = action.payload.slug;
       const {
         page,

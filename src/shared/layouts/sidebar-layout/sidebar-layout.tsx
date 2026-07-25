@@ -29,7 +29,10 @@ export default function SidebarLayout({
             breadcrumbs={breadcrumbs}
             headerItems={headerItems}
           />
-          <div className={cn("flex-1 min-h-0 overflow-y-auto", className)}>
+          <div
+            id="sidebar-layout-content"
+            className={cn("flex-1 min-h-0 overflow-y-auto", className)}
+          >
             {children}
           </div>
         </SidebarInset>

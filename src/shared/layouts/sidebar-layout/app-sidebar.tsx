@@ -15,6 +15,7 @@ import { SidebarMainNav } from "./sidebar-main-nav";
 import SidebarUser from "./sidebar-user";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
+import { Badge } from "@/shared/components/ui/badge";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
@@ -48,7 +49,10 @@ export default function AppSidebar(
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Algowars</span>
+                  <span className="truncate font-medium">
+                    Algowars <Badge className="">Alpha</Badge>
+                  </span>
+
                   <span className="truncate text-xs">Competitive Coding</span>
                 </div>
               </Link>

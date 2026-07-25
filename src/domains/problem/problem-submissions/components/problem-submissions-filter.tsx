@@ -6,6 +6,7 @@ import {
 } from "@/shared/components/ui/card";
 import { Label } from "@/shared/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
+import { cn } from "@/shared/lib/utils";
 
 type ProblemSubmissionsFilterProps = {
   isDisabled?: boolean;
@@ -13,10 +14,11 @@ type ProblemSubmissionsFilterProps = {
 
 export default function ProblemSubmissionsFilter({
   isDisabled,
+  className,
   ...props
 }: Readonly<ProblemSubmissionsFilterProps>) {
   return (
-    <Card {...props}>
+    <Card className={cn("h-fit", className)} {...props}>
       <CardHeader>
         <CardTitle>Filter Submissions</CardTitle>
       </CardHeader>

@@ -1,4 +1,4 @@
-import ProblemPageContent from "../../../pages/problems/problem/problem-page-client";
+import ProblemPageContent from "../../../views/problems/problem/problem-page-client";
 
 export const generateMetadata = async ({
   params,
