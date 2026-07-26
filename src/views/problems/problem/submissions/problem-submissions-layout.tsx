@@ -6,6 +6,8 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import ProblemSubmissions from "@/domains/problem/problem-submissions/components/problem-submissions";
 import { Permissions } from "@/shared/lib/permissions";
 import { AuthGuard } from "@/shared/guards/auth-guard";
+import { Card, CardContent } from "@/shared/components/ui/card";
+import { AuthGuardFallback } from "@/shared/guards/auth-guard-fallback";
 
 type ProblemSubmissionsLayoutProps = {
   problem: Problem;
@@ -24,7 +26,16 @@ export default function ProblemSubmissionsLayout({
           className="col-span-12 order-1"
         />
         <div className="col-span-12 @3xl:col-span-8 order-3 @3xl:order-2">
-          <AuthGuard permission={Permissions.SUBMISSION_VIEW}>
+          <AuthGuard
+            permission={Permissions.SUBMISSION_VIEW}
+            fallback={
+              <Card>
+                <CardContent className="py-3">
+                  <AuthGuardFallback reason="forbidden" />
+                </CardContent>
+              </Card>
+            }
+          >
             <ProblemSubmissions
               problem={problem}
               isAuthenticated={isAuthenticated}
