@@ -21,28 +21,26 @@ import { Problem } from "../../models/problem";
 
 type ProblemSubmissionsProps = {
   problem: Problem;
+  isAuthenticated: boolean;
 } & ComponentProps<"div">;
 
 export default function ProblemSubmissions({
   problem,
+  isAuthenticated,
   className,
   ...props
 }: Readonly<ProblemSubmissionsProps>) {
   const submissions = useAppSelector(selectProblemSubmissions);
-  const page = useAppSelector((state) => state.problemSubmissions.page);
-  const size = useAppSelector((state) => state.problemSubmissions.size);
-  const timestamp = useAppSelector(
-    (state) => state.problemSubmissions.timestamp
-  );
-  const totalPages = useAppSelector(
-    (state) => state.problemSubmissions.totalPages
-  );
   const hasMore = useAppSelector(selectHasMoreSubmissions);
   const isLoading = useAppSelector(selectIsProblemSubmissionsLoading);
   const isLoadingMore = useAppSelector(selectIsLoadingMoreSubmissions);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (!isAuthenticated || !problem.slug) {
+      return;
+    }
+
     dispatch(
       ProblemSubmissionsEvents.loadSubmissionsRequested({
         slug: problem.slug,
@@ -51,17 +49,12 @@ export default function ProblemSubmissions({
         timestamp: new Date().toISOString(),
       })
     );
-  }, [dispatch, problem.slug]);
+  }, [dispatch, isAuthenticated, problem.slug]);
 
   return (
     <Card className={cn("h-fit", className)} {...props}>
       <CardHeader>
-        <CardTitle>Submissionss</CardTitle>
-        <p>Has More: {hasMore.toString()}</p>
-        <p>Page: {page}</p>
-        <p>Size: {size}</p>
-        <p>Timestamp: {timestamp}</p>
-        <p>Total Pages: {totalPages}</p>
+        <CardTitle>Submissions</CardTitle>
       </CardHeader>
       <CardContent>
         <InfinitePaginatedList
@@ -77,7 +70,6 @@ export default function ProblemSubmissions({
             </div>
           }
           onNext={() => {
-            console.log("Loading more submissions for problem:", problem.slug);
             dispatch(
               ProblemSubmissionsEvents.loadMoreSubmissionsRequested({
                 slug: problem.slug,

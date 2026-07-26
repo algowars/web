@@ -73,6 +73,7 @@ const problemSubmissionsSlice = createSlice({
       .addCase(
         ProblemSubmissionsEvents.loadMoreSubmissionsSuccess,
         (state, action) => {
+          console.log("ACTION: ", action);
           state.isLoadingMoreSubmissions = false;
           state.submissions.push(...action.payload.results);
           state.page = action.payload.page;

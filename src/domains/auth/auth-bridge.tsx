@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import { useAppDispatch } from "@/shared/state/hooks";
 import { AuthEvents } from "./state/auth-events";
+import { routerConfig } from "@/shared/router-config";
 
 export function AuthBridge() {
   const dispatch = useAppDispatch();
@@ -11,6 +12,7 @@ export function AuthBridge() {
 
   const prevLoading = useRef<boolean>(false);
   const prevUserId = useRef<string | undefined>(undefined);
+  const isRedirecting = useRef<boolean>(false);
 
   useEffect(() => {
     if (isLoading && !prevLoading.current) {
@@ -29,6 +31,17 @@ export function AuthBridge() {
           message: error.message,
         })
       );
+
+      dispatch(AuthEvents.sessionExpired());
+
+      if (!isRedirecting.current) {
+        isRedirecting.current = true;
+        const returnTo = window.location.pathname + window.location.search;
+        window.location.assign(
+          `${routerConfig.authLogIn.path}?returnTo=${encodeURIComponent(returnTo)}`
+        );
+      }
+
       return;
     }
 
