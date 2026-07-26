@@ -312,7 +312,7 @@ startAppListening({
 
 startAppListening({
   actionCreator: UserEvents.upsertUserFailure,
-  effect: async (action, listenerApi) => {
+  effect: async (action) => {
     const message = action.payload.message;
     toast.error(message);
   },
@@ -320,7 +320,7 @@ startAppListening({
 
 startAppListening({
   actionCreator: ProblemSetupEvents.loadProblemSetupFailure,
-  effect: async (action, listenerApi) => {
+  effect: async (action) => {
     const message = action.payload.message;
     toast.error(message);
   },
