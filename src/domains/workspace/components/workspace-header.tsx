@@ -22,6 +22,7 @@ import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { WorkspaceEvents } from "../state/workspace-events";
 import { selectIsSubmittingSubmission } from "../state/workspace-slice";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
+import { Permissions } from "@/shared/lib/permissions";
 
 type WorkspaceHeaderProps = {
   problem: Problem;
@@ -33,7 +34,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
   const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
   const userPermissions = useAppSelector(selectUserPermissions);
 
-  const canRunCode = userPermissions.includes("submission:create");
+  const canRunCode = userPermissions.includes(Permissions.SUBMISSION_CREATE);
 
   const runLabel = isSubmittingSubmission ? "Running..." : "Run";
   const submitLabel = isSubmittingSubmission ? "Submitting..." : "Submit";

@@ -4,6 +4,8 @@ import ProblemSubmissionsFilter from "@/domains/problem/problem-submissions/comp
 import ProblemSubmissionsHeader from "@/domains/problem/problem-submissions/components/problem-submissions-header";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import ProblemSubmissions from "@/domains/problem/problem-submissions/components/problem-submissions";
+import { Permissions } from "@/shared/lib/permissions";
+import { AuthGuard } from "@/shared/guards/auth-guard";
 
 type ProblemSubmissionsLayoutProps = {
   problem: Problem;
@@ -21,11 +23,14 @@ export default function ProblemSubmissionsLayout({
           problem={problem}
           className="col-span-12 order-1"
         />
-        <ProblemSubmissions
-          className="col-span-12 @3xl:col-span-8 order-3 @3xl:order-2"
-          problem={problem}
-          isAuthenticated={isAuthenticated}
-        />
+        <div className="col-span-12 @3xl:col-span-8 order-3 @3xl:order-2">
+          <AuthGuard permission={Permissions.SUBMISSION_VIEW}>
+            <ProblemSubmissions
+              problem={problem}
+              isAuthenticated={isAuthenticated}
+            />
+          </AuthGuard>
+        </div>
         <ProblemSubmissionsFilter className="col-span-12 @3xl:col-span-4 order-2 @3xl:order-3  @3xl:sticky @3xl:top-0" />
       </div>
     </SidebarLayout>
