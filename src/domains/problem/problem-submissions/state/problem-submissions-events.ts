@@ -24,4 +24,10 @@ export const ProblemSubmissionsEvents = {
   loadMoreSubmissionsFailure: createAction<{ message: string }>(
     "problem-submissions/loadMoreSubmissionsFailure"
   ),
+  changeFilterType: createAction<{
+    type: "my-submissions" | "user-solutions";
+  }>("problem-submissions/changeFilterType"),
+  changeSortBy: createAction<{
+    sortBy: "newest" | "oldest";
+  }>("problem-submissions/changeSortBy"),
 };

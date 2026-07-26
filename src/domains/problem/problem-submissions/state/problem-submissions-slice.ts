@@ -9,6 +9,10 @@ interface ProblemSubmissionsState {
   size: number;
   totalPages: number;
   timestamp: string;
+  filter: {
+    type: "my-submissions" | "user-solutions";
+    sortBy: "newest" | "oldest";
+  };
 
   isProblemSubmissionsLoading: boolean;
   isLoadingMoreSubmissions: boolean;
@@ -25,6 +29,10 @@ const initialState: ProblemSubmissionsState = {
   isLoadingMoreSubmissions: false,
   problemSubmissionsError: null,
   timestamp: new Date().toISOString(),
+  filter: {
+    type: "my-submissions",
+    sortBy: "newest",
+  },
 };
 
 const problemSubmissionsSlice = createSlice({
@@ -88,7 +96,15 @@ const problemSubmissionsSlice = createSlice({
           state.isLoadingMoreSubmissions = false;
           state.problemSubmissionsError = action.payload.message;
         }
-      );
+      )
+
+      .addCase(ProblemSubmissionsEvents.changeFilterType, (state, action) => {
+        state.filter.type = action.payload.type;
+      })
+
+      .addCase(ProblemSubmissionsEvents.changeSortBy, (state, action) => {
+        state.filter.sortBy = action.payload.sortBy;
+      });
   },
 });
 
