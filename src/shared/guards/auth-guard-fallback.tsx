@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/shared/components/ui/button";
 import { routerConfig } from "@/shared/router-config";
 
@@ -9,6 +12,8 @@ type AuthGuardFallbackProps = {
 export function AuthGuardFallback({
   reason,
 }: Readonly<AuthGuardFallbackProps>) {
+  const pathname = usePathname();
+
   if (reason === "forbidden") {
     return (
       <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
@@ -28,7 +33,7 @@ export function AuthGuardFallback({
       <Button asChild>
         <Link
           href={`${routerConfig.authLogIn.path}?returnTo=${encodeURIComponent(
-            typeof window !== "undefined" ? window.location.pathname : "/"
+            pathname ?? "/"
           )}`}
         >
           Sign in
