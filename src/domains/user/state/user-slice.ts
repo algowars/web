@@ -111,6 +111,9 @@ export const userReducer = userSlice.reducer;
 
 export const selectAuthProfile = (s: RootState) => s.user.authProfile;
 export const selectUser = (s: RootState) => s.user.user;
+export const selectUserRoles = (s: RootState) => s.user.user?.roles ?? [];
+export const selectUserPermissions = (s: RootState) =>
+  s.user.user?.permissions ?? [];
 export const selectIsAuthLoading = (s: RootState) => s.user.isAuthLoading;
 export const selectIsUserLoading = (s: RootState) => s.user.isUserLoading;
 export const selectAuthError = (s: RootState) => s.user.authError;
@@ -124,6 +127,9 @@ export const selectIsFullyLoaded = (s: RootState): boolean =>
 
 export const selectHasError = (s: RootState): boolean =>
   s.user.authError !== null || s.user.userError !== null;
+
+export const selectUserSyncFailed = (s: RootState): boolean =>
+  s.user.userError !== null && s.user.user === null;
 
 export const selectDisplayName = createSelector(
   [selectUser, selectAuthProfile],

@@ -6,10 +6,12 @@ import { submissionApi } from "@/domains/submission/api/submission-api";
 import { registerProblemListeners } from "@/domains/problem/state/problem-listeners";
 import { userApi } from "@/domains/user/api/user-api";
 import { UserEvents } from "@/domains/user/state/user-events";
-import { createListenerMiddleware } from "@reduxjs/toolkit";
+import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
+import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
+import { registerHealthListeners } from "@/domains/health/state/health-listeners";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -25,6 +27,10 @@ type AppListenerEffect = NonNullable<
 type AppListenerApi = Parameters<AppListenerEffect>[1];
 
 registerProblemListeners(startAppListening);
+
+registerProblemSubmissionsListeners(startAppListening);
+
+registerHealthListeners(startAppListening);
 
 const getProblemSetupId = (setup: RootState["problemSetup"]["setup"]) => {
   if (!setup || typeof setup !== "object") {
@@ -127,24 +133,39 @@ startAppListening({
   },
 });
 
+const isRunOrSubmitRequested = isAnyOf(
+  WorkspaceEvents.runCodeRequested,
+  WorkspaceEvents.submitCodeRequested
+);
+
+// Run and submit share one listener registration (rather than two separate
+// ones) specifically so cancelActiveListeners() below can cancel a
+// still-in-flight Run when Submit is clicked (or vice versa), not just two
+// clicks of the same button. With separate registrations, cancelActiveListeners
+// only ever cancels other instances of *its own* listener, leaving a
+// cross-button race unguarded.
 startAppListening({
-  actionCreator: WorkspaceEvents.runCodeRequested,
-  effect: async (_, listenerApi) => {
+  matcher: isRunOrSubmitRequested,
+  effect: async (action, listenerApi) => {
+    listenerApi.cancelActiveListeners();
+
     const state = listenerApi.getState();
     const problemSetupId = getProblemSetupId(state.problemSetup.setup);
-
-    if (state.workspace.isSubmittingSubmission) {
-      return;
-    }
+    const isRun = WorkspaceEvents.runCodeRequested.match(action);
 
     if (!problemSetupId) {
       toast.error("Problem setup is not ready yet");
+      // The reducer already flipped isSubmittingSubmission to true and
+      // cleared activeSubmissionId synchronously when the action was
+      // dispatched; undo that here since we're bailing out without ever
+      // actually starting a run/submission.
+      listenerApi.dispatch(
+        WorkspaceEvents.submissionRequestStateChanged(false)
+      );
       return;
     }
 
     try {
-      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(true));
-      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(null));
       listenerApi.dispatch(
         WorkspaceEvents.editorTabActivated({ nodeId: "root", tabIndex: 3 })
       );
@@ -154,11 +175,16 @@ startAppListening({
 
       const submissionId = await listenerApi
         .dispatch(
-          submissionApi.endpoints.createRunSubmission.initiate({
-            problemSetupId,
-            code: state.workspace.code,
-            customTestCases: undefined,
-          })
+          isRun
+            ? submissionApi.endpoints.createRunSubmission.initiate({
+                problemSetupId,
+                code: state.workspace.code,
+                customTestCases: undefined,
+              })
+            : submissionApi.endpoints.createGradeSubmission.initiate({
+                problemSetupId,
+                code: state.workspace.code,
+              })
         )
         .unwrap();
 
@@ -173,10 +199,14 @@ startAppListening({
         })
       );
 
-      toast.success("Run started");
+      toast.success(isRun ? "Run started" : "Submission created");
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Failed to run solution";
+        error instanceof Error
+          ? error.message
+          : isRun
+            ? "Failed to run solution"
+            : "Failed to submit solution";
       toast.error(message);
     } finally {
       listenerApi.dispatch(
@@ -186,94 +216,63 @@ startAppListening({
   },
 });
 
-startAppListening({
-  actionCreator: WorkspaceEvents.submitCodeRequested,
-  effect: async (_, listenerApi) => {
-    const state = listenerApi.getState();
-    const problemSetupId = getProblemSetupId(state.problemSetup.setup);
+const syncUser = async (
+  sub: string | undefined,
+  listenerApi: AppListenerApi
+) => {
+  if (!sub) {
+    const message = "Missing user subject in auth payload";
+    listenerApi.dispatch(UserEvents.upsertUserFailure({ message }));
+    listenerApi.dispatch(UserEvents.initializeUserFailure({ message }));
+    return;
+  }
 
-    if (state.workspace.isSubmittingSubmission) {
-      return;
-    }
+  listenerApi.dispatch(UserEvents.upsertUserRequested({ sub }));
 
-    if (!problemSetupId) {
-      toast.error("Problem setup is not ready yet");
-      return;
-    }
+  // The PUT can fail transiently (e.g. the API is still cold-starting) without the
+  // account itself being missing — it may already exist from a previous successful
+  // upsert. So a failed PUT still falls through to GET rather than giving up outright;
+  // only if both fail does the sidebar end up with no user to show.
+  try {
+    await listenerApi
+      .dispatch(userApi.endpoints.upsertUser.initiate({ sub }))
+      .unwrap();
+    listenerApi.dispatch(UserEvents.upsertUserSuccess());
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to sync user";
+    listenerApi.dispatch(UserEvents.upsertUserFailure({ message }));
+  }
 
-    try {
-      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(true));
-      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(null));
-      listenerApi.dispatch(
-        WorkspaceEvents.editorTabActivated({ nodeId: "root", tabIndex: 3 })
-      );
-      listenerApi.dispatch(
-        WorkspaceEvents.editorTabActivated({ nodeId: "root.1.1", tabIndex: 1 })
-      );
-
-      const submissionId = await listenerApi
-        .dispatch(
-          submissionApi.endpoints.createGradeSubmission.initiate({
-            problemSetupId,
-            code: state.workspace.code,
-          })
-        )
-        .unwrap();
-
-      listenerApi.dispatch(
-        WorkspaceEvents.activeSubmissionChanged(submissionId)
-      );
-
-      listenerApi.dispatch(
-        submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
-          subscribe: false,
-          forceRefetch: true,
-        })
-      );
-
-      toast.success("Submission created");
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to submit solution";
-      toast.error(message);
-    } finally {
-      listenerApi.dispatch(
-        WorkspaceEvents.submissionRequestStateChanged(false)
-      );
-    }
-  },
-});
+  listenerApi.dispatch(UserEvents.initializeUser());
+  try {
+    const account = await listenerApi
+      .dispatch(
+        userApi.endpoints.getAccount.initiate(undefined, { forceRefetch: true })
+      )
+      .unwrap();
+    listenerApi.dispatch(UserEvents.initializeUserSuccess(account));
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to load your profile";
+    listenerApi.dispatch(UserEvents.initializeUserFailure({ message }));
+  }
+};
 
 startAppListening({
   actionCreator: AuthEvents.userAuthenticated,
   effect: async (action, listenerApi) => {
     listenerApi.cancelActiveListeners();
+    await syncUser(action.payload.user.sub, listenerApi);
+  },
+});
 
-    try {
-      const sub = action.payload.user.sub;
-
-      if (!sub) {
-        throw new Error("Missing user subject in auth payload");
-      }
-
-      listenerApi.dispatch(UserEvents.upsertUserRequested({ sub }));
-      await listenerApi
-        .dispatch(userApi.endpoints.upsertUser.initiate({ sub }))
-        .unwrap();
-      listenerApi.dispatch(UserEvents.upsertUserSuccess());
-
-      listenerApi.dispatch(UserEvents.initializeUser());
-      const account = await listenerApi
-        .dispatch(userApi.endpoints.getAccount.initiate())
-        .unwrap();
-
-      listenerApi.dispatch(UserEvents.initializeUserSuccess(account));
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to sync user";
-      listenerApi.dispatch(UserEvents.upsertUserFailure({ message }));
-      listenerApi.dispatch(UserEvents.initializeUserFailure({ message }));
-    }
+startAppListening({
+  actionCreator: UserEvents.retrySyncRequested,
+  effect: async (_action, listenerApi) => {
+    listenerApi.cancelActiveListeners();
+    const sub = listenerApi.getState().user.authProfile?.sub;
+    await syncUser(sub, listenerApi);
   },
 });
 
@@ -308,5 +307,21 @@ startAppListening({
   effect: async (_, listenerApi) => {
     listenerApi.cancelActiveListeners();
     listenerApi.dispatch(UserEvents.loggedOut());
+  },
+});
+
+startAppListening({
+  actionCreator: UserEvents.upsertUserFailure,
+  effect: async (action) => {
+    const message = action.payload.message;
+    toast.error(message);
+  },
+});
+
+startAppListening({
+  actionCreator: ProblemSetupEvents.loadProblemSetupFailure,
+  effect: async (action) => {
+    const message = action.payload.message;
+    toast.error(message);
   },
 });

@@ -32,10 +32,17 @@ const workspaceSlice = createSlice({
         state.code = action.payload;
       })
       .addCase(WorkspaceEvents.runCodeRequested, (state) => {
+        // isSubmittingSubmission flips here, synchronously, in the same
+        // update as clearing activeSubmissionId — not later inside the
+        // async listener effect. That keeps the two flags the panel reads
+        // to decide what to render from ever being out of sync for a
+        // render, which is what caused the previous-status flash.
         state.activeSubmissionId = null;
+        state.isSubmittingSubmission = true;
       })
       .addCase(WorkspaceEvents.submitCodeRequested, (state) => {
         state.activeSubmissionId = null;
+        state.isSubmittingSubmission = true;
       })
       .addCase(
         WorkspaceEvents.submissionRequestStateChanged,

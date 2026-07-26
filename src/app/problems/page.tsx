@@ -1,4 +1,4 @@
-import ProblemsLayout from "@/pages/problems/problems-layout";
+import ProblemsLayout from "@/views/problems/problems-layout";
 
 export default function ProblemsPage() {
   return <ProblemsLayout />;

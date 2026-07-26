@@ -152,6 +152,7 @@ export default function SubmissionStatusPanel() {
   if (data?.results?.length) {
     resultsContent = (
       <Tabs
+        key={submissionId}
         defaultValue="result-0"
         className="flex min-h-0 flex-1 flex-col"
         aria-label="Submission test results"

@@ -1,5 +1,6 @@
 "use client";
 
+import ProblemTable from "@/domains/problem/tables/problem-table";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import {
   selectProblemsError,
@@ -7,19 +8,18 @@ import {
   selectProblemsSize,
   selectProblemsTimestamp,
 } from "@/domains/problem/state/problem-slice";
-import ProblemTable from "@/domains/problem/tables/problem-table";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-export default function DashboardLayout() {
+export default function ProblemsLayout() {
   const dispatch = useAppDispatch();
   const page = useAppSelector(selectProblemsPage);
   const size = useAppSelector(selectProblemsSize);
@@ -48,14 +48,16 @@ export default function DashboardLayout() {
 
   return (
     <SidebarLayout breadcrumbs={[]}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Problems</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProblemTable />
-        </CardContent>
-      </Card>
+      <div className="px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
+        <Card className="col-span-12">
+          <CardHeader>
+            <CardTitle>Problems</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProblemTable />
+          </CardContent>
+        </Card>
+      </div>
     </SidebarLayout>
   );
 }

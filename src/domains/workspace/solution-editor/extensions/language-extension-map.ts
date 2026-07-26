@@ -24,6 +24,22 @@ const languageExtensionLoaders: Record<
   },
 };
 
+const languageExtensionLoadersByName: Record<string, () => Promise<Extension>> =
+  {
+    javascript: async () => {
+      const { javascript } = await import("@codemirror/lang-javascript");
+      return javascript({ jsx: true });
+    },
+    typescript: async () => {
+      const { javascript } = await import("@codemirror/lang-javascript");
+      return javascript({ jsx: true, typescript: true });
+    },
+    python: async () => {
+      const { python } = await import("@codemirror/lang-python");
+      return python();
+    },
+  };
+
 const languageExtensionCache = new Map<string, Promise<Extension[]>>();
 
 const getCacheKey = (languageId: number, options?: LanguageExtensionOptions) =>
@@ -57,4 +73,27 @@ export const registerLanguageExtensionLoader = (
 ) => {
   languageExtensionLoaders[languageId] = loader;
   languageExtensionCache.clear();
+};
+
+const languageExtensionByNameCache = new Map<string, Promise<Extension[]>>();
+
+export const getLanguageExtensionsByName = async (
+  languageName: string
+): Promise<Extension[]> => {
+  const key = languageName.trim().toLowerCase();
+  const loader = languageExtensionLoadersByName[key];
+
+  if (!loader) {
+    return [];
+  }
+
+  const cached = languageExtensionByNameCache.get(key);
+  if (cached) {
+    return cached;
+  }
+
+  const loadPromise = loader().then((extension) => [extension]);
+  languageExtensionByNameCache.set(key, loadPromise);
+
+  return loadPromise;
 };

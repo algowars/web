@@ -6,6 +6,8 @@ export const UserEvents = {
   upsertUserSuccess: createAction("user/upsertSuccess"),
   upsertUserFailure: createAction<{ message: string }>("user/upsertFailure"),
 
+  retrySyncRequested: createAction("user/retrySyncRequested"),
+
   initializeUser: createAction("user/initialize"),
   initializeUserSuccess: createAction<User>("user/initializeSuccess"),
   initializeUserFailure: createAction<{ message: string }>(

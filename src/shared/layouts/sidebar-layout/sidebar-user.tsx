@@ -1,9 +1,13 @@
 "use client";
 
 import {
+  selectAvatarUrl,
+  selectDisplayName,
   selectIsUserLoading,
   selectUser,
+  selectUserSyncFailed,
 } from "@/domains/user/state/user-slice";
+import { UserEvents } from "@/domains/user/state/user-events";
 import {
   Avatar,
   AvatarFallback,
@@ -34,15 +38,26 @@ import {
 } from "@/shared/components/ui/sidebar";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { routerConfig } from "@/shared/router-config";
-import { useAppSelector } from "@/shared/state/hooks";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { useUser } from "@auth0/nextjs-auth0";
-import { ChevronsUpDown, LogOut, Settings2, User } from "lucide-react";
+import {
+  AlertCircle,
+  ChevronsUpDown,
+  LogOut,
+  RefreshCw,
+  Settings2,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function SidebarUser() {
+  const dispatch = useAppDispatch();
   const { user: authUser, isLoading } = useUser();
   const user = useAppSelector(selectUser);
   const isUserLoading = useAppSelector(selectIsUserLoading);
+  const displayName = useAppSelector(selectDisplayName);
+  const avatarUrl = useAppSelector(selectAvatarUrl);
+  const syncFailed = useAppSelector(selectUserSyncFailed);
   const { isMobile } = useSidebar();
 
   if (isLoading || isUserLoading) {
@@ -82,6 +97,10 @@ export default function SidebarUser() {
     );
   }
 
+  // authUser (Auth0 session) can exist even when the app-level user profile failed
+  // to sync (e.g. the API was cold-starting when the PUT went out). displayName/
+  // avatarUrl fall back to the Auth0 profile in that case, so the sidebar still shows
+  // a name and picture instead of going blank.
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -91,12 +110,22 @@ export default function SidebarUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 ">
-                <AvatarImage src={authUser?.picture} alt={user?.username} />
-                <AvatarFallback>{user?.username?.[0] ?? "U"}</AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="h-8 w-8 ">
+                  <AvatarImage src={avatarUrl ?? undefined} alt={displayName} />
+                  <AvatarFallback>{displayName?.[0] ?? "U"}</AvatarFallback>
+                </Avatar>
+                {syncFailed ? (
+                  <AlertCircle className="absolute -bottom-1 -right-1 size-3.5 rounded-full bg-background text-muted-foreground" />
+                ) : null}
+              </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user?.username}</span>
+                <span className="truncate font-medium">{displayName}</span>
+                {syncFailed ? (
+                  <span className="truncate text-xs text-muted-foreground">
+                    Profile unavailable
+                  </span>
+                ) : null}
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -110,15 +139,32 @@ export default function SidebarUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 ">
-                  <AvatarImage src={authUser?.picture} alt={user?.username} />
-                  <AvatarFallback>{user?.username?.[0] ?? "U"}</AvatarFallback>
+                  <AvatarImage src={avatarUrl ?? undefined} alt={displayName} />
+                  <AvatarFallback>{displayName?.[0] ?? "U"}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user?.username}</span>
+                  <span className="truncate font-medium">{displayName}</span>
+                  {user?.roles.includes("admin") ? (
+                    <span className="text-xs text-muted-foreground">Admin</span>
+                  ) : null}
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            {syncFailed ? (
+              <>
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    dispatch(UserEvents.retrySyncRequested());
+                  }}
+                >
+                  <RefreshCw />
+                  Retry loading profile
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            ) : null}
             {user?.username ? (
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild>

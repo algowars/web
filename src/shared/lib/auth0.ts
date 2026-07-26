@@ -9,5 +9,6 @@ export const auth0 = new Auth0Client({
   authorizationParameters: {
     redirect_uri: env.AUTH0_CALLBACK_URL,
     audience: env.AUTH0_AUDIENCE,
+    scope: "openid profile email offline_access",
   },
 });
