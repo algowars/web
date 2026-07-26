@@ -1,6 +1,8 @@
 import { PageResult } from "@/shared/pagination/page-result";
 import { createAction } from "@reduxjs/toolkit";
 import { ProblemSubmission } from "../models/problem-submission";
+import { SubmissionOrderByType } from "../models/submission-order-by-type";
+import { SubmissionFilterType } from "../models/submission-filter-type";
 
 export const ProblemSubmissionsEvents = {
   loadSubmissionsRequested: createAction<{
@@ -8,6 +10,8 @@ export const ProblemSubmissionsEvents = {
     page: number;
     size: number;
     timestamp: string;
+    type?: SubmissionFilterType;
+    sortBy?: SubmissionOrderByType;
   }>("problem-submissions/loadSubmissionsRequested"),
   loadSubmissionsSuccess: createAction<PageResult<ProblemSubmission>>(
     "problem-submissions/loadSubmissionsSuccess"
@@ -25,9 +29,9 @@ export const ProblemSubmissionsEvents = {
     "problem-submissions/loadMoreSubmissionsFailure"
   ),
   changeFilterType: createAction<{
-    type: "my-submissions" | "user-solutions";
+    type: SubmissionFilterType;
   }>("problem-submissions/changeFilterType"),
   changeSortBy: createAction<{
-    sortBy: "newest" | "oldest";
+    sortBy: SubmissionOrderByType;
   }>("problem-submissions/changeSortBy"),
 };

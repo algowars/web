@@ -2,16 +2,19 @@ import { RootState } from "@/shared/state/store";
 import { createSlice } from "@reduxjs/toolkit";
 import { ProblemSubmission } from "../models/problem-submission";
 import { ProblemSubmissionsEvents } from "./problem-submissions-events";
+import { SubmissionFilterType } from "../models/submission-filter-type";
+import { SubmissionOrderByType } from "../models/submission-order-by-type";
 
 interface ProblemSubmissionsState {
+  slug: string;
   submissions: ProblemSubmission[];
   page: number;
   size: number;
   totalPages: number;
   timestamp: string;
   filter: {
-    type: "my-submissions" | "user-solutions";
-    sortBy: "newest" | "oldest";
+    type: SubmissionFilterType;
+    sortBy: SubmissionOrderByType;
   };
 
   isProblemSubmissionsLoading: boolean;
@@ -21,6 +24,7 @@ interface ProblemSubmissionsState {
 }
 
 const initialState: ProblemSubmissionsState = {
+  slug: "",
   submissions: [],
   page: 1,
   size: 10,
@@ -30,8 +34,8 @@ const initialState: ProblemSubmissionsState = {
   problemSubmissionsError: null,
   timestamp: new Date().toISOString(),
   filter: {
-    type: "my-submissions",
-    sortBy: "newest",
+    type: SubmissionFilterType.UserSolutions,
+    sortBy: SubmissionOrderByType.Newest,
   },
 };
 
@@ -42,14 +46,18 @@ const problemSubmissionsSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(ProblemSubmissionsEvents.loadSubmissionsRequested, (state) => {
-        state.isProblemSubmissionsLoading = true;
-        state.problemSubmissionsError = null;
+      .addCase(
+        ProblemSubmissionsEvents.loadSubmissionsRequested,
+        (state, action) => {
+          state.isProblemSubmissionsLoading = true;
+          state.problemSubmissionsError = null;
 
-        state.submissions = [];
-        state.page = 1;
-        state.totalPages = 0;
-      })
+          state.slug = action.payload.slug;
+          state.submissions = [];
+          state.page = 1;
+          state.totalPages = 0;
+        }
+      )
 
       .addCase(
         ProblemSubmissionsEvents.loadSubmissionsSuccess,
@@ -81,7 +89,6 @@ const problemSubmissionsSlice = createSlice({
       .addCase(
         ProblemSubmissionsEvents.loadMoreSubmissionsSuccess,
         (state, action) => {
-          console.log("ACTION: ", action);
           state.isLoadingMoreSubmissions = false;
           state.submissions.push(...action.payload.results);
           state.page = action.payload.page;
@@ -100,10 +107,14 @@ const problemSubmissionsSlice = createSlice({
 
       .addCase(ProblemSubmissionsEvents.changeFilterType, (state, action) => {
         state.filter.type = action.payload.type;
+        state.page = 1;
+        state.totalPages = 0;
       })
 
       .addCase(ProblemSubmissionsEvents.changeSortBy, (state, action) => {
         state.filter.sortBy = action.payload.sortBy;
+        state.page = 1;
+        state.totalPages = 0;
       });
   },
 });
@@ -139,3 +150,12 @@ export const selectIsProblemSubmissionsLoading = (s: RootState) =>
 
 export const selectIsLoadingMoreSubmissions = (s: RootState) =>
   s.problemSubmissions.isLoadingMoreSubmissions;
+
+export const selectProblemSubmissionsSlug = (s: RootState) =>
+  s.problemSubmissions.slug;
+
+export const selectProblemSubmissionsFilterType = (s: RootState) =>
+  s.problemSubmissions.filter.type;
+
+export const selectProblemSubmissionsSortBy = (s: RootState) =>
+  s.problemSubmissions.filter.sortBy;

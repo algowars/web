@@ -17,11 +17,15 @@ export const registerProblemSubmissionsListeners = (
           throw new Error("Missing or invalid timestamp in request payload");
         }
 
+        const { filter } = listenerApi.getState().problemSubmissions;
+
         const response = await listenerApi
           .dispatch(
-            problemSubmissionsApi.endpoints.getProblemSubmissions.initiate(
-              action.payload
-            )
+            problemSubmissionsApi.endpoints.getProblemSubmissions.initiate({
+              ...action.payload,
+              type: action.payload.type ?? filter.type,
+              sortBy: action.payload.sortBy ?? filter.sortBy,
+            })
           )
           .unwrap();
 
@@ -50,6 +54,7 @@ export const registerProblemSubmissionsListeners = (
         page,
         size,
         timestamp,
+        filter,
         isProblemSubmissionsLoading,
         isLoadingMoreSubmissions,
       } = state.problemSubmissions;
@@ -70,6 +75,8 @@ export const registerProblemSubmissionsListeners = (
               page: page + 1,
               size,
               timestamp,
+              type: filter.type,
+              sortBy: filter.sortBy,
             })
           )
           .unwrap();
@@ -86,6 +93,46 @@ export const registerProblemSubmissionsListeners = (
           ProblemSubmissionsEvents.loadMoreSubmissionsFailure({ message })
         );
       }
+    },
+  });
+
+  startAppListening({
+    actionCreator: ProblemSubmissionsEvents.changeFilterType,
+    effect: async (_action, listenerApi) => {
+      const { slug, size } = listenerApi.getState().problemSubmissions;
+
+      if (!slug) {
+        return;
+      }
+
+      listenerApi.dispatch(
+        ProblemSubmissionsEvents.loadSubmissionsRequested({
+          slug,
+          page: 1,
+          size,
+          timestamp: new Date().toISOString(),
+        })
+      );
+    },
+  });
+
+  startAppListening({
+    actionCreator: ProblemSubmissionsEvents.changeSortBy,
+    effect: async (_action, listenerApi) => {
+      const { slug, size } = listenerApi.getState().problemSubmissions;
+
+      if (!slug) {
+        return;
+      }
+
+      listenerApi.dispatch(
+        ProblemSubmissionsEvents.loadSubmissionsRequested({
+          slug,
+          page: 1,
+          size,
+          timestamp: new Date().toISOString(),
+        })
+      );
     },
   });
 };

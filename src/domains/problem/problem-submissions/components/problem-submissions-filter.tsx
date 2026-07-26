@@ -7,6 +7,16 @@ import {
 import { Label } from "@/shared/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 import { cn } from "@/shared/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import { ProblemSubmissionsEvents } from "../state/problem-submissions-events";
+import {
+  selectIsLoadingMoreSubmissions,
+  selectIsProblemSubmissionsLoading,
+  selectProblemSubmissionsFilterType,
+  selectProblemSubmissionsSortBy,
+} from "../state/problem-submissions-slice";
+import { SubmissionFilterType } from "../models/submission-filter-type";
+import { SubmissionOrderByType } from "../models/submission-order-by-type";
 
 type ProblemSubmissionsFilterProps = {
   isDisabled?: boolean;
@@ -17,6 +27,14 @@ export default function ProblemSubmissionsFilter({
   className,
   ...props
 }: Readonly<ProblemSubmissionsFilterProps>) {
+  const dispatch = useAppDispatch();
+  const filterType = useAppSelector(selectProblemSubmissionsFilterType);
+  const sortBy = useAppSelector(selectProblemSubmissionsSortBy);
+  const isLoading = useAppSelector(selectIsProblemSubmissionsLoading);
+  const isLoadingMore = useAppSelector(selectIsLoadingMoreSubmissions);
+
+  const disabled = isDisabled || isLoading || isLoadingMore;
+
   return (
     <Card className={cn("h-fit", className)} {...props}>
       <CardHeader>
@@ -24,22 +42,31 @@ export default function ProblemSubmissionsFilter({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <RadioGroup defaultValue="my-submissions">
+          <RadioGroup
+            value={filterType}
+            onValueChange={(value) =>
+              dispatch(
+                ProblemSubmissionsEvents.changeFilterType({
+                  type: value as SubmissionFilterType,
+                })
+              )
+            }
+          >
             <div className="flex items-center space-x-2">
               <RadioGroupItem
-                value="my-submissions"
-                id="my-submissions"
-                disabled={isDisabled}
+                value={SubmissionFilterType.UserSolutions}
+                id="user-solutions"
+                disabled={disabled}
               />
-              <Label htmlFor="my-submissions">My Submissions</Label>
+              <Label htmlFor="user-solutions">User Solutions</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem
-                value="user-solutions"
-                id="user-solutions"
-                disabled={isDisabled}
+                value={SubmissionFilterType.MySubmissions}
+                id="my-submissions"
+                disabled={disabled}
               />
-              <Label htmlFor="user-solutions">User Solutions</Label>
+              <Label htmlFor="my-submissions">My Submissions</Label>
             </div>
           </RadioGroup>
         </div>
@@ -47,20 +74,29 @@ export default function ProblemSubmissionsFilter({
           <h3 className="font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm mb-3">
             Sort By
           </h3>
-          <RadioGroup defaultValue="newest">
+          <RadioGroup
+            value={sortBy}
+            onValueChange={(value) =>
+              dispatch(
+                ProblemSubmissionsEvents.changeSortBy({
+                  sortBy: value as SubmissionOrderByType,
+                })
+              )
+            }
+          >
             <div className="flex items-center space-x-2">
               <RadioGroupItem
-                value="newest"
+                value={SubmissionOrderByType.Newest}
                 id="newest"
-                disabled={isDisabled}
+                disabled={disabled}
               />
               <Label htmlFor="newest">Newest</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem
-                value="oldest"
+                value={SubmissionOrderByType.Oldest}
                 id="oldest"
-                disabled={isDisabled}
+                disabled={disabled}
               />
               <Label htmlFor="oldest">Oldest</Label>
             </div>
