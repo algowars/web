@@ -7,6 +7,8 @@
 export const Permissions = {
   SUBMISSION_CREATE: "submission:create",
   SUBMISSION_VIEW: "submission:view",
+  ADMIN_PROBLEMS_READ: "problem:read:admin",
+  ADMIN_USERS_READ: "user:read:admin",
 } as const;
 
 export type Permission = (typeof Permissions)[keyof typeof Permissions];
