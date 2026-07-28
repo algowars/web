@@ -7,6 +7,7 @@ import { baseApi } from "../lib/base-api";
 import { listenerMiddleware } from "./listener-middleware";
 import { problemSubmissionsReducer } from "@/domains/problem/problem-submissions/state/problem-submissions-slice";
 import { healthReducer } from "@/domains/health/state/health-slice";
+import { gameplayReducer } from "@/domains/gameplay/state/gameplay-slice";
 
 export const makeStore = () =>
   configureStore({
@@ -17,6 +18,7 @@ export const makeStore = () =>
       workspace: workspaceReducer,
       problemSubmissions: problemSubmissionsReducer,
       health: healthReducer,
+      gameplay: gameplayReducer,
       [baseApi.reducerPath]: baseApi.reducer,
     },
     middleware: (getDefault) =>

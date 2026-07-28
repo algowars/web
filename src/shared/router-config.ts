@@ -13,6 +13,9 @@ export const routerConfig = {
   problems: {
     path: "/problems",
   },
+  games: {
+    path: "/games",
+  },
   problem: {
     path: "/problems/:slug",
     execute: ({ slug }: { slug: string }) =>

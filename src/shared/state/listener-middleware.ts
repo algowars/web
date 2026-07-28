@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
 import { registerHealthListeners } from "@/domains/health/state/health-listeners";
+import { registerGameplayListeners } from "@/domains/gameplay/state/gameplay-listeners";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -31,6 +32,8 @@ registerProblemListeners(startAppListening);
 registerProblemSubmissionsListeners(startAppListening);
 
 registerHealthListeners(startAppListening);
+
+registerGameplayListeners(startAppListening);
 
 const getProblemSetupId = (setup: RootState["problemSetup"]["setup"]) => {
   if (!setup || typeof setup !== "object") {

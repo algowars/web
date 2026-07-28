@@ -18,6 +18,7 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import GameplayDashboard from "./gameplay-dashboard";
 
 export default function DashboardLayout() {
   const dispatch = useAppDispatch();
@@ -57,6 +58,9 @@ export default function DashboardLayout() {
             <ProblemTable />
           </CardContent>
         </Card>
+        <div className="col-span-12">
+          <GameplayDashboard />
+        </div>
       </div>
     </SidebarLayout>
   );
