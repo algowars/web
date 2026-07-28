@@ -18,7 +18,6 @@ export default function ProblemSubmissionsLayout({
   problem,
   isAuthenticated,
 }: Readonly<ProblemSubmissionsLayoutProps>) {
-  console.log("Is authenticated", isAuthenticated);
   return (
     <SidebarLayout breadcrumbs={[]}>
       <div className="@container px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
