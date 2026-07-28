@@ -8,6 +8,7 @@ import { Permissions } from "@/shared/lib/permissions";
 import { AuthGuard } from "@/shared/guards/auth-guard";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { AuthGuardFallback } from "@/shared/guards/auth-guard-fallback";
+import { routerConfig } from "@/shared/router-config";
 
 type ProblemSubmissionsLayoutProps = {
   problem: Problem;
@@ -19,7 +20,18 @@ export default function ProblemSubmissionsLayout({
   isAuthenticated,
 }: Readonly<ProblemSubmissionsLayoutProps>) {
   return (
-    <SidebarLayout breadcrumbs={[]}>
+    <SidebarLayout
+      breadcrumbs={[
+        {
+          name: problem.slug,
+          url: routerConfig.problem.execute({ slug: problem.slug }),
+        },
+        {
+          name: "Submissions",
+          url: routerConfig.problemSubmissions.execute({ slug: problem.slug }),
+        },
+      ]}
+    >
       <div className="@container px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
         <ProblemSubmissionsHeader
           problem={problem}
