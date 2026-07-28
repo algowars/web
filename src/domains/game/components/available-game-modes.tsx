@@ -7,5 +7,5 @@ export default async function availableGameModes() {
     throw new Error("Failed to fetch available games");
   }
 
-  return response.json();
+  const availableGames = await response.json();
 }
