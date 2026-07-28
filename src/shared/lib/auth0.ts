@@ -6,6 +6,7 @@ export const auth0 = new Auth0Client({
   clientId: env.AUTH0_CLIENT_ID,
   secret: env.AUTH0_SECRET,
   clientSecret: env.AUTH0_CLIENT_SECRET,
+  noContentProfileResponseWhenUnauthenticated: true,
   authorizationParameters: {
     redirect_uri: env.AUTH0_CALLBACK_URL,
     audience: env.AUTH0_AUDIENCE,

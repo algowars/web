@@ -51,6 +51,7 @@ export function AuthGuard({
 
   // SSR and the client's first hydration pass both render this branch,
   // regardless of what's already in the (possibly already-populated) store.
+  console.log(hasMounted, isAuthenticated, isFullyLoaded, userPermissions);
   if (!hasMounted || !isFullyLoaded) {
     return <>{loadingFallback}</>;
   }
