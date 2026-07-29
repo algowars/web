@@ -12,7 +12,7 @@ export interface GameMode {
 export enum GameModeType {
   SoloRush = 1,
   OneVsOne = 2,
-  Ffa = 3,
+  FFA = 3,
 }
 
 export enum GameModeStatus {

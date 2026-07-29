@@ -83,6 +83,15 @@ const baseQueryWithTimeout: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithTimeout,
-  tagTypes: ["Order", "User", "Product", "Problem", "Submission", "Health"],
+  tagTypes: [
+    "Game",
+    "GameAvailable",
+    "Health",
+    "Order",
+    "Product",
+    "Problem",
+    "Submission",
+    "User",
+  ],
   endpoints: () => ({}),
 });

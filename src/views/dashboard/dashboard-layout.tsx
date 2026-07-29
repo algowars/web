@@ -1,5 +1,9 @@
 "use client";
 
+import AvailableGameModesHeader from "@/domains/game/components/available-game-modes-header";
+import PlayDuelCard from "@/domains/game/components/play-duel-card";
+import PlayFFACard from "@/domains/game/components/play-ffa-card";
+import PlaySoloRushCard from "@/domains/game/components/play-solo-rush-card";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import {
   selectProblemsError,
@@ -49,6 +53,12 @@ export default function DashboardLayout() {
   return (
     <SidebarLayout breadcrumbs={[]}>
       <div className="px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
+        <div className="col-span-12">
+          <AvailableGameModesHeader />
+        </div>
+        <PlaySoloRushCard className="col-span-4" />
+        <PlayDuelCard className="col-span-4" />
+        <PlayFFACard className="col-span-4" />
         <Card className="col-span-12">
           <CardHeader>
             <CardTitle>Problems</CardTitle>
