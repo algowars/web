@@ -16,16 +16,21 @@ export default function PlayFFACard(props: Readonly<ComponentProps<"div">>) {
       {...props}
       color="lime"
       icon={Bolt}
-      header={ffa?.name ?? "Solo Rush"}
-      tidbit="Race the clock"
+      header={ffa?.name ?? "FFA"}
+      tidbit="Free-for-all"
       description={
         ffa?.description ??
         "Solve as many problems as possible before the time runs out."
       }
-      playerCount={`${ffa?.minPlayers}-${ffa?.maxPlayers}`}
+      playerCount={
+        ffa?.minPlayers && ffa.maxPlayers
+          ? `${ffa?.minPlayers}-${ffa?.maxPlayers}`
+          : "3-10 players"
+      }
       time={"5 / 10 / 15 / 30 minutes"}
       onClick={startGame}
       type={ffa?.isRanked ? "Ranked" : "Practice"}
+      disabled={!ffa}
     />
   );
 }

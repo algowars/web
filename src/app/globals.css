@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@source inline("{text,bg,border}-{lime,sky,fuchsia}-{400,500}{/10,/15,/30,}");
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

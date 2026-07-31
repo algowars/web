@@ -6,7 +6,7 @@ export const gameApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/api/v1/game",
       }),
-      provideTags: ["GameAvailable"],
+      providesTags: ["GameAvailable"],
     }),
   }),
 });
