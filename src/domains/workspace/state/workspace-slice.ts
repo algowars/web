@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "@/shared/state/store";
+import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { ProblemSetupEvents } from "@/domains/problem/state/problem-setup-slice";
 import { WorkspaceEvents } from "./workspace-events";
 
@@ -52,6 +53,13 @@ const workspaceSlice = createSlice({
       )
       .addCase(WorkspaceEvents.activeSubmissionChanged, (state, action) => {
         state.activeSubmissionId = action.payload;
+      })
+      .addCase(ProblemEvents.initializeProblem, (state) => {
+        // Each problem has its own setup per language version.
+        // Reset selection so LanguageSelect picks a valid default
+        // for the newly initialized problem and triggers setup load.
+        state.selectedVersionId = null;
+        state.code = "";
       })
       .addCase(ProblemSetupEvents.loadProblemSetupSuccess, (state, action) => {
         state.code = action.payload.setup.initialCode ?? "";

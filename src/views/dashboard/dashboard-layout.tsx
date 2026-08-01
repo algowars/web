@@ -22,6 +22,8 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useGetAvailableGamesQuery } from "@/domains/game/api/game-api";
+import { AvailableGamesActions } from "@/domains/game/state/available-games-actions";
 
 export default function DashboardLayout() {
   const dispatch = useAppDispatch();
@@ -49,6 +51,20 @@ export default function DashboardLayout() {
       toast.error("Error loading problems", { description: error });
     }
   }, [error]);
+
+  // Fetch available game modes and populate availableGames slice so cards enable correctly
+  const { data: availableGames, error: availableGamesError } = useGetAvailableGamesQuery(undefined);
+
+  useEffect(() => {
+    if (availableGames) {
+      dispatch(AvailableGamesActions.loadAvailableGamesSuccess(availableGames));
+    }
+
+    if (availableGamesError) {
+      const message = availableGamesError instanceof Error ? availableGamesError.message : "Failed to load available games";
+      dispatch(AvailableGamesActions.loadAvailableGamesFailure({ message }));
+    }
+  }, [availableGames, availableGamesError, dispatch]);
 
   return (
     <SidebarLayout breadcrumbs={[]}>

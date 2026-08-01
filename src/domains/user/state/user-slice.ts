@@ -107,13 +107,16 @@ const userSlice = createSlice({
   },
 });
 
+const EMPTY_ROLES: readonly string[] = [];
+const EMPTY_PERMISSIONS: readonly string[] = [];
+
 export const userReducer = userSlice.reducer;
 
 export const selectAuthProfile = (s: RootState) => s.user.authProfile;
 export const selectUser = (s: RootState) => s.user.user;
-export const selectUserRoles = (s: RootState) => s.user.user?.roles ?? [];
+export const selectUserRoles = (s: RootState) => s.user.user?.roles ?? EMPTY_ROLES;
 export const selectUserPermissions = (s: RootState) =>
-  s.user.user?.permissions ?? [];
+  s.user.user?.permissions ?? EMPTY_PERMISSIONS;
 export const selectIsAuthLoading = (s: RootState) => s.user.isAuthLoading;
 export const selectIsUserLoading = (s: RootState) => s.user.isUserLoading;
 export const selectAuthError = (s: RootState) => s.user.authError;
