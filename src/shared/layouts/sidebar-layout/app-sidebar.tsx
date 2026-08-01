@@ -10,17 +10,27 @@ import {
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
 import { routerConfig } from "@/shared/router-config";
-import { Command, HomeIcon, Puzzle } from "lucide-react";
+import { Command, HomeIcon, Puzzle, UserShield } from "lucide-react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import SidebarUser from "./sidebar-user";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
 import { Badge } from "@/shared/components/ui/badge";
+import { useAppSelector } from "@/shared/state/hooks";
+import { selectUserHasRole } from "@/domains/user/state/user-slice";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
   const { user } = useUser();
+  const isAdmin = useAppSelector(selectUserHasRole("admin"));
+  const adminLinks = [
+    {
+      title: "Users",
+      url: routerConfig.admin.path,
+      icon: UserShield,
+    },
+  ];
 
   const data = {
     navMain: [
@@ -36,6 +46,7 @@ export default function AppSidebar(
         icon: Puzzle,
       },
     ],
+    navAdmin: isAdmin ? adminLinks : [],
   };
 
   return (
@@ -62,6 +73,7 @@ export default function AppSidebar(
       </SidebarHeader>
       <SidebarContent>
         <SidebarMainNav items={data.navMain} />
+        <SidebarMainNav items={data.navAdmin} title="Admin" />
       </SidebarContent>
       <SidebarFooter>
         <SidebarUser />

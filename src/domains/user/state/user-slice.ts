@@ -154,3 +154,11 @@ export const selectUserStatus = createSelector(
     error: authError ?? userError ?? null,
   })
 );
+
+export const selectUserHasPermission = (permission: string) =>
+  createSelector([selectUserPermissions], (permissions) =>
+    permissions.includes(permission)
+  );
+
+export const selectUserHasRole = (role: string) =>
+  createSelector([selectUserRoles], (roles) => roles.includes(role));

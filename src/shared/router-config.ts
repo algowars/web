@@ -1,4 +1,7 @@
 export const routerConfig = {
+  admin: {
+    path: "/admin",
+  },
   authLogIn: { path: "/auth/login" },
   authSignUp: {
     path: "/auth/login?screen_hint=signup&returnTo=/user/setup",
