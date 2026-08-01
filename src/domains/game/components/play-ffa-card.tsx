@@ -4,7 +4,7 @@ import { useAppSelector } from "@/shared/state/hooks";
 import { findAvailableGameByName } from "../state/available-games-slice";
 import PlayCard from "./play-card";
 import { GameModeType } from "../models/game-mode";
-import { Bolt } from "lucide-react";
+import { Users } from "lucide-react";
 import { ComponentProps } from "react";
 
 export default function PlayFFACard(props: Readonly<ComponentProps<"div">>) {
@@ -15,7 +15,7 @@ export default function PlayFFACard(props: Readonly<ComponentProps<"div">>) {
     <PlayCard
       {...props}
       color="lime"
-      icon={Bolt}
+      icon={Users}
       header={ffa?.name ?? "FFA"}
       tidbit="Free-for-all"
       description={

@@ -4,7 +4,7 @@ import { useAppSelector } from "@/shared/state/hooks";
 import { findAvailableGameByName } from "../state/available-games-slice";
 import PlayCard from "./play-card";
 import { GameModeType } from "../models/game-mode";
-import { Bolt } from "lucide-react";
+import { Zap } from "lucide-react";
 import { ComponentProps } from "react";
 
 export default function PlaySoloRushCard(
@@ -19,7 +19,7 @@ export default function PlaySoloRushCard(
     <PlayCard
       {...props}
       color="lime"
-      icon={Bolt}
+      icon={Zap}
       header={soloRush?.name ?? "Solo Rush"}
       tidbit="Race the clock"
       description={
