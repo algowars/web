@@ -11,4 +11,9 @@ export const AvailableGamesActions = {
   loadAvailableGamesFailure: createAction<{ message: string }>(
     "available-games/loadAvailableGamesFailure"
   ),
+  playSoloRushRequested: createAction("available-games/playSoloRush"),
+  playSoloRushSuccess: createAction("available-games/playSoloRushSuccess"),
+  playSoloRushFailure: createAction<{ message: string }>(
+    "available-games/playSoloRushFailure"
+  ),
 };

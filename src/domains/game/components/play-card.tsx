@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
 import { cn } from "@/shared/lib/utils";
-import { ChevronRight, Clock, Group, LucideIcon, Trophy } from "lucide-react";
+import { ChevronRight, Clock, LucideIcon, Trophy, Users } from "lucide-react";
 import { ComponentProps } from "react";
 
 type PlayCardProps = {
@@ -82,7 +82,7 @@ export default function PlayCard({
         <p className="text-sm text-muted-foreground">{description}</p>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <Group className="size-4" /> {playerCount}
+            <Users className="size-4" /> {playerCount}
           </span>
           <span className="flex items-center gap-1.5">
             <Clock className="size-4" /> {time}

@@ -25,6 +25,7 @@ export default function PlayDuelCard(props: Readonly<ComponentProps<"div">>) {
       time={"5 / 10 / 15 minutes"}
       onClick={startGame}
       type={duel?.isRanked ? "Ranked" : "Practice"}
+      disabled={!duel}
     />
   );
 }
