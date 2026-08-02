@@ -86,6 +86,8 @@ export const baseApi = createApi({
   tagTypes: [
     "Game",
     "GameAvailable",
+    "ActiveGame",
+    "ActiveLobby",
     "Health",
     "Order",
     "Product",

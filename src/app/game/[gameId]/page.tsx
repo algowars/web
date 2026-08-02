@@ -18,7 +18,6 @@ export default async function GamePage({ params }: Readonly<PageProps>) {
   const gameId = (await params).gameId;
   const response = await fetchGameById({ gameId });
 
-  console.log("RESPONISE: ", response);
   if (response.status === 401) {
     unauthorized();
   }
@@ -36,7 +35,7 @@ export default async function GamePage({ params }: Readonly<PageProps>) {
   }
 
   const game = await response.json();
-
+  console.log("GAME: ", game);
   if (!game) {
     notFound();
   }

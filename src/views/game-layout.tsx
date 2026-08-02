@@ -239,6 +239,7 @@ export default function GameLayout({ game }: Readonly<GameLayoutProps>) {
       breadcrumbs={[]}
       headerItems={
         <SoloRushWorkspaceHeader
+          gameId={currentGame.id}
           endTimeMs={endTimeMs}
           problemsSolved={problemsSolved}
           availableLanguages={problem?.availableLanguages ?? []}

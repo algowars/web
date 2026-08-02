@@ -4,9 +4,20 @@ import {
   selectIsAuthenticated,
   selectUserPermissions,
 } from "@/domains/user/state/user-slice";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/shared/components/ui/alert-dialog";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import { Lock, Timer, Trophy } from "lucide-react";
+import { Flag, Lock, Timer, Trophy } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { selectIsSubmittingSubmission } from "@/domains/workspace/state/workspace-slice";
@@ -19,9 +30,15 @@ import {
   formatCountdown,
   useCountdownSeconds,
 } from "@/domains/game/hooks/use-countdown-seconds";
+import { useForfeitGameMutation } from "@/domains/game/api/game-api";
 import { cn } from "@/shared/lib/utils";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 type SoloRushWorkspaceHeaderProps = {
+  /** Id of the game currently in play, so the player can forfeit it. */
+  gameId: string;
   /** Milliseconds since epoch at which the overall game timer expires. */
   endTimeMs: number;
   /** Number of problems the player has solved so far. */
@@ -38,15 +55,19 @@ type SoloRushWorkspaceHeaderProps = {
  * overall countdown timer and the player's solved-problem count.
  */
 export const SoloRushWorkspaceHeader = ({
+  gameId,
   endTimeMs,
   problemsSolved,
   availableLanguages,
 }: Readonly<SoloRushWorkspaceHeaderProps>) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const hasMounted = useHasMounted();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
   const userPermissions = useAppSelector(selectUserPermissions);
+  const [forfeitGame, { isLoading: isForfeiting }] = useForfeitGameMutation();
+  const [isForfeitDialogOpen, setIsForfeitDialogOpen] = useState(false);
 
   const remainingSeconds = useCountdownSeconds(endTimeMs);
   const isTimeUp = remainingSeconds !== null && remainingSeconds <= 0;
@@ -68,6 +89,17 @@ export const SoloRushWorkspaceHeader = ({
 
   const runLabel = isSubmittingSubmission ? "Running..." : "Run";
   const submitLabel = isSubmittingSubmission ? "Submitting..." : "Submit";
+
+  const handleForfeit = async () => {
+    try {
+      await forfeitGame(gameId).unwrap();
+      setIsForfeitDialogOpen(false);
+      router.push("/dashboard");
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Failed to forfeit game";
+      toast.error(message);
+    }
+  };
 
   return (
     <div className="p-1 flex flex-1 items-center gap-2">
@@ -113,6 +145,36 @@ export const SoloRushWorkspaceHeader = ({
         </Button>
         <LanguageSelect languages={availableLanguages} />
         <ModeToggle />
+        <AlertDialog open={isForfeitDialogOpen} onOpenChange={setIsForfeitDialogOpen}>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="destructive"
+              data-cy="forfeit-btn"
+              disabled={!hasMounted || !isAuthenticated || isTimeUp}
+            >
+              <Flag /> Forfeit
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Forfeit this game?</AlertDialogTitle>
+              <AlertDialogDescription>
+                You&apos;ll lose your current progress and this game will end
+                immediately. This can&apos;t be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                data-cy="forfeit-confirm-btn"
+                disabled={isForfeiting}
+                onClick={handleForfeit}
+              >
+                {isForfeiting ? "Forfeiting..." : "Forfeit"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

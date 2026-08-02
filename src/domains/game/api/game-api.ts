@@ -1,10 +1,14 @@
 import { baseApi } from "@/shared/lib/base-api";
 
+export const TIME_LIMIT_OPTIONS_SECONDS = [300, 600, 900] as const;
+export type TimeLimitSeconds = (typeof TIME_LIMIT_OPTIONS_SECONDS)[number];
+
 export type LobbyDto = {
   id: string;
   gameModeId: string;
   hostUserId: string;
   capacity: number;
+  timeLimitSeconds: number;
   status: string;
   createdAt: string;
   members: { userId: string; isReady: boolean; joinedAt: string }[];
@@ -50,7 +54,7 @@ export type GameDto = {
   problems: GameProblemDto[];
 };
 
-export type CreateLobbyRequest = { gameModeId: string };
+export type CreateLobbyRequest = { gameModeId: string; timeLimitSeconds: number };
 export type StartGameRequest = { lobbyId: string };
 export type SetLobbyReadyRequest = { isReady: boolean };
 
@@ -68,7 +72,7 @@ export const gameApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["GameAvailable"],
+      invalidatesTags: ["GameAvailable", "ActiveLobby"],
     }),
     setLobbyReady: builder.mutation<LobbyDto, { lobbyId: string; body: SetLobbyReadyRequest }>({
       query: ({ lobbyId, body }) => ({
@@ -76,14 +80,14 @@ export const gameApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Game", "GameAvailable"],
+      invalidatesTags: ["Game", "GameAvailable", "ActiveLobby"],
     }),
     startGame: builder.mutation<GameDto, StartGameRequest>({
       query: ({ lobbyId }) => ({
         url: `/api/v1/game/lobbies/${encodeURIComponent(lobbyId)}/start`,
         method: "POST",
       }),
-      invalidatesTags: ["Game"],
+      invalidatesTags: ["Game", "ActiveGame", "ActiveLobby"],
     }),
     getGameById: builder.query<GameDto, string>({
       query: (gameId) => ({
@@ -91,6 +95,33 @@ export const gameApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: (_result, _error, gameId) => [{ type: "Game", id: gameId }],
+    }),
+    forfeitGame: builder.mutation<GameDto, string>({
+      query: (gameId) => ({
+        url: `/api/v1/game/${encodeURIComponent(gameId)}/forfeit`,
+        method: "POST",
+      }),
+      invalidatesTags: (_result, _error, gameId) => [
+        { type: "Game", id: gameId },
+        "GameAvailable",
+        "ActiveGame",
+      ],
+    }),
+    // Both 404 (no active game/lobby) — expected, not an error state — so callers should treat a
+    // 404 `error` as "nothing active" rather than surfacing it.
+    getMyActiveGame: builder.query<GameDto, void>({
+      query: () => ({
+        url: "/api/v1/game/me/active",
+        method: "GET",
+      }),
+      providesTags: ["ActiveGame"],
+    }),
+    getMyActiveLobby: builder.query<LobbyDto, void>({
+      query: () => ({
+        url: "/api/v1/game/lobbies/me",
+        method: "GET",
+      }),
+      providesTags: ["ActiveLobby"],
     }),
   }),
 });
@@ -101,4 +132,7 @@ export const {
   useSetLobbyReadyMutation,
   useStartGameMutation,
   useGetGameByIdQuery,
+  useForfeitGameMutation,
+  useGetMyActiveGameQuery,
+  useGetMyActiveLobbyQuery,
 } = gameApi;
