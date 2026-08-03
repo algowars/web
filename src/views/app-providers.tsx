@@ -7,7 +7,6 @@ import { MainErrorFallback } from "@/shared/errors/main-error-fallback";
 import { AuthBridge } from "@/domains/auth/auth-bridge";
 import StoreProvider from "@/shared/state/provider";
 import HealthCheck from "@/domains/health/components/health-check";
-import ActiveGameIndicator from "@/domains/game/components/active-game-indicator";
 
 type AppProviders = {
   children: React.ReactNode;
@@ -19,7 +18,6 @@ export default function AppProviders({ children }: Readonly<AppProviders>) {
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <AuthBridge />
         <HealthCheck />
-        <ActiveGameIndicator />
         <Toaster position="top-right" />
         {children}
       </ErrorBoundary>

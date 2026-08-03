@@ -164,6 +164,7 @@ export default function ProblemLayout({
     <SidebarLayout
       breadcrumbs={[]}
       headerItems={<WorkspaceHeader problem={problem} />}
+      showGameIndicator={false}
     >
       <div className="h-full px-2 md:px-4 pb-2 md:pb-4">
         <Workspace tab={tabs} />

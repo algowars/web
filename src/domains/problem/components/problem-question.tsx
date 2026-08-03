@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/shared/components/ui/accordion";
 import { Separator } from "@/shared/components/ui/separator";
+import { Markdown } from "@/shared/components/markdown/markdown";
 import { Copyright, Tag } from "lucide-react";
 import DifficultyBadge from "./difficulty-badge";
 import { Problem } from "../models/problem";
@@ -50,7 +51,7 @@ export const ProblemQuestion = ({ problem }: ProblemQuestionProps) => {
           ) : null}
         </div>
 
-        <p className="leading-7 whitespace-pre-wrap">{problem.question}</p>
+        <Markdown content={problem.question} />
       </div>
 
       <div className="mt-auto space-y-3 pt-4">

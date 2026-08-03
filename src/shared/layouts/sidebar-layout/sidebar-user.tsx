@@ -27,6 +27,9 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
@@ -44,11 +47,15 @@ import {
   AlertCircle,
   ChevronsUpDown,
   LogOut,
+  Monitor,
+  Moon,
   RefreshCw,
   Settings2,
+  Sun,
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export default function SidebarUser() {
   const dispatch = useAppDispatch();
@@ -59,6 +66,7 @@ export default function SidebarUser() {
   const avatarUrl = useAppSelector(selectAvatarUrl);
   const syncFailed = useAppSelector(selectUserSyncFailed);
   const { isMobile } = useSidebar();
+  const { setTheme } = useTheme();
 
   if (isLoading || isUserLoading) {
     return (
@@ -185,6 +193,24 @@ export default function SidebarUser() {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             ) : null}
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Appearance</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onSelect={() => setTheme("light")}>
+                  <Sun />
+                  Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setTheme("dark")}>
+                  <Moon />
+                  Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setTheme("system")}>
+                  <Monitor />
+                  System
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Button

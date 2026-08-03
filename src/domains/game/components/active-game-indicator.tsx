@@ -27,9 +27,9 @@ function isExpiredActiveGame(game: GameDto): boolean {
 }
 
 /**
- * Persistent, app-wide banner shown whenever the current user has a game in progress or is
- * waiting in a lobby for one to start — so they're never "stranded" on another page unaware
- * that a match is still running. Mounted once in AppProviders so it renders above every route.
+ * Header status component shown whenever the current user has a game in progress or is waiting
+ * in a lobby for one to start. Intended for placement inside app headers rather than as a
+ * full-width top banner.
  */
 export default function ActiveGameIndicator() {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -46,6 +46,7 @@ export default function ActiveGameIndicator() {
   });
 
   if (!isAuthenticated) return null;
+  if (pathname === "/game" || pathname.startsWith("/game/")) return null;
 
   if (activeGame && activeGame.status === "Active" && !isExpiredActiveGame(activeGame)) {
     const gameHref = `/game/${encodeURIComponent(activeGame.id)}`;
@@ -54,10 +55,10 @@ export default function ActiveGameIndicator() {
     return (
       <Link
         href={gameHref}
-        className="sticky top-2 z-20 mx-2 ml-auto flex w-fit max-w-[calc(100%-1rem)] items-center justify-center gap-2 rounded-md border border-lime-500/30 bg-lime-500/15 px-4 py-1.5 text-sm font-medium text-lime-600 backdrop-blur transition-colors hover:bg-lime-500/25 dark:text-lime-400"
+        className="inline-flex items-center gap-2 rounded-md border border-lime-500/30 bg-lime-500/15 px-2.5 py-1 text-xs font-medium text-lime-700 transition-colors hover:bg-lime-500/25 dark:text-lime-300"
       >
         <Swords className="size-4" />
-        Game in progress — return to your match
+        <span className="hidden sm:inline">Game in progress</span>
         <Badge variant="outline" className="border-lime-500/40">
           Resume
         </Badge>
@@ -81,13 +82,14 @@ export default function ActiveGameIndicator() {
     };
 
     return (
-      <div className="sticky top-2 z-20 mx-2 ml-auto flex w-fit max-w-[calc(100%-1rem)] items-center justify-center gap-2 rounded-md border border-sky-500/30 bg-sky-500/15 px-4 py-1.5 text-sm font-medium text-sky-600 dark:text-sky-400">
+      <div className="inline-flex items-center gap-2 rounded-md border border-sky-500/30 bg-sky-500/15 px-2.5 py-1 text-xs font-medium text-sky-700 dark:text-sky-300">
         <Loader2 className="size-4 animate-spin" />
-        {statusText}
+        <span className="hidden sm:inline">{statusText}</span>
+        <span className="sm:hidden">Lobby active</span>
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 gap-1 px-2 text-sky-600 hover:bg-sky-500/20 hover:text-sky-700 dark:text-sky-400"
+          className="h-6 gap-1 px-2 text-sky-700 hover:bg-sky-500/20 hover:text-sky-800 dark:text-sky-300"
           disabled={isCancelling}
           onClick={handleCancel}
         >
