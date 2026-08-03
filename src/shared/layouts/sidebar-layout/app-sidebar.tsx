@@ -73,7 +73,9 @@ export default function AppSidebar(
       </SidebarHeader>
       <SidebarContent>
         <SidebarMainNav items={data.navMain} />
-        <SidebarMainNav items={data.navAdmin} title="Admin" />
+        {data.navAdmin.length ? (
+          <SidebarMainNav items={data.navAdmin} title="Admin" />
+        ) : null}
       </SidebarContent>
       <SidebarFooter>
         <SidebarUser />

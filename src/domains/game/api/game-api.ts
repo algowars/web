@@ -58,6 +58,13 @@ export type CreateLobbyRequest = { gameModeId: string; timeLimitSeconds: number 
 export type StartGameRequest = { lobbyId: string };
 export type SetLobbyReadyRequest = { isReady: boolean };
 
+export type GameProblemSubmissionDto = {
+  problemId: string;
+  language: { id: string; name: string; version: string };
+  code: string;
+  createdAt: string;
+};
+
 export const gameApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAvailableGames: builder.query({
@@ -88,6 +95,13 @@ export const gameApi = baseApi.injectEndpoints({
         method: "POST",
       }),
       invalidatesTags: ["Game", "ActiveGame", "ActiveLobby"],
+    }),
+    leaveLobby: builder.mutation<void, string>({
+      query: (lobbyId) => ({
+        url: `/api/v1/game/lobbies/${encodeURIComponent(lobbyId)}/leave`,
+        method: "POST",
+      }),
+      invalidatesTags: ["ActiveLobby", "GameAvailable"],
     }),
     getGameById: builder.query<GameDto, string>({
       query: (gameId) => ({
@@ -123,6 +137,20 @@ export const gameApi = baseApi.injectEndpoints({
       }),
       providesTags: ["ActiveLobby"],
     }),
+    // 404 means the player never had an accepted submission for this problem within the game (e.g.
+    // it's still in progress) — callers should treat that as "no history yet", not an error.
+    getGameProblemSubmission: builder.query<
+      GameProblemSubmissionDto,
+      { gameId: string; problemId: string }
+    >({
+      query: ({ gameId, problemId }) => ({
+        url: `/api/v1/game/${encodeURIComponent(gameId)}/problems/${encodeURIComponent(problemId)}/submission`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, { gameId, problemId }) => [
+        { type: "Game", id: `${gameId}:${problemId}:submission` },
+      ],
+    }),
   }),
 });
 
@@ -131,8 +159,10 @@ export const {
   useCreateLobbyMutation,
   useSetLobbyReadyMutation,
   useStartGameMutation,
+  useLeaveLobbyMutation,
   useGetGameByIdQuery,
   useForfeitGameMutation,
   useGetMyActiveGameQuery,
   useGetMyActiveLobbyQuery,
+  useGetGameProblemSubmissionQuery,
 } = gameApi;

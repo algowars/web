@@ -45,6 +45,13 @@ type SoloRushWorkspaceHeaderProps = {
   problemsSolved: number;
   /** Languages available for the currently active problem. */
   availableLanguages: ProgrammingLanguage[];
+  /**
+   * True while the player is browsing a previously solved problem instead of
+   * the one currently in play. Run/Submit/Language selection only ever apply
+   * to the live problem, so they're disabled — and a hint is shown — while
+   * viewing history.
+   */
+  isViewingHistory?: boolean;
 };
 
 /**
@@ -59,6 +66,7 @@ export const SoloRushWorkspaceHeader = ({
   endTimeMs,
   problemsSolved,
   availableLanguages,
+  isViewingHistory = false,
 }: Readonly<SoloRushWorkspaceHeaderProps>) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -84,7 +92,8 @@ export const SoloRushWorkspaceHeader = ({
     !isAuthenticated ||
     isSubmittingSubmission ||
     !canRunCode ||
-    isTimeUp;
+    isTimeUp ||
+    isViewingHistory;
   const showLock = !hasMounted || !isAuthenticated;
 
   const runLabel = isSubmittingSubmission ? "Running..." : "Run";
@@ -123,6 +132,11 @@ export const SoloRushWorkspaceHeader = ({
           <Trophy className="size-3.5" />
           {problemsSolved} solved
         </Badge>
+        {isViewingHistory ? (
+          <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+            Viewing solved problem
+          </Badge>
+        ) : null}
       </div>
 
       <div className="flex flex-1 items-center justify-end gap-1">
@@ -143,7 +157,7 @@ export const SoloRushWorkspaceHeader = ({
         >
           {showLock ? <Lock /> : null} {submitLabel}
         </Button>
-        <LanguageSelect languages={availableLanguages} />
+        <LanguageSelect languages={availableLanguages} disabled={isViewingHistory} />
         <ModeToggle />
         <AlertDialog open={isForfeitDialogOpen} onOpenChange={setIsForfeitDialogOpen}>
           <AlertDialogTrigger asChild>
