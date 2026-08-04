@@ -1,11 +1,11 @@
-import { AuthEvents } from "@/domains/auth/state/auth-events";
+import { AuthActions } from "@/domains/auth/state/auth-actions";
 import { problemApi } from "@/domains/problem/api/problem-api";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { ProblemSetupEvents } from "@/domains/problem/state/problem-setup-slice";
 import { submissionApi } from "@/domains/submission/api/submission-api";
 import { registerProblemListeners } from "@/domains/problem/state/problem-listeners";
 import { userApi } from "@/domains/user/api/user-api";
-import { UserEvents } from "@/domains/user/state/user-events";
+import { UserEvents } from "@/domains/user/state/user-actions";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
@@ -260,7 +260,7 @@ const syncUser = async (
 };
 
 startAppListening({
-  actionCreator: AuthEvents.userAuthenticated,
+  actionCreator: AuthActions.userAuthenticated,
   effect: async (action, listenerApi) => {
     listenerApi.cancelActiveListeners();
     await syncUser(action.payload.user.sub, listenerApi);
@@ -303,7 +303,7 @@ startAppListening({
 });
 
 startAppListening({
-  actionCreator: AuthEvents.userUnauthenticated,
+  actionCreator: AuthActions.userUnauthenticated,
   effect: async (_, listenerApi) => {
     listenerApi.cancelActiveListeners();
     listenerApi.dispatch(UserEvents.loggedOut());

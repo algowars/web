@@ -1,9 +1,9 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { User as AuthUser } from "@auth0/nextjs-auth0/types";
-import { AuthEvents } from "@/domains/auth/state/auth-events";
+import { AuthActions } from "@/domains/auth/state/auth-events";
 import type { User } from "../models/user";
 import type { RootState } from "@/shared/state/store";
-import { UserEvents } from "./user-events";
+import { UserEvents } from "./user-actions";
 
 interface UserState {
   authProfile: AuthUser | null;
@@ -34,29 +34,29 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      .addCase(AuthEvents.authCheckStarted, (state) => {
+      .addCase(AuthActions.authCheckStarted, (state) => {
         state.isAuthLoading = true;
         state.authError = null;
       })
 
-      .addCase(AuthEvents.userAuthenticated, (state, action) => {
+      .addCase(AuthActions.userAuthenticated, (state, action) => {
         state.authProfile = action.payload.user;
         state.isAuthLoading = false;
         state.authError = null;
       })
 
-      .addCase(AuthEvents.userUnauthenticated, (state) => {
+      .addCase(AuthActions.userUnauthenticated, (state) => {
         state.authProfile = null;
         state.user = null;
         state.isAuthLoading = false;
       })
 
-      .addCase(AuthEvents.authCheckFailed, (state, action) => {
+      .addCase(AuthActions.authCheckFailed, (state, action) => {
         state.authError = action.payload.message;
         state.isAuthLoading = false;
       })
 
-      .addCase(AuthEvents.sessionExpired, () => initialState)
+      .addCase(AuthActions.sessionExpired, () => initialState)
 
       .addCase(UserEvents.upsertUserRequested, (state) => {
         state.isUserLoading = true;
@@ -114,7 +114,8 @@ export const userReducer = userSlice.reducer;
 
 export const selectAuthProfile = (s: RootState) => s.user.authProfile;
 export const selectUser = (s: RootState) => s.user.user;
-export const selectUserRoles = (s: RootState) => s.user.user?.roles ?? EMPTY_ROLES;
+export const selectUserRoles = (s: RootState) =>
+  s.user.user?.roles ?? EMPTY_ROLES;
 export const selectUserPermissions = (s: RootState) =>
   s.user.user?.permissions ?? EMPTY_PERMISSIONS;
 export const selectIsAuthLoading = (s: RootState) => s.user.isAuthLoading;

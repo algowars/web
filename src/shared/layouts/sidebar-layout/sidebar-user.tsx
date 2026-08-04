@@ -7,7 +7,7 @@ import {
   selectUser,
   selectUserSyncFailed,
 } from "@/domains/user/state/user-slice";
-import { UserEvents } from "@/domains/user/state/user-events";
+import { UserEvents } from "@/domains/user/state/user-actions";
 import {
   Avatar,
   AvatarFallback,
