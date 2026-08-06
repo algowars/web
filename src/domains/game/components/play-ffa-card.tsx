@@ -1,14 +1,13 @@
 "use client";
 
-import { useAppSelector } from "@/shared/state/hooks";
-import { findAvailableGameByName } from "../state/available-games-slice";
+import { useAvailableGameMode } from "../hooks/use-available-game-mode";
 import PlayCard from "./play-card";
 import { GameModeType } from "../models/game-mode";
 import { Users } from "lucide-react";
 import { ComponentProps } from "react";
 
 export default function PlayFFACard(props: Readonly<ComponentProps<"div">>) {
-  const ffa = useAppSelector(findAvailableGameByName(GameModeType.FFA));
+  const { gameMode: ffa } = useAvailableGameMode(GameModeType.FFA);
 
   const startGame = () => {};
   return (

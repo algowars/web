@@ -1,14 +1,13 @@
 "use client";
 
-import { useAppSelector } from "@/shared/state/hooks";
-import { findAvailableGameByName } from "../state/available-games-slice";
+import { useAvailableGameMode } from "../hooks/use-available-game-mode";
 import PlayCard from "./play-card";
 import { GameModeType } from "../models/game-mode";
 import { Swords } from "lucide-react";
 import { ComponentProps } from "react";
 
 export default function PlayDuelCard(props: Readonly<ComponentProps<"div">>) {
-  const duel = useAppSelector(findAvailableGameByName(GameModeType.OneVsOne));
+  const { gameMode: duel } = useAvailableGameMode(GameModeType.OneVsOne);
 
   const startGame = () => {};
   return (

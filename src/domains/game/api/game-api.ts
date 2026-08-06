@@ -1,4 +1,5 @@
 import { baseApi } from "@/shared/lib/base-api";
+import type { GameMode } from "../models/game-mode";
 
 export const TIME_LIMIT_OPTIONS_SECONDS = [300, 600, 900] as const;
 export type TimeLimitSeconds = (typeof TIME_LIMIT_OPTIONS_SECONDS)[number];
@@ -67,7 +68,7 @@ export type GameProblemSubmissionDto = {
 
 export const gameApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAvailableGames: builder.query({
+    getAvailableGames: builder.query<GameMode[], void>({
       query: () => ({
         url: "/api/v1/game/modes",
       }),

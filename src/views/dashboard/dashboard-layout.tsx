@@ -4,13 +4,7 @@ import AvailableGameModesHeader from "@/domains/game/components/available-game-m
 import PlayDuelCard from "@/domains/game/components/play-duel-card";
 import PlayFFACard from "@/domains/game/components/play-ffa-card";
 import PlaySoloRushCard from "@/domains/game/components/play-solo-rush-card";
-import { ProblemEvents } from "@/domains/problem/state/problem-events";
-import {
-  selectProblemsError,
-  selectProblemsPage,
-  selectProblemsSize,
-  selectProblemsTimestamp,
-} from "@/domains/problem/state/problem-slice";
+import { useLoadProblems } from "@/domains/problem/hooks/use-load-problems";
 import ProblemTable from "@/domains/problem/tables/problem-table";
 import {
   Card,
@@ -19,52 +13,13 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { useEffect } from "react";
-import { toast } from "sonner";
-import { useGetAvailableGamesQuery } from "@/domains/game/api/game-api";
-import { AvailableGamesActions } from "@/domains/game/state/available-games-actions";
 
 export default function DashboardLayout() {
-  const dispatch = useAppDispatch();
-  const page = useAppSelector(selectProblemsPage);
-  const size = useAppSelector(selectProblemsSize);
-  const timestamp = useAppSelector(selectProblemsTimestamp);
-  const error = useAppSelector(selectProblemsError);
+  useLoadProblems();
 
-  useEffect(() => {
-    if (typeof timestamp !== "string" || timestamp.trim() === "") {
-      return;
-    }
-
-    dispatch(
-      ProblemEvents.loadProblemsRequested({
-        page,
-        size,
-        timestamp,
-      })
-    );
-  }, [dispatch, page, size, timestamp]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error("Error loading problems", { description: error });
-    }
-  }, [error]);
-
-  // Fetch available game modes and populate availableGames slice so cards enable correctly
-  const { data: availableGames, error: availableGamesError } = useGetAvailableGamesQuery(undefined);
-
-  useEffect(() => {
-    if (availableGames) {
-      dispatch(AvailableGamesActions.loadAvailableGamesSuccess(availableGames));
-    }
-
-    if (availableGamesError) {
-      const message = availableGamesError instanceof Error ? availableGamesError.message : "Failed to load available games";
-      dispatch(AvailableGamesActions.loadAvailableGamesFailure({ message }));
-    }
-  }, [availableGames, availableGamesError, dispatch]);
+  // Game mode availability is read directly from the `getAvailableGames`
+  // RTK Query cache by each play-*-card component (via useAvailableGameMode)
+  // — no need to fetch or sync it here.
 
   return (
     <SidebarLayout breadcrumbs={[]}>

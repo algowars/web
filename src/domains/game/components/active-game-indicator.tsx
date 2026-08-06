@@ -46,9 +46,13 @@ export default function ActiveGameIndicator() {
   });
 
   if (!isAuthenticated) return null;
-  if (pathname === "/game" || pathname.startsWith("/game/")) return null;
+  if (pathname === "/game" || pathname?.startsWith("/game/")) return null;
 
-  if (activeGame && activeGame.status === "Active" && !isExpiredActiveGame(activeGame)) {
+  if (
+    activeGame &&
+    activeGame.status === "Active" &&
+    !isExpiredActiveGame(activeGame)
+  ) {
     const gameHref = `/game/${encodeURIComponent(activeGame.id)}`;
     if (pathname === gameHref) return null;
 
@@ -66,7 +70,10 @@ export default function ActiveGameIndicator() {
     );
   }
 
-  if (activeLobby && (activeLobby.status === "Open" || activeLobby.status === "Ready")) {
+  if (
+    activeLobby &&
+    (activeLobby.status === "Open" || activeLobby.status === "Ready")
+  ) {
     const isSearching = activeLobby.status === "Open";
     const statusText = isSearching
       ? `Searching for opponents… (${activeLobby.members.length}/${activeLobby.capacity} joined)`

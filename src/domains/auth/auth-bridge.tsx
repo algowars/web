@@ -20,10 +20,15 @@ export function AuthBridge({ session }: Readonly<Auth0BridgeProps>) {
   }, []);
 
   useEffect(() => {
-    if (!session) {
+    if (user) {
+      // Drives the user-sync listener in listener-middleware.ts (upserts the
+      // backend user record and loads the account) — without this dispatch
+      // that flow never runs.
+      dispatch(AuthActions.userAuthenticated({ user }));
+    } else {
       dispatch(AuthActions.userUnauthenticated());
     }
-  }, [dispatch, session]);
+  }, [dispatch, user]);
 
   return null;
 }

@@ -141,15 +141,14 @@ export const selectDisplayName = createSelector(
     user?.username ?? authProfile?.name ?? authProfile?.email ?? "Anonymous"
 );
 
-export const selectAvatarUrl = createSelector(
-  [selectUser, selectAuthProfile],
-  (_, authProfile): string | null => authProfile?.picture ?? null
-);
+// Plain selectors, not createSelector: unlike selectDisplayName, these only
+// ever read from authProfile, so there's nothing to memoize across multiple
+// inputs.
+export const selectAvatarUrl = (s: RootState): string | null =>
+  s.user.authProfile?.picture ?? null;
 
-export const selectUserEmail = createSelector(
-  [selectUser, selectAuthProfile],
-  (_, authProfile): string | null => authProfile?.email ?? null
-);
+export const selectUserEmail = (s: RootState): string | null =>
+  s.user.authProfile?.email ?? null;
 
 export const selectUserStatus = createSelector(
   [selectIsAuthLoading, selectIsUserLoading, selectAuthError, selectUserError],

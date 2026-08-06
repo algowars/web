@@ -10,7 +10,11 @@ interface HealthState {
 
 const initialState: HealthState = {
   isHealthy: false,
-  timestamp: new Date().toISOString(),
+  // Left empty rather than `new Date().toISOString()`, which was evaluated
+  // once at module-load time and could differ between server and client,
+  // risking a hydration mismatch. Replaced by the real value once
+  // `loadHealthSuccess` fires.
+  timestamp: "",
   isLoading: false,
   error: null,
 };

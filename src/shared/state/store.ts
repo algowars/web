@@ -7,12 +7,10 @@ import { baseApi } from "../lib/base-api";
 import { listenerMiddleware } from "./listener-middleware";
 import { problemSubmissionsReducer } from "@/domains/problem/problem-submissions/state/problem-submissions-slice";
 import { healthReducer } from "@/domains/health/state/health-slice";
-import { availableGamesReducer } from "@/domains/game/state/available-games-slice";
 
 export const makeStore = () =>
   configureStore({
     reducer: {
-      availableGames: availableGamesReducer,
       health: healthReducer,
       problems: problemReducer,
       problemSetup: problemSetupReducer,
@@ -22,8 +20,11 @@ export const makeStore = () =>
       [baseApi.reducerPath]: baseApi.reducer,
     },
     middleware: (getDefault) =>
+      // Listener middleware is prepended (not concat'd) so it runs before the
+      // dev-only serializability/immutability check middleware, per the RTK
+      // docs: https://redux-toolkit.js.org/api/createListenerMiddleware
       getDefault()
-        .concat(listenerMiddleware.middleware)
+        .prepend(listenerMiddleware.middleware)
         .concat(baseApi.middleware),
   });
 

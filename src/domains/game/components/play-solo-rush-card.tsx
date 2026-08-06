@@ -1,7 +1,6 @@
 "use client";
 
-import { useAppSelector } from "@/shared/state/hooks";
-import { findAvailableGameByName } from "../state/available-games-slice";
+import { useAvailableGameMode } from "../hooks/use-available-game-mode";
 import PlayCard from "./play-card";
 import { GameModeType } from "../models/game-mode";
 import { Zap } from "lucide-react";
@@ -42,9 +41,7 @@ const TIME_LIMIT_LABELS: Record<TimeLimitSeconds, string> = {
 export default function PlaySoloRushCard(
   props: Readonly<ComponentProps<"div">>
 ) {
-  const soloRush = useAppSelector(
-    findAvailableGameByName(GameModeType.SoloRush)
-  );
+  const { gameMode: soloRush } = useAvailableGameMode(GameModeType.SoloRush);
 
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);

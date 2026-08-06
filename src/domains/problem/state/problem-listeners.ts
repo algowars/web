@@ -20,13 +20,22 @@ export const registerProblemListeners = (
           .dispatch(problemApi.endpoints.getProblems.initiate(action.payload))
           .unwrap();
 
+        // Trust the request's own timestamp over the response's: if the
+        // backend doesn't echo `timestamp` back (or sends something falsy),
+        // falling back here keeps state.timestamp a valid, non-empty string
+        // instead of poisoning it with `undefined` for every render after.
+        const timestamp =
+          typeof response.timestamp === "string" && response.timestamp.trim() !== ""
+            ? response.timestamp
+            : action.payload.timestamp;
+
         listenerApi.dispatch(
           ProblemEvents.loadProblemsSuccess({
             results: response.results,
             total: response.total,
             page: response.page,
             size: response.size,
-            timestamp: response.timestamp,
+            timestamp,
           })
         );
       } catch (error) {

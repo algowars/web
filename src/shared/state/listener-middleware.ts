@@ -1,4 +1,3 @@
-import { AuthActions } from "@/domains/auth/state/auth-actions";
 import { problemApi } from "@/domains/problem/api/problem-api";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { ProblemSetupEvents } from "@/domains/problem/state/problem-setup-slice";
@@ -12,6 +11,7 @@ import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
 import { registerHealthListeners } from "@/domains/health/state/health-listeners";
+import { AuthActions } from "@/domains/auth/state/auth-events";
 
 export const listenerMiddleware = createListenerMiddleware();
 
