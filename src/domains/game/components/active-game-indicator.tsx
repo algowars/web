@@ -26,11 +26,6 @@ function isExpiredActiveGame(game: GameDto): boolean {
   return Date.now() >= startedAt + game.timeLimitSeconds * 1_000;
 }
 
-/**
- * Header status component shown whenever the current user has a game in progress or is waiting
- * in a lobby for one to start. Intended for placement inside app headers rather than as a
- * full-width top banner.
- */
 export default function ActiveGameIndicator() {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const pathname = usePathname();

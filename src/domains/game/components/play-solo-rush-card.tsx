@@ -27,6 +27,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -47,7 +48,8 @@ export default function PlaySoloRushCard(
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [timeLimitSeconds, setTimeLimitSeconds] =
     useState<TimeLimitSeconds>(600);
-  const [createLobby, { isLoading: isCreatingLobby }] = useCreateLobbyMutation();
+  const [createLobby, { isLoading: isCreatingLobby }] =
+    useCreateLobbyMutation();
   const [setLobbyReady] = useSetLobbyReadyMutation();
   const [startGame] = useStartGameMutation();
 
@@ -63,7 +65,10 @@ export default function PlaySoloRushCard(
         timeLimitSeconds,
       }).unwrap();
       // For Solo Rush (capacity 1), host must mark ready — mark host ready so lobby becomes Ready
-      await setLobbyReady({ lobbyId: lobby.id, body: { isReady: true } }).unwrap();
+      await setLobbyReady({
+        lobbyId: lobby.id,
+        body: { isReady: true },
+      }).unwrap();
       const game = await startGame({ lobbyId: lobby.id }).unwrap();
 
       setIsDialogOpen(false);
@@ -109,12 +114,14 @@ export default function PlaySoloRushCard(
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Time limit" />
             </SelectTrigger>
-            <SelectContent>
-              {TIME_LIMIT_OPTIONS_SECONDS.map((seconds) => (
-                <SelectItem key={seconds} value={String(seconds)}>
-                  {TIME_LIMIT_LABELS[seconds as TimeLimitSeconds]}
-                </SelectItem>
-              ))}
+            <SelectContent position="popper">
+              <SelectGroup>
+                {TIME_LIMIT_OPTIONS_SECONDS.map((seconds) => (
+                  <SelectItem key={seconds} value={String(seconds)}>
+                    {TIME_LIMIT_LABELS[seconds as TimeLimitSeconds]}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
             </SelectContent>
           </Select>
           <AlertDialogFooter>

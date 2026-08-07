@@ -36,31 +36,24 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+function renderCountown(seconds: number | null, isTimeUp: boolean) {
+  if (seconds === null) {
+    return "--:--";
+  }
+  if (isTimeUp) {
+    return "Time's up";
+  }
+  return formatCountdown(seconds);
+}
+
 type SoloRushWorkspaceHeaderProps = {
-  /** Id of the game currently in play, so the player can forfeit it. */
   gameId: string;
-  /** Milliseconds since epoch at which the overall game timer expires. */
   endTimeMs: number;
-  /** Number of problems the player has solved so far. */
   problemsSolved: number;
-  /** Languages available for the currently active problem. */
   availableLanguages: ProgrammingLanguage[];
-  /**
-   * True while the player is browsing a previously solved problem instead of
-   * the one currently in play. Run/Submit/Language selection only ever apply
-   * to the live problem, so they're disabled — and a hint is shown — while
-   * viewing history.
-   */
   isViewingHistory?: boolean;
 };
 
-/**
- * Header for the Solo Rush game workspace. Unlike the standalone problem
- * workspace header, a game problem doesn't carry a full `Problem` model
- * (language options, slug for submission history, etc.), so this only
- * exposes the Run/Submit actions relevant while playing a game, plus the
- * overall countdown timer and the player's solved-problem count.
- */
 export const SoloRushWorkspaceHeader = ({
   gameId,
   endTimeMs,
@@ -83,10 +76,6 @@ export const SoloRushWorkspaceHeader = ({
 
   const canRunCode = userPermissions.includes(Permissions.SUBMISSION_CREATE);
 
-  // Auth/permission state only exists in the client-side Redux store, so it
-  // legitimately differs between the SSR pass and the client's first render.
-  // Disabling actions until mounted keeps the `disabled` attribute stable
-  // across hydration instead of causing a mismatch.
   const actionsDisabled =
     !hasMounted ||
     !isAuthenticated ||
@@ -122,11 +111,7 @@ export const SoloRushWorkspaceHeader = ({
           data-cy="game-timer"
         >
           <Timer className="size-3.5" />
-          {remainingSeconds === null
-            ? "--:--"
-            : isTimeUp
-              ? "Time's up"
-              : formatCountdown(remainingSeconds)}
+          {renderCountown(remainingSeconds, isTimeUp)}
         </Badge>
         <Badge variant="outline" className="gap-1.5" data-cy="problems-solved">
           <Trophy className="size-3.5" />
@@ -157,9 +142,15 @@ export const SoloRushWorkspaceHeader = ({
         >
           {showLock ? <Lock /> : null} {submitLabel}
         </Button>
-        <LanguageSelect languages={availableLanguages} disabled={isViewingHistory} />
+        <LanguageSelect
+          languages={availableLanguages}
+          disabled={isViewingHistory}
+        />
         <ModeToggle />
-        <AlertDialog open={isForfeitDialogOpen} onOpenChange={setIsForfeitDialogOpen}>
+        <AlertDialog
+          open={isForfeitDialogOpen}
+          onOpenChange={setIsForfeitDialogOpen}
+        >
           <AlertDialogTrigger asChild>
             <Button
               variant="destructive"
