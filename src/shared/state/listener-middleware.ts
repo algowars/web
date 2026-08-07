@@ -1,4 +1,4 @@
-import { AuthEvents } from "@/domains/auth/state/auth-events";
+import { AuthEvents } from "@/domains/auth/state/auth-actions";
 import { problemApi } from "@/domains/problem/api/problem-api";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { ProblemSetupEvents } from "@/domains/problem/state/problem-setup-slice";

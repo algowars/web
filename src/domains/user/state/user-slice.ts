@@ -1,6 +1,6 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { User as AuthUser } from "@auth0/nextjs-auth0/types";
-import { AuthEvents } from "@/domains/auth/state/auth-events";
+import { AuthEvents } from "@/domains/auth/state/auth-actions";
 import type { User } from "../models/user";
 import type { RootState } from "@/shared/state/store";
 import { UserEvents } from "./user-events";

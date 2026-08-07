@@ -14,6 +14,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Copyright, Tag } from "lucide-react";
 import DifficultyBadge from "./difficulty-badge";
 import { Problem } from "../models/problem";
+import { Markdown } from "@/shared/components/markdown/markdown";
 
 type ProblemQuestionProps = {
   problem: Problem;
@@ -50,7 +51,7 @@ export const ProblemQuestion = ({ problem }: ProblemQuestionProps) => {
           ) : null}
         </div>
 
-        <p className="leading-7 whitespace-pre-wrap">{problem.question}</p>
+        <Markdown content={problem.question} />
       </div>
 
       <div className="mt-auto space-y-3 pt-4">

@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { toast } from "sonner";
-
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { ProblemEvents } from "../../state/problem-events";
+import { ProblemEvents } from "../state/problem-events";
 import {
   selectProblemsError,
   selectProblemsPage,
   selectProblemsSize,
   selectProblemsTimestamp,
-} from "../../state/problem-slice";
+} from "../state/problem-slice";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 
 export function useLoadProblems() {
   const dispatch = useAppDispatch();
