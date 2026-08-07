@@ -1,12 +1,10 @@
 "use client";
 
-import { ProblemEvents } from "@/domains/problem/state/problem-events";
-import {
-  selectProblemsError,
-  selectProblemsPage,
-  selectProblemsSize,
-  selectProblemsTimestamp,
-} from "@/domains/problem/state/problem-slice";
+import AvailableGameModesHeader from "@/domains/game/components/available-game-modes-header";
+import PlayDuelCard from "@/domains/game/components/play-duel-card";
+import PlayFFACard from "@/domains/game/components/play-ffa-card";
+import PlaySoloRushCard from "@/domains/game/components/play-solo-rush-card";
+import { useLoadProblems } from "@/domains/problem/hooks/use-load-problems";
 import ProblemTable from "@/domains/problem/tables/problem-table";
 import {
   Card,
@@ -15,40 +13,23 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { useEffect } from "react";
-import { toast } from "sonner";
 
 export default function DashboardLayout() {
-  const dispatch = useAppDispatch();
-  const page = useAppSelector(selectProblemsPage);
-  const size = useAppSelector(selectProblemsSize);
-  const timestamp = useAppSelector(selectProblemsTimestamp);
-  const error = useAppSelector(selectProblemsError);
+  useLoadProblems();
 
-  useEffect(() => {
-    if (typeof timestamp !== "string" || timestamp.trim() === "") {
-      return;
-    }
-
-    dispatch(
-      ProblemEvents.loadProblemsRequested({
-        page,
-        size,
-        timestamp,
-      })
-    );
-  }, [dispatch, page, size, timestamp]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error("Error loading problems", { description: error });
-    }
-  }, [error]);
+  // Game mode availability is read directly from the `getAvailableGames`
+  // RTK Query cache by each play-*-card component (via useAvailableGameMode)
+  // — no need to fetch or sync it here.
 
   return (
     <SidebarLayout breadcrumbs={[]}>
-      <div className="px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
+      <div className="@container px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">
+        <div className="col-span-12">
+          <AvailableGameModesHeader />
+        </div>
+        <PlaySoloRushCard className="col-span-12 @3xl:col-span-4" />
+        <PlayDuelCard className="col-span-12 @2xl:col-span-6 @3xl:col-span-4" />
+        <PlayFFACard className="col-span-12 @2xl:col-span-6 @3xl:col-span-4" />
         <Card className="col-span-12">
           <CardHeader>
             <CardTitle>Problems</CardTitle>

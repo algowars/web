@@ -53,7 +53,6 @@ export const registerProblemSubmissionsListeners = (
       const {
         page,
         size,
-        timestamp,
         filter,
         isProblemSubmissionsLoading,
         isLoadingMoreSubmissions,
@@ -74,7 +73,10 @@ export const registerProblemSubmissionsListeners = (
               slug,
               page: page + 1,
               size,
-              timestamp,
+              // Generated fresh here, same as the changeFilterType/changeSortBy
+              // effects below — this endpoint requires a timestamp, and the
+              // slice doesn't carry one in state (nothing else needed it).
+              timestamp: new Date().toISOString(),
               type: filter.type,
               sortBy: filter.sortBy,
             })

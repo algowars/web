@@ -16,7 +16,7 @@ import { Button } from "@/shared/components/ui/button";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/shared/router-config";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { UserEvents } from "../state/user-events";
+import { UserEvents } from "../state/user-actions";
 import {
   selectIsUserLoading,
   selectUser,

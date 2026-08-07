@@ -10,6 +10,7 @@ type SidebarProps = {
   children?: ReactNode;
   defaultOpen?: boolean;
   headerItems?: React.ReactNode;
+  showGameIndicator?: boolean;
   className?: string;
 };
 
@@ -18,6 +19,7 @@ export default function SidebarLayout({
   children,
   defaultOpen,
   headerItems,
+  showGameIndicator = true,
   className,
 }: Readonly<SidebarProps>) {
   return (
@@ -28,6 +30,7 @@ export default function SidebarLayout({
           <AppSidebarHeader
             breadcrumbs={breadcrumbs}
             headerItems={headerItems}
+            showGameIndicator={showGameIndicator}
           />
           <div
             id="sidebar-layout-content"

@@ -9,6 +9,12 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
+import {
   Sheet,
   SheetContent,
   SheetFooter,
@@ -19,12 +25,15 @@ import {
 import Logo from "@/shared/logo/logo";
 import { routerConfig } from "@/shared/router-config";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
+import ActiveGameIndicator from "@/domains/game/components/active-game-indicator";
 import { useUser } from "@auth0/nextjs-auth0";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export default function Navbar() {
   const { user } = useUser();
+  const { setTheme } = useTheme();
   const defaultRoutes = [
     { name: "Home", href: routerConfig.home.path },
     { name: "Problems", href: routerConfig.problems.path },
@@ -56,23 +65,26 @@ export default function Navbar() {
     <nav className="border-b border-dashed">
       <div className="max-w-7xl py-3 mx-auto grid grid-cols-2 md:grid-cols-3 gap-3 px-4">
         <Logo />
-        <ul className="hidden justify-self-center md:flex items-center gap-3 text-muted-foreground">
+        <ul className="hidden justify-self-center xl:flex items-center gap-3 text-muted-foreground">
           {defaultRoutes.map((route) => (
-            <li key={route.href} className="hidden md:block">
+            <li key={route.href}>
               <Link href={route.href}>{route.name}</Link>
             </li>
           ))}
         </ul>
         <ul className="justify-self-end flex row-reverse md:row items-center gap-2 md:gap-3">
           {links.map((link) => (
-            <li key={link.key} className="hidden md:block">
+            <li key={link.key} className="hidden lg:block">
               {link}
             </li>
           ))}
+          <li className="max-w-40">
+            <ActiveGameIndicator />
+          </li>
           <li>
             <ModeToggle />
           </li>
-          <li className="block md:hidden">
+          <li className="block xl:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" aria-label="Open navigation menu">
@@ -103,11 +115,31 @@ export default function Navbar() {
                 </div>
                 <SheetFooter>
                   {user ? (
-                    <Button asChild variant="default">
-                      <Link href={routerConfig.authLogOut.path}>Log Out</Link>
-                    </Button>
+                    <div className="w-full flex flex-col gap-2">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-start">
+                            Appearance
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40">
+                          <DropdownMenuItem onClick={() => setTheme("light")}>
+                            Light
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setTheme("dark")}>
+                            Dark
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setTheme("system")}>
+                            System
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Button asChild variant="default">
+                        <Link href={routerConfig.authLogOut.path}>Log Out</Link>
+                      </Button>
+                    </div>
                   ) : (
-                    <Card className="rounded">
+                    <Card className="rounded w-full">
                       <CardHeader>
                         <CardTitle>Join the algowars community</CardTitle>
                         <CardDescription>

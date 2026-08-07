@@ -9,6 +9,7 @@ import {
 import { Separator } from "@/shared/components/ui/separator";
 import { SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
+import ActiveGameIndicator from "@/domains/game/components/active-game-indicator";
 import Link from "next/link";
 import React from "react";
 
@@ -20,11 +21,13 @@ export type BreadcrumbItem = {
 interface AppSidebarHeaderProps {
   breadcrumbs?: BreadcrumbItem[];
   headerItems?: React.ReactNode;
+  showGameIndicator?: boolean;
 }
 
 export default function AppSidebarHeader({
   breadcrumbs = [],
-  headerItems = <ModeToggle className="ml-auto mr-3" />,
+  headerItems = <ModeToggle className="ml-auto" />,
+  showGameIndicator = true,
 }: AppSidebarHeaderProps) {
   return (
     <header className="flex min-h-16 shrink-0 items-center gap-2 py-2 px-2 md:px-4">
@@ -65,7 +68,14 @@ export default function AppSidebarHeader({
           </Breadcrumb>
         )}
       </div>
-      {headerItems}
+      <div className="min-w-0 flex-1">
+        {headerItems}
+      </div>
+      {showGameIndicator ? (
+        <div className="shrink-0">
+          <ActiveGameIndicator />
+        </div>
+      ) : null}
     </header>
   );
 }

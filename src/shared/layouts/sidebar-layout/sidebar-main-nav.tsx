@@ -22,7 +22,7 @@ import Link from "next/link";
 export function SidebarMainNav({
   items,
   title = "Platform",
-}: {
+}: Readonly<{
   items: {
     title: string;
     url: string;
@@ -34,7 +34,7 @@ export function SidebarMainNav({
     }[];
   }[];
   title?: string;
-}) {
+}>) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>{title}</SidebarGroupLabel>

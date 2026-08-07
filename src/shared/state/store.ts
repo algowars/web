@@ -11,17 +11,20 @@ import { healthReducer } from "@/domains/health/state/health-slice";
 export const makeStore = () =>
   configureStore({
     reducer: {
-      user: userReducer,
+      health: healthReducer,
       problems: problemReducer,
       problemSetup: problemSetupReducer,
-      workspace: workspaceReducer,
       problemSubmissions: problemSubmissionsReducer,
-      health: healthReducer,
+      user: userReducer,
+      workspace: workspaceReducer,
       [baseApi.reducerPath]: baseApi.reducer,
     },
     middleware: (getDefault) =>
+      // Listener middleware is prepended (not concat'd) so it runs before the
+      // dev-only serializability/immutability check middleware, per the RTK
+      // docs: https://redux-toolkit.js.org/api/createListenerMiddleware
       getDefault()
-        .concat(listenerMiddleware.middleware)
+        .prepend(listenerMiddleware.middleware)
         .concat(baseApi.middleware),
   });
 

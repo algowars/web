@@ -17,7 +17,12 @@ const initialState: ProblemState = {
   problems: [],
   page: 1,
   size: 20,
-  timestamp: new Date().toISOString(),
+  // Left empty rather than `new Date().toISOString()`: that was evaluated
+  // once at module-load time, which on the server happens at a different
+  // moment than on the client and can produce a hydration mismatch. Callers
+  // (see use-load-problems.ts) fill this in client-side via
+  // `setProblemsTimestamp` after mount.
+  timestamp: "",
   total: 0,
   isLoading: false,
   error: null,

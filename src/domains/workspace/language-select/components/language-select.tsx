@@ -15,10 +15,12 @@ import { selectSelectedVersionId } from "../../state/workspace-slice";
 
 type LanguageSelectProps = {
   languages: ProgrammingLanguage[];
+  disabled?: boolean;
 } & React.HTMLAttributes<HTMLUListElement>;
 
 export const LanguageSelect = ({
   languages,
+  disabled = false,
   ...props
 }: LanguageSelectProps) => {
   const dispatch = useAppDispatch();
@@ -53,7 +55,7 @@ export const LanguageSelect = ({
         <Select
           value={selectedLanguage?.id ?? ""}
           onValueChange={selectLanguage}
-          disabled={languages.length === 0}
+          disabled={disabled || languages.length === 0}
         >
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Select a language" />
@@ -75,7 +77,7 @@ export const LanguageSelect = ({
           onValueChange={(val) =>
             dispatch(WorkspaceEvents.selectedVersionChanged(val))
           }
-          disabled={!selectedLanguage || selectedLanguage.versions.length === 0}
+          disabled={disabled || !selectedLanguage || selectedLanguage.versions.length === 0}
         >
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Select a version" />

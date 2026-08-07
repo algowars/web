@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/shared/theme/theme-provider";
 import { cn } from "@/shared/lib/utils";
 import AppProviders from "@/views/app-providers";
+import { auth0 } from "@/shared/lib/auth0";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -22,11 +23,12 @@ export const metadata: Metadata = {
   description: "Online Competitive Coding Platform",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth0.getSession();
   return (
     <html
       lang="en"
@@ -43,7 +45,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AppProviders>{children}</AppProviders>
+          <AppProviders session={session}>{children}</AppProviders>
         </ThemeProvider>
       </body>
     </html>

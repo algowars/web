@@ -1,9 +1,9 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { User as AuthUser } from "@auth0/nextjs-auth0/types";
-import { AuthEvents } from "@/domains/auth/state/auth-events";
+import { AuthActions } from "@/domains/auth/state/auth-events";
 import type { User } from "../models/user";
 import type { RootState } from "@/shared/state/store";
-import { UserEvents } from "./user-events";
+import { UserEvents } from "./user-actions";
 
 interface UserState {
   authProfile: AuthUser | null;
@@ -34,29 +34,29 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      .addCase(AuthEvents.authCheckStarted, (state) => {
+      .addCase(AuthActions.authCheckStarted, (state) => {
         state.isAuthLoading = true;
         state.authError = null;
       })
 
-      .addCase(AuthEvents.userAuthenticated, (state, action) => {
+      .addCase(AuthActions.userAuthenticated, (state, action) => {
         state.authProfile = action.payload.user;
         state.isAuthLoading = false;
         state.authError = null;
       })
 
-      .addCase(AuthEvents.userUnauthenticated, (state) => {
+      .addCase(AuthActions.userUnauthenticated, (state) => {
         state.authProfile = null;
         state.user = null;
         state.isAuthLoading = false;
       })
 
-      .addCase(AuthEvents.authCheckFailed, (state, action) => {
+      .addCase(AuthActions.authCheckFailed, (state, action) => {
         state.authError = action.payload.message;
         state.isAuthLoading = false;
       })
 
-      .addCase(AuthEvents.sessionExpired, () => initialState)
+      .addCase(AuthActions.sessionExpired, () => initialState)
 
       .addCase(UserEvents.upsertUserRequested, (state) => {
         state.isUserLoading = true;
@@ -107,13 +107,17 @@ const userSlice = createSlice({
   },
 });
 
+const EMPTY_ROLES: readonly string[] = [];
+const EMPTY_PERMISSIONS: readonly string[] = [];
+
 export const userReducer = userSlice.reducer;
 
 export const selectAuthProfile = (s: RootState) => s.user.authProfile;
 export const selectUser = (s: RootState) => s.user.user;
-export const selectUserRoles = (s: RootState) => s.user.user?.roles ?? [];
+export const selectUserRoles = (s: RootState) =>
+  s.user.user?.roles ?? EMPTY_ROLES;
 export const selectUserPermissions = (s: RootState) =>
-  s.user.user?.permissions ?? [];
+  s.user.user?.permissions ?? EMPTY_PERMISSIONS;
 export const selectIsAuthLoading = (s: RootState) => s.user.isAuthLoading;
 export const selectIsUserLoading = (s: RootState) => s.user.isUserLoading;
 export const selectAuthError = (s: RootState) => s.user.authError;
@@ -137,15 +141,14 @@ export const selectDisplayName = createSelector(
     user?.username ?? authProfile?.name ?? authProfile?.email ?? "Anonymous"
 );
 
-export const selectAvatarUrl = createSelector(
-  [selectUser, selectAuthProfile],
-  (_, authProfile): string | null => authProfile?.picture ?? null
-);
+// Plain selectors, not createSelector: unlike selectDisplayName, these only
+// ever read from authProfile, so there's nothing to memoize across multiple
+// inputs.
+export const selectAvatarUrl = (s: RootState): string | null =>
+  s.user.authProfile?.picture ?? null;
 
-export const selectUserEmail = createSelector(
-  [selectUser, selectAuthProfile],
-  (_, authProfile): string | null => authProfile?.email ?? null
-);
+export const selectUserEmail = (s: RootState): string | null =>
+  s.user.authProfile?.email ?? null;
 
 export const selectUserStatus = createSelector(
   [selectIsAuthLoading, selectIsUserLoading, selectAuthError, selectUserError],
@@ -154,3 +157,11 @@ export const selectUserStatus = createSelector(
     error: authError ?? userError ?? null,
   })
 );
+
+export const selectUserHasPermission = (permission: string) =>
+  createSelector([selectUserPermissions], (permissions) =>
+    permissions.includes(permission)
+  );
+
+export const selectUserHasRole = (role: string) =>
+  createSelector([selectUserRoles], (roles) => roles.includes(role));

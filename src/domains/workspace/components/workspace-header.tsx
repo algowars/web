@@ -23,6 +23,7 @@ import { WorkspaceEvents } from "../state/workspace-events";
 import { selectIsSubmittingSubmission } from "../state/workspace-slice";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
 import { Permissions } from "@/shared/lib/permissions";
+import ActiveGameIndicator from "@/domains/game/components/active-game-indicator";
 
 type WorkspaceHeaderProps = {
   problem: Problem;
@@ -40,8 +41,10 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
   const submitLabel = isSubmittingSubmission ? "Submitting..." : "Submit";
   return (
     <div className="p-1 flex flex-1 items-center">
-      <div className="hidden md:grid md:flex-1 md:grid-cols-[1fr_auto_1fr] md:items-center">
-        <div />
+      <div className="hidden xl:grid xl:flex-1 xl:grid-cols-[1fr_auto_1fr] xl:items-center">
+        <div className="flex items-center justify-start">
+          <ActiveGameIndicator />
+        </div>
         <ul className="flex justify-center gap-1">
           <li>
             <Button
@@ -82,11 +85,14 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
         </ul>
         <div className="justify-self-end flex items-center gap-2">
           <LanguageSelect languages={problem.availableLanguages ?? []} />
-          <ModeToggle />
         </div>
       </div>
 
-      <div className="ml-auto flex items-center gap-1 md:hidden">
+      <div className="xl:hidden mr-auto">
+        <ActiveGameIndicator />
+      </div>
+
+      <div className="ml-auto flex items-center gap-1 xl:hidden">
         <Button
           className="w-20"
           data-cy="run-btn"
@@ -107,7 +113,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
       </div>
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" className="ml-1 -mr-1 md:hidden">
+          <Button variant="ghost" className="ml-1 -mr-1 xl:hidden">
             <Menu />
           </Button>
         </SheetTrigger>
@@ -127,6 +133,15 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
                   className="flex-1 min-w-0"
                 />
               </div>
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Theme
+              </span>
+              <ModeToggle />
             </div>
 
             <Separator />
