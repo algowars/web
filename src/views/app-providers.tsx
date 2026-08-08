@@ -7,16 +7,21 @@ import { MainErrorFallback } from "@/shared/errors/main-error-fallback";
 import { AuthBridge } from "@/domains/auth/auth-bridge";
 import StoreProvider from "@/shared/state/provider";
 import HealthCheck from "@/domains/health/components/health-check";
+import { SessionData } from "@auth0/nextjs-auth0/types";
 
 type AppProviders = {
   children: React.ReactNode;
+  session: SessionData | null;
 };
 
-export default function AppProviders({ children }: Readonly<AppProviders>) {
+export default function AppProviders({
+  children,
+  session,
+}: Readonly<AppProviders>) {
   return (
     <StoreProvider>
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
-        <AuthBridge />
+        <AuthBridge session={session} />
         <HealthCheck />
         <Toaster position="top-right" />
         {children}

@@ -1,4 +1,4 @@
-import { AuthEvents } from "@/domains/auth/state/auth-actions";
+import { AuthActions } from "@/domains/auth/state/auth-actions";
 import { problemApi } from "@/domains/problem/api/problem-api";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { ProblemSetupEvents } from "@/domains/problem/state/problem-setup-slice";
@@ -260,7 +260,7 @@ const syncUser = async (
 };
 
 startAppListening({
-  actionCreator: AuthEvents.userAuthenticated,
+  actionCreator: AuthActions.userAuthenticated,
   effect: async (action, listenerApi) => {
     listenerApi.cancelActiveListeners();
     await syncUser(action.payload.user.sub, listenerApi);
@@ -303,7 +303,7 @@ startAppListening({
 });
 
 startAppListening({
-  actionCreator: AuthEvents.userUnauthenticated,
+  actionCreator: AuthActions.userUnauthenticated,
   effect: async (_, listenerApi) => {
     listenerApi.cancelActiveListeners();
     listenerApi.dispatch(UserEvents.loggedOut());

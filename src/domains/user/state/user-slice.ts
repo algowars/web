@@ -1,6 +1,6 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { User as AuthUser } from "@auth0/nextjs-auth0/types";
-import { AuthEvents } from "@/domains/auth/state/auth-actions";
+import { AuthActions } from "@/domains/auth/state/auth-actions";
 import type { User } from "../models/user";
 import type { RootState } from "@/shared/state/store";
 import { UserEvents } from "./user-events";
@@ -34,29 +34,29 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      .addCase(AuthEvents.authCheckStarted, (state) => {
+      .addCase(AuthActions.authCheckStarted, (state) => {
         state.isAuthLoading = true;
         state.authError = null;
       })
 
-      .addCase(AuthEvents.userAuthenticated, (state, action) => {
+      .addCase(AuthActions.userAuthenticated, (state, action) => {
         state.authProfile = action.payload.user;
         state.isAuthLoading = false;
         state.authError = null;
       })
 
-      .addCase(AuthEvents.userUnauthenticated, (state) => {
+      .addCase(AuthActions.userUnauthenticated, (state) => {
         state.authProfile = null;
         state.user = null;
         state.isAuthLoading = false;
       })
 
-      .addCase(AuthEvents.authCheckFailed, (state, action) => {
+      .addCase(AuthActions.authCheckFailed, (state, action) => {
         state.authError = action.payload.message;
         state.isAuthLoading = false;
       })
 
-      .addCase(AuthEvents.sessionExpired, () => initialState)
+      .addCase(AuthActions.sessionExpired, () => initialState)
 
       .addCase(UserEvents.upsertUserRequested, (state) => {
         state.isUserLoading = true;

@@ -15,7 +15,7 @@ interface ProblemSubmissionsState {
     type: SubmissionFilterType;
     sortBy: SubmissionOrderByType;
   };
-
+  timestamp: string;
   isProblemSubmissionsLoading: boolean;
   isLoadingMoreSubmissions: boolean;
 
@@ -28,6 +28,7 @@ const initialState: ProblemSubmissionsState = {
   page: 1,
   size: 10,
   totalPages: 0,
+  timestamp: new Date().toISOString(),
   isProblemSubmissionsLoading: false,
   isLoadingMoreSubmissions: false,
   problemSubmissionsError: null,
