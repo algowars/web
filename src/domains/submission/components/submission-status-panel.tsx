@@ -19,6 +19,7 @@ import {
 } from "@/domains/workspace/state/workspace-slice";
 import { useAppSelector } from "@/shared/state/hooks";
 import { Check, X } from "lucide-react";
+import { useMemo } from "react";
 
 const terminalSubmissionStatuses = new Set<string>([
   "Accepted",
@@ -110,11 +111,13 @@ const OutputBlock = ({
 export default function SubmissionStatusPanel() {
   const submissionId = useAppSelector(selectActiveSubmissionId);
   const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
+  const selectCachedSubmissionStatus = useMemo(
+    () =>
+      submissionApi.endpoints.getSubmissionStatus.select(submissionId ?? ""),
+    [submissionId]
+  );
   const cachedSubmissionStatus = useAppSelector((state) =>
-    submissionId
-      ? submissionApi.endpoints.getSubmissionStatus.select(submissionId)(state)
-          .data
-      : undefined
+    submissionId ? selectCachedSubmissionStatus(state).data : undefined
   );
   const shouldPoll =
     !!submissionId &&

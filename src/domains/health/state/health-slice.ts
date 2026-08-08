@@ -10,7 +10,7 @@ interface HealthState {
 
 const initialState: HealthState = {
   isHealthy: false,
-  timestamp: new Date().toISOString(),
+  timestamp: "",
   isLoading: false,
   error: null,
 };

@@ -17,7 +17,7 @@ const initialState: ProblemState = {
   problems: [],
   page: 1,
   size: 20,
-  timestamp: new Date().toISOString(),
+  timestamp: "",
   total: 0,
   isLoading: false,
   error: null,

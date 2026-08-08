@@ -11,12 +11,11 @@ interface ProblemSubmissionsState {
   page: number;
   size: number;
   totalPages: number;
-  timestamp: string;
   filter: {
     type: SubmissionFilterType;
     sortBy: SubmissionOrderByType;
   };
-
+  timestamp: string;
   isProblemSubmissionsLoading: boolean;
   isLoadingMoreSubmissions: boolean;
 
@@ -29,10 +28,10 @@ const initialState: ProblemSubmissionsState = {
   page: 1,
   size: 10,
   totalPages: 0,
+  timestamp: new Date().toISOString(),
   isProblemSubmissionsLoading: false,
   isLoadingMoreSubmissions: false,
   problemSubmissionsError: null,
-  timestamp: new Date().toISOString(),
   filter: {
     type: SubmissionFilterType.UserSolutions,
     sortBy: SubmissionOrderByType.Newest,
@@ -135,9 +134,6 @@ export const selectProblemSubmissionsPage = (s: RootState) =>
 
 export const selectProblemSubmissionsSize = (s: RootState) =>
   s.problemSubmissions.size;
-
-export const selectProblemSubmissionsTimestamp = (s: RootState) =>
-  s.problemSubmissions.timestamp;
 
 export const selectProblemSubmissionsTotalPages = (s: RootState) =>
   s.problemSubmissions.totalPages;

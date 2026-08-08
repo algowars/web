@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useAppSelector } from "@/shared/state/hooks";
 import {
   selectIsAuthenticated,
@@ -9,6 +9,7 @@ import {
 } from "@/domains/user/state/user-slice";
 import type { Permission } from "@/shared/lib/permissions";
 import { AuthGuardFallback } from "./auth-guard-fallback";
+import { useHasMounted } from "../hooks/use-has-mounted";
 
 type AuthGuardProps = {
   children: ReactNode;
@@ -17,25 +18,6 @@ type AuthGuardProps = {
   permission?: Permission | Permission[];
   requireAll?: boolean;
 };
-
-const emptySubscribe = () => () => {};
-
-/**
- * Returns `false` during SSR and on the client's first hydration pass,
- * then `true` for every render after that. This mirrors what a mount-flag
- * `useEffect(() => setHasMounted(true), [])` was doing, but goes through
- * useSyncExternalStore instead — the primitive React intends for values
- * that legitimately differ between the server snapshot and the client
- * snapshot, so it doesn't trigger the "setState in an effect" cascading
- * render warning.
- */
-function useHasMounted(): boolean {
-  return useSyncExternalStore(
-    emptySubscribe,
-    () => true, // client snapshot
-    () => false // server snapshot
-  );
-}
 
 export function AuthGuard({
   children,
@@ -49,8 +31,6 @@ export function AuthGuard({
   const isFullyLoaded = useAppSelector(selectIsFullyLoaded);
   const userPermissions = useAppSelector(selectUserPermissions);
 
-  // SSR and the client's first hydration pass both render this branch,
-  // regardless of what's already in the (possibly already-populated) store.
   if (!hasMounted || !isFullyLoaded) {
     return <>{loadingFallback}</>;
   }

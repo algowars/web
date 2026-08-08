@@ -53,10 +53,10 @@ export const registerProblemSubmissionsListeners = (
       const {
         page,
         size,
-        timestamp,
         filter,
         isProblemSubmissionsLoading,
         isLoadingMoreSubmissions,
+        timestamp,
       } = state.problemSubmissions;
 
       if (
@@ -74,9 +74,9 @@ export const registerProblemSubmissionsListeners = (
               slug,
               page: page + 1,
               size,
-              timestamp,
               type: filter.type,
               sortBy: filter.sortBy,
+              timestamp,
             })
           )
           .unwrap();
