@@ -31,8 +31,6 @@ export function AuthGuard({
   const isFullyLoaded = useAppSelector(selectIsFullyLoaded);
   const userPermissions = useAppSelector(selectUserPermissions);
 
-  // SSR and the client's first hydration pass both render this branch,
-  // regardless of what's already in the (possibly already-populated) store.
   if (!hasMounted || !isFullyLoaded) {
     return <>{loadingFallback}</>;
   }
