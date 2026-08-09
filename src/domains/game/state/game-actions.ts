@@ -15,6 +15,8 @@ export const GameActions = {
   loadGameFailure: createAction<{ message: string }>("game/loadGameFailure"),
   gameCountdownStarted: createAction<number>("game/gameCountdownStarted"),
   gameCountdownTicked: createAction("game/gameCountdownTicked"),
+  gameTimerStarted: createAction<number>("game/gameTimerStarted"),
+  gameTimerTicked: createAction("game/gameTimerTicked"),
   startGameSuccess: createAction<Game>("game/startGameSuccess"),
   startGameFailure: createAction<{ message: string }>("game/startGameFailure"),
 };

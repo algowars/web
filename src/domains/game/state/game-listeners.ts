@@ -22,21 +22,37 @@ export const registerGameListeners = (
         const isPendingGame =
           game.status === GameStatus.Pending ||
           String(game.status) === GameStatus[GameStatus.Pending];
+        const isRunningGame =
+          game.status === GameStatus.Running ||
+          String(game.status) === GameStatus[GameStatus.Running];
 
-        if (!isPendingGame) {
+        if (!isPendingGame && !isRunningGame) {
           return;
         }
 
-        for (let remaining = 5; remaining > 0; remaining -= 1) {
-          listenerApi.dispatch(GameActions.gameCountdownStarted(remaining));
-          await listenerApi.delay(1000);
+        if (isPendingGame) {
+          for (let remaining = 5; remaining > 0; remaining -= 1) {
+            listenerApi.dispatch(GameActions.gameCountdownStarted(remaining));
+            await listenerApi.delay(1000);
+          }
+
+          const startedGame = await listenerApi
+            .dispatch(gameApi.endpoints.startGame.initiate(action.payload))
+            .unwrap();
+
+          listenerApi.dispatch(GameActions.startGameSuccess(startedGame));
+
+          await runGameTimer(startedGame.timeLimitInSeconds, listenerApi);
+          return;
         }
 
-        const startedGame = await listenerApi
-          .dispatch(gameApi.endpoints.startGame.initiate(action.payload))
-          .unwrap();
-
-        listenerApi.dispatch(GameActions.startGameSuccess(startedGame));
+        const elapsedSeconds = game.startedAt
+          ? Math.floor((Date.now() - new Date(game.startedAt).getTime()) / 1000)
+          : 0;
+        await runGameTimer(
+          Math.max(0, game.timeLimitInSeconds - elapsedSeconds),
+          listenerApi
+        );
       } catch (error) {
         if (listenerApi.signal.aborted) {
           return;
@@ -48,4 +64,16 @@ export const registerGameListeners = (
       }
     },
   });
+};
+
+const runGameTimer = async (
+  initialSeconds: number,
+  listenerApi: Parameters<
+    Parameters<TypedStartListening<RootState, AppDispatch>>[0]["effect"]
+  >[1]
+) => {
+  for (let remaining = initialSeconds; remaining > 0; remaining -= 1) {
+    listenerApi.dispatch(GameActions.gameTimerStarted(remaining));
+    await listenerApi.delay(1000);
+  }
 };

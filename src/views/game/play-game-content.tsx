@@ -7,10 +7,10 @@ import { CodeXml, FileText } from "lucide-react";
 import { useMemo, useEffect } from "react";
 import ProblemSolutionEditor from "../problems/problem/problem-solution-editor";
 import PlayGameWorkspace from "@/domains/game/components/play-game-workspace";
+import PlayGameWorkspaceHeader from "@/domains/game/components/play-game-workspace-header";
 import { GameActions } from "@/domains/game/state/game-actions";
 import {
   selectCurrentGame,
-  selectGameCountdownSeconds,
   selectGameError,
   selectIsLoadingGame,
 } from "@/domains/game/state/game-slice";
@@ -25,7 +25,6 @@ export default function PlayGameContent({
 }: Readonly<PlayGameContentProps>) {
   const dispatch = useAppDispatch();
   const currentGame = useAppSelector(selectCurrentGame);
-  const countdownSeconds = useAppSelector(selectGameCountdownSeconds);
   const isLoading = useAppSelector(selectIsLoadingGame);
   const error = useAppSelector(selectGameError);
 
@@ -105,21 +104,11 @@ export default function PlayGameContent({
   }, [isMobile]);
 
   return (
-    <SidebarLayout breadcrumbs={[]}>
+    <SidebarLayout breadcrumbs={[]} headerItems={<PlayGameWorkspaceHeader />}>
       <div className="h-full px-2 md:px-4 pb-2 md:pb-4">
         {isLoading && <div>Loading game...</div>}
         {error && <div>{error}</div>}
-        {countdownSeconds !== null && (
-          <div className="flex h-full items-center justify-center">
-            <div className="text-center">
-              <p>Game is starting</p>
-              <p className="text-5xl font-bold">{countdownSeconds}</p>
-            </div>
-          </div>
-        )}
-        {currentGame && countdownSeconds === null && !error && (
-          <PlayGameWorkspace tab={tabs} />
-        )}
+        {currentGame && !error && <PlayGameWorkspace tab={tabs} />}
       </div>
     </SidebarLayout>
   );

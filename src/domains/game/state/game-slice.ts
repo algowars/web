@@ -10,6 +10,7 @@ interface GameState {
   currentGame: Game | null;
   isLoading: boolean;
   countdownSeconds: number | null;
+  gameTimeRemainingSeconds: number | null;
 }
 
 const initialState: GameState = {
@@ -19,6 +20,7 @@ const initialState: GameState = {
   currentGame: null,
   isLoading: false,
   countdownSeconds: null,
+  gameTimeRemainingSeconds: null,
 };
 
 const gameSlice = createSlice({
@@ -44,6 +46,7 @@ const gameSlice = createSlice({
         state.isLoading = true;
         state.error = null;
         state.countdownSeconds = null;
+        state.gameTimeRemainingSeconds = null;
       })
       .addCase(GameActions.loadGameSuccess, (state, action) => {
         state.isLoading = false;
@@ -61,9 +64,21 @@ const gameSlice = createSlice({
           state.countdownSeconds -= 1;
         }
       })
+      .addCase(GameActions.gameTimerStarted, (state, action) => {
+        state.gameTimeRemainingSeconds = action.payload;
+      })
+      .addCase(GameActions.gameTimerTicked, (state) => {
+        if (state.gameTimeRemainingSeconds !== null) {
+          state.gameTimeRemainingSeconds = Math.max(
+            0,
+            state.gameTimeRemainingSeconds - 1
+          );
+        }
+      })
       .addCase(GameActions.startGameSuccess, (state, action) => {
         state.currentGame = action.payload;
         state.countdownSeconds = null;
+        state.gameTimeRemainingSeconds = action.payload.timeLimitInSeconds;
         state.error = null;
       })
       .addCase(GameActions.startGameFailure, (state, action) => {
@@ -82,4 +97,6 @@ export const selectCurrentGame = (state: RootState) => state.game.currentGame;
 export const selectIsLoadingGame = (state: RootState) => state.game.isLoading;
 export const selectGameCountdownSeconds = (state: RootState) =>
   state.game.countdownSeconds;
+export const selectGameTimeRemainingSeconds = (state: RootState) =>
+  state.game.gameTimeRemainingSeconds;
 export const selectGameError = (state: RootState) => state.game.error;
