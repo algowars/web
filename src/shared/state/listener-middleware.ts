@@ -15,6 +15,7 @@ import { registerHealthListeners } from "@/domains/health/state/health-listeners
 import { gameApi } from "@/domains/game/api/game-api";
 import { GameModesActions } from "@/domains/game/state/game-modes-actions";
 import { GameActions } from "@/domains/game/state/game-actions";
+import { registerGameListeners } from "@/domains/game/state/game-listeners";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -34,6 +35,8 @@ registerProblemListeners(startAppListening);
 registerProblemSubmissionsListeners(startAppListening);
 
 registerHealthListeners(startAppListening);
+
+registerGameListeners(startAppListening);
 
 startAppListening({
   actionCreator: GameModesActions.availableModesRequested,
