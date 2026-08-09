@@ -84,6 +84,17 @@ const gameSlice = createSlice({
       .addCase(GameActions.startGameFailure, (state, action) => {
         state.countdownSeconds = null;
         state.error = action.payload.message;
+      })
+      .addCase(GameActions.forfeitGameRequested, (state) => {
+        state.error = null;
+        state.countdownSeconds = null;
+        state.gameTimeRemainingSeconds = null;
+      })
+      .addCase(GameActions.forfeitGameSuccess, (state) => {
+        state.error = null;
+      })
+      .addCase(GameActions.forfeitGameFailure, (state, action) => {
+        state.error = action.payload.message;
       });
   },
 });

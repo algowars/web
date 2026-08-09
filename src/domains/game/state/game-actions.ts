@@ -19,4 +19,9 @@ export const GameActions = {
   gameTimerTicked: createAction("game/gameTimerTicked"),
   startGameSuccess: createAction<Game>("game/startGameSuccess"),
   startGameFailure: createAction<{ message: string }>("game/startGameFailure"),
+  forfeitGameRequested: createAction<string>("game/forfeitGameRequested"),
+  forfeitGameSuccess: createAction<string>("game/forfeitGameSuccess"),
+  forfeitGameFailure: createAction<{ message: string }>(
+    "game/forfeitGameFailure"
+  ),
 };

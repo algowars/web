@@ -64,6 +64,30 @@ export const registerGameListeners = (
       }
     },
   });
+
+  startAppListening({
+    actionCreator: GameActions.forfeitGameRequested,
+    effect: async (action, listenerApi) => {
+      listenerApi.cancelActiveListeners();
+
+      try {
+        await listenerApi
+          .dispatch(gameApi.endpoints.forfeitGame.initiate(action.payload))
+          .unwrap();
+
+        listenerApi.dispatch(GameActions.forfeitGameSuccess(action.payload));
+        listenerApi.dispatch(GameActions.loadGameRequested(action.payload));
+      } catch (error) {
+        if (listenerApi.signal.aborted) {
+          return;
+        }
+
+        const message =
+          error instanceof Error ? error.message : "Failed to forfeit game";
+        listenerApi.dispatch(GameActions.forfeitGameFailure({ message }));
+      }
+    },
+  });
 };
 
 const runGameTimer = async (

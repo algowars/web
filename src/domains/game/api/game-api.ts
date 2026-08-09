@@ -34,6 +34,12 @@ export const gameApi = baseApi.injectEndpoints({
         method: "POST",
       }),
     }),
+    forfeitGame: builder.mutation<void, string>({
+      query: (gameId) => ({
+        url: `/api/v1/game/${gameId}/forfeit`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -42,4 +48,5 @@ export const {
   useGameModesQuery,
   useGetGameQuery,
   useStartGameMutation,
+  useForfeitGameMutation,
 } = gameApi;
