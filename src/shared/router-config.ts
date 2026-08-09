@@ -10,6 +10,11 @@ export const routerConfig = {
   dashboard: {
     path: "/dashboard",
   },
+  gamePlay: {
+    path: "/game/play/:gameId",
+    execute: ({ gameId }: { gameId: string }) =>
+      `/game/play/${encodeURIComponent(gameId)}`,
+  },
   problems: {
     path: "/problems",
   },
