@@ -35,7 +35,18 @@ export const problemApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Problem"],
     }),
+    getProblemById: builder.query<Problem, string>({
+      query: (id) => ({
+        url: `/api/v1/problem/by-id/${id}`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, id) => [{ type: "Problem", id }],
+    }),
   }),
 });
 
-export const { useGetProblemsQuery, useGetProblemBySlugQuery } = problemApi;
+export const {
+  useGetProblemsQuery,
+  useGetProblemBySlugQuery,
+  useGetProblemByIdQuery,
+} = problemApi;

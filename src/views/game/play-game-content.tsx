@@ -3,7 +3,7 @@
 import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { CodeXml, FileText, Trophy } from "lucide-react";
+import { CodeXml, FileText, Trophy, History } from "lucide-react";
 import { useMemo, useEffect } from "react";
 import ProblemSolutionEditor from "../problems/problem/problem-solution-editor";
 import PlayGameWorkspace from "@/domains/game/components/play-game-workspace";
@@ -20,6 +20,8 @@ import {
   selectIsLoadingGame,
 } from "@/domains/game/state/game-slice";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+
+import GameHistoryPanel from "@/domains/game/components/game-history-panel";
 
 type PlayGameContentProps = {
   gameId: string;
@@ -60,6 +62,17 @@ export default function PlayGameContent({
             </div>
           ),
         },
+        {
+          key: "history",
+          name: "History",
+          icon: (
+            <History
+              size={16}
+              className="text-purple-600 dark:text-purple-400"
+            />
+          ),
+          component: <GameHistoryPanel />,
+        },
       ],
     };
 
@@ -91,6 +104,17 @@ export default function PlayGameContent({
             component: <ProblemSolutionEditor />,
           },
           mobileProblemTab,
+          {
+            key: "history",
+            name: "History",
+            icon: (
+              <History
+                size={16}
+                className="text-purple-600 dark:text-purple-400"
+              />
+            ),
+            component: <GameHistoryPanel />,
+          },
           {
             key: "progress",
             name: "Progress",
