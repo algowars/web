@@ -2,6 +2,7 @@
 
 import { Clock3 } from "lucide-react";
 import { useAppSelector } from "@/shared/state/hooks";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   selectCurrentGame,
   selectGameCountdownSeconds,
@@ -14,6 +15,8 @@ const formatDuration = (seconds: number) => {
 
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 };
+
+const LOW_TIME_THRESHOLD_SECONDS = 60;
 
 export default function PlayGameTimer() {
   const game = useAppSelector(selectCurrentGame);
@@ -30,19 +33,19 @@ export default function PlayGameTimer() {
   const remainingSeconds = isStarting
     ? countdownSeconds
     : (gameTimeRemainingSeconds ?? game.timeLimitInSeconds);
+  const isLowTime =
+    !isStarting && remainingSeconds <= LOW_TIME_THRESHOLD_SECONDS;
 
   return (
-    <div
+    <Badge
       aria-live="polite"
-      className="flex items-center gap-2 text-sm font-medium"
+      aria-label={`${isStarting ? "Starting in" : "Time left"}: ${formatDuration(remainingSeconds)}`}
+      variant={isLowTime ? "destructive" : "secondary"}
+      className="h-7 gap-1.5 px-2.5 text-sm"
     >
-      <Clock3 className="size-4 text-muted-foreground" />
-      <span className="text-muted-foreground">
-        {isStarting ? "Starting in" : "Time left"}
-      </span>
-      <span className="tabular-nums text-base">
-        {formatDuration(remainingSeconds)}
-      </span>
-    </div>
+      <Clock3 data-icon="inline-start" className="size-3.5" />
+      <span>{isStarting ? "Starting in" : "Time left"}</span>
+      <span className="tabular-nums">{formatDuration(remainingSeconds)}</span>
+    </Badge>
   );
 }

@@ -90,7 +90,7 @@ export default function PlayCard({
         </div>
         <Button
           onClick={disabled ? undefined : onClick}
-          disabled={disabled}
+          disabled={Boolean(disabled)}
           variant="ghost"
           size="sm"
           className="-ml-2 w-fit text-muted-foreground"

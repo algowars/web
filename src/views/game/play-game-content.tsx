@@ -3,15 +3,20 @@
 import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { CodeXml, FileText } from "lucide-react";
+import { CodeXml, FileText, Trophy } from "lucide-react";
 import { useMemo, useEffect } from "react";
 import ProblemSolutionEditor from "../problems/problem/problem-solution-editor";
 import PlayGameWorkspace from "@/domains/game/components/play-game-workspace";
 import PlayGameWorkspaceHeader from "@/domains/game/components/play-game-workspace-header";
+import CompletedGameResultsDialog from "@/domains/game/components/completed-game-results-dialog";
+import GameProgressPanel from "@/domains/game/components/game-progress-panel";
+import { ProblemQuestion } from "@/domains/problem/components/problem-question";
+import { selectCurrentProblem } from "@/domains/problem/state/problem-setup-slice";
 import { GameActions } from "@/domains/game/state/game-actions";
 import {
   selectCurrentGame,
   selectGameError,
+  selectIsGameOver,
   selectIsLoadingGame,
 } from "@/domains/game/state/game-slice";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
@@ -27,6 +32,8 @@ export default function PlayGameContent({
   const currentGame = useAppSelector(selectCurrentGame);
   const isLoading = useAppSelector(selectIsLoadingGame);
   const error = useAppSelector(selectGameError);
+  const isGameOver = useAppSelector(selectIsGameOver);
+  const currentProblem = useAppSelector(selectCurrentProblem);
 
   useEffect(() => {
     dispatch(GameActions.loadGameRequested(gameId));
@@ -45,7 +52,13 @@ export default function PlayGameContent({
           icon: (
             <FileText size={16} className="text-blue-600 dark:text-blue-400" />
           ),
-          component: <div></div>,
+          component: currentProblem ? (
+            <ProblemQuestion problem={currentProblem} />
+          ) : (
+            <div className="p-4 text-sm text-muted-foreground">
+              Loading problem...
+            </div>
+          ),
         },
       ],
     };
@@ -54,7 +67,13 @@ export default function PlayGameContent({
       key: "problem",
       name: "Problem",
       icon: <FileText size={16} className="text-blue-600 dark:text-blue-400" />,
-      component: <div></div>,
+      component: currentProblem ? (
+        <ProblemQuestion problem={currentProblem} />
+      ) : (
+        <div className="p-4 text-sm text-muted-foreground">
+          Loading problem...
+        </div>
+      ),
     };
 
     if (isMobile) {
@@ -69,9 +88,20 @@ export default function PlayGameContent({
                 className="text-green-600 dark:text-green-400"
               />
             ),
-            component: <div></div>,
+            component: <ProblemSolutionEditor />,
           },
           mobileProblemTab,
+          {
+            key: "progress",
+            name: "Progress",
+            icon: (
+              <Trophy
+                size={16}
+                className="text-amber-600 dark:text-amber-400"
+              />
+            ),
+            component: <GameProgressPanel />,
+          },
         ],
       };
     }
@@ -97,11 +127,17 @@ export default function PlayGameContent({
               ...problemTabs,
               defaultSize: 55,
             },
+            {
+              key: "progress",
+              name: "Progress",
+              defaultSize: 45,
+              component: <GameProgressPanel />,
+            },
           ],
         },
       ],
     };
-  }, [isMobile]);
+  }, [currentProblem, isMobile]);
 
   return (
     <SidebarLayout breadcrumbs={[]} headerItems={<PlayGameWorkspaceHeader />}>
@@ -109,6 +145,9 @@ export default function PlayGameContent({
         {isLoading && <div>Loading game...</div>}
         {error && <div>{error}</div>}
         {currentGame && !error && <PlayGameWorkspace tab={tabs} />}
+        {currentGame && isGameOver ? (
+          <CompletedGameResultsDialog game={currentGame} />
+        ) : null}
       </div>
     </SidebarLayout>
   );

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "@/shared/state/store";
 import { GameActions } from "./game-actions";
-import type { Game } from "../models/game";
+import { GameStatus, type Game, type GameProblemHistory } from "../models/game";
 
 interface GameState {
   isCreating: boolean;
@@ -11,6 +11,9 @@ interface GameState {
   isLoading: boolean;
   countdownSeconds: number | null;
   gameTimeRemainingSeconds: number | null;
+  problemHistory: GameProblemHistory[];
+  isLoadingProblemHistory: boolean;
+  problemHistoryError: string | null;
 }
 
 const initialState: GameState = {
@@ -21,6 +24,9 @@ const initialState: GameState = {
   isLoading: false,
   countdownSeconds: null,
   gameTimeRemainingSeconds: null,
+  problemHistory: [],
+  isLoadingProblemHistory: false,
+  problemHistoryError: null,
 };
 
 const gameSlice = createSlice({
@@ -95,6 +101,18 @@ const gameSlice = createSlice({
       })
       .addCase(GameActions.forfeitGameFailure, (state, action) => {
         state.error = action.payload.message;
+      })
+      .addCase(GameActions.loadProblemHistoryRequested, (state) => {
+        state.isLoadingProblemHistory = true;
+        state.problemHistoryError = null;
+      })
+      .addCase(GameActions.loadProblemHistorySuccess, (state, action) => {
+        state.isLoadingProblemHistory = false;
+        state.problemHistory = action.payload;
+      })
+      .addCase(GameActions.loadProblemHistoryFailure, (state, action) => {
+        state.isLoadingProblemHistory = false;
+        state.problemHistoryError = action.payload.message;
       });
   },
 });
@@ -105,9 +123,25 @@ export const selectIsCreatingGame = (state: RootState) => state.game.isCreating;
 export const selectCreatedGameId = (state: RootState) =>
   state.game.createdGameId;
 export const selectCurrentGame = (state: RootState) => state.game.currentGame;
+export const selectIsGameOver = (state: RootState) => {
+  const status = state.game.currentGame?.status;
+
+  return (
+    status === GameStatus.Completed ||
+    String(status) === GameStatus[GameStatus.Completed] ||
+    status === GameStatus.Cancelled ||
+    String(status) === GameStatus[GameStatus.Cancelled]
+  );
+};
 export const selectIsLoadingGame = (state: RootState) => state.game.isLoading;
 export const selectGameCountdownSeconds = (state: RootState) =>
   state.game.countdownSeconds;
 export const selectGameTimeRemainingSeconds = (state: RootState) =>
   state.game.gameTimeRemainingSeconds;
 export const selectGameError = (state: RootState) => state.game.error;
+export const selectGameProblemHistory = (state: RootState) =>
+  state.game.problemHistory;
+export const selectIsLoadingGameProblemHistory = (state: RootState) =>
+  state.game.isLoadingProblemHistory;
+export const selectGameProblemHistoryError = (state: RootState) =>
+  state.game.problemHistoryError;

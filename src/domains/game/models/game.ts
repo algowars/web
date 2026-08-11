@@ -11,6 +11,15 @@ export interface GameParticipant {
   imageUrl?: string;
   seatNumber: number;
   joinedAt: Date;
+  score: number;
+  currentProblem?: {
+    problemId: string;
+  } | null;
+}
+
+export interface GameProblemHistory {
+  userId: string;
+  solvedProblemIds: string[];
 }
 
 export interface Game {

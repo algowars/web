@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import type { CreateGameRequest } from "../api/game-api";
-import type { Game } from "../models/game";
+import type { Game, GameProblemHistory } from "../models/game";
 
 export const GameActions = {
   createGameRequested: createAction<CreateGameRequest>(
@@ -23,5 +23,14 @@ export const GameActions = {
   forfeitGameSuccess: createAction<string>("game/forfeitGameSuccess"),
   forfeitGameFailure: createAction<{ message: string }>(
     "game/forfeitGameFailure"
+  ),
+  loadProblemHistoryRequested: createAction<string>(
+    "game/loadProblemHistoryRequested"
+  ),
+  loadProblemHistorySuccess: createAction<GameProblemHistory[]>(
+    "game/loadProblemHistorySuccess"
+  ),
+  loadProblemHistoryFailure: createAction<{ message: string }>(
+    "game/loadProblemHistoryFailure"
   ),
 };
