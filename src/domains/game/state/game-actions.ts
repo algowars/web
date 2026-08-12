@@ -33,4 +33,7 @@ export const GameActions = {
   loadProblemHistoryFailure: createAction<{ message: string }>(
     "game/loadProblemHistoryFailure"
   ),
+  gameCompletedPushReceived: createAction<{ gameId: string }>(
+    "game/gameCompletedPushReceived"
+  ),
 };

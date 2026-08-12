@@ -7,6 +7,10 @@ import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { problemApi } from "@/domains/problem/api/problem-api";
 import { ProblemSetupEvents } from "@/domains/problem/state/problem-setup-slice";
 import { toast } from "sonner";
+import {
+  joinGameUpdates,
+  leaveGameUpdates,
+} from "@/shared/lib/signalr/game-hub-client";
 
 type GameListenerApi = Parameters<
   Parameters<TypedStartListening<RootState, AppDispatch>>[0]["effect"]
@@ -176,6 +180,17 @@ const loadCurrentProblem = async (game: Game, listenerApi: GameListenerApi) => {
   }
 };
 
+// How long to wait for a SignalR completion push before falling back to a poll, when the hub
+// connection is available. Generous, since the push is expected to arrive within milliseconds of
+// the game actually ending — this interval only gets used if a push is missed (dropped
+// connection, reconnect race, etc.), so it's a safety net rather than the primary signal.
+const FALLBACK_POLL_INTERVAL_WITH_PUSH_MS = 20_000;
+
+// Original tight-poll cadence, kept as the sole mechanism when the hub couldn't be joined (e.g.
+// the client is offline, or SignalR itself is unreachable) so the game screen still behaves
+// exactly as it did before this was added.
+const FALLBACK_POLL_INTERVAL_WITHOUT_PUSH_MS = 3_000;
+
 const runGameLoop = async (
   initialGame: Game,
   gameId: string,
@@ -188,28 +203,65 @@ const runGameLoop = async (
     : Date.now();
   const endTime = startedAt + game.timeLimitInSeconds * 1000;
 
-  while (Date.now() < endTime) {
-    const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
-    listenerApi.dispatch(GameActions.gameTimerStarted(remaining));
-    await listenerApi.delay(3000);
-
-    game = await fetchGame(gameId, listenerApi);
-    listenerApi.dispatch(GameActions.loadGameSuccess(game));
-
-    if (
-      isGameStatus(game, GameStatus.Completed) ||
-      isGameStatus(game, GameStatus.Cancelled)
-    ) {
-      return;
-    }
-
-    const currentProblemId = getCurrentProblemId(game, listenerApi);
-    if (currentProblemId && currentProblemId !== lastProblemId) {
-      await loadCurrentProblem(game, listenerApi);
-      lastProblemId = currentProblemId;
-    }
+  let pushAvailable = false;
+  try {
+    await joinGameUpdates(gameId);
+    pushAvailable = true;
+  } catch {
+    // No push notifications for this game — the loop below just falls back to its original
+    // tight-poll behavior. Not worth surfacing to the user; getGame polling still works fine.
   }
 
-  const finalGame = await fetchGame(gameId, listenerApi);
-  listenerApi.dispatch(GameActions.loadGameSuccess(finalGame));
+  const pollIntervalMs = pushAvailable
+    ? FALLBACK_POLL_INTERVAL_WITH_PUSH_MS
+    : FALLBACK_POLL_INTERVAL_WITHOUT_PUSH_MS;
+
+  try {
+    while (Date.now() < endTime) {
+      const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+      listenerApi.dispatch(GameActions.gameTimerStarted(remaining));
+
+      const waitMs = Math.max(
+        0,
+        Math.min(pollIntervalMs, endTime - Date.now())
+      );
+
+      const pushed = await listenerApi.take(
+        (action) =>
+          GameActions.gameCompletedPushReceived.match(action) &&
+          action.payload.gameId === gameId,
+        waitMs
+      );
+
+      game = await fetchGame(gameId, listenerApi);
+      listenerApi.dispatch(GameActions.loadGameSuccess(game));
+
+      if (
+        isGameStatus(game, GameStatus.Completed) ||
+        isGameStatus(game, GameStatus.Cancelled)
+      ) {
+        return;
+      }
+
+      // A push fired but the game wasn't actually done yet (e.g. it raced ahead of a very
+      // slightly stale read) — loop back around immediately rather than waiting out the rest
+      // of the poll interval again.
+      if (pushed) {
+        continue;
+      }
+
+      const currentProblemId = getCurrentProblemId(game, listenerApi);
+      if (currentProblemId && currentProblemId !== lastProblemId) {
+        await loadCurrentProblem(game, listenerApi);
+        lastProblemId = currentProblemId;
+      }
+    }
+
+    const finalGame = await fetchGame(gameId, listenerApi);
+    listenerApi.dispatch(GameActions.loadGameSuccess(finalGame));
+  } finally {
+    if (pushAvailable) {
+      void leaveGameUpdates(gameId);
+    }
+  }
 };
