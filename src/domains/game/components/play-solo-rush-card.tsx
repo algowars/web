@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/shared/components/ui/alert-dialog";
 import PlayCard from "./play-card";
 import { Zap } from "lucide-react";
 import { ComponentProps, useEffect, useState } from "react";
@@ -27,6 +20,13 @@ import { toast } from "sonner";
 import { Button } from "@/shared/components/ui/button";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/shared/router-config";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/shared/components/ui/dialog";
 
 function formatDuration(durationSeconds: number) {
   const durationMinutes = durationSeconds / 60;
@@ -105,16 +105,16 @@ export default function PlaySoloRushCard(
           setIsDialogOpen(true);
         }}
       />
-      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Choose your time limit</AlertDialogTitle>
-            <AlertDialogDescription>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Choose your time limit</DialogTitle>
+            <DialogDescription>
               Solo Rush is a time-based game mode where you try to solve as many
               problems as possible before the time runs out. Choose your time
               limit below to start playing.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+            </DialogDescription>
+          </DialogHeader>
           <Select
             value={effectiveSelectedDuration ?? ""}
             onValueChange={setSelectedDuration}
@@ -136,8 +136,8 @@ export default function PlaySoloRushCard(
           <Button type="button" onClick={handleStart} disabled={isCreating}>
             {isCreating ? "Starting..." : "Start game"}
           </Button>
-        </AlertDialogContent>
-      </AlertDialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

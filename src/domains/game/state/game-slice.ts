@@ -53,6 +53,12 @@ const gameSlice = createSlice({
         state.error = null;
         state.countdownSeconds = null;
         state.gameTimeRemainingSeconds = null;
+        // The game page has now taken over as the source of truth for "which game am I on"
+        // via the gameId in the URL. Clearing this here (rather than leaving it set until the
+        // next createGameRequested) prevents PlaySoloRushCard's
+        // `if (createdGameId) router.push(...)` effect from firing again and redirecting back
+        // into this game the next time that card remounts (e.g. after navigating home).
+        state.createdGameId = null;
       })
       .addCase(GameActions.loadGameSuccess, (state, action) => {
         state.isLoading = false;

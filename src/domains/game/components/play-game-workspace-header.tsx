@@ -28,40 +28,42 @@ export default function PlayGameWorkspaceHeader() {
   return (
     <header className="flex min-h-12 flex-1 items-center">
       <PlayGameTimer />
-      {problem ? (
-        <LanguageSelect
-          languages={problem.availableLanguages}
-          className="ml-3 hidden md:flex"
-        />
-      ) : null}
-      {game && (
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button className="ml-auto" variant="destructive" size="sm">
-              Forfeit
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Forfeit this game?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Your game will end immediately and cannot be resumed.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                variant="destructive"
-                onClick={() =>
-                  dispatch(GameActions.forfeitGameRequested(game.gameId))
-                }
-              >
-                Forfeit game
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      <div className="ml-auto flex items-center gap-5">
+        {problem ? (
+          <LanguageSelect
+            languages={problem.availableLanguages}
+            className="hidden md:flex"
+          />
+        ) : null}
+        {game && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button className="" variant="destructive" size="sm">
+                Forfeit
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Forfeit this game?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Your game will end immediately and cannot be resumed.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={() =>
+                    dispatch(GameActions.forfeitGameRequested(game.gameId))
+                  }
+                >
+                  Forfeit game
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+      </div>
       <div className="ml-2">
         <ModeToggle />
       </div>

@@ -1,5 +1,5 @@
 import type { AppDispatch, RootState } from "@/shared/state/store";
-import type { TypedStartListening } from "@reduxjs/toolkit";
+import type { ForkedTaskAPI, TypedStartListening } from "@reduxjs/toolkit";
 import { gameApi } from "../api/game-api";
 import { GameStatus, type Game } from "../models/game";
 import { GameActions } from "./game-actions";
@@ -149,7 +149,7 @@ const isGameStatus = (game: Game, status: GameStatus) =>
   game.status === status || String(game.status) === GameStatus[status];
 
 const getCurrentProblemId = (game: Game, listenerApi: GameListenerApi) => {
-  const userId = listenerApi.getState().user.authProfile?.sub;
+  const userId = listenerApi.getState().user.user?.id;
   const participant = userId
     ? game.participants.find((candidate) => candidate.userId === userId)
     : game.participants[0];
@@ -180,16 +180,37 @@ const loadCurrentProblem = async (game: Game, listenerApi: GameListenerApi) => {
   }
 };
 
-// How long to wait for a SignalR completion push before falling back to a poll, when the hub
-// connection is available. Generous, since the push is expected to arrive within milliseconds of
-// the game actually ending — this interval only gets used if a push is missed (dropped
-// connection, reconnect race, etc.), so it's a safety net rather than the primary signal.
-const FALLBACK_POLL_INTERVAL_WITH_PUSH_MS = 20_000;
+// Refresh cadence for the game loop: drives opponent-progress (currentProblem) updates in the
+// progress panel and completion detection when no push arrives. Deliberately NOT what drives the
+// visible timer — see startTimerTicker below.
+const POLL_INTERVAL_MS = 3_000;
 
-// Original tight-poll cadence, kept as the sole mechanism when the hub couldn't be joined (e.g.
-// the client is offline, or SignalR itself is unreachable) so the game screen still behaves
-// exactly as it did before this was added.
-const FALLBACK_POLL_INTERVAL_WITHOUT_PUSH_MS = 3_000;
+// Ticks the visible countdown every second, independent of the network poll cadence above. Pure
+// local time math (no fetch), so it stays smooth regardless of how often the poll loop runs.
+// Runs as a forked task and is cancelled automatically if the *listener itself* is cancelled
+// (e.g. cancelActiveListeners() from another loadGameRequested/forfeitGameRequested dispatch).
+// It is NOT auto-cancelled just because runGameLoop below returns normally — since it only knows
+// wall-clock endTime and nothing about game status, callers must explicitly call
+// ticker.cancel() once they've determined the game is actually over (see runGameLoop).
+const startTimerTicker = (endTime: number, listenerApi: GameListenerApi) => {
+  return listenerApi.fork(async (forkApi: ForkedTaskAPI) => {
+    for (;;) {
+      const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+      listenerApi.dispatch(GameActions.gameTimerStarted(remaining));
+
+      if (remaining <= 0) {
+        return;
+      }
+
+      await forkApi.delay(1000);
+    }
+  });
+};
+
+// Cadence used once local time is up but the server hasn't confirmed completion yet (small
+// clock skew, or the completion push/message hasn't landed). Tighter than the normal poll
+// interval since this should almost always resolve within one tick.
+const GRACE_POLL_INTERVAL_MS = 1_000;
 
 const runGameLoop = async (
   initialGame: Game,
@@ -203,33 +224,37 @@ const runGameLoop = async (
     : Date.now();
   const endTime = startedAt + game.timeLimitInSeconds * 1000;
 
+  const ticker = startTimerTicker(endTime, listenerApi);
+
   let pushAvailable = false;
   try {
     await joinGameUpdates(gameId);
     pushAvailable = true;
   } catch {
-    // No push notifications for this game — the loop below just falls back to its original
-    // tight-poll behavior. Not worth surfacing to the user; getGame polling still works fine.
+    // No push notifications for this game — the loop below still works fine on its regular
+    // poll cadence. Not worth surfacing to the user; getGame polling still works fine.
   }
 
-  const pollIntervalMs = pushAvailable
-    ? FALLBACK_POLL_INTERVAL_WITH_PUSH_MS
-    : FALLBACK_POLL_INTERVAL_WITHOUT_PUSH_MS;
-
   try {
-    while (Date.now() < endTime) {
-      const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
-      listenerApi.dispatch(GameActions.gameTimerStarted(remaining));
+    // Keeps going past endTime (in the tighter grace cadence) until the server actually
+    // confirms the game is over — a single check right at endTime isn't reliable, since the
+    // server's own finalization (message consumer, sweep-job backstop, or push) can lag the
+    // client's clock by a little.
+    for (;;) {
+      const beforeEndTime = Date.now() < endTime;
+      const waitMs = beforeEndTime
+        ? Math.max(0, Math.min(POLL_INTERVAL_MS, endTime - Date.now()))
+        : GRACE_POLL_INTERVAL_MS;
 
-      const waitMs = Math.max(
-        0,
-        Math.min(pollIntervalMs, endTime - Date.now())
-      );
-
+      // Races the regular poll tick against a completion push, or a forfeit this same client
+      // just performed, so either lets us react immediately instead of waiting out the rest of
+      // this tick — it's an early-exit optimization on top of the normal cadence, not a
+      // replacement for it.
       const pushed = await listenerApi.take(
-        (action) =>
-          GameActions.gameCompletedPushReceived.match(action) &&
-          action.payload.gameId === gameId,
+        (action: unknown) =>
+          (GameActions.gameCompletedPushReceived.match(action) &&
+            action.payload.gameId === gameId) ||
+          GameActions.forfeitGameSuccess.match(action),
         waitMs
       );
 
@@ -240,25 +265,29 @@ const runGameLoop = async (
         isGameStatus(game, GameStatus.Completed) ||
         isGameStatus(game, GameStatus.Cancelled)
       ) {
+        // Cancel the ticker explicitly rather than just force-dispatching 0 — the ticker has
+        // no awareness of game status, only wall-clock endTime, so left running it would
+        // simply overwrite this with its own (stale, nonzero) countdown on its next tick.
+        ticker.cancel();
+        listenerApi.dispatch(GameActions.gameTimerStarted(0));
         return;
       }
 
       // A push fired but the game wasn't actually done yet (e.g. it raced ahead of a very
       // slightly stale read) — loop back around immediately rather than waiting out the rest
-      // of the poll interval again.
+      // of this tick again.
       if (pushed) {
         continue;
       }
 
-      const currentProblemId = getCurrentProblemId(game, listenerApi);
-      if (currentProblemId && currentProblemId !== lastProblemId) {
-        await loadCurrentProblem(game, listenerApi);
-        lastProblemId = currentProblemId;
+      if (beforeEndTime) {
+        const currentProblemId = getCurrentProblemId(game, listenerApi);
+        if (currentProblemId && currentProblemId !== lastProblemId) {
+          await loadCurrentProblem(game, listenerApi);
+          lastProblemId = currentProblemId;
+        }
       }
     }
-
-    const finalGame = await fetchGame(gameId, listenerApi);
-    listenerApi.dispatch(GameActions.loadGameSuccess(finalGame));
   } finally {
     if (pushAvailable) {
       void leaveGameUpdates(gameId);
