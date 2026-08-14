@@ -25,18 +25,6 @@ export const GameActions = {
     "game/forfeitGameFailure"
   ),
 
-  loadProblemSetupRequested: createAction<{
-    problemId: string;
-    languageVersionId: string;
-  }>("game/loadProblemSetupRequested"),
-  loadProblemSetupSuccess: createAction<{
-    problemId: string;
-    problemSetup: any;
-  }>("game/loadProblemSetupSuccess"),
-  loadProblemSetupFailure: createAction<{ message: string }>(
-    "game/loadProblemSetupFailure"
-  ),
-
   loadProblemHistoryRequested: createAction<string>(
     "game/loadProblemHistoryRequested"
   ),
