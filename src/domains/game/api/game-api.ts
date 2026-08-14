@@ -28,7 +28,7 @@ export const gameApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
-    startGame: builder.mutation<Game | null, string>({
+    startGame: builder.mutation<void, string>({
       query: (gameId) => ({
         url: `/api/v1/game/${gameId}/start`,
         method: "POST",

@@ -15,8 +15,10 @@ export const GameActions = {
   loadGameSuccess: createAction<Game>("game/loadGameSuccess"),
   loadGameFailure: createAction<{ message: string }>("game/loadGameFailure"),
 
-  startGameRequested: createAction<string>("game/startGameRequested"),
-  startGameSuccess: createAction<Game>("game/startGameSuccess"),
+  startGameRequested: createAction<{ gameId: string }>(
+    "game/startGameRequested"
+  ),
+  startGameSuccess: createAction<{ gameId: string }>("game/startGameSuccess"),
   startGameFailure: createAction<{ message: string }>("game/startGameFailure"),
 
   forfeitGameRequested: createAction<string>("game/forfeitGameRequested"),
