@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CreateGameRequest } from "../api/game-api";
+import type { CreateGameRequest } from "../api/game-api";
 import type { Game, GameProblemHistory } from "../models/game";
 
 export const GameActions = {
@@ -10,33 +10,20 @@ export const GameActions = {
   createGameFailure: createAction<{ message: string }>(
     "game/createGameFailure"
   ),
-
   loadGameRequested: createAction<string>("game/loadGameRequested"),
   loadGameSuccess: createAction<Game>("game/loadGameSuccess"),
   loadGameFailure: createAction<{ message: string }>("game/loadGameFailure"),
-
-  startGameRequested: createAction<string>("game/startGameRequested"),
+  gameCountdownStarted: createAction<number>("game/gameCountdownStarted"),
+  gameCountdownTicked: createAction("game/gameCountdownTicked"),
+  gameTimerStarted: createAction<number>("game/gameTimerStarted"),
+  gameTimerTicked: createAction("game/gameTimerTicked"),
   startGameSuccess: createAction<Game>("game/startGameSuccess"),
   startGameFailure: createAction<{ message: string }>("game/startGameFailure"),
-
   forfeitGameRequested: createAction<string>("game/forfeitGameRequested"),
   forfeitGameSuccess: createAction<string>("game/forfeitGameSuccess"),
   forfeitGameFailure: createAction<{ message: string }>(
     "game/forfeitGameFailure"
   ),
-
-  loadProblemSetupRequested: createAction<{
-    problemId: string;
-    languageVersionId: string;
-  }>("game/loadProblemSetupRequested"),
-  loadProblemSetupSuccess: createAction<{
-    problemId: string;
-    problemSetup: any;
-  }>("game/loadProblemSetupSuccess"),
-  loadProblemSetupFailure: createAction<{ message: string }>(
-    "game/loadProblemSetupFailure"
-  ),
-
   loadProblemHistoryRequested: createAction<string>(
     "game/loadProblemHistoryRequested"
   ),
@@ -45,5 +32,8 @@ export const GameActions = {
   ),
   loadProblemHistoryFailure: createAction<{ message: string }>(
     "game/loadProblemHistoryFailure"
+  ),
+  gameCompletedPushReceived: createAction<{ gameId: string }>(
+    "game/gameCompletedPushReceived"
   ),
 };

@@ -19,7 +19,6 @@ const gameModesSlice = createSlice({
   name: "gameModes",
   initialState,
   reducers: {},
-
   extraReducers: (builder) => {
     builder
       .addCase(GameModesActions.availableModesRequested, (state) => {

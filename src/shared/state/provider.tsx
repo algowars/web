@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 import { AppStore, makeStore } from "./store";
-import { registerGameHubBridge } from "@/domains/game/state/game-hub-bridge";
+import { registerGameHubBridge } from "@/domains/game-old/state/game-hub-bridge";
 
 export default function StoreProvider({
   children,

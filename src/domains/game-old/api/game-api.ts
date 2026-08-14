@@ -1,9 +1,9 @@
 import { baseApi } from "@/shared/lib/base-api";
-import { GameMode, GameModeKey } from "../models/game-mode";
+import { GameMode } from "../models/game-mode";
 import type { Game, GameProblemHistory } from "../models/game";
 
 export type CreateGameRequest = {
-  gameModeKey: GameModeKey;
+  gameModeKey: string;
   timeLimitInSeconds: number;
 };
 

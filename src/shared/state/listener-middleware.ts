@@ -12,10 +12,10 @@ import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
 import { registerHealthListeners } from "@/domains/health/state/health-listeners";
-import { gameApi } from "@/domains/game/api/game-api";
-import { GameModesActions } from "@/domains/game/state/game-modes-actions";
-import { GameActions } from "@/domains/game/state/game-actions";
-import { registerGameListeners } from "@/domains/game/state/game-listeners";
+import { gameApi } from "@/domains/game-old/api/game-api";
+import { GameModesActions } from "@/domains/game-old/state/game-modes-actions";
+import { GameActions } from "@/domains/game-old/state/game-actions";
+import { registerGameListeners } from "@/domains/game-old/state/game-listeners";
 
 export const listenerMiddleware = createListenerMiddleware();
 

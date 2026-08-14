@@ -26,9 +26,17 @@ export default function PlayGameWorkspaceHeader() {
   const problem = useAppSelector(selectCurrentProblem);
 
   return (
-    <header className="flex min-h-12 flex-1 items-center">
-      <PlayGameTimer />
-      <div className="ml-auto flex items-center gap-5">
+    <header className="grid grid-cols-12 min-h-12 flex-1">
+      <div className="col-span-4 flex items-center">
+        <PlayGameTimer />
+      </div>
+      <div className="col-span-4 flex items-center justify-center gap-3">
+        <Button className="w-24" variant="secondary">
+          Run
+        </Button>
+        <Button className="w-24">Submit</Button>
+      </div>
+      <div className="col-span-4 flex items-center gap-5">
         {problem ? (
           <LanguageSelect
             languages={problem.availableLanguages}
@@ -63,9 +71,9 @@ export default function PlayGameWorkspaceHeader() {
             </AlertDialogContent>
           </AlertDialog>
         )}
-      </div>
-      <div className="ml-2">
-        <ModeToggle />
+        <div className="ml-2">
+          <ModeToggle />
+        </div>
       </div>
     </header>
   );

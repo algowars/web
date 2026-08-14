@@ -7,8 +7,8 @@ import { baseApi } from "../lib/base-api";
 import { listenerMiddleware } from "./listener-middleware";
 import { problemSubmissionsReducer } from "@/domains/problem/problem-submissions/state/problem-submissions-slice";
 import { healthReducer } from "@/domains/health/state/health-slice";
-import gameModesReducer from "@/domains/game/state/game-modes-slice";
-import gameReducer from "@/domains/game/state/game-slice";
+import gameModesReducer from "@/domains/game-old/state/game-modes-slice";
+import gameReducer from "@/domains/game-old/state/game-slice";
 
 export const makeStore = () =>
   configureStore({

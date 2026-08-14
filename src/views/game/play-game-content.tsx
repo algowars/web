@@ -6,22 +6,22 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { CodeXml, FileText, Trophy, History } from "lucide-react";
 import { useMemo, useEffect } from "react";
 import ProblemSolutionEditor from "../problems/problem/problem-solution-editor";
-import PlayGameWorkspace from "@/domains/game/components/play-game-workspace";
-import PlayGameWorkspaceHeader from "@/domains/game/components/play-game-workspace-header";
-import CompletedGameResultsDialog from "@/domains/game/components/completed-game-results-dialog";
-import GameProgressPanel from "@/domains/game/components/game-progress-panel";
+import PlayGameWorkspace from "@/domains/game-old/components/play-game-workspace";
+import PlayGameWorkspaceHeader from "@/domains/game-old/components/play-game-workspace-header";
+import CompletedGameResultsDialog from "@/domains/game-old/components/completed-game-results-dialog";
+import GameProgressPanel from "@/domains/game-old/components/game-progress-panel";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import { selectCurrentProblem } from "@/domains/problem/state/problem-setup-slice";
-import { GameActions } from "@/domains/game/state/game-actions";
+import { GameActions } from "@/domains/game-old/state/game-actions";
 import {
   selectCurrentGame,
   selectGameError,
   selectIsGameOver,
   selectIsLoadingGame,
-} from "@/domains/game/state/game-slice";
+} from "@/domains/game-old/state/game-slice";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 
-import GameHistoryPanel from "@/domains/game/components/game-history-panel";
+import GameHistoryPanel from "@/domains/game-old/components/game-history-panel";
 
 type PlayGameContentProps = {
   gameId: string;
