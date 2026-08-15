@@ -11,6 +11,7 @@ interface GameState {
   isProblemHistoryLoading: boolean;
   problemHistory: GameProblemHistory[];
   problemHistoryError: string | null;
+  createdGameId?: string | null;
 }
 
 const initialState: GameState = {
@@ -22,6 +23,7 @@ const initialState: GameState = {
   isProblemHistoryLoading: false,
   problemHistory: [],
   problemHistoryError: null,
+  createdGameId: null,
 };
 
 const gameSlice = createSlice({
@@ -34,9 +36,11 @@ const gameSlice = createSlice({
       .addCase(GameActions.createGameRequested, (state) => {
         state.isCreating = true;
         state.creatingError = null;
+        state.createdGameId = null;
       })
-      .addCase(GameActions.createGameSuccess, (state) => {
+      .addCase(GameActions.createGameSuccess, (state, action) => {
         state.isCreating = false;
+        state.createdGameId = action.payload;
       })
       .addCase(GameActions.createGameFailure, (state, action) => {
         state.isCreating = false;
@@ -70,3 +74,12 @@ const gameSlice = createSlice({
 });
 
 export default gameSlice.reducer;
+
+export const selectCurrentGame = (s: { game: GameState }) => s.game.currentGame;
+export const selectIsLoadingGame = (s: { game: GameState }) =>
+  s.game.isGameLoading;
+export const selectGameError = (s: { game: GameState }) => s.game.gameError;
+export const selectCreatedGameId = (s: { game: GameState }) =>
+  s.game.createdGameId;
+export const selectIsCreatingGame = (s: { game: GameState }) =>
+  s.game.isCreating;

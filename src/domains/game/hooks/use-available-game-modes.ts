@@ -1,5 +1,5 @@
-import { useAppDispatch } from "@/shared/state/hooks";
-import { useAppSelector } from "@/shared/state/hooks";
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { GameModesActions } from "../state/game-modes-actions";

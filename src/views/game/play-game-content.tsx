@@ -3,25 +3,19 @@
 import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { CodeXml, FileText, Trophy, History } from "lucide-react";
+import { CodeXml, FileText, History } from "lucide-react";
 import { useMemo, useEffect } from "react";
 import ProblemSolutionEditor from "../problems/problem/problem-solution-editor";
-import PlayGameWorkspace from "@/domains/game-old/components/play-game-workspace";
-import PlayGameWorkspaceHeader from "@/domains/game-old/components/play-game-workspace-header";
-import CompletedGameResultsDialog from "@/domains/game-old/components/completed-game-results-dialog";
-import GameProgressPanel from "@/domains/game-old/components/game-progress-panel";
+
+import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import { selectCurrentProblem } from "@/domains/problem/state/problem-setup-slice";
-import { GameActions } from "@/domains/game-old/state/game-actions";
+import { GameActions } from "@/domains/game/state/game-actions";
 import {
   selectCurrentGame,
   selectGameError,
-  selectIsGameOver,
   selectIsLoadingGame,
-} from "@/domains/game-old/state/game-slice";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-
-import GameHistoryPanel from "@/domains/game-old/components/game-history-panel";
+} from "@/domains/game/state/game-slice";
 
 type PlayGameContentProps = {
   gameId: string;
@@ -34,7 +28,7 @@ export default function PlayGameContent({
   const currentGame = useAppSelector(selectCurrentGame);
   const isLoading = useAppSelector(selectIsLoadingGame);
   const error = useAppSelector(selectGameError);
-  const isGameOver = useAppSelector(selectIsGameOver);
+  // const isGameOver = useAppSelector(selectIsGameOver);
   const currentProblem = useAppSelector(selectCurrentProblem);
 
   useEffect(() => {
@@ -71,7 +65,7 @@ export default function PlayGameContent({
               className="text-purple-600 dark:text-purple-400"
             />
           ),
-          component: <GameHistoryPanel />,
+          component: <div></div>,
         },
       ],
     };
@@ -104,28 +98,6 @@ export default function PlayGameContent({
             component: <ProblemSolutionEditor />,
           },
           mobileProblemTab,
-          {
-            key: "history",
-            name: "History",
-            icon: (
-              <History
-                size={16}
-                className="text-purple-600 dark:text-purple-400"
-              />
-            ),
-            component: <GameHistoryPanel />,
-          },
-          {
-            key: "progress",
-            name: "Progress",
-            icon: (
-              <Trophy
-                size={16}
-                className="text-amber-600 dark:text-amber-400"
-              />
-            ),
-            component: <GameProgressPanel />,
-          },
         ],
       };
     }
@@ -151,12 +123,6 @@ export default function PlayGameContent({
               ...problemTabs,
               defaultSize: 55,
             },
-            {
-              key: "progress",
-              name: "Progress",
-              defaultSize: 45,
-              component: <GameProgressPanel />,
-            },
           ],
         },
       ],
@@ -164,14 +130,14 @@ export default function PlayGameContent({
   }, [currentProblem, isMobile]);
 
   return (
-    <SidebarLayout breadcrumbs={[]} headerItems={<PlayGameWorkspaceHeader />}>
+    <SidebarLayout breadcrumbs={[]}>
       <div className="h-full px-2 md:px-4 pb-2 md:pb-4">
         {isLoading && <div>Loading game...</div>}
         {error && <div>{error}</div>}
-        {currentGame && !error && <PlayGameWorkspace tab={tabs} />}
-        {currentGame && isGameOver ? (
+        {/* {currentGame && !error && <PlayGameWorkspace tab={tabs} />} */}
+        {/* {currentGame && isGameOver ? (
           <CompletedGameResultsDialog game={currentGame} />
-        ) : null}
+        ) : null} */}
       </div>
     </SidebarLayout>
   );

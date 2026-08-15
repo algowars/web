@@ -12,10 +12,8 @@ import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
 import { registerHealthListeners } from "@/domains/health/state/health-listeners";
-import { gameApi } from "@/domains/game-old/api/game-api";
-import { GameModesActions } from "@/domains/game-old/state/game-modes-actions";
-import { GameActions } from "@/domains/game-old/state/game-actions";
-import { registerGameListeners } from "@/domains/game-old/state/game-listeners";
+import { registerGameListeners } from "@/domains/game/state/game-listeners";
+import { registerGameModesListeners } from "@/domains/game/state/game-modes-listeners";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -38,43 +36,7 @@ registerHealthListeners(startAppListening);
 
 registerGameListeners(startAppListening);
 
-startAppListening({
-  actionCreator: GameModesActions.availableModesRequested,
-  effect: async (_, listenerApi) => {
-    try {
-      const gameModes = await listenerApi
-        .dispatch(gameApi.endpoints.gameModes.initiate())
-        .unwrap();
-
-      listenerApi.dispatch(GameModesActions.availableModesSuccess(gameModes));
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to load game modes";
-
-      listenerApi.dispatch(GameModesActions.availableModesFailure({ message }));
-    }
-  },
-});
-
-startAppListening({
-  actionCreator: GameActions.createGameRequested,
-  effect: async (action, listenerApi) => {
-    listenerApi.cancelActiveListeners();
-
-    try {
-      const gameId = await listenerApi
-        .dispatch(gameApi.endpoints.createGame.initiate(action.payload))
-        .unwrap();
-
-      listenerApi.dispatch(GameActions.createGameSuccess(gameId));
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to create game";
-      listenerApi.dispatch(GameActions.createGameFailure({ message }));
-      toast.error(message);
-    }
-  },
-});
+registerGameModesListeners(startAppListening);
 
 const getProblemSetupId = (setup: RootState["problemSetup"]["setup"]) => {
   if (!setup || typeof setup !== "object") {

@@ -1,14 +1,10 @@
 "use client";
 
-import PlayCard from "./play-card";
+import PlayCard from "@/domains/game/components/play-card";
 import { Zap } from "lucide-react";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { useHasMounted } from "@/shared/hooks/use-has-mounted";
-import { selectGameModeByKey } from "../state/game-modes-slice";
-import { GameModeKey } from "../models/game-mode";
-import { GameActions } from "../state/game-actions";
-import { selectCreatedGameId, selectIsCreatingGame } from "../state/game-slice";
 import {
   Select,
   SelectContent,
@@ -18,8 +14,6 @@ import {
 } from "@/shared/components/ui/select";
 import { toast } from "sonner";
 import { Button } from "@/shared/components/ui/button";
-import { useRouter } from "next/navigation";
-import { routerConfig } from "@/shared/router-config";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +21,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
+import { selectGameModeByKey } from "../state/game-modes-slice";
+import { GameModeKey } from "../models/game-mode";
+import { selectIsCreatingGame } from "../state/game-slice";
+import { GameActions } from "../state/game-actions";
+import { useGameCreatedRedirectListener } from "../hooks/use-game-created-redirect-listener";
 
 function formatDuration(durationSeconds: number) {
   const durationMinutes = durationSeconds / 60;
@@ -40,12 +39,12 @@ function formatDurationValue(durationSeconds: number) {
 export default function PlaySoloRushCard(
   props: Readonly<ComponentProps<"div">>
 ) {
+  useGameCreatedRedirectListener();
+
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState<string>();
   const gameMode = useAppSelector(selectGameModeByKey(GameModeKey.SoloRush));
-  const createdGameId = useAppSelector(selectCreatedGameId);
   const isCreating = useAppSelector(selectIsCreatingGame);
   const hasMounted = useHasMounted();
   const isAvailable = hasMounted && !!gameMode;
@@ -56,12 +55,6 @@ export default function PlaySoloRushCard(
   const timeSummary = timeOptions.map((option) =>
     formatDurationValue(option.durationSeconds)
   );
-
-  useEffect(() => {
-    if (createdGameId) {
-      router.push(routerConfig.gamePlay.execute({ gameId: createdGameId }));
-    }
-  }, [createdGameId, router]);
 
   const handleStart = async () => {
     if (!gameMode) {

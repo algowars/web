@@ -1,10 +1,10 @@
 "use client";
 
-import AvailableGameModesHeader from "@/domains/game-old/components/available-game-modes-header";
-import PlayDuelCard from "@/domains/game-old/components/play-duel-card";
-import PlayFFACard from "@/domains/game-old/components/play-ffa-card";
-import PlaySoloRushCard from "@/domains/game-old/components/play-solo-rush-card";
-import { useAvailableGameModes } from "@/domains/game-old/hooks/use-available-game-modes";
+import AvailableGameModesHeader from "@/domains/game/components/available-game-modes-header";
+import PlayDuelCard from "@/domains/game/components/play-duel-card";
+import PlayFFACard from "@/domains/game/components/play-ffa-card";
+import PlaySoloRushCard from "@/domains/game/components/play-solo-rush-card";
+import { useAvailableGameModes } from "@/domains/game/hooks/use-available-game-modes";
 import { useLoadProblems } from "@/domains/problem/hooks/use-load-problems";
 import ProblemTable from "@/domains/problem/tables/problem-table";
 import {

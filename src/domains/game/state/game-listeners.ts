@@ -61,6 +61,26 @@ export const registerGameListeners = (
   });
 
   startAppListening({
+    actionCreator: GameActions.createGameRequested,
+    effect: async (action, listenerApi) => {
+      listenerApi.cancelActiveListeners();
+
+      try {
+        const gameId = await listenerApi
+          .dispatch(gameApi.endpoints.createGame.initiate(action.payload))
+          .unwrap();
+
+        listenerApi.dispatch(GameActions.createGameSuccess(gameId));
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to create game";
+        listenerApi.dispatch(GameActions.createGameFailure({ message }));
+        toast.error(message);
+      }
+    },
+  });
+
+  startAppListening({
     actionCreator: GameActions.createGameFailure,
     effect: async (action, listenerApi) => {
       listenerApi.cancelActiveListeners();
