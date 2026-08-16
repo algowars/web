@@ -2,14 +2,15 @@
 
 import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
-import { CodeXml, FileText, History } from "lucide-react";
+import { CodeXml, FileText, FlaskConical, History } from "lucide-react";
 import { useMemo } from "react";
 import ProblemSolutionEditor from "@/views/problems/problem/problem-solution-editor";
 import { useAppSelector } from "@/shared/state/hooks";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import { selectCurrentProblem } from "@/domains/problem/state/problem-setup-slice";
-import { GameWorkspaceProps } from "@/domains/game/models/game-workspace";
 import { EditorWindow } from "@/domains/workspace/editor-window/editor";
+import ProblemTestCases from "@/domains/problem/components/problem-test-cases";
+import SubmissionStatusPanel from "@/domains/submission/components/submission-status-panel";
 
 /**
  * Solo Rush's implementation of the workspace strategy.
@@ -17,9 +18,7 @@ import { EditorWindow } from "@/domains/workspace/editor-window/editor";
  * specific to Solo Rush — other modes will look nothing
  * like this.
  */
-export default function SoloRushWorkspace({
-  game,
-}: Readonly<GameWorkspaceProps>) {
+export default function SoloRushWorkspace() {
   const currentProblem = useAppSelector(selectCurrentProblem);
   const isMobile = useIsMobile();
 
@@ -69,6 +68,65 @@ export default function SoloRushWorkspace({
       ),
     };
 
+    const executionTabs = {
+      key: "execution",
+      name: "Execution",
+      children: [
+        {
+          key: "tests",
+          name: "Tests",
+          icon: (
+            <FlaskConical
+              size={16}
+              className="text-indigo-600 dark:text-indigo-400"
+            />
+          ),
+          component: (
+            <ProblemTestCases
+              testCases={currentProblem?.publicTestCases ?? []}
+            />
+          ),
+        },
+        {
+          key: "submission",
+          name: "Submission",
+          icon: (
+            <FlaskConical
+              size={16}
+              className="text-indigo-600 dark:text-indigo-400"
+            />
+          ),
+          component: <SubmissionStatusPanel />,
+        },
+      ],
+    };
+
+    const mobileTestsTab = {
+      key: "tests",
+      name: "Tests",
+      icon: (
+        <FlaskConical
+          size={16}
+          className="text-indigo-600 dark:text-indigo-400"
+        />
+      ),
+      component: (
+        <ProblemTestCases testCases={currentProblem?.publicTestCases ?? []} />
+      ),
+    };
+
+    const mobileSubmissionTab = {
+      key: "submission",
+      name: "Submission",
+      icon: (
+        <FlaskConical
+          size={16}
+          className="text-indigo-600 dark:text-indigo-400"
+        />
+      ),
+      component: <SubmissionStatusPanel />,
+    };
+
     if (isMobile) {
       return {
         children: [
@@ -84,6 +142,8 @@ export default function SoloRushWorkspace({
             component: <ProblemSolutionEditor />,
           },
           mobileProblemTab,
+          mobileTestsTab,
+          mobileSubmissionTab,
         ],
       };
     }
@@ -108,6 +168,10 @@ export default function SoloRushWorkspace({
             {
               ...problemTabs,
               defaultSize: 55,
+            },
+            {
+              ...executionTabs,
+              defaultSize: 45,
             },
           ],
         },
