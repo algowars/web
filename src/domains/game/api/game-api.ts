@@ -7,6 +7,15 @@ export type CreateGameRequest = {
   timeLimitInSeconds: number;
 };
 
+export type CompleteProblemRequest = {
+  submissionId: string;
+};
+
+export type CompleteProblemResult = {
+  newScore: number;
+  nextProblemId: string | null;
+};
+
 export const gameApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getGame: builder.query<Game, string>({
@@ -44,6 +53,16 @@ export const gameApi = baseApi.injectEndpoints({
       query: (gameId) => ({
         url: `/api/v1/game/${gameId}/forfeit`,
         method: "POST",
+      }),
+    }),
+    completeProblem: builder.mutation<
+      CompleteProblemResult,
+      { gameId: string; problemId: string; body: CompleteProblemRequest }
+    >({
+      query: ({ gameId, problemId, body }) => ({
+        url: `/api/v1/game/${gameId}/problems/${problemId}/complete`,
+        method: "POST",
+        body,
       }),
     }),
   }),

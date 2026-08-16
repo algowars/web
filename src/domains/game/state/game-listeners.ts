@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { problemApi } from "@/domains/problem/api/problem-api";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { UserEvents } from "@/domains/user/state/user-events";
+import { submissionApi } from "@/domains/submission/api/submission-api";
+import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 
 type StartAppListening = TypedStartListening<RootState, AppDispatch>;
 type AppListenerEffect = NonNullable<
@@ -39,6 +41,28 @@ const loadCurrentProblemIfNeeded = async (listenerApi: AppListenerApi) => {
     .unwrap();
 
   listenerApi.dispatch(ProblemEvents.initializeProblem(problem));
+};
+
+const waitForTerminalSubmission = async (
+  listenerApi: AppListenerApi,
+  submissionId: string
+) => {
+  while (true) {
+    const submission = await listenerApi
+      .dispatch(
+        submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
+          subscribe: false,
+          forceRefetch: true,
+        })
+      )
+      .unwrap();
+
+    if (submission.status !== "Queued" && submission.status !== "Running") {
+      return submission;
+    }
+
+    await listenerApi.delay(1500);
+  }
 };
 
 export const registerGameListeners = (
@@ -255,6 +279,74 @@ export const registerGameListeners = (
     effect: async (action, listenerApi) => {
       listenerApi.cancelActiveListeners();
       toast.error(action.payload.message, {});
+    },
+  });
+
+  startAppListening({
+    actionCreator: GameActions.submitSoloRushSolutionRequested,
+    effect: async (_action, listenerApi) => {
+      listenerApi.cancelActiveListeners();
+
+      const state = listenerApi.getState();
+      const game = state.game.currentGame;
+      const problem = state.problemSetup.currentProblem;
+      const problemSetupId = state.problemSetup.setup?.id;
+
+      if (!game || !problem || !problemSetupId) {
+        toast.error("Problem setup is not ready yet");
+        return;
+      }
+
+      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(null));
+      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(true));
+
+      try {
+        const submissionId = await listenerApi
+          .dispatch(
+            submissionApi.endpoints.createGradeSubmission.initiate({
+              problemSetupId,
+              code: state.workspace.code,
+            })
+          )
+          .unwrap();
+
+        listenerApi.dispatch(
+          WorkspaceEvents.activeSubmissionChanged(submissionId)
+        );
+        toast.success("Submission created");
+
+        const submission = await waitForTerminalSubmission(
+          listenerApi,
+          submissionId
+        );
+        if (submission.status !== "Accepted") {
+          return;
+        }
+
+        await listenerApi
+          .dispatch(
+            gameApi.endpoints.completeProblem.initiate({
+              gameId: game.gameId,
+              problemId: problem.id,
+              body: { submissionId },
+            })
+          )
+          .unwrap();
+
+        listenerApi.dispatch(GameActions.loadGameRequested(game.gameId));
+      } catch (error) {
+        if (listenerApi.signal.aborted) {
+          return;
+        }
+
+        const message =
+          error instanceof Error ? error.message : "Failed to submit solution";
+        toast.error(message);
+      } finally {
+        listenerApi.dispatch(
+          WorkspaceEvents.submissionRequestStateChanged(false)
+        );
+      }
     },
   });
 

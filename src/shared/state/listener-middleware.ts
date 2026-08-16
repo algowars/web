@@ -38,23 +38,6 @@ registerGameListeners(startAppListening);
 
 registerGameModesListeners(startAppListening);
 
-const getProblemSetupId = (setup: RootState["problemSetup"]["setup"]) => {
-  if (!setup || typeof setup !== "object") {
-    return null;
-  }
-
-  const candidateKeys = ["problemSetupId", "id"] as const;
-
-  for (const key of candidateKeys) {
-    const value = setup[key];
-    if (typeof value === "string" && value.trim().length > 0) {
-      return value;
-    }
-  }
-
-  return null;
-};
-
 const requestProblemSetup = async (
   listenerApi: AppListenerApi,
   slug: string,
@@ -156,7 +139,7 @@ startAppListening({
     listenerApi.cancelActiveListeners();
 
     const state = listenerApi.getState();
-    const problemSetupId = getProblemSetupId(state.problemSetup.setup);
+    const problemSetupId = state.problemSetup.setup?.id;
     const isRun = WorkspaceEvents.runCodeRequested.match(action);
 
     if (!problemSetupId) {
@@ -207,12 +190,12 @@ startAppListening({
 
       toast.success(isRun ? "Run started" : "Submission created");
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : isRun
-            ? "Failed to run solution"
-            : "Failed to submit solution";
+      let fallbackMessage = "Failed to submit solution";
+      if (isRun) {
+        fallbackMessage = "Failed to run solution";
+      }
+
+      const message = error instanceof Error ? error.message : fallbackMessage;
       toast.error(message);
     } finally {
       listenerApi.dispatch(

@@ -23,6 +23,8 @@ import { WorkspaceEvents } from "../state/workspace-events";
 import { selectIsSubmittingSubmission } from "../state/workspace-slice";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
 import { Permissions } from "@/shared/lib/permissions";
+import { useKeyboardCommand } from "@/shared/hooks/use-keyboard-command";
+import { KeyboardShortcutTooltip } from "@/shared/components/keyboard-shortcut-tooltip";
 
 type WorkspaceHeaderProps = {
   problem: Problem;
@@ -35,6 +37,19 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
   const userPermissions = useAppSelector(selectUserPermissions);
 
   const canRunCode = userPermissions.includes(Permissions.SUBMISSION_CREATE);
+  const canSubmitSolution =
+    isAuthenticated && !isSubmittingSubmission && canRunCode;
+
+  const submitSolution = () => {
+    dispatch(WorkspaceEvents.submitCodeRequested());
+  };
+
+  useKeyboardCommand({
+    key: "Enter",
+    onCommand: submitSolution,
+    enabled: canSubmitSolution,
+    modifier: "ctrl",
+  });
 
   const runLabel = isSubmittingSubmission ? "Running..." : "Run";
   const submitLabel = isSubmittingSubmission ? "Submitting..." : "Submit";
@@ -57,16 +72,19 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
             </Button>
           </li>
           <li>
-            <Button
-              className="w-24"
-              data-cy="submit-btn"
-              disabled={
-                !isAuthenticated || isSubmittingSubmission || !canRunCode
-              }
-              onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
+            <KeyboardShortcutTooltip
+              label="Submit solution"
+              shortcut={["Ctrl", "Enter"]}
             >
-              {!isAuthenticated ? <Lock /> : null} {submitLabel}
-            </Button>
+              <Button
+                className="w-24"
+                data-cy="submit-btn"
+                disabled={!canSubmitSolution}
+                onClick={submitSolution}
+              >
+                {!isAuthenticated ? <Lock /> : null} {submitLabel}
+              </Button>
+            </KeyboardShortcutTooltip>
           </li>
           <li>
             <Button variant="ghost" asChild>
@@ -96,14 +114,19 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
         >
           {!isAuthenticated ? <Lock /> : null} {runLabel}
         </Button>
-        <Button
-          className="w-24"
-          data-cy="submit-btn"
-          disabled={!isAuthenticated || isSubmittingSubmission || !canRunCode}
-          onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
+        <KeyboardShortcutTooltip
+          label="Submit solution"
+          shortcut={["Ctrl", "Enter"]}
         >
-          {!isAuthenticated ? <Lock /> : null} {submitLabel}
-        </Button>
+          <Button
+            className="w-24"
+            data-cy="submit-btn"
+            disabled={!canSubmitSolution}
+            onClick={submitSolution}
+          >
+            {!isAuthenticated ? <Lock /> : null} {submitLabel}
+          </Button>
+        </KeyboardShortcutTooltip>
       </div>
       <Sheet>
         <SheetTrigger asChild>
@@ -155,15 +178,19 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
               >
                 {!isAuthenticated ? <Lock /> : null} {runLabel}
               </Button>
-              <Button
-                data-cy="submit-btn"
-                disabled={
-                  !isAuthenticated || isSubmittingSubmission || !canRunCode
-                }
-                onClick={() => dispatch(WorkspaceEvents.submitCodeRequested())}
+              <KeyboardShortcutTooltip
+                label="Submit solution"
+                shortcut={["Ctrl", "Enter"]}
               >
-                {!isAuthenticated ? <Lock /> : null} {submitLabel}
-              </Button>
+                <Button
+                  className="w-full"
+                  data-cy="submit-btn"
+                  disabled={!canSubmitSolution}
+                  onClick={submitSolution}
+                >
+                  {!isAuthenticated ? <Lock /> : null} {submitLabel}
+                </Button>
+              </KeyboardShortcutTooltip>
             </div>
           </SheetFooter>
         </SheetContent>

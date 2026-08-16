@@ -27,6 +27,10 @@ export const GameActions = {
     "game/forfeitGameFailure"
   ),
 
+  submitSoloRushSolutionRequested: createAction(
+    "game/submitSoloRushSolutionRequested"
+  ),
+
   loadProblemHistoryRequested: createAction<string>(
     "game/loadProblemHistoryRequested"
   ),
