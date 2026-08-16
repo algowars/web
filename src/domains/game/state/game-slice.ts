@@ -12,6 +12,7 @@ interface GameState {
   problemHistory: GameProblemHistory[];
   problemHistoryError: string | null;
   createdGameId?: string | null;
+  startRequestedForGameId: string | null;
 }
 
 const initialState: GameState = {
@@ -24,6 +25,7 @@ const initialState: GameState = {
   problemHistory: [],
   problemHistoryError: null,
   createdGameId: null,
+  startRequestedForGameId: null,
 };
 
 const gameSlice = createSlice({
@@ -49,6 +51,7 @@ const gameSlice = createSlice({
       .addCase(GameActions.loadGameRequested, (state) => {
         state.isGameLoading = true;
         state.gameError = null;
+        state.startRequestedForGameId = null;
       })
       .addCase(GameActions.loadGameSuccess, (state, action) => {
         state.isGameLoading = false;
@@ -57,6 +60,12 @@ const gameSlice = createSlice({
       .addCase(GameActions.loadGameFailure, (state, action) => {
         state.isGameLoading = false;
         state.gameError = action.payload.message;
+      })
+      .addCase(GameActions.startGameRequested, (state, action) => {
+        state.startRequestedForGameId = action.payload.gameId;
+      })
+      .addCase(GameActions.startGameFailure, (state) => {
+        state.startRequestedForGameId = null;
       })
       .addCase(GameActions.loadProblemHistoryRequested, (state) => {
         state.isProblemHistoryLoading = true;
@@ -83,3 +92,5 @@ export const selectCreatedGameId = (s: { game: GameState }) =>
   s.game.createdGameId;
 export const selectIsCreatingGame = (s: { game: GameState }) =>
   s.game.isCreating;
+export const selectStartRequestedForGameId = (s: { game: GameState }) =>
+  s.game.startRequestedForGameId;

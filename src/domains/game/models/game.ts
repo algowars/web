@@ -1,3 +1,5 @@
+import { GameModeKey } from "./game-mode";
+
 export enum GameStatus {
   Pending = 0,
   Running = 1,
@@ -25,6 +27,7 @@ export interface GameProblemHistory {
 export interface Game {
   gameId: string;
   gameModeId: string;
+  gameModeKey: GameModeKey;
   status: GameStatus;
   timeLimitInSeconds: number;
   createdAt: Date;

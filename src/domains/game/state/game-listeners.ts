@@ -4,6 +4,42 @@ import { GameActions } from "./game-actions";
 import { gameApi } from "../api/game-api";
 import { Game, GameStatus } from "../models/game";
 import { toast } from "sonner";
+import { problemApi } from "@/domains/problem/api/problem-api";
+import { ProblemEvents } from "@/domains/problem/state/problem-events";
+import { UserEvents } from "@/domains/user/state/user-events";
+
+type StartAppListening = TypedStartListening<RootState, AppDispatch>;
+type AppListenerEffect = NonNullable<
+  Parameters<StartAppListening>[0]["effect"]
+>;
+type AppListenerApi = Parameters<AppListenerEffect>[1];
+
+/**
+ * Loads the current user's active problem for the currently loaded game, if it isn't already
+ * loaded. Reads game/user directly from state (rather than from whichever action triggered it)
+ * so it can be safely called from more than one listener — the game and the user can each
+ * become available first depending on timing (e.g. a hard refresh races the auth/user sync
+ * chain against the game fetch), and either order needs to end up loading the problem.
+ */
+const loadCurrentProblemIfNeeded = async (listenerApi: AppListenerApi) => {
+  const state = listenerApi.getState();
+  const userId = state.user.user?.id;
+  const game = state.game.currentGame;
+  if (!userId || !game) return;
+
+  const participant = game.participants.find((p) => p.userId === userId);
+  const problemId = participant?.currentProblem?.problemId;
+  if (!problemId) return;
+
+  const alreadyLoaded = state.problemSetup.currentProblem?.id === problemId;
+  if (alreadyLoaded) return;
+
+  const problem = await listenerApi
+    .dispatch(problemApi.endpoints.getProblemById.initiate(problemId))
+    .unwrap();
+
+  listenerApi.dispatch(ProblemEvents.initializeProblem(problem));
+};
 
 export const registerGameListeners = (
   startAppListening: TypedStartListening<RootState, AppDispatch>
@@ -41,22 +77,40 @@ export const registerGameListeners = (
     effect: async (action, listenerApi) => {
       listenerApi.cancelActiveListeners();
 
-      try {
-        if (isGameStatus(action.payload, GameStatus.Pending)) {
-          listenerApi.dispatch(
-            GameActions.startGameRequested({ gameId: action.payload.gameId })
-          );
-          return;
-        }
-      } catch (error) {
-        if (listenerApi.signal.aborted) {
-          return;
-        }
-
-        const message =
-          error instanceof Error ? error.message : "Failed to start game";
-        listenerApi.dispatch(GameActions.startGameFailure({ message }));
+      if (!isGameStatus(action.payload, GameStatus.Pending)) {
+        return;
       }
+
+      // Only start a Pending game once per page load (startRequestedForGameId is reset
+      // whenever loadGameRequested fires again, e.g. on remount/manual refresh). This is what
+      // stops loadGameSuccess -> startGameRequested -> startGameSuccess -> getGame ->
+      // loadGameSuccess from looping forever if the game is still Pending after starting.
+      const { startRequestedForGameId } = listenerApi.getState().game;
+      if (startRequestedForGameId === action.payload.gameId) {
+        return;
+      }
+
+      listenerApi.dispatch(
+        GameActions.startGameRequested({ gameId: action.payload.gameId })
+      );
+    },
+  });
+
+  startAppListening({
+    actionCreator: GameActions.loadGameSuccess,
+    effect: async (_action, listenerApi) => {
+      await loadCurrentProblemIfNeeded(listenerApi);
+    },
+  });
+
+  // Covers the hard-refresh case: the game can finish loading before the auth/user sync chain
+  // (userAuthenticated -> upsertUser -> initializeUser -> getAccount -> initializeUserSuccess)
+  // does. Without this, the listener above bails on a missing userId and nothing ever retries
+  // once the user does become available, leaving the problem stuck on "Loading problem...".
+  startAppListening({
+    actionCreator: UserEvents.initializeUserSuccess,
+    effect: async (_action, listenerApi) => {
+      await loadCurrentProblemIfNeeded(listenerApi);
     },
   });
 

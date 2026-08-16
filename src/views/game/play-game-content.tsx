@@ -1,21 +1,17 @@
 "use client";
 
-import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
-import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { useEffect } from "react";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { CodeXml, FileText, History } from "lucide-react";
-import { useMemo, useEffect } from "react";
-import ProblemSolutionEditor from "../problems/problem/problem-solution-editor";
+import { Button } from "@/shared/components/ui/button";
 
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { ProblemQuestion } from "@/domains/problem/components/problem-question";
-import { selectCurrentProblem } from "@/domains/problem/state/problem-setup-slice";
 import { GameActions } from "@/domains/game/state/game-actions";
 import {
   selectCurrentGame,
   selectGameError,
   selectIsLoadingGame,
 } from "@/domains/game/state/game-slice";
+import { gameWorkspaceRegistry } from "@/domains/game/game-workspace-registry";
 
 type PlayGameContentProps = {
   gameId: string;
@@ -28,116 +24,44 @@ export default function PlayGameContent({
   const currentGame = useAppSelector(selectCurrentGame);
   const isLoading = useAppSelector(selectIsLoadingGame);
   const error = useAppSelector(selectGameError);
-  // const isGameOver = useAppSelector(selectIsGameOver);
-  const currentProblem = useAppSelector(selectCurrentProblem);
 
   useEffect(() => {
     dispatch(GameActions.loadGameRequested(gameId));
   }, [dispatch, gameId]);
 
-  const isMobile = useIsMobile();
+  const handleRetry = () => {
+    dispatch(GameActions.loadGameRequested(gameId));
+  };
 
-  const tabs = useMemo((): EditorWindowTabNode => {
-    const problemTabs = {
-      key: "problem",
-      name: "Problem",
-      children: [
-        {
-          key: "description",
-          name: "Description",
-          icon: (
-            <FileText size={16} className="text-blue-600 dark:text-blue-400" />
-          ),
-          component: currentProblem ? (
-            <ProblemQuestion problem={currentProblem} />
-          ) : (
-            <div className="p-4 text-sm text-muted-foreground">
-              Loading problem...
-            </div>
-          ),
-        },
-        {
-          key: "history",
-          name: "History",
-          icon: (
-            <History
-              size={16}
-              className="text-purple-600 dark:text-purple-400"
-            />
-          ),
-          component: <div></div>,
-        },
-      ],
-    };
-
-    const mobileProblemTab = {
-      key: "problem",
-      name: "Problem",
-      icon: <FileText size={16} className="text-blue-600 dark:text-blue-400" />,
-      component: currentProblem ? (
-        <ProblemQuestion problem={currentProblem} />
-      ) : (
-        <div className="p-4 text-sm text-muted-foreground">
-          Loading problem...
-        </div>
-      ),
-    };
-
-    if (isMobile) {
-      return {
-        children: [
-          {
-            key: "code",
-            name: "Code",
-            icon: (
-              <CodeXml
-                size={16}
-                className="text-green-600 dark:text-green-400"
-              />
-            ),
-            component: <ProblemSolutionEditor />,
-          },
-          mobileProblemTab,
-        ],
-      };
-    }
-
-    return {
-      orientation: "horizontal",
-      children: [
-        {
-          key: "code",
-          name: "Code",
-          defaultSize: 50,
-          icon: (
-            <CodeXml size={16} className="text-green-600 dark:text-green-400" />
-          ),
-          component: <ProblemSolutionEditor />,
-        },
-        {
-          key: "right-column",
-          defaultSize: 50,
-          orientation: "vertical",
-          children: [
-            {
-              ...problemTabs,
-              defaultSize: 55,
-            },
-          ],
-        },
-      ],
-    };
-  }, [currentProblem, isMobile]);
+  const strategy = currentGame
+    ? gameWorkspaceRegistry[currentGame.gameModeKey]
+    : undefined;
+  const Workspace = strategy?.Workspace;
+  const Header = strategy?.Header;
 
   return (
-    <SidebarLayout breadcrumbs={[]}>
+    <SidebarLayout
+      breadcrumbs={[]}
+      headerItems={
+        Header && currentGame ? <Header game={currentGame} /> : undefined
+      }
+    >
       <div className="h-full px-2 md:px-4 pb-2 md:pb-4">
         {isLoading && <div>Loading game...</div>}
-        {error && <div>{error}</div>}
-        {/* {currentGame && !error && <PlayGameWorkspace tab={tabs} />} */}
-        {/* {currentGame && isGameOver ? (
-          <CompletedGameResultsDialog game={currentGame} />
-        ) : null} */}
+        {error && (
+          <div className="flex flex-col items-start gap-3">
+            <div>{error}</div>
+            <Button onClick={handleRetry}>Retry</Button>
+          </div>
+        )}
+        {!isLoading && !error && currentGame && Workspace && (
+          <Workspace game={currentGame} />
+        )}
+        {!isLoading && !error && currentGame && !Workspace && (
+          <div className="text-sm text-muted-foreground">
+            This game mode isn&apos;t supported yet.
+          </div>
+        )}
       </div>
     </SidebarLayout>
   );
