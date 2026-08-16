@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Clock3 } from "lucide-react";
 import { Badge } from "../ui/badge";
 
@@ -7,7 +7,7 @@ type CountdownTimerProps = {
   startedAt: Date;
   /** Total duration of the timer, in seconds */
   timeLimitInSeconds: number;
-  /** Called once, when the timer reaches 0 */
+  /** Called once, when the timer reaches 0. Must be a stable/memoized reference. */
   onComplete?: () => void;
 };
 
@@ -38,19 +38,9 @@ export default function CountdownTimer({
     computeRemainingSeconds(startedAt, timeLimitInSeconds)
   );
 
-  // Guards against calling onComplete more than once per mount. Without this, if onComplete's
-  // identity changes on a parent re-render (e.g. it's an inline/unmemoized callback) while
-  // remainingSeconds is still 0, the effect re-runs (onComplete is a dependency) and fires it
-  // again — and if onComplete's own side effects cause the parent to re-render, that's an
-  // infinite loop. This ref makes "only once" true regardless of what the caller passes in.
-  const hasFiredCompleteRef = useRef(false);
-
   useEffect(() => {
     if (remainingSeconds <= 0) {
-      if (!hasFiredCompleteRef.current) {
-        hasFiredCompleteRef.current = true;
-        onComplete?.();
-      }
+      onComplete?.();
       return;
     }
 
