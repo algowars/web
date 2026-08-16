@@ -7,6 +7,9 @@ export const routerConfig = {
   home: {
     path: "/",
   },
+  admin: {
+    path: "/admin",
+  },
   dashboard: {
     path: "/dashboard",
   },

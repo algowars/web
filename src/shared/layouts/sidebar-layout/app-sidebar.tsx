@@ -10,18 +10,20 @@ import {
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
 import { routerConfig } from "@/shared/router-config";
-import { Command, HomeIcon, Puzzle } from "lucide-react";
+import { Command, HomeIcon, Puzzle, ShieldUser } from "lucide-react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import SidebarUser from "./sidebar-user";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
 import { Badge } from "@/shared/components/ui/badge";
+import { useAppSelector } from "@/shared/state/hooks";
+import { selectUserRoles } from "@/domains/user/state/user-slice";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
   const { user } = useUser();
-
+  const roles = useAppSelector(selectUserRoles);
   const data = {
     navMain: [
       {
@@ -37,6 +39,21 @@ export default function AppSidebar(
       },
     ],
   };
+
+  const adminData = {
+    navMain: [
+      {
+        title: "Admin",
+        url: routerConfig.admin.path,
+        icon: ShieldUser,
+      },
+    ],
+  };
+
+  const navItems = [
+    ...data.navMain,
+    ...(roles.includes("admin") ? adminData.navMain : []),
+  ];
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -61,7 +78,7 @@ export default function AppSidebar(
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarMainNav items={data.navMain} />
+        <SidebarMainNav items={navItems} />
       </SidebarContent>
       <SidebarFooter>
         <SidebarUser />

@@ -25,7 +25,7 @@ interface AppSidebarHeaderProps {
 export default function AppSidebarHeader({
   breadcrumbs = [],
   headerItems = <ModeToggle className="ml-auto mr-3" />,
-}: AppSidebarHeaderProps) {
+}: Readonly<AppSidebarHeaderProps>) {
   return (
     <header className="flex min-h-16 shrink-0 items-center gap-2 py-2 px-2 md:px-4">
       <div className="flex items-center gap-2">
