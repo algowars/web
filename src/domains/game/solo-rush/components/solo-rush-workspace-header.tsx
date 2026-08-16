@@ -5,6 +5,7 @@ import GameTimer from "../../components/game-timer";
 import { selectCurrentGame } from "../../state/game-slice";
 import { useAppSelector, useAppDispatch } from "@/shared/state/hooks";
 import { GameActions } from "../../state/game-actions";
+import { ModeToggle } from "@/shared/theme/mode-toggle";
 
 export default function SoloRushWorkspaceHeader() {
   const game = useAppSelector(selectCurrentGame);
@@ -23,7 +24,9 @@ export default function SoloRushWorkspaceHeader() {
         {game ? <GameTimer game={game} onTimeExpired={onTimeExpired} /> : null}
       </div>
       <div className="col-span-4"></div>
-      <div className="col-span-4"></div>
+      <div className="col-span-4 flex items-center">
+        <ModeToggle className="ml-auto" />
+      </div>
     </header>
   );
 }
