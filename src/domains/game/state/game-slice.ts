@@ -85,6 +85,8 @@ const gameSlice = createSlice({
 export default gameSlice.reducer;
 
 export const selectCurrentGame = (s: { game: GameState }) => s.game.currentGame;
+export const selectCurrentGameId = (s: { game: GameState }) =>
+  s.game.currentGame?.gameId;
 export const selectIsLoadingGame = (s: { game: GameState }) =>
   s.game.isGameLoading;
 export const selectGameError = (s: { game: GameState }) => s.game.gameError;
