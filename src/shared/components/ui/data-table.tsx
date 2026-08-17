@@ -60,7 +60,20 @@ export function DataTable<TData, TValue>({
         key={row.id}
         data-state={row.getIsSelected() && "selected"}
         className={onRowClick ? "cursor-pointer" : undefined}
+        tabIndex={onRowClick ? 0 : undefined}
+        role={onRowClick ? "button" : undefined}
         onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+        onKeyDown={
+          onRowClick
+            ? (event) => {
+                if (event.key !== "Enter" && event.key !== " ") {
+                  return;
+                }
+                event.preventDefault();
+                onRowClick(row.original);
+              }
+            : undefined
+        }
       >
         {row.getVisibleCells().map((cell) => (
           <TableCell key={cell.id}>

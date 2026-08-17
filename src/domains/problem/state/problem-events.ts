@@ -4,6 +4,7 @@ import type { ProblemSummary } from "../models/problem-summary";
 
 export const ProblemEvents = {
   initializeProblem: createAction<Problem>("problem/initialize"),
+  clearProblem: createAction("problem/clear"),
 
   setProblemsPage: createAction<number>("problem/setPage"),
   setProblemsSize: createAction<number>("problem/setSize"),

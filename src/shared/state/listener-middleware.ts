@@ -12,6 +12,13 @@ import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
 import { registerHealthListeners } from "@/domains/health/state/health-listeners";
+import { registerGameListeners } from "@/domains/game/state/game-listeners";
+import { registerGameModesListeners } from "@/domains/game/state/game-modes-listeners";
+import { registerGameWorkspaceListeners } from "@/domains/workspace/state/game-workspace-listeners";
+import {
+  connectSubmissionHub,
+  onSubmissionCompletedPush,
+} from "@/shared/lib/signalr/submission-hub-client";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -32,22 +39,9 @@ registerProblemSubmissionsListeners(startAppListening);
 
 registerHealthListeners(startAppListening);
 
-const getProblemSetupId = (setup: RootState["problemSetup"]["setup"]) => {
-  if (!setup || typeof setup !== "object") {
-    return null;
-  }
-
-  const candidateKeys = ["problemSetupId", "id"] as const;
-
-  for (const key of candidateKeys) {
-    const value = setup[key];
-    if (typeof value === "string" && value.trim().length > 0) {
-      return value;
-    }
-  }
-
-  return null;
-};
+registerGameListeners(startAppListening);
+registerGameModesListeners(startAppListening);
+registerGameWorkspaceListeners(startAppListening);
 
 const requestProblemSetup = async (
   listenerApi: AppListenerApi,
@@ -150,7 +144,7 @@ startAppListening({
     listenerApi.cancelActiveListeners();
 
     const state = listenerApi.getState();
-    const problemSetupId = getProblemSetupId(state.problemSetup.setup);
+    const problemSetupId = state.problemSetup.setup?.id;
     const isRun = WorkspaceEvents.runCodeRequested.match(action);
 
     if (!problemSetupId) {
@@ -192,6 +186,33 @@ startAppListening({
         WorkspaceEvents.activeSubmissionChanged(submissionId)
       );
 
+      // Wait for the SignalR "SubmissionCompleted" push then do one forced refetch.
+      // Uses Promise.race with a 60-second timeout as a fallback in case SignalR is unavailable.
+      // The SubmissionStatusPanel's slow fallback poll covers any remaining edge cases.
+      listenerApi.fork(async (forkApi) => {
+        let unsubscribe = () => {};
+        try {
+          await connectSubmissionHub();
+          const pushArrived = new Promise<void>((resolve) => {
+            unsubscribe = onSubmissionCompletedPush(({ submissionId: id }) => {
+              if (id === submissionId) resolve();
+            });
+          });
+          await Promise.race([pushArrived, forkApi.delay(60_000)]);
+        } catch {
+          // Hub unavailable — the slow fallback poll in SubmissionStatusPanel covers this.
+        } finally {
+          unsubscribe();
+        }
+
+        listenerApi.dispatch(
+          submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
+            subscribe: false,
+            forceRefetch: true,
+          })
+        );
+      });
+
       listenerApi.dispatch(
         submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
           subscribe: false,
@@ -201,12 +222,12 @@ startAppListening({
 
       toast.success(isRun ? "Run started" : "Submission created");
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : isRun
-            ? "Failed to run solution"
-            : "Failed to submit solution";
+      let fallbackMessage = "Failed to submit solution";
+      if (isRun) {
+        fallbackMessage = "Failed to run solution";
+      }
+
+      const message = error instanceof Error ? error.message : fallbackMessage;
       toast.error(message);
     } finally {
       listenerApi.dispatch(

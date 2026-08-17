@@ -1,5 +1,12 @@
 import { ProgrammingLanguage } from "@/domains/language/models/programming-language";
 
+export interface ProblemSetupOption {
+  id: string;
+  language: string;
+  initialCode: string;
+  [key: string]: unknown;
+}
+
 export interface ProblemAuthor {
   username: string;
   imageUrl?: string | null;
@@ -30,6 +37,7 @@ export interface Problem {
   question: string;
   availableLanguages: ProgrammingLanguage[];
   publicTestCases: PublicTestCase[];
+  setups?: ProblemSetupOption[];
   author?: ProblemAuthor | null;
   tags?: string[];
 }
