@@ -21,7 +21,9 @@ export const registerGameWorkspaceListeners = (
     actionCreator: GameActions.soloRushSubmissionCreated,
     effect: ({ payload }, listenerApi) => {
       const { submissionId } = payload;
-      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(submissionId));
+      listenerApi.dispatch(
+        WorkspaceEvents.activeSubmissionChanged(submissionId)
+      );
       listenerApi.dispatch(
         WorkspaceEvents.editorTabActivated({ nodeId: "root", tabIndex: 3 })
       );
@@ -40,7 +42,9 @@ export const registerGameWorkspaceListeners = (
   startAppListening({
     actionCreator: GameActions.soloRushSubmissionEnded,
     effect: (_, listenerApi) => {
-      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(false));
+      listenerApi.dispatch(
+        WorkspaceEvents.submissionRequestStateChanged(false)
+      );
     },
   });
 };

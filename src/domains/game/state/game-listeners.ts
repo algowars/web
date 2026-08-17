@@ -9,8 +9,15 @@ import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { UserEvents } from "@/domains/user/state/user-events";
 import { submissionApi } from "@/domains/submission/api/submission-api";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
-import { joinGameUpdates, leaveGameUpdates, onGameCompletedPush } from "@/shared/lib/signalr/game-hub-client";
-import { connectSubmissionHub, onSubmissionCompletedPush } from "@/shared/lib/signalr/submission-hub-client";
+import {
+  joinGameUpdates,
+  leaveGameUpdates,
+  onGameCompletedPush,
+} from "@/shared/lib/signalr/game-hub-client";
+import {
+  connectSubmissionHub,
+  onSubmissionCompletedPush,
+} from "@/shared/lib/signalr/submission-hub-client";
 
 type StartAppListening = TypedStartListening<RootState, AppDispatch>;
 type AppListenerEffect = NonNullable<
@@ -434,7 +441,9 @@ export const registerGameListeners = (
         listenerApi.dispatch(ProblemEvents.initializeProblem(nextProblem));
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : "Failed to load next problem";
+          error instanceof Error
+            ? error.message
+            : "Failed to load next problem";
         toast.error(message);
       }
     },

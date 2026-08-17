@@ -2,7 +2,10 @@
 
 import { useCallback } from "react";
 import GameTimer from "../../components/game-timer";
-import { selectCurrentGame, selectPendingNextProblemId } from "../../state/game-slice";
+import {
+  selectCurrentGame,
+  selectPendingNextProblemId,
+} from "../../state/game-slice";
 import { useAppSelector, useAppDispatch } from "@/shared/state/hooks";
 import { GameActions } from "../../state/game-actions";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
@@ -13,7 +16,11 @@ import { useKeyboardCommand } from "@/shared/hooks/use-keyboard-command";
 import { KeyboardShortcutTooltip } from "@/shared/components/keyboard-shortcut-tooltip";
 import ScoreBadge from "../../components/score-badge";
 import { selectUser } from "@/domains/user/state/user-slice";
-import { selectCurrentProblem, selectProblemSetup, selectProblemSetupLoading } from "@/domains/problem/state/problem-setup-slice";
+import {
+  selectCurrentProblem,
+  selectProblemSetup,
+  selectProblemSetupLoading,
+} from "@/domains/problem/state/problem-setup-slice";
 import { LanguageSelect } from "@/domains/workspace/language-select/components/language-select";
 import {
   Sheet,
@@ -52,11 +59,18 @@ export default function SoloRushWorkspaceHeader() {
 
   const onNextProblem = () => {
     if (!pendingNextProblemId) return;
-    dispatch(GameActions.nextProblemRequested({ nextProblemId: pendingNextProblemId }));
+    dispatch(
+      GameActions.nextProblemRequested({ nextProblemId: pendingNextProblemId })
+    );
   };
 
   const problemSolved = pendingNextProblemId !== undefined;
-  const canSubmitSolution = !!game && !!problemSetup && !isProblemSetupLoading && !isSubmittingSubmission && !problemSolved;
+  const canSubmitSolution =
+    !!game &&
+    !!problemSetup &&
+    !isProblemSetupLoading &&
+    !isSubmittingSubmission &&
+    !problemSolved;
 
   useKeyboardCommand({
     key: "Enter",

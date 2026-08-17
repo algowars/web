@@ -15,7 +15,10 @@ import { registerHealthListeners } from "@/domains/health/state/health-listeners
 import { registerGameListeners } from "@/domains/game/state/game-listeners";
 import { registerGameModesListeners } from "@/domains/game/state/game-modes-listeners";
 import { registerGameWorkspaceListeners } from "@/domains/workspace/state/game-workspace-listeners";
-import { connectSubmissionHub, onSubmissionCompletedPush } from "@/shared/lib/signalr/submission-hub-client";
+import {
+  connectSubmissionHub,
+  onSubmissionCompletedPush,
+} from "@/shared/lib/signalr/submission-hub-client";
 
 export const listenerMiddleware = createListenerMiddleware();
 
