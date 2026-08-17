@@ -13,6 +13,9 @@ interface GameState {
   problemHistoryError: string | null;
   createdGameId?: string | null;
   startRequestedForGameId: string | null;
+  /** Set after a problem is solved. `string` = next problem ID ready to load;
+   *  `null` = last problem solved, game over. `undefined` = not yet solved. */
+  pendingNextProblemId: string | null | undefined;
 }
 
 const initialState: GameState = {
@@ -26,6 +29,7 @@ const initialState: GameState = {
   problemHistoryError: null,
   createdGameId: null,
   startRequestedForGameId: null,
+  pendingNextProblemId: undefined,
 };
 
 const gameSlice = createSlice({
@@ -67,6 +71,27 @@ const gameSlice = createSlice({
       .addCase(GameActions.startGameFailure, (state) => {
         state.startRequestedForGameId = null;
       })
+      .addCase(GameActions.completeProblemSuccess, (state, action) => {
+        if (state.currentGame?.gameId !== action.payload.gameId) {
+          return;
+        }
+
+        const participant = state.currentGame.participants.find(
+          (candidate) => candidate.userId === action.payload.userId
+        );
+        if (!participant) {
+          return;
+        }
+
+        participant.score = action.payload.newScore;
+        participant.currentProblem = action.payload.nextProblemId
+          ? { problemId: action.payload.nextProblemId }
+          : null;
+        state.pendingNextProblemId = action.payload.nextProblemId ?? null;
+      })
+      .addCase(GameActions.nextProblemRequested, (state) => {
+        state.pendingNextProblemId = undefined;
+      })
       .addCase(GameActions.loadProblemHistoryRequested, (state) => {
         state.isProblemHistoryLoading = true;
         state.problemHistoryError = null;
@@ -96,3 +121,5 @@ export const selectIsCreatingGame = (s: { game: GameState }) =>
   s.game.isCreating;
 export const selectStartRequestedForGameId = (s: { game: GameState }) =>
   s.game.startRequestedForGameId;
+export const selectPendingNextProblemId = (s: { game: GameState }) =>
+  s.game.pendingNextProblemId;

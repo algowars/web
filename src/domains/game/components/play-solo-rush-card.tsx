@@ -4,7 +4,6 @@ import PlayCard from "@/domains/game/components/play-card";
 import { Zap } from "lucide-react";
 import { ComponentProps, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { useHasMounted } from "@/shared/hooks/use-has-mounted";
 import {
   Select,
   SelectContent,
@@ -46,8 +45,7 @@ export default function PlaySoloRushCard(
   const [selectedDuration, setSelectedDuration] = useState<string>();
   const gameMode = useAppSelector(selectGameModeByKey(GameModeKey.SoloRush));
   const isCreating = useAppSelector(selectIsCreatingGame);
-  const hasMounted = useHasMounted();
-  const isAvailable = hasMounted && !!gameMode;
+  const isAvailable = !!gameMode;
   const timeOptions = gameMode?.timeOptions ?? [];
   const defaultTimeOption = timeOptions.find((option) => option.isDefault);
   const defaultDuration = defaultTimeOption?.durationSeconds.toString();

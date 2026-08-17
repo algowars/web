@@ -27,9 +27,26 @@ export const GameActions = {
     "game/forfeitGameFailure"
   ),
 
+  completeProblemSuccess: createAction<{
+    gameId: string;
+    userId: string | undefined;
+    newScore: number;
+    nextProblemId: string | null;
+  }>("game/completeProblemSuccess"),
+
   submitSoloRushSolutionRequested: createAction(
     "game/submitSoloRushSolutionRequested"
   ),
+
+  nextProblemRequested: createAction<{ nextProblemId: string }>(
+    "game/nextProblemRequested"
+  ),
+
+  soloRushSubmissionStarted: createAction("game/soloRushSubmissionStarted"),
+  soloRushSubmissionCreated: createAction<{ submissionId: string }>(
+    "game/soloRushSubmissionCreated"
+  ),
+  soloRushSubmissionEnded: createAction("game/soloRushSubmissionEnded"),
 
   loadProblemHistoryRequested: createAction<string>(
     "game/loadProblemHistoryRequested"

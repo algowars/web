@@ -127,7 +127,7 @@ export default function SubmissionStatusPanel() {
     submissionId ?? "",
     {
       skip: !submissionId,
-      pollingInterval: shouldPoll ? 1500 : 0,
+      pollingInterval: shouldPoll ? 10_000 : 0,
       refetchOnMountOrArgChange: true,
     }
   );

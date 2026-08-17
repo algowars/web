@@ -9,6 +9,8 @@ import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { UserEvents } from "@/domains/user/state/user-events";
 import { submissionApi } from "@/domains/submission/api/submission-api";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
+import { joinGameUpdates, leaveGameUpdates, onGameCompletedPush } from "@/shared/lib/signalr/game-hub-client";
+import { connectSubmissionHub, onSubmissionCompletedPush } from "@/shared/lib/signalr/submission-hub-client";
 
 type StartAppListening = TypedStartListening<RootState, AppDispatch>;
 type AppListenerEffect = NonNullable<
@@ -33,13 +35,14 @@ const loadCurrentProblemIfNeeded = async (listenerApi: AppListenerApi) => {
   const problemId = participant?.currentProblem?.problemId;
   if (!problemId) return;
 
-  const alreadyLoaded = state.problemSetup.currentProblem?.id === problemId;
-  if (alreadyLoaded) return;
-
   const problem = await listenerApi
     .dispatch(problemApi.endpoints.getProblemById.initiate(problemId))
     .unwrap();
 
+  // Always dispatch initializeProblem even if the problem ID matches what was
+  // previously loaded (e.g. game starts on the same problem the user was just
+  // solving). Without this, codeVersionId is never cleared and the editor keeps
+  // the old code and submission state instead of resetting for the game.
   listenerApi.dispatch(ProblemEvents.initializeProblem(problem));
 };
 
@@ -47,22 +50,29 @@ const waitForTerminalSubmission = async (
   listenerApi: AppListenerApi,
   submissionId: string
 ) => {
-  while (true) {
-    const submission = await listenerApi
-      .dispatch(
-        submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
-          subscribe: false,
-          forceRefetch: true,
-        })
-      )
-      .unwrap();
-
-    if (submission.status !== "Queued" && submission.status !== "Running") {
-      return submission;
-    }
-
-    await listenerApi.delay(1500);
+  let unsubscribe = () => {};
+  try {
+    await connectSubmissionHub();
+    const pushArrived = new Promise<void>((resolve) => {
+      unsubscribe = onSubmissionCompletedPush(({ submissionId: id }) => {
+        if (id === submissionId) resolve();
+      });
+    });
+    await Promise.race([pushArrived, listenerApi.delay(60_000)]);
+  } catch {
+    // Hub unavailable — fall through and fetch anyway.
+  } finally {
+    unsubscribe();
   }
+
+  return await listenerApi
+    .dispatch(
+      submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
+        subscribe: false,
+        forceRefetch: true,
+      })
+    )
+    .unwrap();
 };
 
 export const registerGameListeners = (
@@ -72,6 +82,15 @@ export const registerGameListeners = (
     actionCreator: GameActions.loadGameRequested,
     effect: async (action, listenerApi) => {
       listenerApi.cancelActiveListeners();
+
+      // Navigating fresh to the game page: wipe any problem/workspace state
+      // left over from a previously visited /problem/{slug} page so the game
+      // workspace never shows a stale problem while the game is loading.
+      const { currentGame } = listenerApi.getState().game;
+      if (!currentGame) {
+        listenerApi.dispatch(ProblemEvents.clearProblem());
+        listenerApi.dispatch(WorkspaceEvents.workspaceReset());
+      }
 
       try {
         const game = await listenerApi
@@ -124,6 +143,43 @@ export const registerGameListeners = (
     actionCreator: GameActions.loadGameSuccess,
     effect: async (_action, listenerApi) => {
       await loadCurrentProblemIfNeeded(listenerApi);
+    },
+  });
+
+  // Subscribe to the SignalR "GameCompleted" push while the game is Running so the UI
+  // updates immediately when the server finalizes the game (timer expiry, forfeit, etc.)
+  // without waiting for the client-side countdown to fire a one-shot re-fetch that might
+  // race the server's async finalization pipeline.
+  startAppListening({
+    actionCreator: GameActions.loadGameSuccess,
+    effect: async (action, listenerApi) => {
+      listenerApi.cancelActiveListeners();
+
+      if (!isGameStatus(action.payload, GameStatus.Running)) return;
+
+      const gameId = action.payload.gameId;
+
+      try {
+        await joinGameUpdates(gameId);
+      } catch {
+        // SignalR unavailable — the countdown timer's onTimeExpired re-fetch is the fallback.
+        return;
+      }
+
+      const unsubscribe = onGameCompletedPush((push) => {
+        if (push.gameId === gameId) {
+          listenerApi.dispatch(GameActions.loadGameRequested(gameId));
+        }
+      });
+
+      // Hold this effect alive until the listener is cancelled (navigation, new loadGameSuccess,
+      // etc.) so the subscription and cleanup stay active for the game's lifetime.
+      try {
+        await listenerApi.condition(() => false);
+      } finally {
+        unsubscribe();
+        leaveGameUpdates(gameId);
+      }
     },
   });
 
@@ -293,25 +349,27 @@ export const registerGameListeners = (
       const problemSetupId = state.problemSetup.setup?.id;
 
       if (!game || !problem || !problemSetupId) {
-        toast.error("Problem setup is not ready yet");
         return;
       }
 
-      listenerApi.dispatch(WorkspaceEvents.activeSubmissionChanged(null));
-      listenerApi.dispatch(WorkspaceEvents.submissionRequestStateChanged(true));
+      listenerApi.dispatch(GameActions.soloRushSubmissionStarted());
 
       try {
         const submissionId = await listenerApi
           .dispatch(
-            submissionApi.endpoints.createGradeSubmission.initiate({
-              problemSetupId,
-              code: state.workspace.code,
+            gameApi.endpoints.submitGameProblem.initiate({
+              gameId: game.gameId,
+              problemId: problem.id,
+              body: {
+                problemSetupId,
+                code: state.workspace.code,
+              },
             })
           )
           .unwrap();
 
         listenerApi.dispatch(
-          WorkspaceEvents.activeSubmissionChanged(submissionId)
+          GameActions.soloRushSubmissionCreated({ submissionId })
         );
         toast.success("Submission created");
 
@@ -323,7 +381,7 @@ export const registerGameListeners = (
           return;
         }
 
-        await listenerApi
+        const completion = await listenerApi
           .dispatch(
             gameApi.endpoints.completeProblem.initiate({
               gameId: game.gameId,
@@ -333,7 +391,18 @@ export const registerGameListeners = (
           )
           .unwrap();
 
-        listenerApi.dispatch(GameActions.loadGameRequested(game.gameId));
+        listenerApi.dispatch(
+          GameActions.completeProblemSuccess({
+            gameId: game.gameId,
+            userId: state.user.user?.id,
+            newScore: completion.newScore,
+            nextProblemId: completion.nextProblemId,
+          })
+        );
+
+        if (!completion.nextProblemId) {
+          listenerApi.dispatch(GameActions.loadGameRequested(game.gameId));
+        }
       } catch (error) {
         if (listenerApi.signal.aborted) {
           return;
@@ -343,9 +412,30 @@ export const registerGameListeners = (
           error instanceof Error ? error.message : "Failed to submit solution";
         toast.error(message);
       } finally {
-        listenerApi.dispatch(
-          WorkspaceEvents.submissionRequestStateChanged(false)
-        );
+        listenerApi.dispatch(GameActions.soloRushSubmissionEnded());
+      }
+    },
+  });
+
+  startAppListening({
+    actionCreator: GameActions.nextProblemRequested,
+    effect: async (action, listenerApi) => {
+      const nextProblemId = action.payload.nextProblemId;
+      if (!nextProblemId) return;
+
+      try {
+        const nextProblem = await listenerApi
+          .dispatch(
+            problemApi.endpoints.getProblemById.initiate(nextProblemId, {
+              forceRefetch: true,
+            })
+          )
+          .unwrap();
+        listenerApi.dispatch(ProblemEvents.initializeProblem(nextProblem));
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to load next problem";
+        toast.error(message);
       }
     },
   });
@@ -388,5 +478,4 @@ export const registerGameListeners = (
     },
   });
 };
-const isGameStatus = (game: Game, status: GameStatus) =>
-  game.status === status || String(game.status) === GameStatus[status];
+const isGameStatus = (game: Game, status: GameStatus) => game.status === status;

@@ -42,10 +42,19 @@ export const LanguageSelect = ({
   const defaultVersionId = languages[0]?.versions[0]?.id;
 
   useEffect(() => {
-    if (!selectedVersionId && defaultVersionId) {
+    // Only auto-select the default if there's no version currently selected OR
+    // the selected version isn't valid for this problem's available languages.
+    // Without the second check, the component fires selectedVersionChanged on
+    // every render where languages first become non-empty (e.g. after game load),
+    // which triggers a redundant getProblemSetup call that previously wiped code.
+    const isCurrentVersionValid =
+      !!selectedVersionId &&
+      languages.some((l) => l.versions.some((v) => v.id === selectedVersionId));
+
+    if (!isCurrentVersionValid && defaultVersionId) {
       dispatch(WorkspaceEvents.selectedVersionChanged(defaultVersionId));
     }
-  }, [defaultVersionId, dispatch, selectedVersionId]);
+  }, [defaultVersionId, dispatch, selectedVersionId, languages]);
 
   return (
     <ul {...props} className={cn("flex items-center gap-2", props.className)}>

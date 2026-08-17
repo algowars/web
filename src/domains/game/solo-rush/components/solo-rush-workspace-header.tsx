@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import GameTimer from "../../components/game-timer";
-import { selectCurrentGame } from "../../state/game-slice";
+import { selectCurrentGame, selectPendingNextProblemId } from "../../state/game-slice";
 import { useAppSelector, useAppDispatch } from "@/shared/state/hooks";
 import { GameActions } from "../../state/game-actions";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
@@ -13,7 +13,7 @@ import { useKeyboardCommand } from "@/shared/hooks/use-keyboard-command";
 import { KeyboardShortcutTooltip } from "@/shared/components/keyboard-shortcut-tooltip";
 import ScoreBadge from "../../components/score-badge";
 import { selectUser } from "@/domains/user/state/user-slice";
-import { selectCurrentProblem } from "@/domains/problem/state/problem-setup-slice";
+import { selectCurrentProblem, selectProblemSetup, selectProblemSetupLoading } from "@/domains/problem/state/problem-setup-slice";
 import { LanguageSelect } from "@/domains/workspace/language-select/components/language-select";
 import {
   Sheet,
@@ -24,13 +24,16 @@ import {
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
 import { Separator } from "@/shared/components/ui/separator";
-import { Menu } from "lucide-react";
+import { ArrowRight, Menu } from "lucide-react";
 
 export default function SoloRushWorkspaceHeader() {
   const game = useAppSelector(selectCurrentGame);
   const user = useAppSelector(selectUser);
   const currentProblem = useAppSelector(selectCurrentProblem);
   const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
+  const isProblemSetupLoading = useAppSelector(selectProblemSetupLoading);
+  const problemSetup = useAppSelector(selectProblemSetup);
+  const pendingNextProblemId = useAppSelector(selectPendingNextProblemId);
   const dispatch = useAppDispatch();
   const gameId = game?.gameId;
   const currentParticipant = game?.participants.find(
@@ -47,7 +50,13 @@ export default function SoloRushWorkspaceHeader() {
     dispatch(GameActions.submitSoloRushSolutionRequested());
   };
 
-  const canSubmitSolution = !!game && !isSubmittingSubmission;
+  const onNextProblem = () => {
+    if (!pendingNextProblemId) return;
+    dispatch(GameActions.nextProblemRequested({ nextProblemId: pendingNextProblemId }));
+  };
+
+  const problemSolved = pendingNextProblemId !== undefined;
+  const canSubmitSolution = !!game && !!problemSetup && !isProblemSetupLoading && !isSubmittingSubmission && !problemSolved;
 
   useKeyboardCommand({
     key: "Enter",
@@ -65,18 +74,27 @@ export default function SoloRushWorkspaceHeader() {
         ) : null}
       </div>
       <div className="hidden flex-1 justify-center @3xl:flex">
-        <KeyboardShortcutTooltip
-          label="Submit solution"
-          shortcut={["Ctrl", "Enter"]}
-        >
+        {problemSolved ? (
           <Button
-            className="w-24"
-            disabled={!canSubmitSolution}
-            onClick={onSubmitSolution}
+            className="gap-2 bg-green-600 hover:bg-green-700 text-white"
+            onClick={onNextProblem}
           >
-            {isSubmittingSubmission ? "Submitting..." : "Submit"}
+            Next Problem <ArrowRight size={16} />
           </Button>
-        </KeyboardShortcutTooltip>
+        ) : (
+          <KeyboardShortcutTooltip
+            label="Submit solution"
+            shortcut={["Ctrl", "Enter"]}
+          >
+            <Button
+              className="w-24"
+              disabled={!canSubmitSolution}
+              onClick={onSubmitSolution}
+            >
+              {isSubmittingSubmission ? "Submitting..." : "Submit"}
+            </Button>
+          </KeyboardShortcutTooltip>
+        )}
       </div>
       <div className="hidden flex-1 items-center justify-end gap-2 @3xl:flex">
         <LanguageSelect languages={currentProblem?.availableLanguages ?? []} />
@@ -121,18 +139,27 @@ export default function SoloRushWorkspaceHeader() {
           </div>
 
           <SheetFooter className="px-4 pb-4">
-            <KeyboardShortcutTooltip
-              label="Submit solution"
-              shortcut={["Ctrl", "Enter"]}
-            >
+            {problemSolved ? (
               <Button
-                className="w-full"
-                disabled={!canSubmitSolution}
-                onClick={onSubmitSolution}
+                className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
+                onClick={onNextProblem}
               >
-                {isSubmittingSubmission ? "Submitting..." : "Submit"}
+                Next Problem <ArrowRight size={16} />
               </Button>
-            </KeyboardShortcutTooltip>
+            ) : (
+              <KeyboardShortcutTooltip
+                label="Submit solution"
+                shortcut={["Ctrl", "Enter"]}
+              >
+                <Button
+                  className="w-full"
+                  disabled={!canSubmitSolution}
+                  onClick={onSubmitSolution}
+                >
+                  {isSubmittingSubmission ? "Submitting..." : "Submit"}
+                </Button>
+              </KeyboardShortcutTooltip>
+            )}
           </SheetFooter>
         </SheetContent>
       </Sheet>

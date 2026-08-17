@@ -55,6 +55,16 @@ export const gameApi = baseApi.injectEndpoints({
         method: "POST",
       }),
     }),
+    submitGameProblem: builder.mutation<
+      string,
+      { gameId: string; problemId: string; body: { problemSetupId: string; code: string } }
+    >({
+      query: ({ gameId, problemId, body }) => ({
+        url: `/api/v1/game/${gameId}/problems/${problemId}/submit`,
+        method: "POST",
+        body,
+      }),
+    }),
     completeProblem: builder.mutation<
       CompleteProblemResult,
       { gameId: string; problemId: string; body: CompleteProblemRequest }

@@ -3,7 +3,12 @@
 import AvailableGameModesHeader from "@/domains/game/components/available-game-modes-header";
 import PlayDuelCard from "@/domains/game/components/play-duel-card";
 import PlayFFACard from "@/domains/game/components/play-ffa-card";
-import PlaySoloRushCard from "@/domains/game/components/play-solo-rush-card";
+import dynamic from "next/dynamic";
+
+const PlaySoloRushCard = dynamic(
+  () => import("@/domains/game/components/play-solo-rush-card"),
+  { ssr: false }
+);
 import { useAvailableGameModes } from "@/domains/game/hooks/use-available-game-modes";
 import { useLoadProblems } from "@/domains/problem/hooks/use-load-problems";
 import ProblemTable from "@/domains/problem/tables/problem-table";

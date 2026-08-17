@@ -14,6 +14,8 @@ import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-s
 import { registerHealthListeners } from "@/domains/health/state/health-listeners";
 import { registerGameListeners } from "@/domains/game/state/game-listeners";
 import { registerGameModesListeners } from "@/domains/game/state/game-modes-listeners";
+import { registerGameWorkspaceListeners } from "@/domains/workspace/state/game-workspace-listeners";
+import { connectSubmissionHub, onSubmissionCompletedPush } from "@/shared/lib/signalr/submission-hub-client";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -35,8 +37,8 @@ registerProblemSubmissionsListeners(startAppListening);
 registerHealthListeners(startAppListening);
 
 registerGameListeners(startAppListening);
-
 registerGameModesListeners(startAppListening);
+registerGameWorkspaceListeners(startAppListening);
 
 const requestProblemSetup = async (
   listenerApi: AppListenerApi,
@@ -180,6 +182,33 @@ startAppListening({
       listenerApi.dispatch(
         WorkspaceEvents.activeSubmissionChanged(submissionId)
       );
+
+      // Wait for the SignalR "SubmissionCompleted" push then do one forced refetch.
+      // Uses Promise.race with a 60-second timeout as a fallback in case SignalR is unavailable.
+      // The SubmissionStatusPanel's slow fallback poll covers any remaining edge cases.
+      listenerApi.fork(async (forkApi) => {
+        let unsubscribe = () => {};
+        try {
+          await connectSubmissionHub();
+          const pushArrived = new Promise<void>((resolve) => {
+            unsubscribe = onSubmissionCompletedPush(({ submissionId: id }) => {
+              if (id === submissionId) resolve();
+            });
+          });
+          await Promise.race([pushArrived, forkApi.delay(60_000)]);
+        } catch {
+          // Hub unavailable — the slow fallback poll in SubmissionStatusPanel covers this.
+        } finally {
+          unsubscribe();
+        }
+
+        listenerApi.dispatch(
+          submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {
+            subscribe: false,
+            forceRefetch: true,
+          })
+        );
+      });
 
       listenerApi.dispatch(
         submissionApi.endpoints.getSubmissionStatus.initiate(submissionId, {

@@ -37,6 +37,8 @@ const problemSetupSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(ProblemEvents.clearProblem, () => initialState);
+
     builder.addCase(ProblemEvents.initializeProblem, (state, action) => {
       state.currentProblem = action.payload;
       state.setup = null;

@@ -12,6 +12,7 @@ import {
   selectIsLoadingGame,
 } from "@/domains/game/state/game-slice";
 import { gameWorkspaceRegistry } from "@/domains/game/game-workspace-registry";
+import { GameStatus } from "@/domains/game/models/game";
 
 type PlayGameContentProps = {
   gameId: string;
@@ -38,12 +39,18 @@ export default function PlayGameContent({
     : undefined;
   const Workspace = strategy?.Workspace;
   const Header = strategy?.Header;
+  const GameOverSummary = strategy?.GameOverSummary;
+  const isGameOver =
+    currentGame?.status === GameStatus.Completed ||
+    currentGame?.status === GameStatus.Cancelled;
 
   return (
     <SidebarLayout
       breadcrumbs={[]}
       headerItems={
-        Header && currentGame ? <Header game={currentGame} /> : undefined
+        Header && currentGame && !isGameOver ? (
+          <Header game={currentGame} />
+        ) : undefined
       }
     >
       <div className="h-full px-2 md:px-4 pb-2 md:pb-4">
@@ -54,14 +61,22 @@ export default function PlayGameContent({
             <Button onClick={handleRetry}>Retry</Button>
           </div>
         )}
-        {!isLoading && !error && currentGame && Workspace && (
+        {!isLoading &&
+          !error &&
+          currentGame &&
+          isGameOver &&
+          GameOverSummary && <GameOverSummary game={currentGame} />}
+        {!isLoading && !error && currentGame && !isGameOver && Workspace && (
           <Workspace game={currentGame} />
         )}
-        {!isLoading && !error && currentGame && !Workspace && (
-          <div className="text-sm text-muted-foreground">
-            This game mode isn&apos;t supported yet.
-          </div>
-        )}
+        {!isLoading &&
+          !error &&
+          currentGame &&
+          ((!isGameOver && !Workspace) || (isGameOver && !GameOverSummary)) && (
+            <div className="text-sm text-muted-foreground">
+              This game mode isn&apos;t supported yet.
+            </div>
+          )}
       </div>
     </SidebarLayout>
   );
