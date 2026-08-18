@@ -1,29 +1,17 @@
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { toAxiosConfig } from "@/shared/lib/request-config";
+import { defineAuthenticatedQuery } from "@/shared/api/define-authenticated-query";
+import type { RequestConfig } from "@/shared/lib/request-config";
+import type { User } from "../models/user";
+import { apiClient } from "@/shared/lib/api-client";
 
-export const getAccount = ({ accessToken, abortController }) => {
-  // api request
-};
+export const getAccount = ({ abortController }: RequestConfig) =>
+  apiClient
+    .get<User>("/api/v1/user", toAxiosConfig({ abortController }))
+    .then((res) => res.data);
 
-export const getAccountQueryOptions = ({ accessToken, abortController }) => {
-  return queryOptions({
-    queryKey: ["account", accessToken],
-    queryFn: () => getAccount({ accessToken, abortController }),
-  });
-};
+const accountQuery = defineAuthenticatedQuery({
+  queryKey: () => ["account"],
+  queryFn: getAccount,
+});
 
-type GetAccountParams = {
-  accessToken: string;
-  abortController: AbortController;
-  queryConfig?: QueryConfig<typeof getAccount>;
-};
-
-export const useAccount = ({
-  accessToken,
-  abortController,
-  queryConfig,
-}: GetAccountParams) => {
-  return useQuery({
-    ...getAccountQueryOptions({ accessToken, abortController }),
-    ...queryConfig?.(),
-  });
-};
+export const useAccount = accountQuery.useQuery;
