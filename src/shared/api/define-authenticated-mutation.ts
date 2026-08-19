@@ -5,7 +5,6 @@ import {
   useQueryClient,
   type UseMutationOptions,
 } from "@tanstack/react-query";
-import { useAbortController } from "@/shared/hooks/use-abort-controller";
 import type { RequestConfig } from "@/shared/lib/request-config";
 import type { MutationConfig } from "@/shared/lib/react-query";
 
@@ -29,11 +28,16 @@ export function defineAuthenticatedMutation<TData, TVariables extends object>({
     mutationConfig?: MutationConfig<typeof mutationFn>;
   }) {
     const queryClient = useQueryClient();
-    const abortController = useAbortController([]);
     const { onSuccess, ...restConfig } = options?.mutationConfig ?? {};
 
     return useMutation<TData, Error, TVariables>({
-      mutationFn: (variables) => mutationFn({ ...variables, abortController }),
+      mutationFn: (variables) => {
+        const abortController = new AbortController();
+        return mutationFn({
+          ...variables,
+          signal: abortController.signal,
+        });
+      },
       onSuccess: (...args: OnSuccessArgs) => {
         const [data, variables] = args;
         invalidateQueries?.(data, variables).forEach((queryKey) =>

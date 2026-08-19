@@ -1,8 +1,11 @@
 // src/shared/api/define-authenticated-query.ts
 "use client";
 
-import { queryOptions, useQuery } from "@tanstack/react-query";
-import { useAbortController } from "@/shared/hooks/use-abort-controller";
+import {
+  queryOptions,
+  useQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import type { RequestConfig } from "@/shared/lib/request-config";
 import type { QueryConfig } from "@/shared/lib/react-query";
 
@@ -15,10 +18,10 @@ export function defineAuthenticatedQuery<
   TData,
   TParams extends object = Record<never, never>,
 >({ queryKey, queryFn }: DefineQueryArgs<TData, TParams>) {
-  const buildQueryOptions = (params: TParams & RequestConfig) =>
+  const buildQueryOptions = (params: TParams) =>
     queryOptions({
       queryKey: queryKey(params),
-      queryFn: () => queryFn(params),
+      queryFn: ({ signal }) => queryFn({ ...params, signal }),
     });
 
   type UseResourceParams = TParams & {
@@ -32,15 +35,26 @@ export function defineAuthenticatedQuery<
   function useResource(...args: UseResourceArgs) {
     const { queryConfig, ...rest } = (args[0] ?? {}) as UseResourceParams;
     const restParams = rest as TParams;
-    const abortController = useAbortController(
-      queryKey(restParams) as string[]
-    );
 
     return useQuery({
-      ...buildQueryOptions({ ...restParams, abortController }),
+      ...buildQueryOptions(restParams),
       ...queryConfig,
     });
   }
 
-  return { queryOptions: buildQueryOptions, useQuery: useResource };
+  function useSuspenseResource(...args: UseResourceArgs) {
+    const { queryConfig, ...rest } = (args[0] ?? {}) as UseResourceParams;
+    const restParams = rest as TParams;
+
+    return useSuspenseQuery({
+      ...buildQueryOptions(restParams),
+      ...queryConfig,
+    });
+  }
+
+  return {
+    queryOptions: buildQueryOptions,
+    useQuery: useResource,
+    useSuspenseQuery: useSuspenseResource,
+  };
 }

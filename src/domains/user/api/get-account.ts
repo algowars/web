@@ -4,8 +4,8 @@ import type { RequestConfig } from "@/shared/lib/request-config";
 import type { User } from "../models/user";
 import { http } from "@/shared/lib/http";
 
-export const getAccount = ({ abortController }: RequestConfig) =>
-  http.get<User>("/api/v1/user", toAxiosConfig({ abortController }));
+export const getAccount = ({ signal }: RequestConfig) =>
+  http.get<User>("/api/v1/user", toAxiosConfig({ signal }));
 
 const accountQuery = defineAuthenticatedQuery({
   queryKey: () => ["account"],
@@ -13,3 +13,4 @@ const accountQuery = defineAuthenticatedQuery({
 });
 
 export const useAccount = accountQuery.useQuery;
+export const useSuspenseAccount = accountQuery.useSuspenseQuery;

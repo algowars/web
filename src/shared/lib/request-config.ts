@@ -2,17 +2,17 @@ import type { AxiosRequestConfig } from "axios";
 
 export type RequestConfig = {
   accessToken?: string;
-  abortController?: AbortController;
+  signal?: AbortSignal;
 };
 
 export function toAxiosConfig({
   accessToken,
-  abortController,
+  signal,
 }: RequestConfig = {}): AxiosRequestConfig {
   return {
     headers: accessToken
       ? { Authorization: `Bearer ${accessToken}` }
       : undefined,
-    signal: abortController?.signal,
+    signal,
   };
 }

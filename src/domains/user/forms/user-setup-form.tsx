@@ -16,11 +16,11 @@ import { Button } from "@/shared/components/ui/button";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/shared/router-config";
 import { useUpdateUsername } from "../api/update-username";
-import { useAccount } from "../api/get-account";
+import { useSuspenseAccount } from "../api/get-account";
 
 export default function UserSetupForm() {
   const router = useRouter();
-  const { data: user, isPending, error } = useAccount();
+  const { data: user } = useSuspenseAccount();
 
   const mutation = useUpdateUsername({
     mutationConfig: {
@@ -87,8 +87,10 @@ export default function UserSetupForm() {
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
-                    {error?.message && (
-                      <FieldError errors={[{ message: error?.message }]} />
+                    {mutation.error?.message && (
+                      <FieldError
+                        errors={[{ message: mutation.error?.message }]}
+                      />
                     )}
                   </Field>
                 );
@@ -97,8 +99,8 @@ export default function UserSetupForm() {
           </FieldGroup>
         </FieldSet>
         <Field orientation="horizontal">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : "Save Changes"}
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? "Saving..." : "Save Changes"}
           </Button>
         </Field>
       </FieldGroup>

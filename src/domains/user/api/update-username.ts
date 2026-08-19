@@ -7,10 +7,10 @@ import { http } from "@/shared/lib/http";
 type UpsertUserVariables = { username: string };
 
 export const updateUsername = ({
-  abortController,
+  signal,
   ...data
 }: UpsertUserVariables & RequestConfig) =>
-  http.put<User>("/api/v1/user", data, toAxiosConfig({ abortController }));
+  http.put<User>("/api/v1/user", data, toAxiosConfig({ signal }));
 
 const updateUsernameMutation = defineAuthenticatedMutation<
   User,
