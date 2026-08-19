@@ -1,15 +1,33 @@
 "use client";
 
-import { useAppDispatch } from "@/shared/state/hooks";
+const SLOW_STARTUP_TOAST_ID = "server-startup";
+const SLOW_STARTUP_DELAY_MS = 5000;
+
+import { toast } from "sonner";
+import { useHealth } from "../api/get-health";
 import { useEffect } from "react";
-import { HealthEvents } from "../state/health-events";
 
 export default function HealthCheck() {
-  const appDispatch = useAppDispatch();
+  const { isFetching, isSuccess, isError } = useHealth();
+  const settled = isSuccess || isError;
 
   useEffect(() => {
-    appDispatch(HealthEvents.loadHealthRequested());
-  }, [appDispatch]);
+    if (!isFetching) return;
+
+    const timer = setTimeout(() => {
+      toast.loading("Server is starting up. This may take up to a minute.", {
+        id: SLOW_STARTUP_TOAST_ID,
+      });
+    }, SLOW_STARTUP_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (settled) {
+      toast.dismiss(SLOW_STARTUP_TOAST_ID);
+    }
+  }, [settled]);
 
   return null;
 }

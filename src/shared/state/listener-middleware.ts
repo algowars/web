@@ -11,7 +11,6 @@ import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
-import { registerHealthListeners } from "@/domains/health/state/health-listeners";
 import { registerGameListeners } from "@/domains/game/state/game-listeners";
 import { registerGameModesListeners } from "@/domains/game/state/game-modes-listeners";
 import { registerGameWorkspaceListeners } from "@/domains/workspace/state/game-workspace-listeners";
@@ -36,8 +35,6 @@ type AppListenerApi = Parameters<AppListenerEffect>[1];
 registerProblemListeners(startAppListening);
 
 registerProblemSubmissionsListeners(startAppListening);
-
-registerHealthListeners(startAppListening);
 
 registerGameListeners(startAppListening);
 registerGameModesListeners(startAppListening);
