@@ -31,7 +31,7 @@ apiClient.interceptors.request.use(async (config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<{ message?: string }>) => {
-    if (axios.isCancel(error)) return Promise.reject(error);
+    if (axios.isCancel(error)) throw error;
 
     const original = error.config as
       | (InternalAxiosRequestConfig & { _retry?: boolean })
@@ -49,12 +49,11 @@ apiClient.interceptors.response.use(
         original.headers.Authorization = `Bearer ${accessToken}`;
         return apiClient(original);
       }
-      return Promise.reject(
-        new Error("Session expired. Please sign in again.")
-      );
+
+      throw new Error("Session expired. Please sign in again.");
     }
 
     const message = error.response?.data?.message ?? error.message;
-    return Promise.reject(new Error(message));
+    throw new Error(message);
   }
 );
