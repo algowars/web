@@ -1,4 +1,4 @@
-import { defineAuthenticatedQuery } from "@/shared/api/define-authenticated-query";
+import { defineQuery } from "@/shared/api/define-query";
 import { http } from "@/shared/lib/http";
 import { RequestConfig, toAxiosConfig } from "@/shared/lib/request-config";
 
@@ -8,7 +8,7 @@ export const getHealth = ({ signal }: RequestConfig) =>
     toAxiosConfig({ signal })
   );
 
-const healthQuery = defineAuthenticatedQuery({
+const healthQuery = defineQuery({
   queryKey: () => ["health"],
   queryFn: getHealth,
 });

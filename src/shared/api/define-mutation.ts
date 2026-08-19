@@ -16,7 +16,7 @@ type DefineMutationArgs<TData, TVariables extends object> = {
   ) => readonly (readonly unknown[])[];
 };
 
-export function defineAuthenticatedMutation<TData, TVariables extends object>({
+export function defineMutation<TData, TVariables extends object>({
   mutationFn,
   invalidateQueries,
 }: DefineMutationArgs<TData, TVariables>) {

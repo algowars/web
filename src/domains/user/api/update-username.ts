@@ -1,5 +1,5 @@
 import { toAxiosConfig } from "@/shared/lib/request-config";
-import { defineAuthenticatedMutation } from "@/shared/api/define-authenticated-mutation";
+import { defineMutation } from "@/shared/api/define-mutation";
 import type { RequestConfig } from "@/shared/lib/request-config";
 import type { User } from "../models/user";
 import { http } from "@/shared/lib/http";
@@ -12,10 +12,7 @@ export const updateUsername = ({
 }: UpsertUserVariables & RequestConfig) =>
   http.put<User>("/api/v1/user", data, toAxiosConfig({ signal }));
 
-const updateUsernameMutation = defineAuthenticatedMutation<
-  User,
-  UpsertUserVariables
->({
+const updateUsernameMutation = defineMutation<User, UpsertUserVariables>({
   mutationFn: updateUsername,
   invalidateQueries: () => [["account"]],
 });

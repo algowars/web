@@ -1,4 +1,3 @@
-// src/shared/api/define-authenticated-query.ts
 "use client";
 
 import {
@@ -14,7 +13,7 @@ type DefineQueryArgs<TData, TParams extends object> = {
   queryFn: (params: TParams & RequestConfig) => Promise<TData>;
 };
 
-export function defineAuthenticatedQuery<
+export function defineQuery<
   TData,
   TParams extends object = Record<never, never>,
 >({ queryKey, queryFn }: DefineQueryArgs<TData, TParams>) {
