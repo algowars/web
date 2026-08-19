@@ -7,7 +7,6 @@ import {
   type PaginationState,
 } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import DifficultyBadge from "../components/difficulty-badge";
 import { useProblemListStore } from "../state/problem-list-store";
@@ -53,17 +52,11 @@ export default function ProblemTable() {
     resetSession();
   }, [resetSession]);
 
-  const { data, isLoading, error } = useProblems({
+  const { data, isLoading } = useProblems({
     page: pageIndex + 1,
     size: pageSize,
     timestamp,
   });
-
-  useEffect(() => {
-    if (error) {
-      toast.error("Error loading problems", { description: error.message });
-    }
-  }, [error]);
 
   const handleRowClick = (problem: ProblemSummary) => {
     if (!problem.slug) {

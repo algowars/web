@@ -2,10 +2,12 @@
 "use client";
 
 import {
+  QueryCache,
   QueryClient,
   QueryClientProvider,
   type UseMutationOptions,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export type ApiFnReturnType<FnType extends (...args: any[]) => Promise<any>> =
   Awaited<ReturnType<FnType>>;
@@ -21,9 +23,24 @@ export type MutationConfig<FnType extends (...args: any[]) => Promise<any>> =
     "mutationFn"
   >;
 
+declare module "@tanstack/react-query" {
+  interface Register {
+    queryMeta: {
+      errorToast?: string;
+    };
+  }
+}
+
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: { queries: { staleTime: 60 * 1000 } },
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        const title = query.meta?.errorToast;
+        if (!title) return;
+        toast.error(title, { description: error.message });
+      },
+    }),
   });
 }
 

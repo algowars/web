@@ -28,6 +28,7 @@ const problemsQuery = defineQuery<
 >({
   queryKey: ({ page, size, timestamp }) => ["problems", page, size, timestamp],
   queryFn: getProblems,
+  meta: { errorToast: "Error loading problems" },
 });
 
 export const useProblems = problemsQuery.useQuery;
