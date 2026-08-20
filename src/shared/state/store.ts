@@ -4,7 +4,6 @@ import { workspaceReducer } from "@/domains/workspace/state/workspace-slice";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "../lib/base-api";
 import { listenerMiddleware } from "./listener-middleware";
-import gameModesReducer from "@/domains/game/state/game-modes-slice";
 import gameReducer from "@/domains/game/state/game-slice";
 
 export const makeStore = () =>
@@ -13,7 +12,6 @@ export const makeStore = () =>
       user: userReducer,
       problemSetup: problemSetupReducer,
       workspace: workspaceReducer,
-      gameModes: gameModesReducer,
       game: gameReducer,
       [baseApi.reducerPath]: baseApi.reducer,
     },

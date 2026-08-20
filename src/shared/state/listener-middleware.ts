@@ -10,7 +10,6 @@ import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
 import { registerGameListeners } from "@/domains/game/state/game-listeners";
-import { registerGameModesListeners } from "@/domains/game/state/game-modes-listeners";
 import { registerGameWorkspaceListeners } from "@/domains/workspace/state/game-workspace-listeners";
 import {
   connectSubmissionHub,
@@ -31,7 +30,6 @@ type AppListenerEffect = NonNullable<
 type AppListenerApi = Parameters<AppListenerEffect>[1];
 
 registerGameListeners(startAppListening);
-registerGameModesListeners(startAppListening);
 registerGameWorkspaceListeners(startAppListening);
 
 const requestProblemSetup = async (

@@ -1,5 +1,5 @@
 import { baseApi } from "@/shared/lib/base-api";
-import { GameMode, GameModeKey } from "../models/game-mode";
+import { GameModeKey } from "../models/game-mode";
 import type { Game, GameProblemHistory } from "../models/game";
 
 export type CreateGameRequest = {
@@ -29,12 +29,6 @@ export const gameApi = baseApi.injectEndpoints({
         url: "/api/v1/game",
         method: "POST",
         body,
-      }),
-    }),
-    gameModes: builder.query<GameMode[], void>({
-      query: () => ({
-        url: "/api/v1/game/modes",
-        method: "GET",
       }),
     }),
     startGame: builder.mutation<void, string>({
@@ -84,7 +78,6 @@ export const gameApi = baseApi.injectEndpoints({
 
 export const {
   useCreateGameMutation,
-  useGameModesQuery,
   useGetGameQuery,
   useStartGameMutation,
   useForfeitGameMutation,

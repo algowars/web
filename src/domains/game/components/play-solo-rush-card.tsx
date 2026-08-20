@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
-import { selectGameModeByKey } from "../state/game-modes-slice";
+import { useGameModes } from "@/domains/game/api/use-game-modes";
 import { GameModeKey } from "../models/game-mode";
 import { selectIsCreatingGame } from "../state/game-slice";
 import { GameActions } from "../state/game-actions";
@@ -43,7 +43,8 @@ export default function PlaySoloRushCard(
   const dispatch = useAppDispatch();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState<string>();
-  const gameMode = useAppSelector(selectGameModeByKey(GameModeKey.SoloRush));
+  const { data: gameModes } = useGameModes();
+  const gameMode = gameModes?.find((mode) => mode.key === GameModeKey.SoloRush);
   const isCreating = useAppSelector(selectIsCreatingGame);
   const isAvailable = !!gameMode;
   const timeOptions = gameMode?.timeOptions ?? [];

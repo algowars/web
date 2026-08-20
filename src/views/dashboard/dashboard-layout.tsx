@@ -9,7 +9,7 @@ const PlaySoloRushCard = dynamic(
   () => import("@/domains/game/components/play-solo-rush-card"),
   { ssr: false }
 );
-import { useAvailableGameModes } from "@/domains/game/hooks/use-available-game-modes";
+import { useGameModes } from "@/domains/game/api/use-game-modes";
 import ProblemTable from "@/domains/problem/tables/problem-table";
 import {
   Alert,
@@ -26,7 +26,7 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { AlertTriangle } from "lucide-react";
 
 export default function DashboardLayout() {
-  const { error: gameModesError } = useAvailableGameModes();
+  const { error: gameModesError } = useGameModes();
 
   return (
     <SidebarLayout breadcrumbs={[]}>
@@ -37,7 +37,7 @@ export default function DashboardLayout() {
             <Alert variant="destructive" className="mt-2">
               <AlertTriangle />
               <AlertTitle>Unable to load game modes</AlertTitle>
-              <AlertDescription>{gameModesError}</AlertDescription>
+              <AlertDescription>{gameModesError.message}</AlertDescription>
             </Alert>
           ) : null}
         </div>
