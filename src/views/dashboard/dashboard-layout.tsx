@@ -10,7 +10,6 @@ const PlaySoloRushCard = dynamic(
   { ssr: false }
 );
 import { useAvailableGameModes } from "@/domains/game/hooks/use-available-game-modes";
-import { useLoadProblems } from "@/domains/problem/hooks/use-load-problems";
 import ProblemTable from "@/domains/problem/tables/problem-table";
 import {
   Alert,
@@ -27,7 +26,6 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { AlertTriangle } from "lucide-react";
 
 export default function DashboardLayout() {
-  useLoadProblems();
   const { error: gameModesError } = useAvailableGameModes();
 
   return (

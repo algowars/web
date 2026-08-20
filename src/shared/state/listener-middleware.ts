@@ -3,14 +3,12 @@ import { problemApi } from "@/domains/problem/api/problem-api";
 import { ProblemEvents } from "@/domains/problem/state/problem-events";
 import { ProblemSetupEvents } from "@/domains/problem/state/problem-setup-slice";
 import { submissionApi } from "@/domains/submission/api/submission-api";
-import { registerProblemListeners } from "@/domains/problem/state/problem-listeners";
 import { userApi } from "@/domains/user/api/user-api";
 import { UserEvents } from "@/domains/user/state/user-events";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
-import { registerProblemSubmissionsListeners } from "@/domains/problem/problem-submissions/state/problem-submissions-listeners";
 import { registerGameListeners } from "@/domains/game/state/game-listeners";
 import { registerGameModesListeners } from "@/domains/game/state/game-modes-listeners";
 import { registerGameWorkspaceListeners } from "@/domains/workspace/state/game-workspace-listeners";
@@ -31,10 +29,6 @@ type AppListenerEffect = NonNullable<
   Parameters<StartAppListening>[0]["effect"]
 >;
 type AppListenerApi = Parameters<AppListenerEffect>[1];
-
-registerProblemListeners(startAppListening);
-
-registerProblemSubmissionsListeners(startAppListening);
 
 registerGameListeners(startAppListening);
 registerGameModesListeners(startAppListening);

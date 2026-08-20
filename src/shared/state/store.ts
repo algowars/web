@@ -1,11 +1,9 @@
 import { userReducer } from "@/domains/user/state/user-slice";
-import { problemReducer } from "@/domains/problem/state/problem-slice";
 import { problemSetupReducer } from "@/domains/problem/state/problem-setup-slice";
 import { workspaceReducer } from "@/domains/workspace/state/workspace-slice";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "../lib/base-api";
 import { listenerMiddleware } from "./listener-middleware";
-import { problemSubmissionsReducer } from "@/domains/problem/problem-submissions/state/problem-submissions-slice";
 import gameModesReducer from "@/domains/game/state/game-modes-slice";
 import gameReducer from "@/domains/game/state/game-slice";
 
@@ -13,10 +11,8 @@ export const makeStore = () =>
   configureStore({
     reducer: {
       user: userReducer,
-      problems: problemReducer,
       problemSetup: problemSetupReducer,
       workspace: workspaceReducer,
-      problemSubmissions: problemSubmissionsReducer,
       gameModes: gameModesReducer,
       game: gameReducer,
       [baseApi.reducerPath]: baseApi.reducer,
