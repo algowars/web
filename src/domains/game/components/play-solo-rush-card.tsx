@@ -3,7 +3,6 @@
 import PlayCard from "@/domains/game/components/play-card";
 import { Zap } from "lucide-react";
 import { ComponentProps, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import {
   Select,
   SelectContent,
@@ -22,9 +21,7 @@ import {
 } from "@/shared/components/ui/dialog";
 import { useGameModes } from "@/domains/game/api/use-game-modes";
 import { GameModeKey } from "../models/game-mode";
-import { selectIsCreatingGame } from "../state/game-slice";
-import { GameActions } from "../state/game-actions";
-import { useGameCreatedRedirectListener } from "../hooks/use-game-created-redirect-listener";
+import { useCreateGameAndPlay } from "../hooks/use-create-game-and-play";
 
 function formatDuration(durationSeconds: number) {
   const durationMinutes = durationSeconds / 60;
@@ -38,14 +35,11 @@ function formatDurationValue(durationSeconds: number) {
 export default function PlaySoloRushCard(
   props: Readonly<ComponentProps<"div">>
 ) {
-  useGameCreatedRedirectListener();
-
-  const dispatch = useAppDispatch();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState<string>();
   const { data: gameModes } = useGameModes();
   const gameMode = gameModes?.find((mode) => mode.key === GameModeKey.SoloRush);
-  const isCreating = useAppSelector(selectIsCreatingGame);
+  const { createGame, isCreating } = useCreateGameAndPlay();
   const isAvailable = !!gameMode;
   const timeOptions = gameMode?.timeOptions ?? [];
   const defaultTimeOption = timeOptions.find((option) => option.isDefault);
@@ -66,12 +60,10 @@ export default function PlaySoloRushCard(
       return;
     }
 
-    dispatch(
-      GameActions.createGameRequested({
-        gameModeKey: gameMode.key,
-        timeLimitInSeconds: Number(effectiveSelectedDuration),
-      })
-    );
+    createGame({
+      gameModeKey: gameMode.key,
+      timeLimitInSeconds: Number(effectiveSelectedDuration),
+    });
   };
 
   return (

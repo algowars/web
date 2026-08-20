@@ -17,6 +17,7 @@ export const startGame = ({
 
 const startGameMutation = defineMutation<void, StartGameVariables>({
   mutationFn: startGame,
+  invalidateQueries: (_data, { gameId }) => [["game", gameId]],
 });
 
 export const useStartGame = startGameMutation.useMutation;

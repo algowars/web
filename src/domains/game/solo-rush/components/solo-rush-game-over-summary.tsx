@@ -3,7 +3,7 @@
 import { GameStatus } from "@/domains/game/models/game";
 import type { GameWorkspaceProps } from "@/domains/game/models/game-workspace";
 import ScoreBadge from "@/domains/game/components/score-badge";
-import { selectUser } from "@/domains/user/state/user-slice";
+import { useUserStore, selectUser } from "@/domains/user/state/user-store";
 import { Button } from "@/shared/components/ui/button";
 import {
   Card,
@@ -14,33 +14,25 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { routerConfig } from "@/shared/router-config";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { Home, RotateCcw, Trophy } from "lucide-react";
 import Link from "next/link";
-import { GameActions } from "@/domains/game/state/game-actions";
-import { selectIsCreatingGame } from "@/domains/game/state/game-slice";
-import { useGameCreatedRedirectListener } from "@/domains/game/hooks/use-game-created-redirect-listener";
+import { useCreateGameAndPlay } from "@/domains/game/hooks/use-create-game-and-play";
 
 export default function SoloRushGameOverSummary({
   game,
 }: Readonly<GameWorkspaceProps>) {
-  useGameCreatedRedirectListener();
-
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
-  const isCreating = useAppSelector(selectIsCreatingGame);
+  const user = useUserStore(selectUser);
+  const { createGame, isCreating } = useCreateGameAndPlay();
   const participant = game.participants.find(
     (candidate) => candidate.userId === user?.id
   );
   const wasForfeited = game.status === GameStatus.Cancelled;
 
   const playAgain = () => {
-    dispatch(
-      GameActions.createGameRequested({
-        gameModeKey: game.gameModeKey,
-        timeLimitInSeconds: game.timeLimitInSeconds,
-      })
-    );
+    createGame({
+      gameModeKey: game.gameModeKey,
+      timeLimitInSeconds: game.timeLimitInSeconds,
+    });
   };
 
   return (

@@ -17,6 +17,7 @@ export const forfeitGame = ({
 
 const forfeitGameMutation = defineMutation<void, ForfeitGameVariables>({
   mutationFn: forfeitGame,
+  invalidateQueries: (_data, { gameId }) => [["game", gameId]],
 });
 
 export const useForfeitGame = forfeitGameMutation.useMutation;

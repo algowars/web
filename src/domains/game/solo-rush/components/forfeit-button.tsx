@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,19 +12,14 @@ import {
   AlertDialogTrigger,
 } from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { GameActions } from "../../state/game-actions";
-import { selectCurrentGameId } from "../../state/game-slice";
+import { useForfeitGame } from "@/domains/game/hooks/use-forfeit-game";
 
-export default function ForfeitButton() {
-  const dispatch = useAppDispatch();
-  const gameId = useAppSelector(selectCurrentGameId);
+type ForfeitButtonProps = {
+  gameId: string | undefined;
+};
 
-  const forfeitGame = () => {
-    if (gameId) {
-      dispatch(GameActions.forfeitGameRequested(gameId));
-    }
-  };
+export default function ForfeitButton({ gameId }: Readonly<ForfeitButtonProps>) {
+  const { forfeit } = useForfeitGame(gameId);
 
   return (
     <AlertDialog>
@@ -40,7 +37,7 @@ export default function ForfeitButton() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={forfeitGame}>
+          <AlertDialogAction variant="destructive" onClick={forfeit}>
             Forfeit game
           </AlertDialogAction>
         </AlertDialogFooter>
