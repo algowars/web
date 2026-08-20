@@ -1,12 +1,12 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { useAppSelector } from "@/shared/state/hooks";
 import {
   selectIsAuthenticated,
   selectIsFullyLoaded,
   selectUserPermissions,
-} from "@/domains/user/state/user-slice";
+  useUserStore,
+} from "@/domains/user/state/user-store";
 import type { Permission } from "@/shared/lib/permissions";
 import { AuthGuardFallback } from "./auth-guard-fallback";
 import { useHasMounted } from "../hooks/use-has-mounted";
@@ -27,9 +27,9 @@ export function AuthGuard({
   requireAll = true,
 }: Readonly<AuthGuardProps>) {
   const hasMounted = useHasMounted();
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const isFullyLoaded = useAppSelector(selectIsFullyLoaded);
-  const userPermissions = useAppSelector(selectUserPermissions);
+  const isAuthenticated = useUserStore(selectIsAuthenticated);
+  const isFullyLoaded = useUserStore(selectIsFullyLoaded);
+  const userPermissions = useUserStore(selectUserPermissions);
 
   if (!hasMounted || !isFullyLoaded) {
     return <>{loadingFallback}</>;

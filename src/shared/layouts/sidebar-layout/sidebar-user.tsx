@@ -6,8 +6,9 @@ import {
   selectIsUserLoading,
   selectUser,
   selectUserSyncFailed,
-} from "@/domains/user/state/user-slice";
-import { UserEvents } from "@/domains/user/state/user-events";
+  useUserStore,
+} from "@/domains/user/state/user-store";
+import { useUserSync } from "@/domains/user/hooks/use-user-sync";
 import {
   Avatar,
   AvatarFallback,
@@ -38,7 +39,6 @@ import {
 } from "@/shared/components/ui/sidebar";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { routerConfig } from "@/shared/router-config";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { useUser } from "@auth0/nextjs-auth0";
 import {
   AlertCircle,
@@ -51,13 +51,13 @@ import {
 import Link from "next/link";
 
 export default function SidebarUser() {
-  const dispatch = useAppDispatch();
   const { user: authUser, isLoading } = useUser();
-  const user = useAppSelector(selectUser);
-  const isUserLoading = useAppSelector(selectIsUserLoading);
-  const displayName = useAppSelector(selectDisplayName);
-  const avatarUrl = useAppSelector(selectAvatarUrl);
-  const syncFailed = useAppSelector(selectUserSyncFailed);
+  const user = useUserStore(selectUser);
+  const isUserLoading = useUserStore(selectIsUserLoading);
+  const displayName = useUserStore(selectDisplayName);
+  const avatarUrl = useUserStore(selectAvatarUrl);
+  const syncFailed = useUserStore(selectUserSyncFailed);
+  const { retrySync } = useUserSync();
   const { isMobile } = useSidebar();
 
   if (isLoading || isUserLoading) {
@@ -156,7 +156,7 @@ export default function SidebarUser() {
                 <DropdownMenuItem
                   onSelect={(e) => {
                     e.preventDefault();
-                    dispatch(UserEvents.retrySyncRequested());
+                    retrySync();
                   }}
                 >
                   <RefreshCw />

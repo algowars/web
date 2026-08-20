@@ -14,3 +14,4 @@ const accountQuery = defineQuery({
 
 export const useAccount = accountQuery.useQuery;
 export const useSuspenseAccount = accountQuery.useSuspenseQuery;
+export const accountQueryOptions = accountQuery.queryOptions;
