@@ -2,7 +2,7 @@ import { defineQuery } from "@/shared/api/define-query";
 import { http } from "@/shared/lib/http";
 import { toAxiosConfig } from "@/shared/lib/request-config";
 import type { RequestConfig } from "@/shared/lib/request-config";
-import type { GameProblemHistory } from "../models/game";
+import { GameProblemHistory } from "../models/game";
 
 type GetGameProblemHistoryParams = { gameId: string };
 

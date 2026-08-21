@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCreateGame } from "../api/create-game";
 import { routerConfig } from "@/shared/router-config";
-import type { GameModeKey } from "../models/game-mode";
+import { GameModeKey } from "../models/game-mode";
 
 /** Creates a game and navigates to it on success. Replaces the old
  *  createGameRequested/Success/Failure flow plus useGameCreatedRedirectListener —

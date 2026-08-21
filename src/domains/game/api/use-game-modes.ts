@@ -2,7 +2,7 @@ import { defineQuery } from "@/shared/api/define-query";
 import { http } from "@/shared/lib/http";
 import { toAxiosConfig } from "@/shared/lib/request-config";
 import type { RequestConfig } from "@/shared/lib/request-config";
-import type { GameMode } from "../models/game-mode";
+import { GameMode } from "../models/game-mode";
 
 export const getGameModes = ({ signal }: RequestConfig) =>
   http.get<GameMode[]>("/api/v1/game/modes", toAxiosConfig({ signal }));

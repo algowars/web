@@ -2,18 +2,21 @@
 
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useGame, gameQueryOptions } from "../api/get-game";
 import { useStartGame } from "../api/start-game";
 import { problemByIdQueryOptions } from "@/domains/problem/api/get-problem-by-id";
-import { useInitializeProblem, useClearProblem } from "@/domains/problem/hooks/use-problem-actions";
+import {
+  useInitializeProblem,
+  useClearProblem,
+} from "@/domains/problem/hooks/use-problem-actions";
 import { useWorkspaceStore } from "@/domains/workspace/state/workspace-store";
 import { useUserStore, selectUser } from "@/domains/user/state/user-store";
-import { Game, GameStatus } from "../models/game";
 import {
   joinGameUpdates,
   leaveGameUpdates,
   onGameCompletedPush,
 } from "@/shared/lib/signalr/game-hub-client";
+import { Game, GameStatus } from "../models/game";
+import { gameQueryOptions, useGame } from "../api/get-game";
 
 const isGameStatus = (game: Game, status: GameStatus) => game.status === status;
 
@@ -61,11 +64,14 @@ export function useGameSession(gameId: string) {
 
     startRequestedForGameId.current = game.gameId;
 
-    void startGame({ gameId: game.gameId }, {
-      onError: () => {
-        startRequestedForGameId.current = null;
-      },
-    });
+    void startGame(
+      { gameId: game.gameId },
+      {
+        onError: () => {
+          startRequestedForGameId.current = null;
+        },
+      }
+    );
     // start-game's mutation invalidates the game query on success, which
     // triggers the refetch that used to be the explicit getGame dispatch.
   }, [game, startGame]);

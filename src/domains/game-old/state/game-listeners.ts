@@ -1,7 +1,7 @@
 import { AppDispatch, RootState } from "@/shared/state/store";
 import { TypedStartListening } from "@reduxjs/toolkit";
 import { GameActions } from "./game-actions";
-import { gameApi } from "../api/game-api";
+import { gameApi } from "../../game/api/game-api";
 import { Game, GameStatus } from "../models/game";
 import { toast } from "sonner";
 import { problemApi } from "@/domains/problem/api/problem-api";

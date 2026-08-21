@@ -2,7 +2,7 @@ import { defineMutation } from "@/shared/api/define-mutation";
 import { http } from "@/shared/lib/http";
 import { toAxiosConfig } from "@/shared/lib/request-config";
 import type { RequestConfig } from "@/shared/lib/request-config";
-import type { GameModeKey } from "../models/game-mode";
+import { GameModeKey } from "../models/game-mode";
 
 export type CreateGameRequest = {
   gameModeKey: GameModeKey;

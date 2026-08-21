@@ -20,8 +20,8 @@ import {
   DialogTitle,
 } from "@/shared/components/ui/dialog";
 import { useGameModes } from "@/domains/game/api/use-game-modes";
+import { useCreateGameAndPlay } from "@/domains/game/hooks/use-create-game-and-play";
 import { GameModeKey } from "../models/game-mode";
-import { useCreateGameAndPlay } from "../hooks/use-create-game-and-play";
 
 function formatDuration(durationSeconds: number) {
   const durationMinutes = durationSeconds / 60;
@@ -40,7 +40,6 @@ export default function PlaySoloRushCard(
   const { data: gameModes } = useGameModes();
   const gameMode = gameModes?.find((mode) => mode.key === GameModeKey.SoloRush);
   const { createGame, isCreating } = useCreateGameAndPlay();
-  const isAvailable = !!gameMode;
   const timeOptions = gameMode?.timeOptions ?? [];
   const defaultTimeOption = timeOptions.find((option) => option.isDefault);
   const defaultDuration = defaultTimeOption?.durationSeconds.toString();
@@ -84,7 +83,7 @@ export default function PlaySoloRushCard(
             : "No time limits available"
         }
         type="Ranked"
-        disabled={!isAvailable}
+        disabled={!gameMode}
         onClick={() => {
           setIsDialogOpen(true);
         }}

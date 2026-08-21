@@ -1,8 +1,27 @@
-import ForfeitButton from "@/domains/game-old/components/components/forfeit-button";
-import { LanguageSelect } from "@/domains/workspace/language-select/components/language-select";
-import { KeyboardShortcutTooltip } from "@/shared/components/keyboard-shortcut-tooltip";
+"use client";
+
+import { useCallback } from "react";
+import GameTimer from "../../../game/components/game-timer";
+import {
+  selectCurrentGame,
+  selectPendingNextProblemId,
+} from "../../state/game-slice";
+import { useAppSelector, useAppDispatch } from "@/shared/state/hooks";
+import { GameActions } from "../../state/game-actions";
+import { ModeToggle } from "@/shared/theme/mode-toggle";
+import ForfeitButton from "./forfeit-button";
 import { Button } from "@/shared/components/ui/button";
-import { Separator } from "@/shared/components/ui/separator";
+import { selectIsSubmittingSubmission } from "@/domains/workspace/state/workspace-slice";
+import { useKeyboardCommand } from "@/shared/hooks/use-keyboard-command";
+import { KeyboardShortcutTooltip } from "@/shared/components/keyboard-shortcut-tooltip";
+import ScoreBadge from "../../../game/components/score-badge";
+import { selectUser } from "@/domains/user/state/user-slice";
+import {
+  selectCurrentProblem,
+  selectProblemSetup,
+  selectProblemSetupLoading,
+} from "@/domains/problem/state/problem-setup-slice";
+import { LanguageSelect } from "@/domains/workspace/language-select/components/language-select";
 import {
   Sheet,
   SheetContent,
@@ -11,26 +30,54 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
-import { ModeToggle } from "@/shared/theme/mode-toggle";
+import { Separator } from "@/shared/components/ui/separator";
 import { ArrowRight, Menu } from "lucide-react";
-import ScoreBadge from "../../components/score-badge";
-import GameTimer from "../../components/game-timer";
-import { useGame } from "../../api/get-game";
-import { useAccount } from "@/domains/user/api/get-account";
-import { useCallback } from "react";
 
-type SoloRushWorkspaceHeaderProps = {
-  gameId: string;
-};
-
-export default function SoloRushWorkspaceHeader({
-  gameId,
-}: Readonly<SoloRushWorkspaceHeaderProps>) {
-  const { data: user } = useAccount();
-  const { data: game } = useGame({ gameId: gameId });
+export default function SoloRushWorkspaceHeader() {
+  const game = useAppSelector(selectCurrentGame);
+  const user = useAppSelector(selectUser);
+  const currentProblem = useAppSelector(selectCurrentProblem);
+  const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
+  const isProblemSetupLoading = useAppSelector(selectProblemSetupLoading);
+  const problemSetup = useAppSelector(selectProblemSetup);
+  const pendingNextProblemId = useAppSelector(selectPendingNextProblemId);
+  const dispatch = useAppDispatch();
+  const gameId = game?.gameId;
   const currentParticipant = game?.participants.find(
     (participant) => participant.userId === user?.id
   );
+
+  const onTimeExpired = useCallback(() => {
+    if (gameId) {
+      dispatch(GameActions.loadGameRequested(gameId));
+    }
+  }, [dispatch, gameId]);
+
+  const onSubmitSolution = () => {
+    dispatch(GameActions.submitSoloRushSolutionRequested());
+  };
+
+  const onNextProblem = () => {
+    if (!pendingNextProblemId) return;
+    dispatch(
+      GameActions.nextProblemRequested({ nextProblemId: pendingNextProblemId })
+    );
+  };
+
+  const problemSolved = pendingNextProblemId !== undefined;
+  const canSubmitSolution =
+    !!game &&
+    !!problemSetup &&
+    !isProblemSetupLoading &&
+    !isSubmittingSubmission &&
+    !problemSolved;
+
+  useKeyboardCommand({
+    key: "Enter",
+    onCommand: onSubmitSolution,
+    enabled: canSubmitSolution,
+    modifier: "ctrl",
+  });
 
   return (
     <header className="@container flex min-h-12 flex-1 items-center p-1">

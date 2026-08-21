@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CreateGameRequest } from "../api/game-api";
+import { CreateGameRequest } from "../../game/api/game-api";
 import type { Game, GameProblemHistory } from "../models/game";
 
 export const GameActions = {
