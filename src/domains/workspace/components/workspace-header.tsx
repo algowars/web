@@ -2,7 +2,8 @@
 import {
   selectIsAuthenticated,
   selectUserPermissions,
-} from "@/domains/user/state/user-slice";
+  useUserStore,
+} from "@/domains/user/state/user-store";
 import { Problem } from "@/domains/problem/models/problem";
 import { LanguageSelect } from "../language-select/components/language-select";
 import {
@@ -18,9 +19,12 @@ import { Separator } from "@/shared/components/ui/separator";
 import { ClipboardList, Lock, Menu } from "lucide-react";
 import Link from "next/link";
 import { routerConfig } from "@/shared/router-config";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { WorkspaceEvents } from "../state/workspace-events";
-import { selectIsSubmittingSubmission } from "../state/workspace-slice";
+import {
+  useWorkspaceStore,
+  selectIsSubmittingSubmission,
+  selectSelectedVersionId,
+} from "../state/workspace-store";
+import { useSubmitSolution } from "../hooks/use-submit-solution";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
 import { Permissions } from "@/shared/lib/permissions";
 import { useKeyboardCommand } from "@/shared/hooks/use-keyboard-command";
@@ -28,25 +32,29 @@ import { KeyboardShortcutTooltip } from "@/shared/components/keyboard-shortcut-t
 
 type WorkspaceHeaderProps = {
   problem: Problem;
+  problemSetupId: string | null;
 };
 
-export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
-  const dispatch = useAppDispatch();
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
-  const userPermissions = useAppSelector(selectUserPermissions);
+export const WorkspaceHeader = ({
+  problem,
+  problemSetupId,
+}: WorkspaceHeaderProps) => {
+  const isAuthenticated = useUserStore(selectIsAuthenticated);
+  const isSubmittingSubmission = useWorkspaceStore(
+    selectIsSubmittingSubmission
+  );
+  const userPermissions = useUserStore(selectUserPermissions);
+  const selectedVersionId = useWorkspaceStore(selectSelectedVersionId);
+  const onSelectVersion = useWorkspaceStore((s) => s.selectVersion);
+  const { runCode, submitCode } = useSubmitSolution(problemSetupId);
 
   const canRunCode = userPermissions.includes(Permissions.SUBMISSION_CREATE);
   const canSubmitSolution =
     isAuthenticated && !isSubmittingSubmission && canRunCode;
 
-  const submitSolution = () => {
-    dispatch(WorkspaceEvents.submitCodeRequested());
-  };
-
   useKeyboardCommand({
     key: "Enter",
-    onCommand: submitSolution,
+    onCommand: submitCode,
     enabled: canSubmitSolution,
     modifier: "ctrl",
   });
@@ -66,7 +74,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
               disabled={
                 !isAuthenticated || isSubmittingSubmission || !canRunCode
               }
-              onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
+              onClick={runCode}
             >
               {!isAuthenticated ? <Lock /> : null} {runLabel}
             </Button>
@@ -80,7 +88,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
                 className="w-24"
                 data-cy="submit-btn"
                 disabled={!canSubmitSolution}
-                onClick={submitSolution}
+                onClick={submitCode}
               >
                 {!isAuthenticated ? <Lock /> : null} {submitLabel}
               </Button>
@@ -99,7 +107,11 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
           </li>
         </ul>
         <div className="justify-self-end flex items-center gap-2">
-          <LanguageSelect languages={problem.availableLanguages ?? []} />
+          <LanguageSelect
+            languages={problem.availableLanguages ?? []}
+            selectedVersionId={selectedVersionId}
+            onSelectVersion={onSelectVersion}
+          />
           <ModeToggle />
         </div>
       </div>
@@ -110,7 +122,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
           data-cy="run-btn"
           variant="secondary"
           disabled={!isAuthenticated || isSubmittingSubmission || !canRunCode}
-          onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
+          onClick={runCode}
         >
           {!isAuthenticated ? <Lock /> : null} {runLabel}
         </Button>
@@ -122,7 +134,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
             className="w-24"
             data-cy="submit-btn"
             disabled={!canSubmitSolution}
-            onClick={submitSolution}
+            onClick={submitCode}
           >
             {!isAuthenticated ? <Lock /> : null} {submitLabel}
           </Button>
@@ -147,6 +159,8 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
               <div className="flex flex-wrap gap-2">
                 <LanguageSelect
                   languages={problem.availableLanguages ?? []}
+                  selectedVersionId={selectedVersionId}
+                  onSelectVersion={onSelectVersion}
                   className="flex-1 min-w-0"
                 />
               </div>
@@ -174,7 +188,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
                 disabled={
                   !isAuthenticated || isSubmittingSubmission || !canRunCode
                 }
-                onClick={() => dispatch(WorkspaceEvents.runCodeRequested())}
+                onClick={runCode}
               >
                 {!isAuthenticated ? <Lock /> : null} {runLabel}
               </Button>
@@ -186,7 +200,7 @@ export const WorkspaceHeader = ({ problem }: WorkspaceHeaderProps) => {
                   className="w-full"
                   data-cy="submit-btn"
                   disabled={!canSubmitSolution}
-                  onClick={submitSolution}
+                  onClick={submitCode}
                 >
                   {!isAuthenticated ? <Lock /> : null} {submitLabel}
                 </Button>

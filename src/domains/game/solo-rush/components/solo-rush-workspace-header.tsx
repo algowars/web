@@ -1,4 +1,7 @@
-import ForfeitButton from "@/domains/game-old/components/components/forfeit-button";
+"use client";
+
+import { useQueryClient } from "@tanstack/react-query";
+import ForfeitButton from "@/domains/game/components/forfeit-button";
 import { LanguageSelect } from "@/domains/workspace/language-select/components/language-select";
 import { KeyboardShortcutTooltip } from "@/shared/components/keyboard-shortcut-tooltip";
 import { Button } from "@/shared/components/ui/button";
@@ -12,30 +15,90 @@ import {
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
 import { ModeToggle } from "@/shared/theme/mode-toggle";
+import { useKeyboardCommand } from "@/shared/hooks/use-keyboard-command";
 import { ArrowRight, Menu } from "lucide-react";
 import ScoreBadge from "../../components/score-badge";
 import GameTimer from "../../components/game-timer";
-import { useGame } from "../../api/get-game";
-import { useAccount } from "@/domains/user/api/get-account";
+import { gameQueryOptions } from "../../api/get-game";
+import type { GameWorkspaceProps } from "../../models/game-workspace";
+import { useUserStore, selectUser } from "@/domains/user/state/user-store";
 import { useCallback } from "react";
-
-type SoloRushWorkspaceHeaderProps = {
-  gameId: string;
-};
+import {
+  useProblemSetupStore,
+  selectCurrentProblem,
+} from "@/domains/problem/state/problem-setup-store";
+import { useProblemSetupSync } from "@/domains/problem/hooks/use-problem-setup-sync";
+import {
+  useWorkspaceStore,
+  selectSelectedVersionId,
+  selectIsSubmittingSubmission,
+} from "@/domains/workspace/state/workspace-store";
+import {
+  useGameSessionStore,
+  selectPendingNextProblemId,
+} from "../../state/game-session-store";
+import { useSoloRushSubmission } from "../../hooks/use-solo-rush-submission";
+import { useLoadNextProblem } from "../../hooks/use-load-next-problem";
 
 export default function SoloRushWorkspaceHeader({
-  gameId,
-}: Readonly<SoloRushWorkspaceHeaderProps>) {
-  const { data: user } = useAccount();
-  const { data: game } = useGame({ gameId: gameId });
-  const currentParticipant = game?.participants.find(
+  game,
+}: Readonly<GameWorkspaceProps>) {
+  const queryClient = useQueryClient();
+  const user = useUserStore(selectUser);
+  const currentProblem = useProblemSetupStore(selectCurrentProblem);
+  const { setup: problemSetup, isLoading: isProblemSetupLoading } =
+    useProblemSetupSync();
+  const isSubmittingSubmission = useWorkspaceStore(
+    selectIsSubmittingSubmission
+  );
+  const selectedVersionId = useWorkspaceStore(selectSelectedVersionId);
+  const selectVersion = useWorkspaceStore((s) => s.selectVersion);
+  const pendingNextProblemId = useGameSessionStore(selectPendingNextProblemId);
+
+  const { submit } = useSoloRushSubmission();
+  const loadNextProblem = useLoadNextProblem();
+
+  const currentParticipant = game.participants.find(
     (participant) => participant.userId === user?.id
   );
+
+  const onTimeExpired = useCallback(() => {
+    void queryClient.invalidateQueries({
+      queryKey: gameQueryOptions({ gameId: game.gameId }).queryKey,
+    });
+  }, [queryClient, game.gameId]);
+
+  const onSubmitSolution = () => {
+    if (!currentProblem || !problemSetup) return;
+    void submit({
+      game,
+      problemId: currentProblem.id,
+      problemSetupId: problemSetup.id,
+    });
+  };
+
+  const onNextProblem = () => {
+    void loadNextProblem(pendingNextProblemId);
+  };
+
+  const problemSolved = pendingNextProblemId !== undefined;
+  const canSubmitSolution =
+    !!problemSetup &&
+    !isProblemSetupLoading &&
+    !isSubmittingSubmission &&
+    !problemSolved;
+
+  useKeyboardCommand({
+    key: "Enter",
+    onCommand: onSubmitSolution,
+    enabled: canSubmitSolution,
+    modifier: "ctrl",
+  });
 
   return (
     <header className="@container flex min-h-12 flex-1 items-center p-1">
       <div className="flex flex-1 items-center gap-2 @3xl:gap-3">
-        {game ? <GameTimer game={game} onTimeExpired={onTimeExpired} /> : null}
+        <GameTimer game={game} onTimeExpired={onTimeExpired} />
         {currentParticipant ? (
           <ScoreBadge score={currentParticipant.score} />
         ) : null}
@@ -64,8 +127,12 @@ export default function SoloRushWorkspaceHeader({
         )}
       </div>
       <div className="hidden flex-1 items-center justify-end gap-2 @3xl:flex">
-        <LanguageSelect languages={currentProblem?.availableLanguages ?? []} />
-        <ForfeitButton />
+        <LanguageSelect
+          languages={currentProblem?.availableLanguages ?? []}
+          selectedVersionId={selectedVersionId}
+          onSelectVersion={selectVersion}
+        />
+        <ForfeitButton gameId={game.gameId} />
         <ModeToggle />
       </div>
       <Sheet>
@@ -86,6 +153,8 @@ export default function SoloRushWorkspaceHeader({
               </span>
               <LanguageSelect
                 languages={currentProblem?.availableLanguages ?? []}
+                selectedVersionId={selectedVersionId}
+                onSelectVersion={selectVersion}
                 className="flex-1 min-w-0"
               />
             </div>
@@ -101,7 +170,7 @@ export default function SoloRushWorkspaceHeader({
 
             <div className="flex items-center justify-between gap-3">
               <span className="text-sm font-medium">Game</span>
-              <ForfeitButton />
+              <ForfeitButton gameId={game.gameId} />
             </div>
           </div>
 

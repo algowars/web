@@ -9,21 +9,24 @@ import {
 } from "@/shared/components/ui/select";
 import { cn } from "@/shared/lib/utils";
 import { useEffect, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { WorkspaceEvents } from "../../state/workspace-events";
-import { selectSelectedVersionId } from "../../state/workspace-slice";
 
 type LanguageSelectProps = {
   languages: ProgrammingLanguage[];
-} & React.HTMLAttributes<HTMLUListElement>;
+  /** Currently selected language version ID. Store-agnostic — callers own
+   *  where this lives (redux, zustand, etc.) and pass it down. */
+  selectedVersionId: string | null;
+  /** Called whenever the selected version should change, either because the
+   *  user picked a different language (first version of that language) or a
+   *  different version directly. */
+  onSelectVersion: (versionId: string | null) => void;
+} & Omit<React.HTMLAttributes<HTMLUListElement>, "onSelect">;
 
 export const LanguageSelect = ({
   languages,
+  selectedVersionId,
+  onSelectVersion,
   ...props
 }: LanguageSelectProps) => {
-  const dispatch = useAppDispatch();
-  const selectedVersionId = useAppSelector(selectSelectedVersionId);
-
   const selectedLanguage = useMemo(
     () =>
       languages.find((l) =>
@@ -34,9 +37,7 @@ export const LanguageSelect = ({
 
   const selectLanguage = (languageId: string) => {
     const language = languages.find((l) => l.id === languageId);
-    dispatch(
-      WorkspaceEvents.selectedVersionChanged(language?.versions[0]?.id ?? null)
-    );
+    onSelectVersion(language?.versions[0]?.id ?? null);
   };
 
   const defaultVersionId = languages[0]?.versions[0]?.id;
@@ -44,17 +45,17 @@ export const LanguageSelect = ({
   useEffect(() => {
     // Only auto-select the default if there's no version currently selected OR
     // the selected version isn't valid for this problem's available languages.
-    // Without the second check, the component fires selectedVersionChanged on
-    // every render where languages first become non-empty (e.g. after game load),
+    // Without the second check, the component fires onSelectVersion on every
+    // render where languages first become non-empty (e.g. after game load),
     // which triggers a redundant getProblemSetup call that previously wiped code.
     const isCurrentVersionValid =
       !!selectedVersionId &&
       languages.some((l) => l.versions.some((v) => v.id === selectedVersionId));
 
     if (!isCurrentVersionValid && defaultVersionId) {
-      dispatch(WorkspaceEvents.selectedVersionChanged(defaultVersionId));
+      onSelectVersion(defaultVersionId);
     }
-  }, [defaultVersionId, dispatch, selectedVersionId, languages]);
+  }, [defaultVersionId, onSelectVersion, selectedVersionId, languages]);
 
   return (
     <ul {...props} className={cn("flex items-center gap-2", props.className)}>
@@ -81,9 +82,7 @@ export const LanguageSelect = ({
       <li>
         <Select
           value={selectedVersionId ?? ""}
-          onValueChange={(val) =>
-            dispatch(WorkspaceEvents.selectedVersionChanged(val))
-          }
+          onValueChange={(val) => onSelectVersion(val)}
           disabled={!selectedLanguage || selectedLanguage.versions.length === 0}
         >
           <SelectTrigger className="w-32">

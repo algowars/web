@@ -9,8 +9,6 @@ import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "./store";
-import { registerGameListeners } from "@/domains/game/state/game-listeners";
-import { registerGameWorkspaceListeners } from "@/domains/workspace/state/game-workspace-listeners";
 import {
   connectSubmissionHub,
   onSubmissionCompletedPush,
@@ -29,8 +27,10 @@ type AppListenerEffect = NonNullable<
 >;
 type AppListenerApi = Parameters<AppListenerEffect>[1];
 
-registerGameListeners(startAppListening);
-registerGameWorkspaceListeners(startAppListening);
+// Note: the game domain's listeners (registerGameListeners,
+// registerGameWorkspaceListeners) have been retired along with the redux
+// game slice. Their behavior now lives in useGameSession (react-query) and
+// the solo-rush submission hook (react-query + zustand).
 
 const requestProblemSetup = async (
   listenerApi: AppListenerApi,

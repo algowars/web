@@ -39,7 +39,6 @@
     "react-error-boundary": "^6.1.2",
     "react-infinite-scroll-component": "^7.2.1",
     "react-markdown": "^10.1.0",
-    "react-redux": "^9.3.0",
     "react-resizable-panels": "^4.11.2",
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1",

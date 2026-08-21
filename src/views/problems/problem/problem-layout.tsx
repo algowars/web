@@ -4,14 +4,19 @@ import ProblemLoading from "@/app/problems/[slug]/loading";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
 import ProblemTestCases from "@/domains/problem/components/problem-test-cases";
 import { Problem } from "@/domains/problem/models/problem";
-import { ProblemEvents } from "@/domains/problem/state/problem-events";
+import { useInitializeProblem } from "@/domains/problem/hooks/use-problem-actions";
+import { useProblemSetupSync } from "@/domains/problem/hooks/use-problem-setup-sync";
 import SubmissionStatusPanel from "@/domains/submission/components/submission-status-panel";
 import Workspace from "@/domains/workspace/components/workspace";
 import { WorkspaceHeader } from "@/domains/workspace/components/workspace-header";
 import type { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
-import { useAppDispatch } from "@/shared/state/hooks";
+import {
+  useWorkspaceStore,
+  selectActiveSubmissionId,
+  selectIsSubmittingSubmission,
+} from "@/domains/workspace/state/workspace-store";
 import { CodeXml, FileText, FlaskConical } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import ProblemSolutionEditor from "./problem-solution-editor";
@@ -23,12 +28,17 @@ type ProblemLayoutProps = {
 export default function ProblemLayout({
   problem,
 }: Readonly<ProblemLayoutProps>) {
-  const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
+  const initializeProblem = useInitializeProblem();
+  const { setup } = useProblemSetupSync();
+  const activeSubmissionId = useWorkspaceStore(selectActiveSubmissionId);
+  const isSubmittingSubmission = useWorkspaceStore(
+    selectIsSubmittingSubmission
+  );
 
   useEffect(() => {
-    dispatch(ProblemEvents.initializeProblem(problem));
-  }, [dispatch, problem]);
+    initializeProblem(problem);
+  }, [initializeProblem, problem]);
 
   const tabs = useMemo((): EditorWindowTabNode => {
     const problemTabs: EditorWindowTabNode = {
@@ -77,7 +87,12 @@ export default function ProblemLayout({
               className="text-indigo-600 dark:text-indigo-400"
             />
           ),
-          component: <SubmissionStatusPanel />,
+          component: (
+            <SubmissionStatusPanel
+              submissionId={activeSubmissionId}
+              isSubmitting={isSubmittingSubmission}
+            />
+          ),
         },
       ],
     };
@@ -103,7 +118,12 @@ export default function ProblemLayout({
           className="text-indigo-600 dark:text-indigo-400"
         />
       ),
-      component: <SubmissionStatusPanel />,
+      component: (
+        <SubmissionStatusPanel
+          submissionId={activeSubmissionId}
+          isSubmitting={isSubmittingSubmission}
+        />
+      ),
     };
 
     if (isMobile) {
@@ -156,14 +176,16 @@ export default function ProblemLayout({
         },
       ],
     };
-  }, [isMobile, problem]);
+  }, [isMobile, problem, activeSubmissionId, isSubmittingSubmission]);
 
   if (isMobile === undefined) return <ProblemLoading />;
 
   return (
     <SidebarLayout
       breadcrumbs={[]}
-      headerItems={<WorkspaceHeader problem={problem} />}
+      headerItems={
+        <WorkspaceHeader problem={problem} problemSetupId={setup?.id ?? null} />
+      }
     >
       <div className="h-full px-2 md:px-4 pb-2 md:pb-4">
         <Workspace tab={tabs} />

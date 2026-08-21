@@ -4,15 +4,16 @@ import { workspaceReducer } from "@/domains/workspace/state/workspace-slice";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "../lib/base-api";
 import { listenerMiddleware } from "./listener-middleware";
-import gameReducer from "@/domains/game/state/game-slice";
 
+// Note: the game domain no longer has a redux slice — it's fully on
+// react-query + zustand now (see src/domains/game/state/game-session-store.ts
+// and src/domains/game/hooks/use-game-session.ts).
 export const makeStore = () =>
   configureStore({
     reducer: {
       user: userReducer,
       problemSetup: problemSetupReducer,
       workspace: workspaceReducer,
-      game: gameReducer,
       [baseApi.reducerPath]: baseApi.reducer,
     },
     middleware: (getDefault) =>

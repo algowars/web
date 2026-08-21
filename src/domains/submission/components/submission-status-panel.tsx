@@ -1,11 +1,10 @@
 "use client";
 
-import {
-  submissionApi,
-  type SubmissionResultStatus,
-  type SubmissionStatus,
-  useGetSubmissionStatusQuery,
-} from "@/domains/submission/api/submission-api";
+import type {
+  SubmissionResultStatus,
+  SubmissionStatus,
+} from "@/domains/submission/models/submission-status";
+import { useSubmissionStatus } from "@/domains/submission/api/get-submission-status";
 import { Badge } from "@/shared/components/ui/badge";
 import {
   Tabs,
@@ -13,13 +12,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
-import {
-  selectActiveSubmissionId,
-  selectIsSubmittingSubmission,
-} from "@/domains/workspace/state/workspace-slice";
-import { useAppSelector } from "@/shared/state/hooks";
 import { Check, X } from "lucide-react";
-import { useMemo } from "react";
 
 const terminalSubmissionStatuses = new Set<string>([
   "Accepted",
@@ -69,21 +62,8 @@ const getStatusClassName = (
   return undefined;
 };
 
-const getQueryErrorMessage = (error: unknown) => {
-  if (!error || typeof error !== "object") {
-    return "Failed to load submission status.";
-  }
-
-  if ("status" in error) {
-    const { status } = error;
-
-    if (typeof status === "string" || typeof status === "number") {
-      return `Failed to load submission status (${status}).`;
-    }
-  }
-
-  return "Failed to load submission status.";
-};
+const getQueryErrorMessage = (error: Error) =>
+  error.message || "Failed to load submission status.";
 
 const OutputBlock = ({
   title,
@@ -108,29 +88,21 @@ const OutputBlock = ({
   );
 };
 
-export default function SubmissionStatusPanel() {
-  const submissionId = useAppSelector(selectActiveSubmissionId);
-  const isSubmittingSubmission = useAppSelector(selectIsSubmittingSubmission);
-  const selectCachedSubmissionStatus = useMemo(
-    () =>
-      submissionApi.endpoints.getSubmissionStatus.select(submissionId ?? ""),
-    [submissionId]
-  );
-  const cachedSubmissionStatus = useAppSelector((state) =>
-    submissionId ? selectCachedSubmissionStatus(state).data : undefined
-  );
-  const shouldPoll =
-    !!submissionId &&
-    (!cachedSubmissionStatus ||
-      isPendingSubmissionStatus(cachedSubmissionStatus.status));
-  const { data, error, isLoading } = useGetSubmissionStatusQuery(
-    submissionId ?? "",
-    {
-      skip: !submissionId,
-      pollingInterval: shouldPoll ? 10_000 : 0,
-      refetchOnMountOrArgChange: true,
-    }
-  );
+type SubmissionStatusPanelProps = {
+  /** ID of the submission to show live status for, or `null` if none has
+   *  been started yet. Store-agnostic — callers own where this lives
+   *  (redux, zustand, etc.) and pass it down. */
+  submissionId: string | null;
+  /** Whether a run/submit request is currently in flight but hasn't yet
+   *  produced a submissionId (used only for the empty-state message). */
+  isSubmitting: boolean;
+};
+
+export default function SubmissionStatusPanel({
+  submissionId,
+  isSubmitting: isSubmittingSubmission,
+}: Readonly<SubmissionStatusPanelProps>) {
+  const { data, error, isLoading } = useSubmissionStatus(submissionId);
 
   if (!submissionId) {
     return (

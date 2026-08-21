@@ -2,11 +2,24 @@
 
 import { EditorWindowTab } from "../editor-window/editor-tab";
 import { EditorWindowTabNode } from "../editor-window/state/editor-window-store";
+import {
+  useWorkspaceStore,
+  selectActiveTabByNode,
+} from "../state/workspace-store";
 
 type WorkspaceProps = {
   readonly tab: EditorWindowTabNode;
 };
 
 export default function Workspace({ tab }: WorkspaceProps) {
-  return <EditorWindowTab tab={tab} />;
+  const activeTabByNode = useWorkspaceStore(selectActiveTabByNode);
+  const setActiveTab = useWorkspaceStore((s) => s.setActiveTab);
+
+  return (
+    <EditorWindowTab
+      tab={tab}
+      activeTabByNode={activeTabByNode}
+      onTabActivate={setActiveTab}
+    />
+  );
 }

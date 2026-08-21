@@ -10,6 +10,7 @@ import {
 } from "@/domains/problem/hooks/use-problem-actions";
 import { useWorkspaceStore } from "@/domains/workspace/state/workspace-store";
 import { useUserStore, selectUser } from "@/domains/user/state/user-store";
+import { useGameSessionStore } from "../state/game-session-store";
 import {
   joinGameUpdates,
   leaveGameUpdates,
@@ -32,6 +33,7 @@ export function useGameSession(gameId: string) {
   const queryClient = useQueryClient();
   const clearProblem = useClearProblem();
   const workspaceReset = useWorkspaceStore((s) => s.reset);
+  const gameSessionReset = useGameSessionStore((s) => s.reset);
   const initializeProblem = useInitializeProblem();
   const user = useUserStore(selectUser);
 
@@ -52,8 +54,9 @@ export function useGameSession(gameId: string) {
       lastLoadedProblemId.current = null;
       clearProblem();
       workspaceReset();
+      gameSessionReset();
     }
-  }, [gameId, clearProblem, workspaceReset]);
+  }, [gameId, clearProblem, workspaceReset, gameSessionReset]);
 
   const game = gameQuery.data;
 
