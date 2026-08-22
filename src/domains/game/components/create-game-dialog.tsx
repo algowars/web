@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { routerConfig } from "@/shared/router-config";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -34,6 +36,7 @@ type CreateGameDialogProps = {
 export default function CreateGameDialog({
   defaultModeKey,
 }: Readonly<CreateGameDialogProps>) {
+  const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedModeKey, setSelectedModeKey] = useState<string | undefined>(
     defaultModeKey
@@ -71,10 +74,10 @@ export default function CreateGameDialog({
         timeLimitInSeconds: Number(effectiveSelectedDuration),
       },
       {
-        onSuccess: () => {
-          toast.success("Game created");
+        onSuccess: (gameId) => {
           setIsDialogOpen(false);
           setSelectedDuration(undefined);
+          router.push(routerConfig.gamePlay.execute({ gameId }));
         },
         onError: (error) => {
           toast.error(error.message || "Failed to create game");

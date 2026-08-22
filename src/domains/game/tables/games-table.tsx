@@ -17,7 +17,6 @@ import {
 } from "@/domains/user/state/user-store";
 import { useOpenGames } from "../api/get-open-games";
 import { useJoinGame } from "../api/join-game";
-import { useStartGame } from "../api/start-game";
 import type { GameLobbySummary } from "../models/game-lobby";
 import type { GameModeKey } from "../models/game-mode";
 
@@ -29,47 +28,18 @@ function LobbyActionCell({ lobby }: Readonly<{ lobby: GameLobbySummary }>) {
   const router = useRouter();
   const isAuthenticated = useUserStore(selectIsAuthenticated);
   const { mutate: join, isPending: isJoining } = useJoinGame();
-  const { mutate: start, isPending: isStarting } = useStartGame();
 
   const isFull = lobby.participantCount >= lobby.maxPlayers;
+  const openLobby = () =>
+    router.push(routerConfig.gamePlay.execute({ gameId: lobby.gameId }));
 
-  if (lobby.isHost) {
-    const canStart = lobby.participantCount >= lobby.minPlayers;
-
-    if (!canStart) {
-      return (
-        <span className="text-sm text-muted-foreground">
-          Waiting for players...
-        </span>
-      );
-    }
-
+  // Starting the game now happens inside the lobby (LobbyPanel), not blind
+  // from this row — both the host and joined participants just open it.
+  if (lobby.isHost || lobby.isParticipant) {
     return (
-      <Button
-        size="sm"
-        disabled={isStarting}
-        onClick={() =>
-          start(
-            { gameId: lobby.gameId },
-            {
-              onSuccess: () =>
-                router.push(
-                  routerConfig.gamePlay.execute({ gameId: lobby.gameId })
-                ),
-              onError: (error) =>
-                toast.error(error.message || "Failed to start game"),
-            }
-          )
-        }
-      >
-        {isStarting ? "Starting..." : "Start"}
+      <Button size="sm" variant="secondary" onClick={openLobby}>
+        Open lobby
       </Button>
-    );
-  }
-
-  if (lobby.isParticipant) {
-    return (
-      <span className="text-sm text-muted-foreground">Waiting for host...</span>
     );
   }
 

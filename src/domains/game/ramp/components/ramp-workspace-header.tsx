@@ -38,10 +38,16 @@ import {
   selectPendingNextProblemId,
   selectViewingProblemId,
 } from "../../state/game-session-store";
-import { useSoloRushSubmission } from "../../hooks/use-solo-rush-submission";
+import { useRampSubmission } from "../../hooks/use-ramp-submission";
 import { useLoadNextProblem } from "../../hooks/use-load-next-problem";
 
-export default function SoloRushWorkspaceHeader({
+/**
+ * Toolbar for the ramp workspace: timer, own score, language, submit/next,
+ * forfeit. Shared by every mode's strategy while Running — one player's loop
+ * looks the same whether they're alone (Solo Rush) or one of several
+ * participants (Duel, FFA) racing on their own independent problem track.
+ */
+export default function RampWorkspaceHeader({
   game,
 }: Readonly<GameWorkspaceProps>) {
   const queryClient = useQueryClient();
@@ -58,7 +64,7 @@ export default function SoloRushWorkspaceHeader({
   const viewingProblemId = useGameSessionStore(selectViewingProblemId);
   const isViewingHistory = viewingProblemId !== null;
 
-  const { submit } = useSoloRushSubmission();
+  const { submit } = useRampSubmission();
   const loadNextProblem = useLoadNextProblem();
 
   const currentParticipant = game.participants.find(
@@ -147,7 +153,7 @@ export default function SoloRushWorkspaceHeader({
         </SheetTrigger>
         <SheetContent className="flex flex-col">
           <SheetHeader>
-            <SheetTitle>{currentProblem?.title ?? "Solo Rush"}</SheetTitle>
+            <SheetTitle>{currentProblem?.title ?? "Game"}</SheetTitle>
           </SheetHeader>
 
           <div className="flex flex-1 flex-col gap-4 px-4">

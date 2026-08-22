@@ -20,6 +20,7 @@ import {
   onGameCompletedPush,
 } from "@/shared/lib/signalr/game-hub-client";
 import { Game, GameStatus } from "../models/game";
+import { GameModeKey } from "../models/game-mode";
 import { gameQueryOptions, useGame } from "../api/get-game";
 
 const isGameStatus = (game: Game, status: GameStatus) => game.status === status;
@@ -64,9 +65,13 @@ export function useGameSession(gameId: string) {
 
   const game = gameQuery.data;
 
-  // Auto-start a Pending game, once per page load.
+  // Auto-start a Pending game, once per page load. Solo Rush only — it's the
+  // only mode with exactly one player, so there's no lobby to wait in.
+  // Multiplayer modes (Duel, FFA) instead sit in LobbyWorkspace until the
+  // host explicitly starts, once enough players have joined.
   useEffect(() => {
-    if (!game || !isGameStatus(game, GameStatus.Pending)) return;
+    if (!game || game.gameModeKey !== GameModeKey.SoloRush) return;
+    if (!isGameStatus(game, GameStatus.Pending)) return;
     if (startRequestedForGameId.current === game.gameId) return;
 
     startRequestedForGameId.current = game.gameId;

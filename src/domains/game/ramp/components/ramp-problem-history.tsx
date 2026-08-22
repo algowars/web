@@ -7,7 +7,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { cn } from "@/shared/lib/utils";
 
-type SoloRushProblemHistoryProps = {
+type RampProblemHistoryProps = {
   solvedProblemIds: string[];
   currentProblemId: string | null;
   viewingProblemId: string | null;
@@ -15,13 +15,13 @@ type SoloRushProblemHistoryProps = {
   onReturnToCurrent: () => void;
 };
 
-export default function SoloRushProblemHistory({
+export default function RampProblemHistory({
   solvedProblemIds,
   currentProblemId,
   viewingProblemId,
   onSelectProblem,
   onReturnToCurrent,
-}: Readonly<SoloRushProblemHistoryProps>) {
+}: Readonly<RampProblemHistoryProps>) {
   const solvedProblemQueries = useQueries({
     queries: solvedProblemIds.map((id) => problemByIdQueryOptions({ id })),
   });

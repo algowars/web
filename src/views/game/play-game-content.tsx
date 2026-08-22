@@ -6,6 +6,7 @@ import { Button } from "@/shared/components/ui/button";
 import { useGameSession } from "@/domains/game/hooks/use-game-session";
 import { gameWorkspaceRegistry } from "@/domains/game/game-workspace-registry";
 import { GameStatus } from "@/domains/game/models/game";
+import { useUserStore, selectUser } from "@/domains/user/state/user-store";
 
 type PlayGameContentProps = {
   gameId: string;
@@ -20,6 +21,7 @@ export default function PlayGameContent({
     error,
     refetch,
   } = useGameSession(gameId);
+  const user = useUserStore(selectUser);
 
   const handleRetry = () => {
     void refetch();
@@ -31,9 +33,16 @@ export default function PlayGameContent({
   const Workspace = strategy?.Workspace;
   const Header = strategy?.Header;
   const GameOverSummary = strategy?.GameOverSummary;
+
+  // A multiplayer game keeps running for everyone else after one participant
+  // forfeits — only that participant's own view treats it as over.
+  const ownParticipant = currentGame?.participants.find(
+    (p) => p.userId === user?.id
+  );
   const isGameOver =
     currentGame?.status === GameStatus.Completed ||
-    currentGame?.status === GameStatus.Cancelled;
+    currentGame?.status === GameStatus.Cancelled ||
+    ownParticipant?.hasForfeited === true;
 
   return (
     <SidebarLayout

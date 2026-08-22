@@ -1,9 +1,11 @@
 import { ComponentType } from "react";
 import { GameModeKey } from "./models/game-mode";
 import { GameWorkspaceProps } from "./models/game-workspace";
-import SoloRushWorkspace from "./solo-rush/components/solo-rush-workspace";
-import SoloRushWorkspaceHeader from "./solo-rush/components/solo-rush-workspace-header";
-import SoloRushGameOverSummary from "./solo-rush/components/solo-rush-game-over-summary";
+import RampWorkspace from "./ramp/components/ramp-workspace";
+import RampWorkspaceHeader from "./ramp/components/ramp-workspace-header";
+import RampGameOverSummary from "./ramp/components/ramp-game-over-summary";
+import MultiplayerWorkspace from "./lobby/components/multiplayer-workspace";
+import MultiplayerWorkspaceHeader from "./lobby/components/multiplayer-workspace-header";
 
 /**
  * A mode's full strategy: the required workspace, plus an
@@ -17,21 +19,40 @@ type GameWorkspaceStrategy = {
 };
 
 /**
- * Strategy registry: one entry per game mode. Partial<>
- * because not every mode has a workspace built yet (Duel,
- * FFA) — PlayGameContent falls back gracefully when a key
- * isn't registered.
+ * Strategy registry: one entry per game mode. Partial<> because a mode's
+ * strategy only needs to exist once someone's building it — PlayGameContent
+ * falls back gracefully when a key isn't registered.
  *
- * To add a new mode: build its workspace (and, if it needs
- * one, its header) against GameWorkspaceProps, then add one
- * entry here. PlayGameContent never needs to change.
+ * The actual "solve problems that get harder as you go" gameplay
+ * (RampWorkspace/RampWorkspaceHeader/RampGameOverSummary, under ./ramp) is
+ * shared: every mode's strategy calls into it rather than owning its own
+ * copy, since one player's loop is identical whether they're alone (Solo
+ * Rush) or one of several participants racing on their own independent
+ * problem track (Duel, FFA). Duel/FFA's strategy additionally composes the
+ * lobby phase (./lobby) in front of it, since those modes wait for players
+ * before starting — Solo Rush skips straight to Ramp*.
+ *
+ * To add a new mode that reuses the same gameplay: register Ramp* directly
+ * (like Solo Rush), or wrap it the way Duel/FFA do if the mode needs its own
+ * pre-game phase. A mode with genuinely different gameplay gets its own
+ * strategy instead. PlayGameContent never needs to change either way.
  */
 export const gameWorkspaceRegistry: Partial<
   Record<GameModeKey, GameWorkspaceStrategy>
 > = {
   [GameModeKey.SoloRush]: {
-    Workspace: SoloRushWorkspace,
-    Header: SoloRushWorkspaceHeader,
-    GameOverSummary: SoloRushGameOverSummary,
+    Workspace: RampWorkspace,
+    Header: RampWorkspaceHeader,
+    GameOverSummary: RampGameOverSummary,
+  },
+  [GameModeKey.Duel]: {
+    Workspace: MultiplayerWorkspace,
+    Header: MultiplayerWorkspaceHeader,
+    GameOverSummary: RampGameOverSummary,
+  },
+  [GameModeKey.Ffa]: {
+    Workspace: MultiplayerWorkspace,
+    Header: MultiplayerWorkspaceHeader,
+    GameOverSummary: RampGameOverSummary,
   },
 };

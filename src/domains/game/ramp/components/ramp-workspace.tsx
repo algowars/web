@@ -36,18 +36,20 @@ import {
 } from "../../state/game-session-store";
 import { useGameProblemHistory } from "../../api/get-game-problem-history";
 import type { GameWorkspaceProps } from "../../models/game-workspace";
-import SoloRushProblemHistory from "./solo-rush-problem-history";
+import RampProblemHistory from "./ramp-problem-history";
 
 const EMPTY_SOLVED_PROBLEM_IDS: string[] = [];
 
 /**
- * Solo Rush's implementation of the workspace strategy.
- * Everything here (tabs, mobile layout, code editor) is
- * specific to Solo Rush — other modes will look nothing
- * like this. Reads problem/code/submission state from the
- * zustand stores.
+ * The "ramp" workspace: solve problems that get harder as you go, matched to
+ * DifficultyRampProblemSelectionStrategy on the server. This is the shared
+ * per-participant gameplay engine (tabs, mobile layout, code editor, problem
+ * history) — every mode's strategy (Solo Rush, Duel, FFA) uses this same
+ * component while Running, since the loop is identical per player regardless
+ * of how many others are in the game. Reads problem/code/submission state
+ * from the zustand stores.
  */
-export default function SoloRushWorkspace({
+export default function RampWorkspace({
   game,
 }: Readonly<GameWorkspaceProps>) {
   const user = useUserStore(selectUser);
@@ -123,7 +125,7 @@ export default function SoloRushWorkspace({
         <History size={16} className="text-purple-600 dark:text-purple-400" />
       ),
       component: (
-        <SoloRushProblemHistory
+        <RampProblemHistory
           solvedProblemIds={solvedProblemIds}
           currentProblemId={liveProblem?.id ?? null}
           viewingProblemId={viewingProblemId}
