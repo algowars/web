@@ -24,7 +24,7 @@ export default function ForfeitButton({ gameId }: Readonly<ForfeitButtonProps>) 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="ml-auto" variant="destructive" size="sm">
+        <Button variant="destructive" size="sm">
           Forfeit
         </Button>
       </AlertDialogTrigger>
