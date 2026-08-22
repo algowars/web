@@ -18,6 +18,8 @@ import {
   joinGameUpdates,
   leaveGameUpdates,
   onGameCompletedPush,
+  onGameLobbyUpdatedPush,
+  onGameProgressUpdatedPush,
 } from "@/shared/lib/signalr/game-hub-client";
 import { Game, GameStatus } from "../models/game";
 import { GameModeKey } from "../models/game-mode";
@@ -27,11 +29,11 @@ const isGameStatus = (game: Game, status: GameStatus) => game.status === status;
 
 /**
  * Loads and keeps a game session in sync: fetches the game, auto-starts it once
- * if it's Pending, subscribes to the SignalR "GameCompleted" push while Running
- * (falling back to the caller's timer-driven refetch if the hub is unavailable),
- * and loads the current user's active problem into the problem-setup store
- * whenever the game or the user identity becomes available. Replaces
- * `registerGameListeners`.
+ * if it's Pending, subscribes to SignalR pushes while Pending ("GameLobbyUpdated")
+ * or Running ("GameProgressUpdated", "GameCompleted"), polls as a fallback (5s
+ * Pending, 8s Running), and loads the current user's active problem into the
+ * problem-setup store whenever the game or the user identity becomes available.
+ * Replaces `registerGameListeners`.
  */
 export function useGameSession(gameId: string) {
   const queryClient = useQueryClient();
@@ -42,7 +44,22 @@ export function useGameSession(gameId: string) {
   const initializeProblem = useInitializeProblem();
   const user = useUserStore(selectUser);
 
-  const gameQuery = useGame({ gameId });
+  const gameQuery = useGame({
+    gameId,
+    // Fallback for when the SignalR push below can't connect (e.g. a proxy blocking
+    // websockets), and — while Running — the only source of opponents' live progress at all
+    // (there's no push for "someone else scored a point", only for the game completing).
+    // Pending polls tighter (a join/leave should show up within a few seconds); Running polls
+    // a bit lighter since the player's own actions already trigger incidental refetches.
+    queryConfig: {
+      refetchInterval: (query) => {
+        const status = query.state.data?.status;
+        if (status === GameStatus.Pending) return 5_000;
+        if (status === GameStatus.Running) return 8_000;
+        return false;
+      },
+    },
+  });
   const { mutateAsync: startGame } = useStartGame();
 
   const startRequestedForGameId = useRef<string | null>(null);
@@ -88,37 +105,60 @@ export function useGameSession(gameId: string) {
     // triggers the refetch that used to be the explicit getGame dispatch.
   }, [game, startGame]);
 
-  // Subscribe to the SignalR "GameCompleted" push while the game is Running so the
-  // UI updates immediately when the server finalizes the game, without waiting for
-  // the client-side countdown's one-shot re-fetch (which might race server finalization).
+  // Subscribe to SignalR pushes while the game is Pending or Running so the UI updates
+  // immediately rather than waiting on a fallback: "GameLobbyUpdated" while Pending (someone
+  // joined/left — the 5s poll above is the fallback for this one, since there's no other
+  // time-based re-fetch during the lobby phase), "GameProgressUpdated" while Running (someone
+  // solved a problem — otherwise the Score tab would only ever update from the 8s poll or the
+  // viewer's own actions), and "GameCompleted" while Running (the client-side countdown's
+  // one-shot re-fetch is the fallback there, which might race server finalization). One
+  // subscription covers all three without dropping and rejoining the SignalR group across the
+  // Pending -> Running transition. Depends on gameId/status specifically (not the whole `game`
+  // object) so a routine poll/refetch doesn't tear this down and redo the group join on every
+  // tick. `gameId` (the hook's own param) is used rather than `game.gameId` — it's known
+  // synchronously, no need to wait on fetched data for it.
+  const gameStatus = game?.status;
   useEffect(() => {
-    if (!game || !isGameStatus(game, GameStatus.Running)) return;
+    if (gameStatus !== GameStatus.Pending && gameStatus !== GameStatus.Running) return;
 
-    const runningGameId = game.gameId;
-    let unsubscribe = () => {};
+    const activeGameId = gameId;
+    let unsubscribeCompleted = () => {};
+    let unsubscribeLobbyUpdated = () => {};
+    let unsubscribeProgressUpdated = () => {};
     let cancelled = false;
 
-    void joinGameUpdates(runningGameId)
+    const invalidateGame = () => {
+      queryClient.invalidateQueries({
+        queryKey: gameQueryOptions({ gameId: activeGameId }).queryKey,
+      });
+    };
+
+    void joinGameUpdates(activeGameId)
       .then(() => {
         if (cancelled) return;
-        unsubscribe = onGameCompletedPush((push) => {
-          if (push.gameId === runningGameId) {
-            queryClient.invalidateQueries({
-              queryKey: gameQueryOptions({ gameId: runningGameId }).queryKey,
-            });
-          }
+        unsubscribeCompleted = onGameCompletedPush((push) => {
+          if (push.gameId === activeGameId) invalidateGame();
+        });
+        unsubscribeLobbyUpdated = onGameLobbyUpdatedPush((push) => {
+          if (push.gameId === activeGameId) invalidateGame();
+        });
+        unsubscribeProgressUpdated = onGameProgressUpdatedPush((push) => {
+          if (push.gameId === activeGameId) invalidateGame();
         });
       })
       .catch(() => {
-        // SignalR unavailable — the countdown timer's onTimeExpired re-fetch is the fallback.
+        // SignalR unavailable — the Pending-phase poll / Running-phase poll+timer re-fetch
+        // (see above) are the fallbacks.
       });
 
     return () => {
       cancelled = true;
-      unsubscribe();
-      void leaveGameUpdates(runningGameId);
+      unsubscribeCompleted();
+      unsubscribeLobbyUpdated();
+      unsubscribeProgressUpdated();
+      void leaveGameUpdates(activeGameId);
     };
-  }, [game, queryClient]);
+  }, [gameId, gameStatus, queryClient]);
 
   // Load the current user's active problem for this game, if it isn't already
   // loaded. Re-runs whenever the game or the user identity changes, which

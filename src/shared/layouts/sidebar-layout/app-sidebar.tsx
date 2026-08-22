@@ -10,12 +10,13 @@ import {
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
 import { routerConfig } from "@/shared/router-config";
-import { Command, HomeIcon, Puzzle } from "lucide-react";
+import { Command, HomeIcon, Puzzle, Swords } from "lucide-react";
 import { SidebarMainNav } from "./sidebar-main-nav";
 import SidebarUser from "./sidebar-user";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
 import { Badge } from "@/shared/components/ui/badge";
+import { GameModeKey } from "@/domains/game/models/game-mode";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
@@ -34,6 +35,22 @@ export default function AppSidebar(
         title: "Problems",
         url: routerConfig.problems.path,
         icon: Puzzle,
+      },
+      {
+        title: "Games",
+        url: routerConfig.games.execute(),
+        icon: Swords,
+        isActive: true,
+        items: [
+          {
+            title: "Duel",
+            url: routerConfig.games.execute({ mode: GameModeKey.Duel }),
+          },
+          {
+            title: "Free For All",
+            url: routerConfig.games.execute({ mode: GameModeKey.Ffa }),
+          },
+        ],
       },
     ],
   };

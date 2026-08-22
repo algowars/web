@@ -8,6 +8,7 @@ import { AuthBridge } from "@/domains/auth/auth-bridge";
 import HealthCheck from "@/domains/health/components/health-check";
 import { SessionData } from "@auth0/nextjs-auth0/types";
 import ReactQueryProvider from "@/shared/lib/react-query";
+import ActiveGameBanner from "@/domains/game/components/active-game-banner";
 
 type AppProviders = {
   children: React.ReactNode;
@@ -24,6 +25,7 @@ export default function AppProviders({
         <AuthBridge session={session} />
         <HealthCheck />
         <Toaster position="top-right" />
+        <ActiveGameBanner />
         {children}
       </ErrorBoundary>
     </ReactQueryProvider>

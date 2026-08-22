@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import GamesTable from "@/domains/game/tables/games-table";
+import MyActiveGamesTable from "@/domains/game/tables/my-active-games-table";
 import CreateGameDialog from "@/domains/game/components/create-game-dialog";
 import {
   Select,
@@ -13,7 +14,7 @@ import {
 } from "@/shared/components/ui/select";
 import { routerConfig } from "@/shared/router-config";
 import { GameModeKey } from "@/domains/game/models/game-mode";
-import { Card } from "@/shared/components/ui/card";
+import { Card, CardContent } from "@/shared/components/ui/card";
 
 const ALL_MODES = "all";
 
@@ -40,25 +41,29 @@ export default function GamesLayout() {
           </p>
         </div>
 
-        <Card className="px-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <Select value={mode} onValueChange={onModeChange}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="All modes" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem value={ALL_MODES}>All modes</SelectItem>
-                <SelectItem value={GameModeKey.Duel}>Duel</SelectItem>
-                <SelectItem value={GameModeKey.Ffa}>FFA</SelectItem>
-              </SelectContent>
-            </Select>
+        <MyActiveGamesTable />
 
-            <CreateGameDialog
-              defaultModeKey={mode === ALL_MODES ? undefined : mode}
-            />
-          </div>
+        <Card>
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Select value={mode} onValueChange={onModeChange}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="All modes" />
+                </SelectTrigger>
+                <SelectContent position="popper">
+                  <SelectItem value={ALL_MODES}>All modes</SelectItem>
+                  <SelectItem value={GameModeKey.Duel}>Duel</SelectItem>
+                  <SelectItem value={GameModeKey.Ffa}>FFA</SelectItem>
+                </SelectContent>
+              </Select>
 
-          <GamesTable />
+              <CreateGameDialog
+                defaultModeKey={mode === ALL_MODES ? undefined : mode}
+              />
+            </div>
+
+            <GamesTable />
+          </CardContent>
         </Card>
       </div>
     </SidebarLayout>

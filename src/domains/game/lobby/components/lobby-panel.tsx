@@ -12,6 +12,8 @@ import { useUserStore, selectUser } from "@/domains/user/state/user-store";
 import { useGameModes } from "../../api/use-game-modes";
 import { useStartGame } from "../../api/start-game";
 import type { GameWorkspaceProps } from "../../models/game-workspace";
+import CloseLobbyButton from "../../components/close-lobby-button";
+import LeaveLobbyButton from "../../components/leave-lobby-button";
 
 /**
  * The lobby-phase side panel for multiplayer modes (Duel, FFA). Shown next to
@@ -32,7 +34,8 @@ export default function LobbyPanel({ game }: Readonly<GameWorkspaceProps>) {
   const participants = [...game.participants].sort(
     (a, b) => a.seatNumber - b.seatNumber
   );
-  const isHost = participants[0]?.userId === user?.id;
+  const hostUserId = participants[0]?.userId;
+  const isHost = hostUserId === user?.id;
   const canStart = participants.length >= minPlayers;
 
   const handleStart = () => {
@@ -74,7 +77,7 @@ export default function LobbyPanel({ game }: Readonly<GameWorkspaceProps>) {
               {participant.username}
               {participant.userId === user?.id ? " (You)" : ""}
             </span>
-            {participant.seatNumber === 1 ? (
+            {participant.userId === hostUserId ? (
               <span
                 title="Host"
                 className="flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400"
@@ -98,11 +101,26 @@ export default function LobbyPanel({ game }: Readonly<GameWorkspaceProps>) {
                 {minPlayers === 1 ? "" : "s"} to join...
               </p>
             ) : null}
+            <LeaveLobbyButton
+              gameId={game.gameId}
+              variant="outline"
+              size="default"
+              className="w-full"
+            />
+            <CloseLobbyButton gameId={game.gameId} className="w-full" />
           </>
         ) : (
-          <p className="text-center text-sm text-muted-foreground">
-            Waiting for the host to start the game...
-          </p>
+          <>
+            <p className="text-center text-sm text-muted-foreground">
+              Waiting for the host to start the game...
+            </p>
+            <LeaveLobbyButton
+              gameId={game.gameId}
+              variant="outline"
+              size="default"
+              className="w-full"
+            />
+          </>
         )}
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import type { GameWorkspaceProps } from "@/domains/game/models/game-workspace";
+import { GameStatus } from "@/domains/game/models/game";
 import ScoreBadge from "@/domains/game/components/score-badge";
 import {
   Avatar,
@@ -18,7 +19,7 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { routerConfig } from "@/shared/router-config";
-import { Crown, Home, RotateCcw, Trophy } from "lucide-react";
+import { Crown, Home, RotateCcw, Trophy, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useCreateGameAndPlay } from "@/domains/game/hooks/use-create-game-and-play";
 
@@ -39,10 +40,50 @@ export default function RampGameOverSummary({
 }: Readonly<GameWorkspaceProps>) {
   const user = useUserStore(selectUser);
   const { createGame, isCreating } = useCreateGameAndPlay();
+
+  const playAgain = () => {
+    createGame({
+      gameModeKey: game.gameModeKey,
+      timeLimitInSeconds: game.timeLimitInSeconds,
+    });
+  };
+
+  // A multiplayer lobby can only ever be Cancelled by being closed (by the host, explicitly,
+  // or implicitly by everyone leaving) — it's Pending-only, so this never means "the game ran
+  // and got cancelled." No score badge or standings here: nobody actually played anything.
+  if (game.status === GameStatus.Cancelled) {
+    return (
+      <div className="flex h-full min-h-0 items-center justify-center py-6">
+        <Card className="w-full max-w-md">
+          <CardHeader className="justify-items-center text-center">
+            <XCircle className="mb-2 size-8 text-muted-foreground" />
+            <CardTitle>Lobby closed</CardTitle>
+            <CardDescription>
+              This lobby was closed before the game started.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="grid grid-cols-2 gap-2">
+            <Button variant="outline" asChild>
+              <Link href={routerConfig.home.path}>
+                <Home />
+                Home
+              </Link>
+            </Button>
+            <Button disabled={isCreating} onClick={playAgain}>
+              <RotateCcw />
+              {isCreating ? "Starting..." : "Play again"}
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
   const participant = game.participants.find(
     (candidate) => candidate.userId === user?.id
   );
   const wasForfeited = participant?.hasForfeited === true;
+  const wasFinished = participant?.hasFinishedProblems === true;
   const isMultiplayer = game.participants.length > 1;
 
   // Highest score wins — computed here rather than trusted from any single
@@ -57,18 +98,17 @@ export default function RampGameOverSummary({
   const isTie = winners.length > 1;
   const currentUserWon = winners.some((w) => w.userId === user?.id);
 
-  const playAgain = () => {
-    createGame({
-      gameModeKey: game.gameModeKey,
-      timeLimitInSeconds: game.timeLimitInSeconds,
-    });
-  };
-
-  const title = wasForfeited ? "Game forfeited" : "Time's up";
+  const title = wasForfeited
+    ? "Game forfeited"
+    : wasFinished
+      ? "All problems solved!"
+      : "Time's up";
   const description = !isMultiplayer
     ? wasForfeited
       ? "This game has ended."
-      : "Your game is complete."
+      : wasFinished
+        ? "You solved every problem in the pool with time to spare."
+        : "Your game is complete."
     : isTie
       ? currentUserWon
         ? `Tied for first at ${topScore} point${topScore === 1 ? "" : "s"}.`
@@ -106,7 +146,11 @@ export default function RampGameOverSummary({
                     <span className="flex-1 truncate text-sm font-medium">
                       {p.username}
                       {p.userId === user?.id ? " (You)" : ""}
-                      {p.hasForfeited ? " — forfeited" : ""}
+                      {p.hasForfeited
+                        ? " — forfeited"
+                        : p.hasFinishedProblems
+                          ? " — finished"
+                          : ""}
                     </span>
                     {p.score === topScore ? (
                       <Crown

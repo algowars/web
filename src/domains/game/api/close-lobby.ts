@@ -3,24 +3,25 @@ import { http } from "@/shared/lib/http";
 import { toAxiosConfig } from "@/shared/lib/request-config";
 import type { RequestConfig } from "@/shared/lib/request-config";
 
-type StartGameVariables = { gameId: string };
+type CloseLobbyVariables = { gameId: string };
 
-export const startGame = ({
+export const closeLobby = ({
   gameId,
   signal,
-}: StartGameVariables & RequestConfig) =>
+}: CloseLobbyVariables & RequestConfig) =>
   http.post<void>(
-    `/api/v1/game/${gameId}/start`,
+    `/api/v1/game/${gameId}/close`,
     undefined,
     toAxiosConfig({ signal })
   );
 
-const startGameMutation = defineMutation<void, StartGameVariables>({
-  mutationFn: startGame,
+const closeLobbyMutation = defineMutation<void, CloseLobbyVariables>({
+  mutationFn: closeLobby,
   invalidateQueries: (_data, { gameId }) => [
     ["game", gameId],
+    ["open-games"],
     ["my-active-games"],
   ],
 });
 
-export const useStartGame = startGameMutation.useMutation;
+export const useCloseLobby = closeLobbyMutation.useMutation;

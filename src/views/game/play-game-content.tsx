@@ -35,14 +35,16 @@ export default function PlayGameContent({
   const GameOverSummary = strategy?.GameOverSummary;
 
   // A multiplayer game keeps running for everyone else after one participant
-  // forfeits — only that participant's own view treats it as over.
+  // forfeits or runs out of problems — only that participant's own view
+  // treats it as over.
   const ownParticipant = currentGame?.participants.find(
     (p) => p.userId === user?.id
   );
   const isGameOver =
     currentGame?.status === GameStatus.Completed ||
     currentGame?.status === GameStatus.Cancelled ||
-    ownParticipant?.hasForfeited === true;
+    ownParticipant?.hasForfeited === true ||
+    ownParticipant?.hasFinishedProblems === true;
 
   return (
     <SidebarLayout

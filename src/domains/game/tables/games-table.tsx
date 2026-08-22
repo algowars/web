@@ -19,6 +19,7 @@ import { useOpenGames } from "../api/get-open-games";
 import { useJoinGame } from "../api/join-game";
 import type { GameLobbySummary } from "../models/game-lobby";
 import type { GameModeKey } from "../models/game-mode";
+import LeaveLobbyButton from "../components/leave-lobby-button";
 
 function formatDuration(durationSeconds: number) {
   return `${durationSeconds / 60} min`;
@@ -34,12 +35,17 @@ function LobbyActionCell({ lobby }: Readonly<{ lobby: GameLobbySummary }>) {
     router.push(routerConfig.gamePlay.execute({ gameId: lobby.gameId }));
 
   // Starting the game now happens inside the lobby (LobbyPanel), not blind
-  // from this row — both the host and joined participants just open it.
+  // from this row — both the host and joined participants just open it. Every
+  // row here is a Pending lobby (this table only ever lists open games), so
+  // Leave is always valid for whoever's already in it.
   if (lobby.isHost || lobby.isParticipant) {
     return (
-      <Button size="sm" variant="secondary" onClick={openLobby}>
-        Open lobby
-      </Button>
+      <div className="flex items-center justify-end gap-2">
+        <LeaveLobbyButton gameId={lobby.gameId} />
+        <Button size="sm" variant="secondary" onClick={openLobby}>
+          Open lobby
+        </Button>
+      </div>
     );
   }
 

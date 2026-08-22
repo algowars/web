@@ -12,8 +12,23 @@ export type GameCompletedPush = {
   gameId: string;
 };
 
+/** Payload the server pushes on the "GameLobbyUpdated" hub method, whenever someone joins or
+ *  leaves a still-Pending lobby. Same "just a re-fetch signal" treatment as GameCompletedPush. */
+export type GameLobbyUpdatedPush = {
+  gameId: string;
+};
+
+/** Payload the server pushes on the "GameProgressUpdated" hub method, whenever a participant's
+ *  progress changes in a Running game (they solved a problem). Same "just a re-fetch signal"
+ *  treatment as GameCompletedPush — the actual score is read back from the REST API. */
+export type GameProgressUpdatedPush = {
+  gameId: string;
+};
+
 const HUB_PATH = "/hubs/game";
 const GAME_COMPLETED_EVENT = "GameCompleted";
+const GAME_LOBBY_UPDATED_EVENT = "GameLobbyUpdated";
+const GAME_PROGRESS_UPDATED_EVENT = "GameProgressUpdated";
 
 let connection: signalR.HubConnection | null = null;
 let connectPromise: Promise<void> | null = null;
@@ -99,4 +114,28 @@ export const onGameCompletedPush = (
   const conn = getConnection();
   conn.on(GAME_COMPLETED_EVENT, handler);
   return () => conn.off(GAME_COMPLETED_EVENT, handler);
+};
+
+/**
+ * Subscribes to lobby-updated pushes (someone joined/left a Pending game). Same semantics as
+ * onGameCompletedPush — safe to call before the connection exists, returns an unsubscribe fn.
+ */
+export const onGameLobbyUpdatedPush = (
+  handler: (payload: GameLobbyUpdatedPush) => void
+): (() => void) => {
+  const conn = getConnection();
+  conn.on(GAME_LOBBY_UPDATED_EVENT, handler);
+  return () => conn.off(GAME_LOBBY_UPDATED_EVENT, handler);
+};
+
+/**
+ * Subscribes to progress-updated pushes (a participant solved a problem in a Running game).
+ * Same semantics as onGameCompletedPush.
+ */
+export const onGameProgressUpdatedPush = (
+  handler: (payload: GameProgressUpdatedPush) => void
+): (() => void) => {
+  const conn = getConnection();
+  conn.on(GAME_PROGRESS_UPDATED_EVENT, handler);
+  return () => conn.off(GAME_PROGRESS_UPDATED_EVENT, handler);
 };

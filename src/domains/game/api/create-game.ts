@@ -17,7 +17,7 @@ export const createGame = ({
 
 const createGameMutation = defineMutation<string, CreateGameRequest>({
   mutationFn: createGame,
-  invalidateQueries: () => [["open-games"]],
+  invalidateQueries: () => [["open-games"], ["my-active-games"]],
 });
 
 export const useCreateGame = createGameMutation.useMutation;

@@ -137,7 +137,11 @@ function SidebarProvider({
           } as React.CSSProperties
         }
         className={cn(
-          "group/sidebar-wrapper flex h-svh w-full has-data-[variant=inset]:bg-sidebar",
+          // h-svh, minus whatever ActiveGameBanner currently occupies above this wrapper in the
+          // document flow — otherwise this fills a full extra viewport-height's worth of space
+          // below the banner and the page overflows by the banner's height. See the matching
+          // --active-banner-offset use on the fixed sidebar-container below.
+          "group/sidebar-wrapper flex h-[calc(100svh-var(--active-banner-offset,0px))] w-full has-data-[variant=inset]:bg-sidebar",
           className
         )}
         {...props}
@@ -229,7 +233,10 @@ function Sidebar({
         data-slot="sidebar-container"
         data-side={side}
         className={cn(
-          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear data-[side=left]:left-0 data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] md:flex",
+          // top (not inset-y-0's default 0) tracks --active-banner-offset, a CSS var the global
+          // ActiveGameBanner sets so this fixed-position container starts below it instead of
+          // overlapping it — falls back to 0px (identical to inset-y-0's top) when unset.
+          "fixed top-[var(--active-banner-offset,0px)] bottom-0 z-10 hidden w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear data-[side=left]:left-0 data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] md:flex",
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"

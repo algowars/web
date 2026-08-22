@@ -3,24 +3,25 @@ import { http } from "@/shared/lib/http";
 import { toAxiosConfig } from "@/shared/lib/request-config";
 import type { RequestConfig } from "@/shared/lib/request-config";
 
-type StartGameVariables = { gameId: string };
+type LeaveGameVariables = { gameId: string };
 
-export const startGame = ({
+export const leaveGame = ({
   gameId,
   signal,
-}: StartGameVariables & RequestConfig) =>
+}: LeaveGameVariables & RequestConfig) =>
   http.post<void>(
-    `/api/v1/game/${gameId}/start`,
+    `/api/v1/game/${gameId}/leave`,
     undefined,
     toAxiosConfig({ signal })
   );
 
-const startGameMutation = defineMutation<void, StartGameVariables>({
-  mutationFn: startGame,
+const leaveGameMutation = defineMutation<void, LeaveGameVariables>({
+  mutationFn: leaveGame,
   invalidateQueries: (_data, { gameId }) => [
     ["game", gameId],
+    ["open-games"],
     ["my-active-games"],
   ],
 });
 
-export const useStartGame = startGameMutation.useMutation;
+export const useLeaveGame = leaveGameMutation.useMutation;

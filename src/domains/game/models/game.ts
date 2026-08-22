@@ -18,6 +18,7 @@ export interface GameParticipant {
     problemId: string;
   } | null;
   hasForfeited: boolean;
+  hasFinishedProblems: boolean;
 }
 
 export interface SolvedProblemSubmission {

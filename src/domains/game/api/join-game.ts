@@ -17,7 +17,11 @@ export const joinGame = ({
 
 const joinGameMutation = defineMutation<void, JoinGameVariables>({
   mutationFn: joinGame,
-  invalidateQueries: (_data, { gameId }) => [["game", gameId], ["open-games"]],
+  invalidateQueries: (_data, { gameId }) => [
+    ["game", gameId],
+    ["open-games"],
+    ["my-active-games"],
+  ],
 });
 
 export const useJoinGame = joinGameMutation.useMutation;

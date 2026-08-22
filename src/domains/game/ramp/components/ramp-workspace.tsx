@@ -8,6 +8,7 @@ import {
   FileText,
   FlaskConical,
   History,
+  Trophy,
 } from "lucide-react";
 import { useMemo } from "react";
 import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
@@ -37,6 +38,7 @@ import {
 import { useGameProblemHistory } from "../../api/get-game-problem-history";
 import type { GameWorkspaceProps } from "../../models/game-workspace";
 import RampProblemHistory from "./ramp-problem-history";
+import RampStandings from "./ramp-standings";
 
 const EMPTY_SOLVED_PROBLEM_IDS: string[] = [];
 
@@ -135,10 +137,25 @@ export default function RampWorkspace({
       ),
     };
 
+    // Only meaningful once there's someone to compare against — Solo Rush games always have
+    // exactly one participant, so the tab would just show a single row duplicating the header's
+    // own ScoreBadge.
+    const isMultiplayer = game.participants.length > 1;
+    const scoreTab = {
+      key: "score",
+      name: "Score",
+      icon: (
+        <Trophy size={16} className="text-amber-600 dark:text-amber-400" />
+      ),
+      component: <RampStandings game={game} />,
+    };
+
     const problemTabs = {
       key: "problem",
       name: "Problem",
-      children: [descriptionTab, historyTab],
+      children: isMultiplayer
+        ? [descriptionTab, historyTab, scoreTab]
+        : [descriptionTab, historyTab],
     };
 
     const testsTab = {
@@ -199,6 +216,7 @@ export default function RampWorkspace({
           testsTab,
           submissionTab,
           historyTab,
+          ...(isMultiplayer ? [scoreTab] : []),
         ],
       };
     }
@@ -228,6 +246,7 @@ export default function RampWorkspace({
       ],
     };
   }, [
+    game,
     displayProblem,
     displayCode,
     displaySubmissionId,
