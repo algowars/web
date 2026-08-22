@@ -2,8 +2,14 @@
 
 import { useEffect } from "react";
 import { useProblemSetup } from "../api/get-problem-setup";
-import { useProblemSetupStore, selectCurrentProblem } from "../state/problem-setup-store";
-import { useWorkspaceStore, selectSelectedVersionId } from "@/domains/workspace/state/workspace-store";
+import {
+  useProblemSetupStore,
+  selectCurrentProblem,
+} from "../state/problem-setup-store";
+import {
+  useWorkspaceStore,
+  selectSelectedVersionId,
+} from "@/domains/workspace/state/workspace-store";
 
 /**
  * Fetches the setup (starter code, etc.) for the current problem + selected

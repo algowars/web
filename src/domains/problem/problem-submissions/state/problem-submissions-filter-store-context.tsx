@@ -12,9 +12,9 @@ const ProblemSubmissionsFilterStoreContext =
 
 export function ProblemSubmissionsFilterProvider({
   children,
-}: {
+}: Readonly<{
   children: ReactNode;
-}) {
+}>) {
   // One store per mount of the submissions page — fresh filter/sort state
   // each time you navigate here, same as `problem-list-store`.
   const [store] = useState(createProblemSubmissionsFilterStore);

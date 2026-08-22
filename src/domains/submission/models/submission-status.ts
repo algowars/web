@@ -23,7 +23,11 @@ export type SubmissionResultStatus =
   | "RuntimeError"
   | "CompileError";
 
-export type SubmissionStatus = "Queued" | "Running" | "Accepted" | "WrongAnswer";
+export type SubmissionStatus =
+  | "Queued"
+  | "Running"
+  | "Accepted"
+  | "WrongAnswer";
 
 export type SubmissionResultStatusDto = {
   status: SubmissionResultStatus;

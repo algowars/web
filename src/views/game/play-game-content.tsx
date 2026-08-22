@@ -14,7 +14,12 @@ type PlayGameContentProps = {
 export default function PlayGameContent({
   gameId,
 }: Readonly<PlayGameContentProps>) {
-  const { game: currentGame, isLoading, error, refetch } = useGameSession(gameId);
+  const {
+    game: currentGame,
+    isLoading,
+    error,
+    refetch,
+  } = useGameSession(gameId);
 
   const handleRetry = () => {
     void refetch();

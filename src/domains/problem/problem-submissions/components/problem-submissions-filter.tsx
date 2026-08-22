@@ -5,10 +5,7 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Label } from "@/shared/components/ui/label";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/shared/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 import { cn } from "@/shared/lib/utils";
 import { SubmissionFilterType } from "../models/submission-filter-type";
 import { SubmissionOrderByType } from "../models/submission-order-by-type";
@@ -54,9 +51,7 @@ export default function ProblemSubmissionsFilter({
         <div>
           <RadioGroup
             value={filterType}
-            onValueChange={(value) =>
-              setType(value as SubmissionFilterType)
-            }
+            onValueChange={(value) => setType(value as SubmissionFilterType)}
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem
@@ -82,9 +77,7 @@ export default function ProblemSubmissionsFilter({
           </h3>
           <RadioGroup
             value={sortBy}
-            onValueChange={(value) =>
-              setSortBy(value as SubmissionOrderByType)
-            }
+            onValueChange={(value) => setSortBy(value as SubmissionOrderByType)}
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem

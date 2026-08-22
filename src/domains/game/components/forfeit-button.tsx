@@ -18,7 +18,9 @@ type ForfeitButtonProps = {
   gameId: string | undefined;
 };
 
-export default function ForfeitButton({ gameId }: Readonly<ForfeitButtonProps>) {
+export default function ForfeitButton({
+  gameId,
+}: Readonly<ForfeitButtonProps>) {
   const { forfeit } = useForfeitGame(gameId);
 
   return (

@@ -15,5 +15,4 @@ export const useProblemSetupStore = create<ProblemSetupState>((set) => ({
   clearProblem: () => set({ currentProblem: null }),
 }));
 
-export const selectCurrentProblem = (s: ProblemSetupState) =>
-  s.currentProblem;
+export const selectCurrentProblem = (s: ProblemSetupState) => s.currentProblem;

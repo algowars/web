@@ -2,8 +2,7 @@ import { create } from "zustand";
 
 interface GameSessionState {
   /** Set after a problem is solved. `string` = next problem ID ready to load;
-   *  `null` = last problem solved, game over. `undefined` = not yet solved.
-   *  Mirrors the old `pendingNextProblemId` redux field. */
+   *  `null` = last problem solved, game over. `undefined` = not yet solved. */
   pendingNextProblemId: string | null | undefined;
 
   problemSolved: (nextProblemId: string | null) => void;
@@ -14,7 +13,8 @@ interface GameSessionState {
 export const useGameSessionStore = create<GameSessionState>((set) => ({
   pendingNextProblemId: undefined,
 
-  problemSolved: (nextProblemId) => set({ pendingNextProblemId: nextProblemId }),
+  problemSolved: (nextProblemId) =>
+    set({ pendingNextProblemId: nextProblemId }),
 
   nextProblemLoading: () => set({ pendingNextProblemId: undefined }),
 

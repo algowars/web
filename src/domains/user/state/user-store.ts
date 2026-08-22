@@ -89,7 +89,10 @@ export const selectUserSyncFailed = (s: UserState): boolean =>
   s.userError !== null && s.user === null;
 
 export const selectDisplayName = (s: UserState): string =>
-  s.user?.username ?? s.authProfile?.name ?? s.authProfile?.email ?? "Anonymous";
+  s.user?.username ??
+  s.authProfile?.name ??
+  s.authProfile?.email ??
+  "Anonymous";
 
 export const selectAvatarUrl = (s: UserState): string | null =>
   s.authProfile?.picture ?? null;

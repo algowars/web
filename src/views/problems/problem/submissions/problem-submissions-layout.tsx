@@ -46,9 +46,7 @@ export default function ProblemSubmissionsLayout({
                 <Card>
                   <CardContent className="py-3">
                     <AuthGuardFallback
-                      reason={
-                        isAuthenticated ? "forbidden" : "unauthenticated"
-                      }
+                      reason={isAuthenticated ? "forbidden" : "unauthenticated"}
                     />
                   </CardContent>
                 </Card>

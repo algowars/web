@@ -50,11 +50,20 @@ export function useUserSync() {
         userLoaded(account);
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : "Failed to load your profile";
+          error instanceof Error
+            ? error.message
+            : "Failed to load your profile";
         userLoadFailed(message);
       }
     },
-    [queryClient, upsertUser, userSyncStarted, userSyncFailed, userLoaded, userLoadFailed]
+    [
+      queryClient,
+      upsertUser,
+      userSyncStarted,
+      userSyncFailed,
+      userLoaded,
+      userLoadFailed,
+    ]
   );
 
   const retrySync = useCallback(() => {

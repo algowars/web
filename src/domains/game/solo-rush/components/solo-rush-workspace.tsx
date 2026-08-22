@@ -25,9 +25,8 @@ import {
  * Solo Rush's implementation of the workspace strategy.
  * Everything here (tabs, mobile layout, code editor) is
  * specific to Solo Rush — other modes will look nothing
- * like this. Ported from the redux-backed version: reads
- * problem/code/submission state from the new zustand stores
- * instead of the problem-setup/workspace slices.
+ * like this. Reads problem/code/submission state from the
+ * zustand stores.
  */
 export default function SoloRushWorkspace() {
   const currentProblem = useProblemSetupStore(selectCurrentProblem);
@@ -168,9 +167,7 @@ export default function SoloRushWorkspace() {
                 className="text-green-600 dark:text-green-400"
               />
             ),
-            component: (
-              <SolutionEditor value={code} onChange={setCode} />
-            ),
+            component: <SolutionEditor value={code} onChange={setCode} />,
           },
           mobileProblemTab,
           mobileTestsTab,
