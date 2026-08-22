@@ -15,6 +15,13 @@ export const routerConfig = {
     execute: ({ gameId }: { gameId: string }) =>
       `/game/play/${encodeURIComponent(gameId)}`,
   },
+  games: {
+    path: "/games",
+    execute: (params?: { mode?: string }) =>
+      params?.mode
+        ? `/games?mode=${encodeURIComponent(params.mode)}`
+        : "/games",
+  },
   problems: {
     path: "/problems",
   },

@@ -3,9 +3,17 @@
 import PlayCard from "./play-card";
 import { Users } from "lucide-react";
 import { ComponentProps } from "react";
+import { useRouter } from "next/navigation";
+import { routerConfig } from "@/shared/router-config";
+import { GameModeKey } from "../models/game-mode";
 
 export default function PlayFFACard(props: Readonly<ComponentProps<"div">>) {
-  const startGame = () => {};
+  const router = useRouter();
+
+  const goToLobbies = () => {
+    router.push(routerConfig.games.execute({ mode: GameModeKey.Ffa }));
+  };
+
   return (
     <PlayCard
       {...props}
@@ -18,9 +26,8 @@ export default function PlayFFACard(props: Readonly<ComponentProps<"div">>) {
       }
       playerCount={"3-10 players"}
       time={"5 / 10 / 15 / 30 minutes"}
-      onClick={startGame}
-      type="Practice"
-      disabled={true}
+      onClick={goToLobbies}
+      type="Ranked"
     />
   );
 }

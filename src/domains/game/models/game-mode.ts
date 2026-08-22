@@ -1,5 +1,7 @@
 export enum GameModeKey {
   SoloRush = "solo_rush",
+  Duel = "duel",
+  Ffa = "ffa",
 }
 
 export interface GameModeTimeOption {
