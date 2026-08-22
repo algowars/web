@@ -1,16 +1,14 @@
+"use client";
+
 import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
-import { WorkspaceEvents } from "@/domains/workspace/state/workspace-events";
-import { selectWorkspaceCode } from "@/domains/workspace/state/workspace-slice";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
+import {
+  useWorkspaceStore,
+  selectWorkspaceCode,
+} from "@/domains/workspace/state/workspace-store";
 
 export default function ProblemSolutionEditor() {
-  const dispatch = useAppDispatch();
-  const code = useAppSelector(selectWorkspaceCode);
+  const code = useWorkspaceStore(selectWorkspaceCode);
+  const setCode = useWorkspaceStore((s) => s.setCode);
 
-  return (
-    <SolutionEditor
-      value={code}
-      onChange={(value) => dispatch(WorkspaceEvents.codeChanged(value))}
-    />
-  );
+  return <SolutionEditor value={code} onChange={setCode} />;
 }

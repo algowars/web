@@ -15,27 +15,24 @@ import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { useRouter } from "next/navigation";
 import { routerConfig } from "@/shared/router-config";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { UserEvents } from "../state/user-events";
-import {
-  selectIsUserLoading,
-  selectUser,
-  selectUserError,
-} from "../state/user-slice";
-import { useEffect } from "react";
+import { useUpdateUsername } from "../api/update-username";
+import { useSuspenseAccount } from "../api/get-account";
 
 export default function UserSetupForm() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
-  const isPending = useAppSelector(selectIsUserLoading);
-  const error = useAppSelector(selectUserError);
+  const { data: user } = useSuspenseAccount();
 
-  useEffect(() => {
-    if (user?.usernameLastChangedAt) {
-      router.push(routerConfig.home.path);
-    }
-  }, [router, user?.usernameLastChangedAt]);
+  const mutation = useUpdateUsername({
+    mutationConfig: {
+      onSuccess: () => {
+        router.push(routerConfig.home.path);
+      },
+    },
+  });
+
+  if (user?.usernameLastChangedAt) {
+    router.push(routerConfig.home.path);
+  }
 
   const form = useForm({
     defaultValues: {
@@ -45,7 +42,7 @@ export default function UserSetupForm() {
       onSubmit: userSetupSchema,
     },
     onSubmit: async ({ value }) => {
-      dispatch(UserEvents.updateUsernameRequested({ data: value }));
+      mutation.mutate(value);
     },
   });
 
@@ -90,7 +87,11 @@ export default function UserSetupForm() {
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
-                    {error && <FieldError errors={[{ message: error }]} />}
+                    {mutation.error?.message && (
+                      <FieldError
+                        errors={[{ message: mutation.error?.message }]}
+                      />
+                    )}
                   </Field>
                 );
               }}
@@ -98,8 +99,8 @@ export default function UserSetupForm() {
           </FieldGroup>
         </FieldSet>
         <Field orientation="horizontal">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : "Save Changes"}
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? "Saving..." : "Save Changes"}
           </Button>
         </Field>
       </FieldGroup>

@@ -6,6 +6,8 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  type OnChangeFn,
+  type PaginationState,
 } from "@tanstack/react-table";
 
 import {
@@ -22,6 +24,15 @@ import {
   DataTablePaginationProps,
 } from "./data-table-pagination";
 
+export interface ManualPaginationProps {
+  pagination: PaginationState;
+  onPaginationChange: OnChangeFn<PaginationState>;
+  /** Total page count from the server. Pass -1 while it's not yet known
+   *  (e.g. the first page hasn't loaded), which tanstack table treats as
+   *  "unknown" and disables next-page bounds checking accordingly. */
+  pageCount: number;
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -29,6 +40,10 @@ interface DataTableProps<TData, TValue> {
   skeletonRows: number;
   paginationProps?: Omit<DataTablePaginationProps<TData>, "table">;
   onRowClick?: (row: TData) => void;
+  /** Omit for client-side pagination over `data` (the default). Pass this
+   *  when `data` is only ever the current server page — pagination state
+   *  then lives with the caller and every page change is a new fetch. */
+  manualPagination?: ManualPaginationProps;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,13 +53,21 @@ export function DataTable<TData, TValue>({
   skeletonRows = 5,
   paginationProps,
   onRowClick,
+  manualPagination,
 }: Readonly<DataTableProps<TData, TValue>>) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    ...(manualPagination
+      ? {
+          manualPagination: true,
+          pageCount: manualPagination.pageCount,
+          state: { pagination: manualPagination.pagination },
+          onPaginationChange: manualPagination.onPaginationChange,
+        }
+      : { getPaginationRowModel: getPaginationRowModel() }),
   });
 
   const rows = table.getRowModel().rows;

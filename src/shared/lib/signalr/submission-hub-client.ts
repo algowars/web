@@ -41,18 +41,15 @@ const getConnection = (): signalR.HubConnection => {
 const ensureConnected = async (): Promise<signalR.HubConnection> => {
   const conn = getConnection();
 
-  if (conn.state === signalR.HubConnectionState.Connected) {
-    return conn;
-  }
-
-  if (!connectPromise) {
-    connectPromise = conn.start().catch((error) => {
+  if (conn.state !== signalR.HubConnectionState.Connected) {
+    connectPromise ??= conn.start().catch((error) => {
       connectPromise = null;
       throw error;
     });
+
+    await connectPromise;
   }
 
-  await connectPromise;
   return conn;
 };
 

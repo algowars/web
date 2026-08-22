@@ -1,6 +1,5 @@
 "use client";
 
-import { useLoadProblems } from "@/domains/problem/hooks/use-load-problems";
 import ProblemTable from "@/domains/problem/tables/problem-table";
 import {
   Card,
@@ -11,7 +10,6 @@ import {
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 
 export default function ProblemsLayout() {
-  useLoadProblems();
   return (
     <SidebarLayout breadcrumbs={[]}>
       <div className="@container px-2 md:px-4 pb-2 md:pb-4 grid grid-cols-12 gap-4">

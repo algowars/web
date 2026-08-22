@@ -4,22 +4,40 @@ import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/edi
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { CodeXml, FileText, FlaskConical, History } from "lucide-react";
 import { useMemo } from "react";
-import ProblemSolutionEditor from "@/views/problems/problem/problem-solution-editor";
-import { useAppSelector } from "@/shared/state/hooks";
+import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
-import { selectCurrentProblem } from "@/domains/problem/state/problem-setup-slice";
+import {
+  useProblemSetupStore,
+  selectCurrentProblem,
+} from "@/domains/problem/state/problem-setup-store";
 import { EditorWindow } from "@/domains/workspace/editor-window/editor";
 import ProblemTestCases from "@/domains/problem/components/problem-test-cases";
 import SubmissionStatusPanel from "@/domains/submission/components/submission-status-panel";
+import {
+  useWorkspaceStore,
+  selectWorkspaceCode,
+  selectActiveSubmissionId,
+  selectIsSubmittingSubmission,
+  selectActiveTabByNode,
+} from "@/domains/workspace/state/workspace-store";
 
 /**
  * Solo Rush's implementation of the workspace strategy.
  * Everything here (tabs, mobile layout, code editor) is
  * specific to Solo Rush — other modes will look nothing
- * like this.
+ * like this. Reads problem/code/submission state from the
+ * zustand stores.
  */
 export default function SoloRushWorkspace() {
-  const currentProblem = useAppSelector(selectCurrentProblem);
+  const currentProblem = useProblemSetupStore(selectCurrentProblem);
+  const code = useWorkspaceStore(selectWorkspaceCode);
+  const setCode = useWorkspaceStore((s) => s.setCode);
+  const activeSubmissionId = useWorkspaceStore(selectActiveSubmissionId);
+  const isSubmittingSubmission = useWorkspaceStore(
+    selectIsSubmittingSubmission
+  );
+  const activeTabByNode = useWorkspaceStore(selectActiveTabByNode);
+  const setActiveTab = useWorkspaceStore((s) => s.setActiveTab);
   const isMobile = useIsMobile();
 
   const tabs = useMemo((): EditorWindowTabNode => {
@@ -96,7 +114,12 @@ export default function SoloRushWorkspace() {
               className="text-indigo-600 dark:text-indigo-400"
             />
           ),
-          component: <SubmissionStatusPanel />,
+          component: (
+            <SubmissionStatusPanel
+              submissionId={activeSubmissionId}
+              isSubmitting={isSubmittingSubmission}
+            />
+          ),
         },
       ],
     };
@@ -124,7 +147,12 @@ export default function SoloRushWorkspace() {
           className="text-indigo-600 dark:text-indigo-400"
         />
       ),
-      component: <SubmissionStatusPanel />,
+      component: (
+        <SubmissionStatusPanel
+          submissionId={activeSubmissionId}
+          isSubmitting={isSubmittingSubmission}
+        />
+      ),
     };
 
     if (isMobile) {
@@ -139,7 +167,7 @@ export default function SoloRushWorkspace() {
                 className="text-green-600 dark:text-green-400"
               />
             ),
-            component: <ProblemSolutionEditor />,
+            component: <SolutionEditor value={code} onChange={setCode} />,
           },
           mobileProblemTab,
           mobileTestsTab,
@@ -158,7 +186,7 @@ export default function SoloRushWorkspace() {
           icon: (
             <CodeXml size={16} className="text-green-600 dark:text-green-400" />
           ),
-          component: <ProblemSolutionEditor />,
+          component: <SolutionEditor value={code} onChange={setCode} />,
         },
         {
           key: "right-column",
@@ -177,7 +205,20 @@ export default function SoloRushWorkspace() {
         },
       ],
     };
-  }, [currentProblem, isMobile]);
+  }, [
+    currentProblem,
+    isMobile,
+    code,
+    setCode,
+    activeSubmissionId,
+    isSubmittingSubmission,
+  ]);
 
-  return <EditorWindow tabs={tabs} />;
+  return (
+    <EditorWindow
+      tabs={tabs}
+      activeTabByNode={activeTabByNode}
+      onTabActivate={setActiveTab}
+    />
+  );
 }

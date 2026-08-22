@@ -8,23 +8,26 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/shared/components/ui/resizable";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { EditorWindowPanelHeader } from "./editor-panel-header";
 import { EditorWindowTabNode } from "./state/editor-window-store";
-import { selectActiveTabIndex } from "../state/workspace-slice";
-import { WorkspaceEvents } from "../state/workspace-events";
 
 type EditorWindowTabProps = {
   tab?: EditorWindowTabNode;
   nodeId?: string;
+  /** Which child tab is active per node ID. Store-agnostic — callers own
+   *  where this lives (redux, zustand, etc.) and pass it down. */
+  activeTabByNode: Record<string, number>;
+  /** Called with the node ID and the newly-clicked tab index. */
+  onTabActivate: (nodeId: string, tabIndex: number) => void;
 };
 
 export const EditorWindowTab = ({
   tab,
   nodeId = "root",
+  activeTabByNode,
+  onTabActivate,
 }: EditorWindowTabProps) => {
-  const dispatch = useAppDispatch();
-  const activeTab = useAppSelector(selectActiveTabIndex(nodeId));
+  const activeTab = activeTabByNode[nodeId] ?? 0;
   const resolvedTab = tab;
 
   if (!resolvedTab) {
@@ -37,7 +40,12 @@ export const EditorWindowTab = ({
         {resolvedTab.children?.map((t, index) => (
           <Fragment key={t.key ?? `${nodeId}-${index}`}>
             <ResizablePanel defaultSize={t.defaultSize} minSize={10}>
-              <EditorWindowTab tab={t} nodeId={`${nodeId}.${index}`} />
+              <EditorWindowTab
+                tab={t}
+                nodeId={`${nodeId}.${index}`}
+                activeTabByNode={activeTabByNode}
+                onTabActivate={onTabActivate}
+              />
             </ResizablePanel>
             {resolvedTab.children &&
             index !== resolvedTab.children.length - 1 ? (
@@ -50,7 +58,7 @@ export const EditorWindowTab = ({
   }
 
   const handleTabClick = (index: number) => {
-    dispatch(WorkspaceEvents.editorTabActivated({ nodeId, tabIndex: index }));
+    onTabActivate(nodeId, index);
   };
 
   const currentTab = resolvedTab.children

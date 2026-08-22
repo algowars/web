@@ -1,16 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import SidebarLayout from "@/shared/layouts/sidebar-layout/sidebar-layout";
 import { Button } from "@/shared/components/ui/button";
 
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { GameActions } from "@/domains/game/state/game-actions";
-import {
-  selectCurrentGame,
-  selectGameError,
-  selectIsLoadingGame,
-} from "@/domains/game/state/game-slice";
+import { useGameSession } from "@/domains/game/hooks/use-game-session";
 import { gameWorkspaceRegistry } from "@/domains/game/game-workspace-registry";
 import { GameStatus } from "@/domains/game/models/game";
 
@@ -21,17 +14,15 @@ type PlayGameContentProps = {
 export default function PlayGameContent({
   gameId,
 }: Readonly<PlayGameContentProps>) {
-  const dispatch = useAppDispatch();
-  const currentGame = useAppSelector(selectCurrentGame);
-  const isLoading = useAppSelector(selectIsLoadingGame);
-  const error = useAppSelector(selectGameError);
-
-  useEffect(() => {
-    dispatch(GameActions.loadGameRequested(gameId));
-  }, [dispatch, gameId]);
+  const {
+    game: currentGame,
+    isLoading,
+    error,
+    refetch,
+  } = useGameSession(gameId);
 
   const handleRetry = () => {
-    dispatch(GameActions.loadGameRequested(gameId));
+    void refetch();
   };
 
   const strategy = currentGame

@@ -5,19 +5,13 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { InfinitePaginatedList } from "@/shared/pagination/pagination-list";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
 import { cn } from "@/shared/lib/utils";
-import { ComponentProps, useEffect } from "react";
-import {
-  selectProblemSubmissions,
-  selectHasMoreSubmissions,
-  selectIsProblemSubmissionsLoading,
-  selectIsLoadingMoreSubmissions,
-} from "../state/problem-submissions-slice";
+import { ComponentProps } from "react";
 
 import ProblemSubmissionsCard from "./problem-submissions-card";
-import { ProblemSubmissionsEvents } from "../state/problem-submissions-events";
 import { Problem } from "../../models/problem";
+import { useProblemSubmissions } from "../api/use-problem-submissions";
+import { useProblemSubmissionsFilterStore } from "../state/problem-submissions-filter-store-context";
 
 type ProblemSubmissionsProps = {
   problem: Problem;
@@ -30,26 +24,18 @@ export default function ProblemSubmissions({
   className,
   ...props
 }: Readonly<ProblemSubmissionsProps>) {
-  const submissions = useAppSelector(selectProblemSubmissions);
-  const hasMore = useAppSelector(selectHasMoreSubmissions);
-  const isLoading = useAppSelector(selectIsProblemSubmissionsLoading);
-  const isLoadingMore = useAppSelector(selectIsLoadingMoreSubmissions);
-  const dispatch = useAppDispatch();
+  const type = useProblemSubmissionsFilterStore((s) => s.type);
+  const sortBy = useProblemSubmissionsFilterStore((s) => s.sortBy);
 
-  useEffect(() => {
-    if (!isAuthenticated || !problem.slug) {
-      return;
-    }
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useProblemSubmissions({
+      slug: problem.slug,
+      type,
+      sortBy,
+      enabled: isAuthenticated,
+    });
 
-    dispatch(
-      ProblemSubmissionsEvents.loadSubmissionsRequested({
-        slug: problem.slug,
-        page: 1,
-        size: 10,
-        timestamp: new Date().toISOString(),
-      })
-    );
-  }, [dispatch, isAuthenticated, problem.slug]);
+  const submissions = data?.pages.flatMap((page) => page.results) ?? [];
 
   return (
     <Card className={cn("h-fit", className)} {...props}>
@@ -59,8 +45,8 @@ export default function ProblemSubmissions({
       <CardContent>
         <InfinitePaginatedList
           items={submissions}
-          hasMore={hasMore}
-          isFetching={isLoading || isLoadingMore}
+          hasMore={!!hasNextPage}
+          isFetching={isLoading || isFetchingNextPage}
           scrollableTarget="sidebar-layout-content"
           emptyComponent={
             <div className="flex flex-col items-center justify-center py-8">
@@ -70,11 +56,7 @@ export default function ProblemSubmissions({
             </div>
           }
           onNext={() => {
-            dispatch(
-              ProblemSubmissionsEvents.loadMoreSubmissionsRequested({
-                slug: problem.slug,
-              })
-            );
+            fetchNextPage();
           }}
           renderItem={(item) => <ProblemSubmissionsCard submission={item} />}
           getKey={(item) => item.id}

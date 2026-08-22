@@ -9,7 +9,7 @@ type DataTableSkeletonProps = {
 export function DataTableSkeleton({
   rowCount = 5,
   columnCount = 3,
-}: DataTableSkeletonProps) {
+}: Readonly<DataTableSkeletonProps>) {
   return Array.from({ length: rowCount }).map((_, rowIndex) => (
     <TableRow key={`skeleton-row-${rowIndex}`}>
       {Array.from({ length: columnCount }).map((__, colIndex) => (

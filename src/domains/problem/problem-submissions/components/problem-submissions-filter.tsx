@@ -7,33 +7,40 @@ import {
 import { Label } from "@/shared/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 import { cn } from "@/shared/lib/utils";
-import { useAppDispatch, useAppSelector } from "@/shared/state/hooks";
-import { ProblemSubmissionsEvents } from "../state/problem-submissions-events";
-import {
-  selectIsLoadingMoreSubmissions,
-  selectIsProblemSubmissionsLoading,
-  selectProblemSubmissionsFilterType,
-  selectProblemSubmissionsSortBy,
-} from "../state/problem-submissions-slice";
 import { SubmissionFilterType } from "../models/submission-filter-type";
 import { SubmissionOrderByType } from "../models/submission-order-by-type";
+import { useProblemSubmissions } from "../api/use-problem-submissions";
+import { useProblemSubmissionsFilterStore } from "../state/problem-submissions-filter-store-context";
 
 type ProblemSubmissionsFilterProps = {
+  slug?: string;
+  isAuthenticated?: boolean;
   isDisabled?: boolean;
 } & React.ComponentProps<"div">;
 
 export default function ProblemSubmissionsFilter({
+  slug,
+  isAuthenticated,
   isDisabled,
   className,
   ...props
 }: Readonly<ProblemSubmissionsFilterProps>) {
-  const dispatch = useAppDispatch();
-  const filterType = useAppSelector(selectProblemSubmissionsFilterType);
-  const sortBy = useAppSelector(selectProblemSubmissionsSortBy);
-  const isLoading = useAppSelector(selectIsProblemSubmissionsLoading);
-  const isLoadingMore = useAppSelector(selectIsLoadingMoreSubmissions);
+  const filterType = useProblemSubmissionsFilterStore((s) => s.type);
+  const sortBy = useProblemSubmissionsFilterStore((s) => s.sortBy);
+  const setType = useProblemSubmissionsFilterStore((s) => s.setType);
+  const setSortBy = useProblemSubmissionsFilterStore((s) => s.setSortBy);
 
-  const disabled = isDisabled || isLoading || isLoadingMore;
+  // Same (slug, type, sortBy) key as the sibling `ProblemSubmissions` list —
+  // React Query dedupes this against that request instead of firing a
+  // second network call, so this is "free" loading state, not an extra fetch.
+  const { isLoading, isFetchingNextPage } = useProblemSubmissions({
+    slug: slug ?? "",
+    type: filterType,
+    sortBy,
+    enabled: !!isAuthenticated && !!slug,
+  });
+
+  const disabled = isDisabled || isLoading || isFetchingNextPage;
 
   return (
     <Card className={cn("h-fit", className)} {...props}>
@@ -44,13 +51,7 @@ export default function ProblemSubmissionsFilter({
         <div>
           <RadioGroup
             value={filterType}
-            onValueChange={(value) =>
-              dispatch(
-                ProblemSubmissionsEvents.changeFilterType({
-                  type: value as SubmissionFilterType,
-                })
-              )
-            }
+            onValueChange={(value) => setType(value as SubmissionFilterType)}
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem
@@ -76,13 +77,7 @@ export default function ProblemSubmissionsFilter({
           </h3>
           <RadioGroup
             value={sortBy}
-            onValueChange={(value) =>
-              dispatch(
-                ProblemSubmissionsEvents.changeSortBy({
-                  sortBy: value as SubmissionOrderByType,
-                })
-              )
-            }
+            onValueChange={(value) => setSortBy(value as SubmissionOrderByType)}
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem
