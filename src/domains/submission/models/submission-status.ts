@@ -44,5 +44,6 @@ export type SubmissionStatusDto = {
   submissionId: string;
   problemSetupId: string;
   status: SubmissionStatus;
+  code: string;
   results: SubmissionResultStatusDto[];
 };
