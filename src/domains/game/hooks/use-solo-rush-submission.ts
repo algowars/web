@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useSubmitGameProblem } from "../api/submit-game-problem";
 import { useCompleteProblem } from "../api/complete-problem";
 import { gameQueryOptions } from "../api/get-game";
+import { gameProblemHistoryQueryOptions } from "../api/get-game-problem-history";
 import { waitForTerminalSubmission } from "@/domains/submission/api/wait-for-terminal-submission";
 import {
   useWorkspaceStore,
@@ -87,6 +88,10 @@ export function useSoloRushSubmission() {
       // query is cheap to re-fetch.
       void queryClient.invalidateQueries({
         queryKey: gameQueryOptions({ gameId: game.gameId }).queryKey,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: gameProblemHistoryQueryOptions({ gameId: game.gameId })
+          .queryKey,
       });
     } catch (error) {
       const message =

@@ -36,6 +36,7 @@ import {
 import {
   useGameSessionStore,
   selectPendingNextProblemId,
+  selectViewingProblemId,
 } from "../../state/game-session-store";
 import { useSoloRushSubmission } from "../../hooks/use-solo-rush-submission";
 import { useLoadNextProblem } from "../../hooks/use-load-next-problem";
@@ -54,6 +55,8 @@ export default function SoloRushWorkspaceHeader({
   const selectedVersionId = useWorkspaceStore(selectSelectedVersionId);
   const selectVersion = useWorkspaceStore((s) => s.selectVersion);
   const pendingNextProblemId = useGameSessionStore(selectPendingNextProblemId);
+  const viewingProblemId = useGameSessionStore(selectViewingProblemId);
+  const isViewingHistory = viewingProblemId !== null;
 
   const { submit } = useSoloRushSubmission();
   const loadNextProblem = useLoadNextProblem();
@@ -81,12 +84,13 @@ export default function SoloRushWorkspaceHeader({
     void loadNextProblem(pendingNextProblemId);
   };
 
-  const problemSolved = pendingNextProblemId !== undefined;
+  const problemSolved = pendingNextProblemId !== undefined && !isViewingHistory;
   const canSubmitSolution =
     !!problemSetup &&
     !isProblemSetupLoading &&
     !isSubmittingSubmission &&
-    !problemSolved;
+    !problemSolved &&
+    !isViewingHistory;
 
   useKeyboardCommand({
     key: "Enter",

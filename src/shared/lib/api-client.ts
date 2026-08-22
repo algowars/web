@@ -12,6 +12,16 @@ function isApiServerRequest(config: InternalAxiosRequestConfig): boolean {
   return resolveRequestUrl(config).startsWith(env.NEXT_PUBLIC_API_SERVER_URL);
 }
 
+/** `getAccessToken()` throws when there's no active session — expected for a
+ *  signed-out visitor hitting a public endpoint, not a real failure. */
+async function getAccessTokenSafely(): Promise<string | undefined> {
+  try {
+    return await getAccessToken();
+  } catch {
+    return undefined;
+  }
+}
+
 export const apiClient = axios.create({
   baseURL: env.NEXT_PUBLIC_API_SERVER_URL,
   headers: { "Content-Type": "application/json" },
@@ -21,7 +31,7 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(async (config) => {
   if (!isApiServerRequest(config)) return config;
 
-  const accessToken = await getAccessToken();
+  const accessToken = await getAccessTokenSafely();
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
@@ -44,7 +54,7 @@ apiClient.interceptors.response.use(
       !original._retry
     ) {
       original._retry = true;
-      const accessToken = await getAccessToken();
+      const accessToken = await getAccessTokenSafely();
       if (accessToken) {
         original.headers.Authorization = `Bearer ${accessToken}`;
         return apiClient(original);
