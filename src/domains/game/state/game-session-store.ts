@@ -28,8 +28,7 @@ export const useGameSessionStore = create<GameSessionState>((set) => ({
 
   returnToCurrentProblem: () => set({ viewingProblemId: null }),
 
-  reset: () =>
-    set({ pendingNextProblemId: undefined, viewingProblemId: null }),
+  reset: () => set({ pendingNextProblemId: undefined, viewingProblemId: null }),
 }));
 
 export const selectPendingNextProblemId = (s: GameSessionState) =>

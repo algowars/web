@@ -2,7 +2,13 @@
 
 import { EditorWindowTabNode } from "@/domains/workspace/editor-window/state/editor-window-store";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
-import { ArrowLeft, CodeXml, FileText, FlaskConical, History } from "lucide-react";
+import {
+  ArrowLeft,
+  CodeXml,
+  FileText,
+  FlaskConical,
+  History,
+} from "lucide-react";
 import { useMemo } from "react";
 import SolutionEditor from "@/domains/workspace/solution-editor/components/solution-editor";
 import { ProblemQuestion } from "@/domains/problem/components/problem-question";
@@ -83,13 +89,14 @@ export default function SoloRushWorkspace({
     id: viewingProblemId ?? "",
     queryConfig: { enabled: isViewingHistory },
   });
-  const { data: historicalSubmission } = useSubmissionStatus(
-    viewingSubmissionId
-  );
+  const { data: historicalSubmission } =
+    useSubmissionStatus(viewingSubmissionId);
 
-  const displayProblem = isViewingHistory ? historicalProblem ?? null : liveProblem;
+  const displayProblem = isViewingHistory
+    ? (historicalProblem ?? null)
+    : liveProblem;
   const displayCode = isViewingHistory
-    ? historicalSubmission?.code ?? ""
+    ? (historicalSubmission?.code ?? "")
     : workspaceCode;
   const displaySubmissionId = isViewingHistory
     ? viewingSubmissionId
@@ -99,9 +106,7 @@ export default function SoloRushWorkspace({
     const descriptionTab = {
       key: "description",
       name: "Description",
-      icon: (
-        <FileText size={16} className="text-blue-600 dark:text-blue-400" />
-      ),
+      icon: <FileText size={16} className="text-blue-600 dark:text-blue-400" />,
       component: displayProblem ? (
         <ProblemQuestion problem={displayProblem} />
       ) : (

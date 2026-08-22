@@ -25,4 +25,5 @@ const gameProblemHistoryQuery = defineQuery<
 });
 
 export const useGameProblemHistory = gameProblemHistoryQuery.useQuery;
-export const gameProblemHistoryQueryOptions = gameProblemHistoryQuery.queryOptions;
+export const gameProblemHistoryQueryOptions =
+  gameProblemHistoryQuery.queryOptions;
