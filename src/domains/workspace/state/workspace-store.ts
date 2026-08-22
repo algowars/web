@@ -23,7 +23,10 @@ interface WorkspaceState {
   setSubmittingSubmission: (isSubmitting: boolean) => void;
   setActiveSubmissionId: (submissionId: string | null) => void;
   onNewProblem: () => void;
-  onProblemSetupLoaded: (setup: ProblemSetup, languageVersionId: string) => void;
+  onProblemSetupLoaded: (
+    setup: ProblemSetup,
+    languageVersionId: string
+  ) => void;
   setActiveTab: (nodeId: string, tabIndex: number) => void;
   reset: () => void;
 }
@@ -63,7 +66,10 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
       if (languageVersionId !== state.codeVersionId) {
         // New problem (codeVersionId was cleared by onNewProblem) or the user
         // switched language — reset the editor to the initial template.
-        return { code: setup.initialCode ?? "", codeVersionId: languageVersionId };
+        return {
+          code: setup.initialCode ?? "",
+          codeVersionId: languageVersionId,
+        };
       }
       // Same problem + same language version reloading (e.g. LanguageSelect
       // auto-selecting the default on mount): do nothing — keep the user's code
@@ -91,8 +97,3 @@ export const selectActiveSubmissionId = (s: WorkspaceState) =>
   s.activeSubmissionId;
 
 export const selectActiveTabByNode = (s: WorkspaceState) => s.activeTabByNode;
-
-export const selectActiveTabIndex =
-  (nodeId: string) =>
-  (s: WorkspaceState): number =>
-    s.activeTabByNode[nodeId] ?? 0;

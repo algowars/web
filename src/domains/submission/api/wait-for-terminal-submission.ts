@@ -3,10 +3,14 @@ import {
   connectSubmissionHub,
   onSubmissionCompletedPush,
 } from "@/shared/lib/signalr/submission-hub-client";
-import { getSubmissionStatus, submissionStatusQueryKey } from "./get-submission-status";
+import {
+  getSubmissionStatus,
+  submissionStatusQueryKey,
+} from "./get-submission-status";
 import type { SubmissionStatusDto } from "../models/submission-status";
 
-const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const delay = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /**
  * Waits for `submissionId` to reach a terminal state, then returns its status.
@@ -41,5 +45,6 @@ export async function waitForTerminalSubmission(
   return queryClient.fetchQuery({
     queryKey: submissionStatusQueryKey(submissionId),
     queryFn: ({ signal }) => getSubmissionStatus({ submissionId, signal }),
+    staleTime: 0,
   });
 }

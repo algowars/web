@@ -10,7 +10,10 @@ import {
 } from "@/domains/problem/hooks/use-problem-actions";
 import { useWorkspaceStore } from "@/domains/workspace/state/workspace-store";
 import { useUserStore, selectUser } from "@/domains/user/state/user-store";
-import { useGameSessionStore } from "../state/game-session-store";
+import {
+  useGameSessionStore,
+  selectPendingNextProblemId,
+} from "../state/game-session-store";
 import {
   joinGameUpdates,
   leaveGameUpdates,
@@ -34,6 +37,7 @@ export function useGameSession(gameId: string) {
   const clearProblem = useClearProblem();
   const workspaceReset = useWorkspaceStore((s) => s.reset);
   const gameSessionReset = useGameSessionStore((s) => s.reset);
+  const pendingNextProblemId = useGameSessionStore(selectPendingNextProblemId);
   const initializeProblem = useInitializeProblem();
   const user = useUserStore(selectUser);
 
@@ -117,8 +121,14 @@ export function useGameSession(gameId: string) {
   // the game fetch (whichever becomes available second triggers the load) —
   // and skips re-fetching when the problem ID hasn't actually changed (e.g. a
   // routine game poll), guarded by the lastLoadedProblemId ref above.
+  //
+  // Skipped entirely while pendingNextProblemId is set: completeProblem
+  // already advances the participant's currentProblem server-side, so the
+  // post-submit refetch would otherwise swap the workspace to the next
+  // problem before the player clicks "Next Problem". useLoadNextProblem
+  // (triggered by that click) is what's responsible for loading it instead.
   useEffect(() => {
-    if (!user || !game) return;
+    if (!user || !game || pendingNextProblemId !== undefined) return;
 
     const participant = game.participants.find((p) => p.userId === user.id);
     const problemId = participant?.currentProblem?.problemId;
@@ -137,7 +147,7 @@ export function useGameSession(gameId: string) {
       .catch(() => {
         lastLoadedProblemId.current = null;
       });
-  }, [user, game, queryClient, initializeProblem]);
+  }, [user, game, pendingNextProblemId, queryClient, initializeProblem]);
 
   return {
     game,

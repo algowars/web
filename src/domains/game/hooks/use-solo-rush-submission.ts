@@ -11,7 +11,6 @@ import {
   selectWorkspaceCode,
   selectIsSubmittingSubmission,
 } from "@/domains/workspace/state/workspace-store";
-import { useUserStore, selectUser } from "@/domains/user/state/user-store";
 import { useGameSessionStore } from "../state/game-session-store";
 import type { Game } from "../models/game";
 
@@ -24,14 +23,13 @@ type SubmitSoloRushSolutionArgs = {
 /**
  * Orchestrates a Solo Rush submission: submit the current code -> wait for the
  * submission to reach a terminal state (SignalR push, 60s timeout fallback) ->
- * if accepted, complete the problem and patch the game query cache with the
- * new score/next-problem so the UI updates without a round-trip refetch (the
- * game is still Running so there's nothing new to fetch until the player
- * moves on). Replaces the `submitSoloRushSolutionRequested` listener effect.
+ * if accepted, complete the problem, flip the local "solved" flag so the
+ * "Next Problem" button appears immediately, and invalidate the game query so
+ * score/next-problem come from the server. Replaces the
+ * `submitSoloRushSolutionRequested` listener effect.
  */
 export function useSoloRushSubmission() {
   const queryClient = useQueryClient();
-  const user = useUserStore(selectUser);
   const code = useWorkspaceStore(selectWorkspaceCode);
   const isSubmitting = useWorkspaceStore(selectIsSubmittingSubmission);
   const beginSubmission = useWorkspaceStore((s) => s.beginSubmission);
@@ -82,36 +80,14 @@ export function useSoloRushSubmission() {
         body: { submissionId },
       });
 
-      queryClient.setQueryData(
-        gameQueryOptions({ gameId: game.gameId }).queryKey,
-        (current: Game | undefined) => {
-          if (!current || !user) return current;
-          return {
-            ...current,
-            participants: current.participants.map((participant) =>
-              participant.userId === user.id
-                ? {
-                    ...participant,
-                    score: completion.newScore,
-                    currentProblem: completion.nextProblemId
-                      ? { problemId: completion.nextProblemId }
-                      : null,
-                  }
-                : participant
-            ),
-          };
-        }
-      );
-
       problemSolved(completion.nextProblemId);
 
-      if (!completion.nextProblemId) {
-        // Last problem solved — refetch so the game's final (Completed)
-        // status comes from the server rather than being inferred client-side.
-        void queryClient.invalidateQueries({
-          queryKey: gameQueryOptions({ gameId: game.gameId }).queryKey,
-        });
-      }
+      // Refetch rather than hand-patching the cache — the server is the
+      // source of truth for score/next-problem/final status, and the game
+      // query is cheap to re-fetch.
+      void queryClient.invalidateQueries({
+        queryKey: gameQueryOptions({ gameId: game.gameId }).queryKey,
+      });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to submit solution";
