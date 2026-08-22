@@ -65,12 +65,14 @@ export const useUserStore = create<UserState>((set) => ({
   loggedOut: () => set(initialState),
 }));
 
-// Selectors — plain functions of state, usable as `useUserStore(selectX)`.
+const EMPTY_ROLES: string[] = [];
+const EMPTY_PERMISSIONS: string[] = [];
+
 export const selectAuthProfile = (s: UserState) => s.authProfile;
 export const selectUser = (s: UserState) => s.user;
-export const selectUserRoles = (s: UserState) => s.user?.roles ?? [];
+export const selectUserRoles = (s: UserState) => s.user?.roles ?? EMPTY_ROLES;
 export const selectUserPermissions = (s: UserState) =>
-  s.user?.permissions ?? [];
+  s.user?.permissions ?? EMPTY_PERMISSIONS;
 export const selectIsAuthLoading = (s: UserState) => s.isAuthLoading;
 export const selectIsUserLoading = (s: UserState) => s.isUserLoading;
 export const selectAuthError = (s: UserState) => s.authError;
