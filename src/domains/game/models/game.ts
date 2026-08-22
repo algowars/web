@@ -19,9 +19,15 @@ export interface GameParticipant {
   } | null;
 }
 
+export interface SolvedProblemSubmission {
+  problemId: string;
+  submissionId: string;
+}
+
 export interface GameProblemHistory {
   userId: string;
   solvedProblemIds: string[];
+  solvedProblemSubmissions: SolvedProblemSubmission[];
 }
 
 export interface Game {
